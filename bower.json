@@ -1,0 +1,24 @@
+{
+    "name": "px-3-column-browser",
+    "version": "0.0.1",
+    "main": [
+        "src/js/px-3-column-browser.html"
+    ],
+    "ignore": [
+        ".*",
+        "npm-debug.log",
+        "Gruntfile.js",
+        "doc",
+        "lib",
+        "css",
+        "src",
+        "node_modules",
+        "test"
+    ],
+    "dependencies": {
+        "polymer": "~0.5.2"
+    },
+    "devDependencies": {
+
+    }
+}

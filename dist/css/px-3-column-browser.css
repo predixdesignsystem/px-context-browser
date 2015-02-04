@@ -1,0 +1,146 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+/*
+THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
+common/abstract rules go in px-3-column-browser-sketch.scss, not in this file.
+*/
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+/*
+THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
+Predix branding rules go in px-3-column-browser-predix.scss, not in this file.
+*/
+.circle {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: content-box;
+  /* Even though we use shadow DOM in this component, Safari insists on bleeding styles through from outside, so reset the resetting of this */
+  border: 1px black dashed;
+  font-size: 2rem;
+  text-align: center;
+  padding: 1.25rem 0.4rem 0.4rem 0.4rem;
+  border-radius: 50%; }
+
+.counter {
+  display: inline-block;
+  background-color: #ececec;
+  min-width: 6.5rem;
+  height: 3rem; }
+
+.asset-browser {
+  width: 522px;
+  height: 306px;
+  padding: 0;
+  color: #868686;
+  /* @gray */
+  background-color: #141414;
+  /* @black */ }
+
+.px-tree-nav {
+  overflow-x: auto;
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 29px;
+  background-color: #414141;
+  /* @grayDarker */ }
+
+.px-tree-breadcrumbs, .px-tree-search {
+  padding-right: 10px;
+  padding-left: 10px;
+  background-color: #2b2b2b;
+  /* @greyDarkest */ }
+
+.px-tree-breadcrumbs {
+  height: 29px; }
+
+.px-tree-level {
+  float: left;
+  overflow-y: scroll;
+  width: 174px;
+  height: 225px;
+  scrollbar-base-color: #2b2b2b;
+  scrollbar-face-color: #868686; }
+  .px-tree-level:last-child {
+    padding-right: 0; }
+  .px-tree-level::-webkit-scrollbar {
+    width: 6px; }
+  .px-tree-level::-webkit-scrollbar-track {
+    background-color: #2b2b2b;
+    /* @greyDarkest */ }
+  .px-tree-level::-webkit-scrollbar-thumb {
+    border: solid transparent;
+    border-width: 0 2px;
+    background-clip: content-box;
+    background-color: #868686;
+    /* @gray */ }
+
+.table {
+  table-layout: fixed;
+  margin-bottom: 0; }
+  .table th {
+    padding: 0;
+    background-color: transparent; }
+  .table > tbody > tr > td {
+    overflow: hidden;
+    position: relative;
+    border-top: 0;
+    padding: 0 5px 0 10px;
+    line-height: 31px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #d4d4d4;
+    /* @grayLighter */ }
+    .table > tbody > tr > td i {
+      position: absolute;
+      right: 5px;
+      top: 0; }
+  .table > tbody > tr > .active {
+    color: white;
+    /* @white */
+    background-color: #005cb9;
+    /* @blue */ }
+  .table > tbody.empty {
+    color: #868686; }
+    .table > tbody.empty > tr, .table > tbody.empty > tr > td {
+      color: inherit; }
+
+[class^="icon-"], [class*=" icon-"] {
+  font-size: 0.75em;
+  line-height: 29px; }
+
+.px-tree-open-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border-color: #414141;
+  /* @grayDarker */
+  padding-right: 10px;
+  padding-left: 10px;
+  font-size: 13px;
+  color: #bcbcbc;
+  /* @grayLight */
+  background-color: #141414;
+  /* @black */ }
+
+li.selected > a {
+  background-color: #0057af;
+  color: #fff; }

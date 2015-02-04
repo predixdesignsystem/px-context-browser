@@ -1,0 +1,29 @@
+<!doctype html>
+
+<html>
+    <head>
+        <title>Three Column Browser Test fixture</title>
+
+        <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+        <script src="../../../lib/webcomponentsjs/webcomponents.js"></script>
+
+        <!-- Import component dependencies separately here b/c component src is optimized for consumption over bower,
+        and therefore assumes it is a sibling to these dependencies -->
+        
+        <link rel="import" href="../../../lib/polymer/polymer.html"/>
+        
+        
+
+        <!-- Import Custom Elements -->
+        <link rel="import" href="../../../dist/px-3-column-browser.html"/>
+        <link rel="import" href="../../../dist/px-3-column-browser-sketch.html"/>
+    </head>
+
+    <body>
+        <!-- instance 1, "predix" theme -->
+        <px-3-column-browser counterValue="1">&hearts;</px-3-column-browser>
+
+        <!-- instance 2, "sketch" theme -->
+        <px-3-column-browser-sketch counterValue="2">&clubs;</px-3-column-browser-sketch>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+/*
+THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
+Predix branding rules go in px-3-column-browser-predix.scss, not in this file.
+*/
+.circle {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  box-sizing: content-box;
+  /* Even though we use shadow DOM in this component, Safari insists on bleeding styles through from outside, so reset the resetting of this */
+  border: 1px black dashed;
+  font-size: 2rem;
+  text-align: center;
+  padding: 1.25rem 0.4rem 0.4rem 0.4rem;
+  border-radius: 50%; }
+
+.counter {
+  display: inline-block;
+  background-color: #ececec;
+  min-width: 6.5rem;
+  height: 3rem; }
