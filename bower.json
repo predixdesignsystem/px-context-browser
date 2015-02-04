@@ -10,7 +10,6 @@
         "Gruntfile.js",
         "doc",
         "lib",
-        "css",
         "src",
         "node_modules",
         "test"
