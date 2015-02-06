@@ -5,7 +5,7 @@
 <link rel="import" href="../../polymer/polymer.html"/>
 
 
-<polymer-element name="px-3-column-browser" attributes="treeData handlers labelField parentIdField idField headers">
+<polymer-element name="px-3-column-browser" attributes="treeData handlers labelField parentIdField idField headers childKey">
 
 <template>
     <link rel="stylesheet" href="css/px-3-column-browser.css"/>
@@ -62,7 +62,7 @@ Polymer({
 
     ready: function() {
         console.log('ready');
-        if (angular && this.hasAttributes()) {
+        if (window['angular'] && this.hasAttributes()) {
             //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
             var ngScope = angular.element(this).scope();
             for (var i = 0; i < this.attributes.length; i++) {
