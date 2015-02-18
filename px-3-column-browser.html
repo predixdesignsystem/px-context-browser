@@ -2,13 +2,13 @@
     Import dependencies, assuming relative to this project which works when this component is consumed downstream.
     See tests/examples within this project re-specify these paths locally to this component.
  -->
-<link rel="import" href="../../polymer/polymer.html"/>
+<link rel="import" href="../polymer/polymer.html"/>
 
 
-<polymer-element name="px-3-column-browser-sketch" attributes="treeData handlers labelField parentIdField idField headers childKey">
+<polymer-element name="px-3-column-browser" attributes="treeData handlers labelField parentIdField idField headers childKey">
 
 <template>
-    <link rel="stylesheet" href="css/px-3-column-browser-sketch.css"/>
+    <link rel="stylesheet" href="css/px-3-column-browser.css"/>
     <div class="asset-browser">
         <div class="px-tree-nav">
             <div class="px-tree-breadcrumbs" hidden?="{{!showBreadcrumbs}}">

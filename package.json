@@ -20,6 +20,6 @@
         "grunt-contrib-clean": "~v0.6.0",
         "grunt-contrib-jshint": "~v0.10.0",
         "grunt-contrib-watch": "~v0.6.1",
-        "grunt-px-comp-dist": "git+https://github.sw.ge.com/PX/grunt-px-comp-dist.git#master"
+        "grunt-px-comp-build": "git+https://github.sw.ge.com/PX/grunt-px-comp-build.git#master"
     }
 }

@@ -6,9 +6,9 @@ module.exports = function (grunt) {
     grunt.initConfig({
 
         clean: {
-            css: ['dist/css'],
-            lib: ['lib'],
-            dist: ['dist']
+            css: ['css'],
+            bower: ['bower_components'],
+            build: ['build-local']
         },
 
         sass: {
@@ -17,8 +17,8 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    'dist/css/px-3-column-browser-sketch.css': 'src/sass/px-3-column-browser-sketch.scss',
-                    'dist/css/px-3-column-browser.css': 'src/sass/px-3-column-browser-predix.scss'
+                    'css/px-3-column-browser-sketch.css': 'sass/px-3-column-browser-sketch.scss',
+                    'css/px-3-column-browser.css': 'sass/px-3-column-browser-predix.scss'
                 }
             }
         },
@@ -43,23 +43,23 @@ module.exports = function (grunt) {
             }
         },
 
-        "px-comp-dist": {
-            dist: {
+        buildlocal: {
+            localDev: {
                 inlineCSS: false
             }
         },
 
         watch: {
             html: {
-                files: ['src/**/*,html'],
-                tasks: 'px-comp-dist',
+                files: ['*.html'],
+                tasks: 'buildlocal',
                 options: {
                     interrupt: true
                 }
             },
             sass: {
-                files: ['src/sass/**/*,scss'],
-                tasks: 'sass',
+                files: ['sass/**/*.scss'],
+                tasks: ['sass', 'buildlocal'],
                 options: {
                     interrupt: true
                 }
@@ -73,20 +73,19 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-px-comp-dist');
+    grunt.loadNpmTasks('grunt-px-comp-build');
 
     // Default task.
     grunt.registerTask('default', 'Basic build', [
+        'sass',
+        'buildlocal'
+    ]);
+
+    grunt.registerTask('release', 'Release', [
         'clean',
         'shell:bower',
         'sass',
-        'px-comp-dist'
-    ]);
-
-    grunt.registerTask('dist', 'Basic build', [
-        'clean:dist',
-        'sass',
-        'px-comp-dist',
+        'buildlocal',
         'test'
     ]);
 
