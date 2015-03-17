@@ -15,9 +15,11 @@
         "test"
     ],
     "dependencies": {
-        "polymer": "~0.5.2"
+        "polymer": "~0.5.5",
+        "px-starter-kit-design": "git://github.sw.ge.com/pxc/px-starter-kit-design.git#master"
     },
     "devDependencies": {
-
+        "core-component-page" : "https://github.com/Polymer/core-component-page.git#~v0.5.5",
+        "web-component-tester": "~2.2.6"
     }
 }

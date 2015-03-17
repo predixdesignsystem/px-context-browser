@@ -3,7 +3,6 @@ node_modules
 temp
 css
 bower_components
-build-local
 .idea
 test/unit/report*
 test/ui/report*
