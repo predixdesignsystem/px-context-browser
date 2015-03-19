@@ -28,14 +28,165 @@
             Click on the counter to make it increment:
         </p>
 
+
         <px-3-column-browser
-                treedata='[{"name":"Mustang","identifier":"001-1","nodeIdentifier":"001-1","hasChildren":true,"entity":true,"entityType":"top1","category":"parent","classification":"car", "children":[{"name":"Another Thing","identifier":"001-4","nodeIdentifier":"001-4","hasChildren":false,"entity":true,"entityType":"top4","category":"top1","classification":"car"},{"name":"Something","identifier":"001-5","nodeIdentifier":"001-5","hasChildren":false,"entity":true,"entityType":"top5","category":"top1","classification":"car"},{"name":"Yet Another Thing","identifier":"001-6","nodeIdentifier":"001-6","hasChildren":false,"entity":true,"entityType":"top6","category":"top1","classification":"car"}]},{"name":"Sandy Bridges","identifier":"001-2","nodeIdentifier":"001-2","hasChildren":true,"entity":true,"entityType":"top2","category":"parent","classification":"bridge", "children": [{"name":"Nothing Below Me","identifier":"001-3","nodeIdentifier":"001-3","hasChildren":false,"entity":false,"entityType":"top3","category":"top2","classification":"car"}]}]'
-                handlers="{}"
                 labelField="name"
                 parentIdField="category"
-                idField="entityType"
+                idField="identifier"
                 treeDisplayLevels="3"
                 childKey="children">
         </px-3-column-browser>
+
+        <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.js"></script>
+
+        <script>
+            var initialContexts = {
+                data: [{
+                    "name": "Mustang",
+                    "identifier": "001-1",
+                    "parent": "top",
+                    "classification": "truck"
+                }, {
+                    "name": "Sandy Bridges",
+                    "identifier": "001-2",
+                    "parent": "top",
+                    "classification": "car"
+                }, {
+                    "name": "Nothing Below Me",
+                    "identifier": "001-3",
+                    "parent": "top",
+                    "classification": "car"
+                }],
+                meta: {
+                    total: 3 // total number of entities on all pages (to support pagination)
+                }
+            };
+
+            window.addEventListener('polymer-ready', function(e) {
+                var colBrowser = document.querySelector('px-3-column-browser');
+                colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
+                colBrowser.initialContexts = initialContexts;
+            });
+
+            function demoGetChildren(nodeId, newIndex) {
+                var deferred = Q.defer();
+                var mustangChildren = {
+                    data: [{
+                        "name": "A",
+                        "identifier": "001-1a",
+                        "parent": "001-1",
+                        "classification": "truck"
+                    }, {
+                        "name": "B",
+                        "identifier": "001-1b",
+                        "parent": "001-1",
+                        "classification": "car"
+                    }, {
+                        "name": "C",
+                        "identifier": "001-1c",
+                        "parent": "001-1",
+                        "classification": "car"
+                    },{
+                        "name": "D",
+                        "identifier": "001-1d",
+                        "parent": "001-1",
+                        "classification": "truck"
+                    }, {
+                        "name": "E",
+                        "identifier": "001-1e",
+                        "parent": "001-1",
+                        "classification": "car"
+                    }, {
+                        "name": "F",
+                        "identifier": "001-1f",
+                        "parent": "001-1",
+                        "classification": "car"
+                    },{
+                        "name": "G",
+                        "identifier": "001-1g",
+                        "parent": "001-1",
+                        "classification": "truck"
+                    }, {
+                        "name": "H",
+                        "identifier": "001-1h",
+                        "parent": "001-1",
+                        "classification": "car"
+                    }, {
+                        "name": "I",
+                        "identifier": "001-1i",
+                        "parent": "001-1",
+                        "classification": "car"
+                    }],
+                    meta: {
+                        total: 9 // total number of entities on all pages (to support pagination)
+                    }
+                };
+                var bridgesChildren = {
+                    data: [{
+                        "name": "BridgeChild",
+                        "identifier": "001-2a",
+                        "parent": "001-2",
+                        "classification": "truck",
+                        "isOpenable": true
+                    }],
+                    meta: {
+                        total: 1 // total number of entities on all pages (to support pagination)
+                    }
+                };
+
+                var bridgesGrandchildren = {
+                    data: [{
+                        "name": "BridgeGrandchild",
+                        "identifier": "001-2aa",
+                        "parent": "001-2a",
+                        "classification": "truck"
+                    }],
+                    meta: {
+                        total: 1 // total number of entities on all pages (to support pagination)
+                    }
+                };
+
+                var bridgesGreatGrandchild = {
+                    data: [{
+                        "name": "BridgeGreatGrandchild",
+                        "identifier": "001-2aaa",
+                        "parent": "001-2aa",
+                        "classification": "truck",
+                        "isOpenable": true
+                    }],
+                    meta: {
+                        total: 1 // total number of entities on all pages (to support pagination)
+                    }
+                };
+
+                var children = {
+                    data: [],
+                    meta: {
+                        total: 0
+                    }
+                };
+
+                if (nodeId === "001-1") {
+                    children = mustangChildren;
+                }
+                if (nodeId === "001-2") {
+                    children = bridgesChildren;
+                }
+                if (nodeId === "001-2a") {
+                    children = bridgesGrandchildren;
+                }
+                if (nodeId === "001-2aa") {
+                    children = bridgesGreatGrandchild;
+                }
+
+                deferred.resolve(children);
+
+                return deferred.promise;
+            }
+
+
+        </script>
+
     </body>
 </html>

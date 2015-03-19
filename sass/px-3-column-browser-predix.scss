@@ -28,6 +28,7 @@ common/abstract rules go in px-3-column-browser-sketch.scss, not in this file.
 }
 
 .px-tree-nav {
+  border-radius: 3px;
   font-size: 13px;
   line-height: 29px;
   background-color: rgb(65, 65, 65); /* @grayDarker */
@@ -39,7 +40,7 @@ common/abstract rules go in px-3-column-browser-sketch.scss, not in this file.
 }
 
 .px-tree-level {
-  width: 174px;
+  width: 265px;
   scrollbar-base-color: rgb(43, 43, 43);
   scrollbar-face-color: rgb(134, 134, 134);
 
@@ -112,4 +113,8 @@ common/abstract rules go in px-3-column-browser-sketch.scss, not in this file.
 li.selected > a {
   background-color: #0057af;
   color: #fff;
+}
+
+.px-tree-footer {
+  background-color: rgb(43, 43, 43); /* @greyDarkest */
 }

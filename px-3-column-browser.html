@@ -12,7 +12,7 @@
 
 ##### Usage
 
-    <px-3-column-browser treeData="{{ ... }}"
+    <px-3-column-browser initialContexts="{{ ... }}"
                         handlers="{{ ... }}"
                         labelField="{{ ... }}"
                         parentIdField="{{ ... }}"
@@ -24,7 +24,7 @@
 @blurb 3-column browser element
 @homepage index.html
 -->
-<polymer-element name="px-3-column-browser" attributes="treeData handlers labelField parentIdField idField headers childKey">
+<polymer-element name="px-3-column-browser" attributes="initialContexts handlers labelField parentIdField idField headers treeDisplayLevels showBreadcrumbs showOpenButton">
 
 <template>
     <link rel="stylesheet" href="css/px-3-column-browser.css"/>
@@ -39,9 +39,12 @@
                 </span>
             </template>
         </div>
-        <div class="px-tree-nav-row">
+        <div class="px-tree-additional-info">
+            <content></content>
+        </div>
+        <div class="px-tree-nav-row clearfix">
             <template repeat="{{n in displayNodes}}">
-                <div class="px-tree-level">
+                <div class="px-tree-level" on-scroll-end="{{scrollEndHandler}}">
                     <table class="table table-condensed px-tree-table">
                         <thead>
                         <th class="px-tree-header">{{n.header}}</th>
@@ -63,8 +66,9 @@
                 </div>
             </template>
         </div>
-        <button class="btn px-tree-open-btn" on-click="{{openClickHandler}}" hidden?="{{!isOpenable(selectedItem)}}">Open</button>
-    </div>
+        <div class="px-tree-footer">
+            <button class="btn px-tree-open-btn" on-click="{{openClickHandler}}" hidden?="{{!isOpenable(selectedItem)}}">Open</button>
+        </div>
     </div>
 </template>
 
@@ -76,6 +80,7 @@ Polymer({
         treeDisplayLevels: 1,
         showBreadcrumbs: true,
         showOpenButton: true,
+        handlers: {},
         currentLevel: {value: -1, reflect: true} //need to reflect back properties to attributes per angular-bind-polymer
     },
 
@@ -105,13 +110,13 @@ Polymer({
         }
     },
 
-    treeDataChanged: function(oldValue, newValue) {
-        console.log('treeDataChanged2: ' + oldValue + " " + newValue);
-        var treeData = this.treeData;
-        if (typeof treeData === 'string') {
-            treeData = JSON.parse(treeData);
+    initialContextsChanged: function(oldValue, newValue) {
+        console.log('initialContexts: ' + oldValue + " " + newValue);
+        var initialContexts = this.initialContexts;
+        if (typeof initialContexts === 'string') {
+            initialContexts = JSON.parse(initialContexts);
         }
-        this.updateTreeData(treeData);
+        this.addChildren(this.parentNodes[0], initialContexts);
     },
 
     parentNodes: [{}],
@@ -120,33 +125,41 @@ Polymer({
 
     displayNodes: null,
 
-    updateTreeData: function(newData) {
-
-        if (this.shouldAddData(newData)) {
-
-            // set the current level to the next level (use parentNodes so multiple clicks don't mess up)
-            this.currentLevel = this.parentNodes.length - 1;
-
-            // set up the children/parent pointers
-            for (var i = 0; i < newData.length; i++) {
-                newData[i].parent = this.parentNodes[this.currentLevel];
-            }
-            this.parentNodes[this.currentLevel].children = newData;
-
-            // set the new node's header
-            if (this.headers) {
-                this.parentNodes[this.currentLevel].header = this.headers[this.currentLevel];
-            }
-            else {
-                this.parentNodes[this.currentLevel].header = '';
-            }
-
-            // set the new node's level
-            this.parentNodes[this.currentLevel].level = this.currentLevel;
-
-            // update the display
-            this.setDisplayNodes();
+    appendChildren: function (node, results) {
+        if (results === undefined || results === null) {
+            return;
         }
+        var children = results.data || [];
+
+        // set up the parent pointers
+        for (var i = 0; i < children.length; i++) {
+            children[i].parent = node;
+        }
+
+        // adding all the new children onto the node's children
+        Array.prototype.push.apply(node.children, children);
+
+        // update the display
+        this.setDisplayNodes();
+    },
+
+    addChildren: function(parentNode, results) {
+
+        if (results === undefined || results === null) {
+            return;
+        }
+        var children = results.data || [];
+
+        // set up the parent pointers
+        for (var i = 0; i < children.length; i++) {
+            children[i].parent = parentNode;
+        }
+
+        parentNode.children = children;
+        parentNode.childrenCount = results.meta.total;
+
+        // update the display
+        this.setDisplayNodes();
     },
 
     handleBreadcrumbClick: function(event, detail, sender) {
@@ -155,7 +168,6 @@ Polymer({
     },
 
     isBreadcrumbVisible: function (index) {
-        console.log("index=" + index);
         return (index > 0 && (index >= (this.parentNodes.length - this.treeDisplayLevels)));
     },
 
@@ -164,41 +176,35 @@ Polymer({
         return this.parentNodes.length > (this.treeDisplayLevels + 1);
     },
 
-    shouldAddData: function(newData) {
-        if (!newData) {
-            // if no new data don't add it
+    isSelected: function (node) {
+        if (!node || !scope.selectedItem) {
             return false;
         }
-        if (this.selectedItem && newData.length > 0 && newData[0][this.parentIdField] !== this.selectedItem[this.idField]) {
-            // if the parent of the child is NOT the selected item, then the data is out of date so don't add it
-            // (the data is the children from a previous item click)
-            return false;
+        var selected = this.selectedItem;
+        while (selected[this.idField]) {
+            if (node[this.idField] === selected[this.idField]) {
+                return true;
+            }
+            selected = selected.parent;
         }
-        return true;
+        return false;
     },
 
     markNodeSelected: function(node) {
-        // mark all other nodes on this level unselected
-        for (var j=0; j<node.parent.children.length; j++) {
-            node.parent.children[j].selected = false;
-        }
-        node.selected = true;
         this.selectedItem = node;
     },
 
     dropCurrentChildren: function(node) {
-
         // drop the children from the master list of nodes (and update the level)
-        for (var i=0; i<this.parentNodes.length-1; i++) {
+        for (var i = 0; i < this.parentNodes.length - 1; i++) {
             if (this.parentNodes[i] === node.parent) {
-                this.currentLevel = i;
                 this.parentNodes = this.parentNodes.slice(0, i + 1);
             }
         }
 
         // drop the children from the displayed nodes (so old nodes don't linger during next GET for children)
-        for(var j=0; j<this.displayNodes.length-1; j++) {
-            if(this.displayNodes[j] === node.parent) {
+        for (var j = 0; j < this.displayNodes.length - 1; j++) {
+            if (this.displayNodes[j] === node.parent) {
                 this.displayNodes = this.displayNodes.slice(0, j + 1);
 
             }
@@ -210,16 +216,18 @@ Polymer({
             // push the node to the parentNodes so breadcrumbs updated even if children not successfully returned
             this.parentNodes.push(node);
             var _this = this;
-            this.handlers.getChildren(node).then(function (children) {
-                _this.treeData = children;
+            this.handlers.getChildren(node[this.idField]).then(function (children) {
+                _this.addChildren(node, children);
             });
         }
         else {
             if (this.childKey) {
-                this.treeData = node[this.childKey];
-            } else if (node.subcontexts) {
-                this.treeData = node.subcontexts;
-            } else {
+                this.addChildren(node, node[this.childKey]);
+            }
+            else if (node.subcontexts) {
+                this.addChildren(node, node.subcontexts);
+            }
+            else {
                 console.log('The next level of children could not be returned.');
                 return; //do not put anything else in tree
             }
@@ -242,11 +250,23 @@ Polymer({
         this.selectNode(node);
     },
 
+    scrollEndHandler: function (event, detail, sender) {
+        if (this.handlers.getChildren) {
+            if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
+                return;
+            }
+            var _this = this;
+            this.handlers.getChildren(node[this.idField], node.children.length).then(function (children) {
+                _this.appendChildren(node, children);
+            });
+        }
+    },
+
     openClickHandler: function(event, detail, sender) {
         if (this.selectedItem && this.handlers.itemOpenHandler) {
             var breadcrumbs = [];
             for (var index in this.parentNodes) {
-                if(index < this.parentNodes.length - 1) {
+                if (index < this.parentNodes.length - 1) {
                     breadcrumbs.push(this.getBreadcrumb(this.parentNodes[index], index));
                 }
             }
@@ -255,10 +275,17 @@ Polymer({
     },
 
     getBreadcrumb: function(node) {
-        if(node && node.hasOwnProperty(this.labelField)) {
+        if (node && node.hasOwnProperty(this.labelField)) {
             return node[this.labelField];
         }
         return '';
+    },
+
+    isOpenable: function(selectedItem) {
+        if(this.showOpenButton && this.handlers.isOpenable) {
+            return this.handlers.isOpenable(selectedItem);
+        }
+        return false;
     },
 
     setDisplayNodes: function() {
@@ -267,13 +294,6 @@ Polymer({
             beginIndex = this.parentNodes.length - this.treeDisplayLevels;
         }
         this.displayNodes = this.parentNodes.slice(beginIndex);
-    },
-
-    isOpenable: function(selectedItem) {
-        if(this.showOpenButton && this.handlers.isOpenable) {
-            return this.handlers.isOpenable(selectedItem);
-        }
-        return false;
     }
 
 });

@@ -50,8 +50,7 @@ in import paths
 
 
 .asset-browser {
-  width: 522px;
-  height: 306px;
+  width: 795px;
   padding: 0;
   border: 1px dashed black;
 }
@@ -60,7 +59,7 @@ in import paths
   overflow-x: auto;
 }
 
-.px-tree-breadcrumbs, .px-tree-search {
+.px-tree-breadcrumbs, .px-tree-search, .px-tree-additional-info {
   padding-right: 10px;
   padding-left: 10px;
   height: 29px;
@@ -104,7 +103,11 @@ in import paths
 }
 
 .px-tree-open-btn {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.px-tree-footer {
+  height: 46px;
 }
