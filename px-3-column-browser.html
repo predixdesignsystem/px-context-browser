@@ -111,9 +111,8 @@ Polymer({
     },
 
     initialContextsChanged: function(oldValue, newValue) {
-        console.log('initialContexts: ' + oldValue + " " + newValue);
         var initialContexts = this.initialContexts;
-        if (typeof initialContexts === 'string') {
+        if (typeof initialContexts === 'string' && initialContexts.length > 0) {
             initialContexts = JSON.parse(initialContexts);
         }
         this.addChildren(this.parentNodes[0], initialContexts);
