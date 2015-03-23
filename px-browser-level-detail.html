@@ -1,0 +1,42 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
+    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
+    See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
+-->
+<link rel="import" href="../polymer/polymer.html"/>
+
+
+<!--
+Details for selected level of 3-column browser
+
+##### Usage
+
+    <px-browser-level-detail details={{ ... }}></px-browser-level-detail>
+
+@element px-browser-level-detail
+@blurb details for selected level
+@homepage index.html
+-->
+<polymer-element name="px-browser-level-detail" attributes="details">
+
+<template>
+    <link rel="stylesheet" href="css/px-3-column-browser.css"/>
+    <ul class="list-inline">
+        <li ng-repeat="detail in details">
+            <span>{{detail.label}}</span>
+            <span ng-if="detail.value">: {{detail.value}}</span>
+        </li>
+    </ul>
+</template>
+
+<script>
+Polymer({
+
+    publish: {
+        details: {}
+    }
+});
+</script>
+
+</polymer-element>
