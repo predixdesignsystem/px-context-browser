@@ -118,3 +118,14 @@ li.selected > a {
 .px-tree-footer {
   background-color: rgb(43, 43, 43); /* @greyDarkest */
 }
+
+.px-tree-additional-info {
+  color: rgb(212, 212, 212);
+  li {
+    margin-right: 7px;
+  }
+  ul {
+    margin-bottom: 0px;
+  }
+}
+
