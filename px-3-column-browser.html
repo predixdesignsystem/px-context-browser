@@ -49,11 +49,12 @@
                         <thead>
                         <th class="px-tree-header">{{n.header}}</th>
                         </thead>
-                        <tbody template if="{{n.children.length > 0}}" repeat="{{item in n.children}}">
+                        <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
+                        <tbody template if="{{n.children.length > 0 && selectedItem}}" repeat="{{item in n.children}}">
                         <tr>
-                            <td class="{{ {active: isSelected(item)} | tokenList}}" on-click="{{rowClickHandler}}">
+                            <td class="{{ {active: item.selected} | tokenList}}" on-click="{{rowClickHandler}}">
                                 <span class="px-tree-item">{{item[labelField]}}</span>
-                                <i class="icon-ico_chevron_right_sm" hidden?="{{!isSelected(item)}}}"></i>
+                                <i class="fa fa-chevron-right" hidden?="{{item | selectedFilter}}"></i>
                             </td>
                         </tr>
                         </tbody>
@@ -125,7 +126,9 @@ Polymer({
 
     parentNodes: [{}],
 
-    selectedItem: null,
+     //see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for why selected item is not null
+     // we rely on a change observer on it and if null then our if statement in the template will eval false.
+    selectedItem: "temp",
 
     displayNodes: null,
 
@@ -180,22 +183,12 @@ Polymer({
         return this.parentNodes.length > (this.treeDisplayLevels + 1);
     },
 
-    isSelected: function (node) {
-        if (!node || !scope.selectedItem) {
-            return false;
-        }
-        var selected = this.selectedItem;
-        while (selected[this.idField]) {
-            if (node[this.idField] === selected[this.idField]) {
-                return true;
-            }
-            selected = selected.parent;
-        }
-        return false;
-    },
-
     markNodeSelected: function(node) {
         this.selectedItem = node;
+        var _this = this;
+        node.parent.children.forEach(function(siblingOrSelf) {
+            siblingOrSelf.selected = (siblingOrSelf[_this.idField] === node[_this.idField]);
+        });
     },
 
     dropCurrentChildren: function(node) {
@@ -243,6 +236,10 @@ Polymer({
         this.markNodeSelected(node);
         this.dropCurrentChildren(node);
         this.getNewChildren(node);
+    },
+
+    selectedFilter: function(node) {
+        return !node.selected;
     },
 
     rowClickHandler: function(event, detail, sender) {

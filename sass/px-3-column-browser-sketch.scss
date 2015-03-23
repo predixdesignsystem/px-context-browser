@@ -42,6 +42,7 @@ in import paths
 
 // Base
 @import "../px-typography-design/base.typography";
+@import "../px-iconography-design/base.iconography";
 
 // Trumps
 @import "../px-clearfix-design/trumps.clearfix";
@@ -81,6 +82,7 @@ in import paths
 .table {
   table-layout: fixed;
   margin-bottom: 0;
+  width: 100%;
 
   th {
     padding: 0;
