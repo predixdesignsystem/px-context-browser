@@ -51,9 +51,9 @@
                         </thead>
                         <tbody template if="{{n.children.length > 0}}" repeat="{{item in n.children}}">
                         <tr>
-                            <td class="{{ {active: item.selected === true} | tokenList}}" on-click="{{rowClickHandler}}">
+                            <td class="{{ {active: isSelected(item)} | tokenList}}" on-click="{{rowClickHandler}}">
                                 <span class="px-tree-item">{{item[labelField]}}</span>
-                                <i class="icon-ico_chevron_right_sm" hidden?="{{item.selected}}"></i>
+                                <i class="icon-ico_chevron_right_sm" hidden?="{{!isSelected(item)}}}"></i>
                             </td>
                         </tr>
                         </tbody>
