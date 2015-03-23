@@ -1431,7 +1431,9 @@ html {
 
 .px-tree-breadcrumbs, .px-tree-search, .px-tree-additional-info {
   padding-right: 10px;
-  padding-left: 10px;
+  padding-left: 10px; }
+
+.px-tree-breadcrumbs, .px-tree-search {
   height: 29px; }
 
 .px-tree-breadcrumbs {
