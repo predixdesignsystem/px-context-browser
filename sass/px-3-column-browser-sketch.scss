@@ -63,6 +63,10 @@ in import paths
 .px-tree-breadcrumbs, .px-tree-search, .px-tree-additional-info {
   padding-right: 10px;
   padding-left: 10px;
+
+  .px-tree-breadcrumb {
+    cursor: pointer;
+  }
 }
 
 .px-tree-breadcrumbs, .px-tree-search {
