@@ -43,8 +43,8 @@
             <content></content>
         </div>
         <div class="px-tree-nav-row clearfix">
-            <template repeat="{{n in displayNodes}}">
-                <div class="px-tree-level" on-scroll-end="{{scrollEndHandler}}">
+            <template repeat="{{n, nIndex in displayNodes}}">
+                <div class="px-tree-level" on-scroll="{{scrollEndHandler}}" data-index="{{nIndex}}">
                     <table class="table table-condensed px-tree-table">
                         <thead>
                         <th class="px-tree-header">{{n.header}}</th>
@@ -252,15 +252,19 @@ Polymer({
     },
 
     scrollEndHandler: function (event, detail, sender) {
-        if (this.handlers.getChildren) {
-            if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
-                return;
+        // executes when it hasn't been called for 500ms
+        var _this = this;
+        this.job('scroll-panel', function() {
+            if (this.handlers.getChildren) {
+                var node = _this.parentNodes[sender.getAttribute('data-index')];
+                if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
+                    return;
+                }
+                this.handlers.getChildren(node[_this.idField], node.children.length).then(function (children) {
+                    _this.appendChildren(node, children);
+                });
             }
-            var _this = this;
-            this.handlers.getChildren(node[this.idField], node.children.length).then(function (children) {
-                _this.appendChildren(node, children);
-            });
-        }
+        }, 500);
     },
 
     openClickHandler: function(event, detail, sender) {
