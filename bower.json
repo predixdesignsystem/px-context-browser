@@ -18,7 +18,7 @@
     },
     "devDependencies": {
         "px-starter-kit-design": "git://github.sw.ge.com/pxc/px-starter-kit-design.git#master",
-        "px-iconography-design" : "git://github.sw.ge.com/pxc/px-iconography-design.git#master"
+        "px-iconography-design" : "git://github.sw.ge.com/pxc/px-iconography-design.git#master",
         "core-component-page" : "https://github.com/Polymer/core-component-page.git#~v0.5.5",
         "web-component-tester": "~2.2.6"
     }
