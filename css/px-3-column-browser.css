@@ -2443,594 +2443,283 @@ html {
 /**
  * Sass functions for Predix Experience
  */
+/*!
+ * inuitcss, by @csswizardry
+ *
+ * github.com/inuitcss | inuitcss.com
+ */
 /*------------------------------------*\
-    #PX-WIDTHS-DESIGN
+    #WIDTHS
 \*------------------------------------*/
 /**
  * A series of width helper classes that you can use to size things like grid
- * systems. Classes can take a fraction-like format (e.g. `.2/3`) or a spoken-
- * word format (e.g. `two-thirds`). Toggle formats by overriding the
- * `$inuit-use-fractions` variable defined below.
+ * systems. Classes can take a fraction-like format (e.g. `.u-2/3`) or a spoken-
+ * word format (e.g. `.u-2-of-3`). Use these in your markup:
+ *
+ * <div class="u-7/12">
  */
+/*!
+ * inuitcss, by @csswizardry
+ *
+ * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
 /**
-       * Whole.
-       */
-[class~="1/1"] {
+ * Sass functions for Predix Experience
+ */
+/*!
+ * inuitcss, by @csswizardry
+ *
+ * github.com/inuitcss | inuitcss.com
+ */
+.u-1\/1 {
   width: 100% !important; }
 
-/**
-       * Halves.
-       */
-[class~="1/2"], [class~="2/4"], [class~="3/6"], [class~="4/8"], [class~="5/10"], [class~="6/12"] {
-  width: 50% !important; }
+.u-1\/2 {
+  width: 50% !important;
+  flex: none !important; }
 
-/**
-       * Thirds.
-       */
-[class~="1/3"], [class~="2/6"], [class~="3/9"], [class~="4/12"] {
-  width: 33.3333333% !important; }
+.u-1\/3 {
+  width: 33.3333333333% !important;
+  flex: none !important; }
 
-[class~="2/3"], [class~="4/6"], [class~="6/9"], [class~="8/12"] {
-  width: 66.6666666% !important; }
+.u-2\/3 {
+  width: 66.6666666667% !important;
+  flex: none !important; }
 
-/**
-       * Quarters.
-       */
-[class~="1/4"], [class~="2/8"], [class~="3/12"] {
-  width: 25% !important; }
+.u-1\/4 {
+  width: 25% !important;
+  flex: none !important; }
 
-[class~="3/4"], [class~="6/8"], [class~="9/12"] {
-  width: 75% !important; }
+.u-2\/4 {
+  width: 50% !important;
+  flex: none !important; }
 
-/**
-       * Fifths.
-       */
-[class~="1/5"], [class~="2/10"] {
-  width: 20% !important; }
+.u-3\/4 {
+  width: 75% !important;
+  flex: none !important; }
 
-[class~="2/5"], [class~="4/10"] {
-  width: 40% !important; }
+.u-1\/5 {
+  width: 20% !important;
+  flex: none !important; }
 
-[class~="3/5"], [class~="6/10"] {
-  width: 60% !important; }
+.u-2\/5 {
+  width: 40% !important;
+  flex: none !important; }
 
-[class~="4/5"], [class~="8/10"] {
-  width: 80% !important; }
+.u-3\/5 {
+  width: 60% !important;
+  flex: none !important; }
 
-/**
-       * Sixths.
-       */
-[class~="1/6"], [class~="2/12"] {
-  width: 16.6666666% !important; }
-
-[class~="5/6"], [class~="10/12"] {
-  width: 83.3333333% !important; }
-
-/**
-       * Eighths.
-       */
-[class~="1/8"] {
-  width: 12.5% !important; }
-
-[class~="3/8"] {
-  width: 37.5% !important; }
-
-[class~="5/8"] {
-  width: 62.5% !important; }
-
-[class~="7/8"] {
-  width: 87.5% !important; }
-
-/**
-       * Ninths.
-       */
-[class~="1/9"] {
-  width: 11.1111111% !important; }
-
-[class~="2/9"] {
-  width: 22.2222222% !important; }
-
-[class~="4/9"] {
-  width: 44.4444444% !important; }
-
-[class~="5/9"] {
-  width: 55.5555555% !important; }
-
-[class~="7/9"] {
-  width: 77.7777777% !important; }
-
-[class~="8/9"] {
-  width: 88.8888888% !important; }
-
-/**
-       * Tenths.
-       */
-[class~="1/10"] {
-  width: 10% !important; }
-
-[class~="3/10"] {
-  width: 30% !important; }
-
-[class~="7/10"] {
-  width: 70% !important; }
-
-[class~="9/10"] {
-  width: 90% !important; }
-
-/**
-       * Twelfths.
-       */
-[class~="1/12"] {
-  width: 8.3333333% !important; }
-
-[class~="5/12"] {
-  width: 41.6666666% !important; }
-
-[class~="7/12"] {
-  width: 58.3333333% !important; }
-
-[class~="11/12"] {
-  width: 91.6666666% !important; }
+.u-4\/5 {
+  width: 80% !important;
+  flex: none !important; }
 
 @media screen and (max-width: 44.9375em) {
-  /**
-                   * Whole.
-                   */
-  [class~="palm-1/1"] {
+  .u-1\/1-palm {
     width: 100% !important; }
-  /**
-                   * Halves.
-                   */
-  [class~="palm-1/2"], [class~="palm-2/4"], [class~="palm-3/6"], [class~="palm-4/8"], [class~="palm-5/10"], [class~="palm-6/12"] {
-    width: 50% !important; }
-  /**
-                   * Thirds.
-                   */
-  [class~="palm-1/3"], [class~="palm-2/6"], [class~="palm-3/9"], [class~="palm-4/12"] {
-    width: 33.3333333% !important; }
-  [class~="palm-2/3"], [class~="palm-4/6"], [class~="palm-6/9"], [class~="palm-8/12"] {
-    width: 66.6666666% !important; }
-  /**
-                   * Quarters.
-                   */
-  [class~="palm-1/4"], [class~="palm-2/8"], [class~="palm-3/12"] {
-    width: 25% !important; }
-  [class~="palm-3/4"], [class~="palm-6/8"], [class~="palm-9/12"] {
-    width: 75% !important; }
-  /**
-                   * Fifths.
-                   */
-  [class~="palm-1/5"], [class~="palm-2/10"] {
-    width: 20% !important; }
-  [class~="palm-2/5"], [class~="palm-4/10"] {
-    width: 40% !important; }
-  [class~="palm-3/5"], [class~="palm-6/10"] {
-    width: 60% !important; }
-  [class~="palm-4/5"], [class~="palm-8/10"] {
-    width: 80% !important; }
-  /**
-                   * Sixths.
-                   */
-  [class~="palm-1/6"], [class~="palm-2/12"] {
-    width: 16.6666666% !important; }
-  [class~="palm-5/6"], [class~="palm-10/12"] {
-    width: 83.3333333% !important; }
-  /**
-                   * Eighths.
-                   */
-  [class~="palm-1/8"] {
-    width: 12.5% !important; }
-  [class~="palm-3/8"] {
-    width: 37.5% !important; }
-  [class~="palm-5/8"] {
-    width: 62.5% !important; }
-  [class~="palm-7/8"] {
-    width: 87.5% !important; }
-  /**
-                   * Ninths.
-                   */
-  [class~="palm-1/9"] {
-    width: 11.1111111% !important; }
-  [class~="palm-2/9"] {
-    width: 22.2222222% !important; }
-  [class~="palm-4/9"] {
-    width: 44.4444444% !important; }
-  [class~="palm-5/9"] {
-    width: 55.5555555% !important; }
-  [class~="palm-7/9"] {
-    width: 77.7777777% !important; }
-  [class~="palm-8/9"] {
-    width: 88.8888888% !important; }
-  /**
-                   * Tenths.
-                   */
-  [class~="palm-1/10"] {
-    width: 10% !important; }
-  [class~="palm-3/10"] {
-    width: 30% !important; }
-  [class~="palm-7/10"] {
-    width: 70% !important; }
-  [class~="palm-9/10"] {
-    width: 90% !important; }
-  /**
-                   * Twelfths.
-                   */
-  [class~="palm-1/12"] {
-    width: 8.3333333% !important; }
-  [class~="palm-5/12"] {
-    width: 41.6666666% !important; }
-  [class~="palm-7/12"] {
-    width: 58.3333333% !important; }
-  [class~="palm-11/12"] {
-    width: 91.6666666% !important; } }
+  .u-1\/2-palm {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-palm {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-palm {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-palm {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-palm {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-palm {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-palm {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-palm {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-palm {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-palm {
+    width: 80% !important;
+    flex: none !important; } }
 
 @media screen and (min-width: 45em) and (max-width: 63.9375em) {
-  /**
-                   * Whole.
-                   */
-  [class~="lap-1/1"] {
+  .u-1\/1-lap {
     width: 100% !important; }
-  /**
-                   * Halves.
-                   */
-  [class~="lap-1/2"], [class~="lap-2/4"], [class~="lap-3/6"], [class~="lap-4/8"], [class~="lap-5/10"], [class~="lap-6/12"] {
-    width: 50% !important; }
-  /**
-                   * Thirds.
-                   */
-  [class~="lap-1/3"], [class~="lap-2/6"], [class~="lap-3/9"], [class~="lap-4/12"] {
-    width: 33.3333333% !important; }
-  [class~="lap-2/3"], [class~="lap-4/6"], [class~="lap-6/9"], [class~="lap-8/12"] {
-    width: 66.6666666% !important; }
-  /**
-                   * Quarters.
-                   */
-  [class~="lap-1/4"], [class~="lap-2/8"], [class~="lap-3/12"] {
-    width: 25% !important; }
-  [class~="lap-3/4"], [class~="lap-6/8"], [class~="lap-9/12"] {
-    width: 75% !important; }
-  /**
-                   * Fifths.
-                   */
-  [class~="lap-1/5"], [class~="lap-2/10"] {
-    width: 20% !important; }
-  [class~="lap-2/5"], [class~="lap-4/10"] {
-    width: 40% !important; }
-  [class~="lap-3/5"], [class~="lap-6/10"] {
-    width: 60% !important; }
-  [class~="lap-4/5"], [class~="lap-8/10"] {
-    width: 80% !important; }
-  /**
-                   * Sixths.
-                   */
-  [class~="lap-1/6"], [class~="lap-2/12"] {
-    width: 16.6666666% !important; }
-  [class~="lap-5/6"], [class~="lap-10/12"] {
-    width: 83.3333333% !important; }
-  /**
-                   * Eighths.
-                   */
-  [class~="lap-1/8"] {
-    width: 12.5% !important; }
-  [class~="lap-3/8"] {
-    width: 37.5% !important; }
-  [class~="lap-5/8"] {
-    width: 62.5% !important; }
-  [class~="lap-7/8"] {
-    width: 87.5% !important; }
-  /**
-                   * Ninths.
-                   */
-  [class~="lap-1/9"] {
-    width: 11.1111111% !important; }
-  [class~="lap-2/9"] {
-    width: 22.2222222% !important; }
-  [class~="lap-4/9"] {
-    width: 44.4444444% !important; }
-  [class~="lap-5/9"] {
-    width: 55.5555555% !important; }
-  [class~="lap-7/9"] {
-    width: 77.7777777% !important; }
-  [class~="lap-8/9"] {
-    width: 88.8888888% !important; }
-  /**
-                   * Tenths.
-                   */
-  [class~="lap-1/10"] {
-    width: 10% !important; }
-  [class~="lap-3/10"] {
-    width: 30% !important; }
-  [class~="lap-7/10"] {
-    width: 70% !important; }
-  [class~="lap-9/10"] {
-    width: 90% !important; }
-  /**
-                   * Twelfths.
-                   */
-  [class~="lap-1/12"] {
-    width: 8.3333333% !important; }
-  [class~="lap-5/12"] {
-    width: 41.6666666% !important; }
-  [class~="lap-7/12"] {
-    width: 58.3333333% !important; }
-  [class~="lap-11/12"] {
-    width: 91.6666666% !important; } }
+  .u-1\/2-lap {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-lap {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-lap {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-lap {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-lap {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-lap {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-lap {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-lap {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-lap {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-lap {
+    width: 80% !important;
+    flex: none !important; } }
 
 @media screen and (min-width: 45em) {
-  /**
-                   * Whole.
-                   */
-  [class~="lap-and-up-1/1"] {
+  .u-1\/1-lap-and-up {
     width: 100% !important; }
-  /**
-                   * Halves.
-                   */
-  [class~="lap-and-up-1/2"], [class~="lap-and-up-2/4"], [class~="lap-and-up-3/6"], [class~="lap-and-up-4/8"], [class~="lap-and-up-5/10"], [class~="lap-and-up-6/12"] {
-    width: 50% !important; }
-  /**
-                   * Thirds.
-                   */
-  [class~="lap-and-up-1/3"], [class~="lap-and-up-2/6"], [class~="lap-and-up-3/9"], [class~="lap-and-up-4/12"] {
-    width: 33.3333333% !important; }
-  [class~="lap-and-up-2/3"], [class~="lap-and-up-4/6"], [class~="lap-and-up-6/9"], [class~="lap-and-up-8/12"] {
-    width: 66.6666666% !important; }
-  /**
-                   * Quarters.
-                   */
-  [class~="lap-and-up-1/4"], [class~="lap-and-up-2/8"], [class~="lap-and-up-3/12"] {
-    width: 25% !important; }
-  [class~="lap-and-up-3/4"], [class~="lap-and-up-6/8"], [class~="lap-and-up-9/12"] {
-    width: 75% !important; }
-  /**
-                   * Fifths.
-                   */
-  [class~="lap-and-up-1/5"], [class~="lap-and-up-2/10"] {
-    width: 20% !important; }
-  [class~="lap-and-up-2/5"], [class~="lap-and-up-4/10"] {
-    width: 40% !important; }
-  [class~="lap-and-up-3/5"], [class~="lap-and-up-6/10"] {
-    width: 60% !important; }
-  [class~="lap-and-up-4/5"], [class~="lap-and-up-8/10"] {
-    width: 80% !important; }
-  /**
-                   * Sixths.
-                   */
-  [class~="lap-and-up-1/6"], [class~="lap-and-up-2/12"] {
-    width: 16.6666666% !important; }
-  [class~="lap-and-up-5/6"], [class~="lap-and-up-10/12"] {
-    width: 83.3333333% !important; }
-  /**
-                   * Eighths.
-                   */
-  [class~="lap-and-up-1/8"] {
-    width: 12.5% !important; }
-  [class~="lap-and-up-3/8"] {
-    width: 37.5% !important; }
-  [class~="lap-and-up-5/8"] {
-    width: 62.5% !important; }
-  [class~="lap-and-up-7/8"] {
-    width: 87.5% !important; }
-  /**
-                   * Ninths.
-                   */
-  [class~="lap-and-up-1/9"] {
-    width: 11.1111111% !important; }
-  [class~="lap-and-up-2/9"] {
-    width: 22.2222222% !important; }
-  [class~="lap-and-up-4/9"] {
-    width: 44.4444444% !important; }
-  [class~="lap-and-up-5/9"] {
-    width: 55.5555555% !important; }
-  [class~="lap-and-up-7/9"] {
-    width: 77.7777777% !important; }
-  [class~="lap-and-up-8/9"] {
-    width: 88.8888888% !important; }
-  /**
-                   * Tenths.
-                   */
-  [class~="lap-and-up-1/10"] {
-    width: 10% !important; }
-  [class~="lap-and-up-3/10"] {
-    width: 30% !important; }
-  [class~="lap-and-up-7/10"] {
-    width: 70% !important; }
-  [class~="lap-and-up-9/10"] {
-    width: 90% !important; }
-  /**
-                   * Twelfths.
-                   */
-  [class~="lap-and-up-1/12"] {
-    width: 8.3333333% !important; }
-  [class~="lap-and-up-5/12"] {
-    width: 41.6666666% !important; }
-  [class~="lap-and-up-7/12"] {
-    width: 58.3333333% !important; }
-  [class~="lap-and-up-11/12"] {
-    width: 91.6666666% !important; } }
+  .u-1\/2-lap-and-up {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-lap-and-up {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-lap-and-up {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-lap-and-up {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-lap-and-up {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-lap-and-up {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-lap-and-up {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-lap-and-up {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-lap-and-up {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-lap-and-up {
+    width: 80% !important;
+    flex: none !important; } }
 
 @media screen and (max-width: 63.9375em) {
-  /**
-                   * Whole.
-                   */
-  [class~="portable-1/1"] {
+  .u-1\/1-portable {
     width: 100% !important; }
-  /**
-                   * Halves.
-                   */
-  [class~="portable-1/2"], [class~="portable-2/4"], [class~="portable-3/6"], [class~="portable-4/8"], [class~="portable-5/10"], [class~="portable-6/12"] {
-    width: 50% !important; }
-  /**
-                   * Thirds.
-                   */
-  [class~="portable-1/3"], [class~="portable-2/6"], [class~="portable-3/9"], [class~="portable-4/12"] {
-    width: 33.3333333% !important; }
-  [class~="portable-2/3"], [class~="portable-4/6"], [class~="portable-6/9"], [class~="portable-8/12"] {
-    width: 66.6666666% !important; }
-  /**
-                   * Quarters.
-                   */
-  [class~="portable-1/4"], [class~="portable-2/8"], [class~="portable-3/12"] {
-    width: 25% !important; }
-  [class~="portable-3/4"], [class~="portable-6/8"], [class~="portable-9/12"] {
-    width: 75% !important; }
-  /**
-                   * Fifths.
-                   */
-  [class~="portable-1/5"], [class~="portable-2/10"] {
-    width: 20% !important; }
-  [class~="portable-2/5"], [class~="portable-4/10"] {
-    width: 40% !important; }
-  [class~="portable-3/5"], [class~="portable-6/10"] {
-    width: 60% !important; }
-  [class~="portable-4/5"], [class~="portable-8/10"] {
-    width: 80% !important; }
-  /**
-                   * Sixths.
-                   */
-  [class~="portable-1/6"], [class~="portable-2/12"] {
-    width: 16.6666666% !important; }
-  [class~="portable-5/6"], [class~="portable-10/12"] {
-    width: 83.3333333% !important; }
-  /**
-                   * Eighths.
-                   */
-  [class~="portable-1/8"] {
-    width: 12.5% !important; }
-  [class~="portable-3/8"] {
-    width: 37.5% !important; }
-  [class~="portable-5/8"] {
-    width: 62.5% !important; }
-  [class~="portable-7/8"] {
-    width: 87.5% !important; }
-  /**
-                   * Ninths.
-                   */
-  [class~="portable-1/9"] {
-    width: 11.1111111% !important; }
-  [class~="portable-2/9"] {
-    width: 22.2222222% !important; }
-  [class~="portable-4/9"] {
-    width: 44.4444444% !important; }
-  [class~="portable-5/9"] {
-    width: 55.5555555% !important; }
-  [class~="portable-7/9"] {
-    width: 77.7777777% !important; }
-  [class~="portable-8/9"] {
-    width: 88.8888888% !important; }
-  /**
-                   * Tenths.
-                   */
-  [class~="portable-1/10"] {
-    width: 10% !important; }
-  [class~="portable-3/10"] {
-    width: 30% !important; }
-  [class~="portable-7/10"] {
-    width: 70% !important; }
-  [class~="portable-9/10"] {
-    width: 90% !important; }
-  /**
-                   * Twelfths.
-                   */
-  [class~="portable-1/12"] {
-    width: 8.3333333% !important; }
-  [class~="portable-5/12"] {
-    width: 41.6666666% !important; }
-  [class~="portable-7/12"] {
-    width: 58.3333333% !important; }
-  [class~="portable-11/12"] {
-    width: 91.6666666% !important; } }
+  .u-1\/2-portable {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-portable {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-portable {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-portable {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-portable {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-portable {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-portable {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-portable {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-portable {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-portable {
+    width: 80% !important;
+    flex: none !important; } }
 
 @media screen and (min-width: 64em) {
-  /**
-                   * Whole.
-                   */
-  [class~="desk-1/1"] {
+  .u-1\/1-desk {
     width: 100% !important; }
-  /**
-                   * Halves.
-                   */
-  [class~="desk-1/2"], [class~="desk-2/4"], [class~="desk-3/6"], [class~="desk-4/8"], [class~="desk-5/10"], [class~="desk-6/12"] {
-    width: 50% !important; }
-  /**
-                   * Thirds.
-                   */
-  [class~="desk-1/3"], [class~="desk-2/6"], [class~="desk-3/9"], [class~="desk-4/12"] {
-    width: 33.3333333% !important; }
-  [class~="desk-2/3"], [class~="desk-4/6"], [class~="desk-6/9"], [class~="desk-8/12"] {
-    width: 66.6666666% !important; }
-  /**
-                   * Quarters.
-                   */
-  [class~="desk-1/4"], [class~="desk-2/8"], [class~="desk-3/12"] {
-    width: 25% !important; }
-  [class~="desk-3/4"], [class~="desk-6/8"], [class~="desk-9/12"] {
-    width: 75% !important; }
-  /**
-                   * Fifths.
-                   */
-  [class~="desk-1/5"], [class~="desk-2/10"] {
-    width: 20% !important; }
-  [class~="desk-2/5"], [class~="desk-4/10"] {
-    width: 40% !important; }
-  [class~="desk-3/5"], [class~="desk-6/10"] {
-    width: 60% !important; }
-  [class~="desk-4/5"], [class~="desk-8/10"] {
-    width: 80% !important; }
-  /**
-                   * Sixths.
-                   */
-  [class~="desk-1/6"], [class~="desk-2/12"] {
-    width: 16.6666666% !important; }
-  [class~="desk-5/6"], [class~="desk-10/12"] {
-    width: 83.3333333% !important; }
-  /**
-                   * Eighths.
-                   */
-  [class~="desk-1/8"] {
-    width: 12.5% !important; }
-  [class~="desk-3/8"] {
-    width: 37.5% !important; }
-  [class~="desk-5/8"] {
-    width: 62.5% !important; }
-  [class~="desk-7/8"] {
-    width: 87.5% !important; }
-  /**
-                   * Ninths.
-                   */
-  [class~="desk-1/9"] {
-    width: 11.1111111% !important; }
-  [class~="desk-2/9"] {
-    width: 22.2222222% !important; }
-  [class~="desk-4/9"] {
-    width: 44.4444444% !important; }
-  [class~="desk-5/9"] {
-    width: 55.5555555% !important; }
-  [class~="desk-7/9"] {
-    width: 77.7777777% !important; }
-  [class~="desk-8/9"] {
-    width: 88.8888888% !important; }
-  /**
-                   * Tenths.
-                   */
-  [class~="desk-1/10"] {
-    width: 10% !important; }
-  [class~="desk-3/10"] {
-    width: 30% !important; }
-  [class~="desk-7/10"] {
-    width: 70% !important; }
-  [class~="desk-9/10"] {
-    width: 90% !important; }
-  /**
-                   * Twelfths.
-                   */
-  [class~="desk-1/12"] {
-    width: 8.3333333% !important; }
-  [class~="desk-5/12"] {
-    width: 41.6666666% !important; }
-  [class~="desk-7/12"] {
-    width: 58.3333333% !important; }
-  [class~="desk-11/12"] {
-    width: 91.6666666% !important; } }
+  .u-1\/2-desk {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-desk {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-desk {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-desk {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-desk {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-desk {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-desk {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-desk {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-desk {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-desk {
+    width: 80% !important;
+    flex: none !important; } }
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi), (min-resolution: 2dppx) {
+  .u-1\/1-retina {
+    width: 100% !important; }
+  .u-1\/2-retina {
+    width: 50% !important;
+    flex: none !important; }
+  .u-1\/3-retina {
+    width: 33.3333333333% !important;
+    flex: none !important; }
+  .u-2\/3-retina {
+    width: 66.6666666667% !important;
+    flex: none !important; }
+  .u-1\/4-retina {
+    width: 25% !important;
+    flex: none !important; }
+  .u-2\/4-retina {
+    width: 50% !important;
+    flex: none !important; }
+  .u-3\/4-retina {
+    width: 75% !important;
+    flex: none !important; }
+  .u-1\/5-retina {
+    width: 20% !important;
+    flex: none !important; }
+  .u-2\/5-retina {
+    width: 40% !important;
+    flex: none !important; }
+  .u-3\/5-retina {
+    width: 60% !important;
+    flex: none !important; }
+  .u-4\/5-retina {
+    width: 80% !important;
+    flex: none !important; } }
 
 .asset-browser {
   width: 795px;

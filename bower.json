@@ -1,25 +1,27 @@
 {
-    "name": "px-3-column-browser",
-    "version": "0.0.1",
-    "main": [
-        "src/js/px-3-column-browser.html"
-    ],
-    "ignore": [
-        ".*",
-        "npm-debug.log",
-        "Gruntfile.js",
-        "sass",
-        "bower_components",
-        "node_modules",
-        "test"
-    ],
-    "dependencies": {
-        "polymer": "~0.5.5"
-    },
-    "devDependencies": {
-        "px-starter-kit-design": "git://github.sw.ge.com/pxc/px-starter-kit-design.git#master",
-        "px-iconography-design" : "git://github.sw.ge.com/pxc/px-iconography-design.git#master",
-        "core-component-page" : "https://github.com/Polymer/core-component-page.git#~v0.5.5",
-        "web-component-tester": "~2.2.6"
-    }
+  "name": "px-3-column-browser",
+  "version": "0.0.1",
+  "main": [
+    "src/js/px-3-column-browser.html"
+  ],
+  "ignore": [
+    ".*",
+    "npm-debug.log",
+    "Gruntfile.js",
+    "sass",
+    "bower_components",
+    "node_modules",
+    "test"
+  ],
+  "dependencies": {
+    "polymer": "~v0.8.0"
+  },
+  "devDependencies": {
+    "px-starter-kit-design": "git://github.sw.ge.com/pxc/px-starter-kit-design.git#master",
+    "px-iconography-design": "git://github.sw.ge.com/pxc/px-iconography-design.git#master",
+    "core-doc-viewer": "https://github.com/Polymer/core-doc-viewer.git#0.8-preview"
+  },
+  "resolutions": {
+    "polymer": "~v0.8.0"
+  }
 }

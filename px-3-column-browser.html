@@ -12,296 +12,362 @@
 
 ##### Usage
 
-    <px-3-column-browser initialContexts="{{ ... }}"
+    <px-3-column-browser initial-contexts="{{ ... }}"
                         handlers="{{ ... }}"
-                        labelField="{{ ... }}"
-                        parentIdField="{{ ... }}"
-                        idField="{{ ... }}"
+                        label-field="{{ ... }}"
+                        parent-id-field="{{ ... }}"
+                        id-field="{{ ... }}"
                         headers="{{ ... }}"
-                        childKey="{{ ... }}"></px-3-column-browser>
+                        child-key="{{ ... }}"></px-3-column-browser>
 
 @element px-3-column-browser
 @blurb 3-column browser element
 @homepage index.html
 -->
-<polymer-element name="px-3-column-browser" attributes="initialContexts handlers labelField parentIdField idField headers treeDisplayLevels showBreadcrumbs showOpenButton">
-
-<template>
-    <link rel="stylesheet" href="css/px-3-column-browser.css"/>
+<dom-module id="px-3-column-browser">
+  <link rel="stylesheet" href="css/px-3-column-browser.css"/>
+  <template>
     <div class="asset-browser">
-        <div class="px-tree-nav">
-            <div class="px-tree-breadcrumbs" hidden?="{{!showBreadcrumbs}}">
-            <span on-click="{{handleBreadcrumbClick}}" data-level="0">{{parentNodes[0].header}}</span>
-            <span hidden?="{{!isEllipsisShown()}}" id="px-tree-breadcrumbs-ellipsis">...</span>
-            <template repeat="{{p, pIndex in parentNodes}}">
-                <span hidden?="{{!isBreadcrumbVisible(pIndex)}}" on-click="{{handleBreadcrumbClick}}" data-level="{{pIndex}}" class="px-tree-breadcrumb">
-                {{getBreadcrumb(p)}}&nbsp;&gt;&nbsp;
-                </span>
+      <div class="px-tree-nav">
+        <div class="px-tree-breadcrumbs" hidden$="[[!showBreadcrumbs]]">
+          <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+            <span class="px-tree-breadcrumb" on-click="handleBreadcrumbClick">
+              <span>[[item.name]]</span>
+              <span>&gt;</span>
+            </span>
+          </template>
+        </div>
+      </div>
+      <div class="px-tree-additional-info">
+        <content></content>
+      </div>
+    <div class="px-tree-nav-row clearfix">
+      <template is="x-repeat" id="levels" items="{{displayNodes}}">
+        <div class="px-tree-level" on-scroll="scrollEndHandler">
+          <table class="table table-condensed px-tree-table">
+            <thead>
+            <th class="px-tree-header">{{item.header}}</th>
+            </thead>
+            <tbody>
+            <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
+            <template is="x-repeat" items="{{item.children}}" id="level">
+              <tr>
+                <!--<td class$="[[getItemStyleClass(item)]]" on-click="{{rowClickHandler}}">-->
+                <!--<span class="px-tree-item">[[getItemLabel(item)]]</span>-->
+                <!--<i class="fa fa-chevron-right" hidden$="[[item | selectedFilter}}"></i>-->
+                <!--</td>-->
+                <td on-click="rowClickHandler">
+                  <span class="px-tree-item">[[item.name]]</span>
+                  <i class="fa fa-chevron-right" hidden$="[[item]]"></i>
+                </td>
+              </tr>
             </template>
-        </div>
-        <div class="px-tree-additional-info">
-            <content></content>
-        </div>
-        <div class="px-tree-nav-row clearfix">
-            <template repeat="{{n, nIndex in displayNodes}}">
-                <div class="px-tree-level" on-scroll="{{scrollEndHandler}}" data-index="{{nIndex}}">
-                    <table class="table table-condensed px-tree-table">
-                        <thead>
-                        <th class="px-tree-header">{{n.header}}</th>
-                        </thead>
-                        <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-                        <tbody template if="{{n.children.length > 0 && selectedItem}}" repeat="{{item in n.children}}">
-                        <tr>
-                            <td class="{{ {active: item.selected} | tokenList}}" on-click="{{rowClickHandler}}">
-                                <span class="px-tree-item">{{item[labelField]}}</span>
-                                <i class="fa fa-chevron-right" hidden?="{{item | selectedFilter}}"></i>
-                            </td>
-                        </tr>
-                        </tbody>
-                        <tbody template if="{{n.children.length === 0}}" class="empty">
-                        <tr>
-                            <td>This context has no children.</td> <!-- todo: i18n / messages. Runtime or build-time?? -->
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <template>
+              <tr class="empty">
+                <td>This context has no children.</td> <!-- todo: i18n / messages. Runtime or build-time?? -->
+              </tr>
             </template>
+            </tbody>
+          </table>
         </div>
-        <div class="px-tree-footer">
-            <button class="btn px-tree-open-btn" on-click="{{openClickHandler}}" hidden?="{{!isOpenable(selectedItem)}}">Open</button>
-        </div>
+      </template>
     </div>
-</template>
+    <div class="px-tree-footer">
+      <button class="btn px-tree-open-btn" on-click="openClickHandler" hidden$="[[!isOpenable(selectedItem)]]">Open</button>
+    </div>
+    </div>
+  </template>
+</dom-module>
 
 <script>
 Polymer({
 
-    publish: {
-        ngScopeToken: "ngScope:",
-        treeDisplayLevels: 1,
-        showBreadcrumbs: true,
-        showOpenButton: true,
-        handlers: {},
-        currentLevel: {value: -1, reflect: true} //need to reflect back properties to attributes per angular-bind-polymer
+  is: 'px-3-column-browser',
+  properties: {
+    parentIdField: {
+      type: String
     },
-
-    ready: function() {
-        console.log('ready');
-        if (window['angular'] && this.hasAttributes()) {
-            //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
-            var ngScope = angular.element(this).scope();
-            for (var i = 0; i < this.attributes.length; i++) {
-                this.resolveNgScopeAttr(ngScope, this.attributes[i].name, this.attributes[i].value);
-            }
-        }
+    idField: {
+      type: String
     },
-
-    resolveNgScopeAttr: function(ngScope, attrName, attrValue) {
-        var scopePath, scopeTokens, i, resolvedValue;
-        if (attrValue.indexOf(this.ngScopeToken) === 0) {
-            scopePath = attrValue.substring(this.ngScopeToken.length);
-            console.log("scopePath=" + scopePath);
-            scopeTokens = scopePath.split('.');
-            resolvedValue = ngScope;
-            for (i = 0; i < scopeTokens.length; i++) {
-                //iterate over the dots values in 'a.b.c' to find the final resolved value
-                resolvedValue = resolvedValue[scopeTokens[i]];
-            }
-            this[attrName] = resolvedValue;
-        }
+    headers: {
     },
-
-    initialContextsChanged: function(oldValue, newValue) {
-        var initialContexts = this.initialContexts;
-        if (typeof initialContexts === 'string') {
-            if (initialContexts.length > 0) {
-                initialContexts = JSON.parse(initialContexts);
-            }
-            else {
-                initialContexts = null;
-            }
-        }
-        this.addChildren(this.parentNodes[0], initialContexts);
+    treeDisplayLevels: {
+      value : 1,
+      type: Number
     },
-
-    parentNodes: [{}],
-
-     //see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for why selected item is not null
-     // we rely on a change observer on it and if null then our if statement in the template will eval false.
-    selectedItem: "temp",
-
-    displayNodes: null,
-
-    appendChildren: function (node, results) {
-        if (results === undefined || results === null) {
-            return;
-        }
-        var children = results.data || [];
-
-        // set up the parent pointers
-        for (var i = 0; i < children.length; i++) {
-            children[i].parent = node;
-        }
-
-        // adding all the new children onto the node's children
-        Array.prototype.push.apply(node.children, children);
-
-        // update the display
-        this.setDisplayNodes();
+    labelField: {
+      type: String
     },
-
-    addChildren: function(parentNode, results) {
-
-        if (results === undefined || results === null) {
-            return;
-        }
-        var children = results.data || [];
-
-        // set up the parent pointers
-        for (var i = 0; i < children.length; i++) {
-            children[i].parent = parentNode;
-        }
-
-        parentNode.children = children;
-        parentNode.childrenCount = results.meta.total;
-
-        // update the display
-        this.setDisplayNodes();
+    currentLevel: {
+      value: -1,
+      type: Number//need to reflect back properties to attributes per angular-bind-polymer
     },
-
-    handleBreadcrumbClick: function(event, detail, sender) {
-        var level = sender.getAttribute('data-level');
-        this.selectNode(this.parentNodes[level]);
+    showBreadcrumbs: {
+      value: true,
+      type: Boolean
     },
-
-    isBreadcrumbVisible: function (index) {
-        return (index > 0 && (index >= (this.parentNodes.length - this.treeDisplayLevels)));
+    showOpenButton: {
+      value: true,
+      type: Boolean
     },
-
-    isEllipsisShown: function() {
-        // since parentNodes has 1 more than breadcrumbs (for the initial header support), add 1
-        return this.parentNodes.length > (this.treeDisplayLevels + 1);
+    handlers:{
+      type: Object,
+      value:function(){ return {};}
     },
-
-    markNodeSelected: function(node) {
-        this.selectedItem = node;
-        var _this = this;
-        node.parent.children.forEach(function(siblingOrSelf) {
-            siblingOrSelf.selected = (siblingOrSelf[_this.idField] === node[_this.idField]);
-        });
+    initialContexts:{
+      value: null,
+      observer: 'initialContextsChanged'
     },
-
-    dropCurrentChildren: function(node) {
-        // drop the children from the master list of nodes (and update the level)
-        for (var i = 0; i < this.parentNodes.length - 1; i++) {
-            if (this.parentNodes[i] === node.parent) {
-                this.parentNodes = this.parentNodes.slice(0, i + 1);
-            }
-        }
-
-        // drop the children from the displayed nodes (so old nodes don't linger during next GET for children)
-        for (var j = 0; j < this.displayNodes.length - 1; j++) {
-            if (this.displayNodes[j] === node.parent) {
-                this.displayNodes = this.displayNodes.slice(0, j + 1);
-
-            }
-        }
+    parentNodes: {
+      type: Array,
+      value: []
     },
-
-    getNewChildren: function(node) {
-        if (this.handlers.getChildren) {
-            // push the node to the parentNodes so breadcrumbs updated even if children not successfully returned
-            this.parentNodes.push(node);
-            var _this = this;
-            this.handlers.getChildren(node[this.idField]).then(function (children) {
-                _this.addChildren(node, children);
-            });
-        }
-        else {
-            if (this.childKey) {
-                this.addChildren(node, node[this.childKey]);
-            }
-            else if (node.subcontexts) {
-                this.addChildren(node, node.subcontexts);
-            }
-            else {
-                console.log('The next level of children could not be returned.');
-                return; //do not put anything else in tree
-            }
-            this.parentNodes.push(node);
-        }
-    },
-
-    selectNode: function(node) {
-        this.markNodeSelected(node);
-        this.dropCurrentChildren(node);
-        this.getNewChildren(node);
-    },
-
-    selectedFilter: function(node) {
-        return !node.selected;
-    },
-
-    rowClickHandler: function(event, detail, sender) {
-        var node = sender.templateInstance.model.item;
-        if (this.handlers.itemClickHandler) {
-            this.handlers.itemClickHandler(node);
-        }
-
-        this.selectNode(node);
-    },
-
-    scrollEndHandler: function (event, detail, sender) {
-        // executes when it hasn't been called for 500ms
-        var _this = this;
-        this.job('scroll-panel', function() {
-            if (this.handlers.getChildren) {
-                var node = _this.parentNodes[sender.getAttribute('data-index')];
-                if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
-                    return;
-                }
-                this.handlers.getChildren(node[_this.idField], node.children.length).then(function (children) {
-                    _this.appendChildren(node, children);
-                });
-            }
-        }, 500);
-    },
-
-    openClickHandler: function(event, detail, sender) {
-        if (this.selectedItem && this.handlers.itemOpenHandler) {
-            var breadcrumbs = [];
-            for (var index in this.parentNodes) {
-                if (index < this.parentNodes.length - 1) {
-                    breadcrumbs.push(this.getBreadcrumb(this.parentNodes[index], index));
-                }
-            }
-            this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
-        }
-    },
-
-    getBreadcrumb: function(node) {
-        if (node && node.hasOwnProperty(this.labelField)) {
-            return node[this.labelField];
-        }
-        return '';
-    },
-
-    isOpenable: function(selectedItem) {
-        if(this.showOpenButton && this.handlers.isOpenable) {
-            return this.handlers.isOpenable(selectedItem);
-        }
-        return false;
-    },
-
-    setDisplayNodes: function() {
-        var beginIndex = 0;
-        if (this.treeDisplayLevels < this.parentNodes.length) {
-            beginIndex = this.parentNodes.length - this.treeDisplayLevels;
-        }
-        this.displayNodes = this.parentNodes.slice(beginIndex);
+    rootBreadcrumb: {
+      type: String,
+      computed: 'computeRootBreadcrumb(parentNodes)'
     }
+  },
+
+  ngScopeToken: "ngScope:",
+
+  ready: function() {
+
+
+
+    if (window['angular'] && this.hasAttributes()) {
+      //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
+      var ngScope = angular.element(this).scope();
+      for (var i = 0; i < this.attributes.length; i++) {
+        this.resolveNgScopeAttr(ngScope, this.attributes[i].name, this.attributes[i].value);
+      }
+    }
+  },
+
+  resolveNgScopeAttr: function(ngScope, attrName, attrValue) {
+    var scopePath, scopeTokens, i, resolvedValue;
+    if (attrValue.indexOf(this.ngScopeToken) === 0) {
+      scopePath = attrValue.substring(this.ngScopeToken.length);
+      console.log("scopePath=" + scopePath);
+      scopeTokens = scopePath.split('.');
+      resolvedValue = ngScope;
+      for (i = 0; i < scopeTokens.length; i++) {
+        //iterate over the dots values in 'a.b.c' to find the final resolved value
+        resolvedValue = resolvedValue[scopeTokens[i]];
+      }
+      this[attrName] = resolvedValue;
+    }
+  },
+
+  initialContextsChanged: function(newValue, oldValue) {
+    var initialContexts = this.initialContexts;
+    if (typeof initialContexts === 'string') {
+      if (initialContexts.length > 0) {
+        initialContexts = JSON.parse(initialContexts);
+      }
+      else {
+        initialContexts = null;
+      }
+    }
+    var root = {name: "root"};
+    this.parentNodes = [root];
+    this.addChildren(root, initialContexts);
+  },
+
+  //see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for why selected item is not null
+  // we rely on a change observer on it and if null then our if statement in the template will eval false.
+  selectedItem: "temp",
+
+  displayNodes: null,
+
+  appendChildren: function (node, results) {
+    if (results === undefined || results === null) {
+      return;
+    }
+    var children = results.data || [];
+
+    // set up the parent pointers
+    for (var i = 0; i < children.length; i++) {
+      children[i].parent = node;
+    }
+
+    // adding all the new children onto the node's children
+    Array.prototype.push.apply(node.children, children);
+
+    // update the display
+    this.setDisplayNodes();
+  },
+
+  addChildren: function(parentNode, results) {
+
+    if (results === undefined || results === null) {
+      return;
+    }
+    var children = results.data || [];
+
+    // set up the parent pointers
+    for (var i = 0; i < children.length; i++) {
+      children[i].parent = parentNode;
+    }
+
+    parentNode.children = children;
+    parentNode.childrenCount = results.meta.total;
+
+    // update the display
+    this.setDisplayNodes();
+  },
+
+  handleBreadcrumbClick: function(event, detail, sender) {
+    var level = this.$.breadcrumbs.indexForElement(event.target); //"$.breadcrumbs" is id of the template element with x-repeat
+    if (level > 0) {//"root" is a no-op
+      this.selectNode(this.parentNodes[level]);
+    }
+  },
+
+  isEllipsisShown: function() {
+    // since parentNodes has 1 more than breadcrumbs (for the initial header support), add 1
+    return this.parentNodes.length > (this.treeDisplayLevels + 1);
+  },
+
+  isShowChildren: function(item) {
+    return item.children.length > 0 && this.selectedItem;
+  },
+
+  isShowEmptyMsg: function(item) {
+    return !item.children || item.children.length === 0;
+  },
+
+  getItemLabel: function(item) {
+    return item[this.labelField];
+  },
+
+  getItemStyleClass: function(item) {
+    return item.selected ? "active" : null;
+  },
+
+  computeRootBreadcrumb: function(parentNodes) {
+    return (parentNodes && parentNodes.length > 0) ? this.getItemLabel(parentNodes[0]) : null;
+  },
+
+  markNodeSelected: function(node) {
+    this.selectedItem = node;
+    var _this = this;
+    node.parent.children.forEach(function(siblingOrSelf) {
+      siblingOrSelf.selected = (siblingOrSelf[_this.idField] === node[_this.idField]);
+    });
+  },
+
+  dropCurrentChildren: function(node) {
+    // drop the children from the master list of nodes (and update the level)
+    for (var i = 0; i < this.parentNodes.length - 1; i++) {
+      if (this.parentNodes[i] === node.parent) {
+        this.parentNodes = this.parentNodes.slice(0, i + 1);
+      }
+    }
+
+    // drop the children from the displayed nodes (so old nodes don't linger during next GET for children)
+    for (var j = 0; j < this.displayNodes.length - 1; j++) {
+      if (this.displayNodes[j] === node.parent) {
+        this.displayNodes = this.displayNodes.slice(0, j + 1);
+
+      }
+    }
+  },
+
+  getNewChildren: function(node) {
+    if (this.handlers.getChildren) {
+      // push the node to the parentNodes so breadcrumbs updated even if children not successfully returned
+      this.parentNodes.push(node);
+      var _this = this;
+      this.handlers.getChildren(node[_this.idField]).then(function (children) {
+        _this.addChildren(node, children);
+      });
+    }
+    else {
+      if (this.childKey) {
+        this.addChildren(node, node[this.childKey]);
+      }
+      else if (node.subcontexts) {
+        this.addChildren(node, node.subcontexts);
+      }
+      else {
+        console.log('The next level of children could not be returned.');
+        return; //do not put anything else in tree
+      }
+      this.parentNodes.push(node);
+    }
+  },
+
+  selectNode: function(node) {
+    this.markNodeSelected(node);
+    this.dropCurrentChildren(node);
+    this.getNewChildren(node);
+  },
+
+  selectedFilter: function(node) {
+    return !node.selected;
+  },
+
+  rowClickHandler: function(event, detail, sender) {
+    var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
+    var node = levelTemplateRepeat.itemForElement(event.target);
+    if (this.handlers.itemClickHandler) {
+      this.handlers.itemClickHandler(node);
+    }
+
+    this.selectNode(node);
+  },
+
+  scrollEndHandler: function (event, detail, sender) {
+    // executes when it hasn't been called for 500ms
+    var _this = this;
+    var levelIdx = this.$.levels.itemForElement(event.target);
+    this.job('scroll-panel', function() {
+      if (this.handlers.getChildren) {
+        var node = _this.parentNodes[levelIdx];
+        if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
+          return;
+        }
+        this.handlers.getChildren(node[_this.idField], node.children.length).then(function (children) {
+          _this.appendChildren(node, children);
+        });
+      }
+    }, 500);
+  },
+
+  openClickHandler: function(event, detail, sender) {
+    if (this.selectedItem && this.handlers.itemOpenHandler) {
+      var breadcrumbs = [];
+      for (var index in this.parentNodes) {
+        if (index < this.parentNodes.length - 1) {
+          breadcrumbs.push(this.getBreadcrumb(this.parentNodes[index], index));
+        }
+      }
+      this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
+    }
+  },
+
+  getBreadcrumb: function(node) {
+    if (node && node.hasOwnProperty(this.labelField)) {
+      return node[this.labelField];
+    }
+    return '';
+  },
+
+  isOpenable: function(selectedItem) {
+    if(this.showOpenButton && this.handlers.isOpenable) {
+      return this.handlers.isOpenable(selectedItem);
+    }
+    return false;
+  },
+
+  setDisplayNodes: function() {
+    var beginIndex = 0;
+    if (this.treeDisplayLevels < this.parentNodes.length) {
+      beginIndex = this.parentNodes.length - this.treeDisplayLevels;
+    }
+    this.displayNodes = this.parentNodes.slice(beginIndex);
+  }
 
 });
 </script>
-
-</polymer-element>

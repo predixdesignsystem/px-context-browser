@@ -9,7 +9,6 @@
 
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
         <link rel="import" href="px-3-column-browser.html"/>
-        <link rel="import" href="px-browser-level-detail.html"/>
     </head>
 
     <body>
@@ -25,17 +24,13 @@
             Also see the <a href="index.html">documentation</a> and the <a href="test/spec.html">UI test fixture</a>.
         </p>
 
-        <p>
-            Click on the counter to make it increment:
-        </p>
-
 
         <px-3-column-browser
-                labelField="name"
-                parentIdField="category"
-                idField="identifier"
-                treeDisplayLevels="3"
-                childKey="children">
+                label-field="name"
+                parent-id-field="category"
+                id-field="identifier"
+                tree-display-levels="3"
+                child-key="children">
         </px-3-column-browser>
 
         <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
@@ -64,11 +59,12 @@
                 }
             };
 
-            window.addEventListener('polymer-ready', function(e) {
+            window.setTimeout(function() {
+
                 var colBrowser = document.querySelector('px-3-column-browser');
                 colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
                 colBrowser.initialContexts = initialContexts;
-            });
+            }, 2000);
 
             function demoGetChildren(nodeId, newIndex) {
                 var deferred = Q.defer();
