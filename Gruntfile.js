@@ -10,23 +10,50 @@ module.exports = function (grunt) {
             bower: ['bower_components']
         },
 
-        sass: {
-            options: {
-                sourceMap: false, //no source maps b/c web-components inline css anyway...
+      sass: {
+        options: {
+          sourceMap: false, //no source maps b/c web-components inline css anyway...
 
-                /*
-                 See https://github.sw.ge.com/pxc/px-getting-started#a-note-about-relative-import-paths for an explanation
-                 of the contents of the includePaths option for Sass
-                 */
-                includePaths: ['bower_components/*']
-            },
-            dist: {
-                files: {
-                    'css/px-3-column-browser-sketch.css': 'sass/px-3-column-browser-sketch.scss',
-                    'css/px-3-column-browser.css': 'sass/px-3-column-browser-predix.scss'
-                }
-            }
+          /*
+           See https://github.sw.ge.com/pxc/px-getting-started#a-note-about-relative-import-paths for an explanation
+           of the contents of the includePaths option for Sass
+           */
+          includePaths: ['bower_components/*']
         },
+        dist: {
+          files: {
+            'css/noprefix/px-3-column-browser-sketch.css': 'sass/px-3-column-browser-sketch.scss',
+            'css/noprefix/px-3-column-browser.css': 'sass/px-3-column-browser-predix.scss'
+          }
+        }
+      },
+
+      autoprefixer: {
+        options: {
+          browsers: ['last 2 version']
+        },
+        multiple_files: {
+          expand: true,
+          flatten: true,
+          src: 'css/noprefix/*.css',
+          dest: 'css'
+        }
+      },
+
+      copy: {
+        icons: {
+          expand: true,
+          flatten: true,
+          src: '*/font-awesome/fonts/*',
+          dest: 'icons'
+        },
+        type: {
+          expand: true,
+          flatten: true,
+          src: '*/px-typography-design/type/*',
+          dest: 'type'
+        }
+      },
 
         shell: {
             options: {
@@ -48,31 +75,19 @@ module.exports = function (grunt) {
             }
         },
 
-        watch: {
-            sass: {
-                files: ['sass/**/*.scss'],
-                tasks: ['sass'],
-                options: {
-                    interrupt: true
-                }
-            }
-        },
+      watch: {
+        sass: {
+          files: ['sass/**/*.scss'],
+          tasks: ['sass', 'autoprefixer'],
+          options: {
+            interrupt: true
+          }
+        }
+      },
 
         depserve: {
             options: {
                 open: '<%= depserveOpenUrl %>'
-            }
-        },
-
-        'wct-test': {
-            local: {
-                options: {
-                    root: './',
-                    verbose: false,
-                    plugins: {
-                        local: {browsers: ['chrome']}
-                    }
-                }
             }
         }
     });
@@ -82,13 +97,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-dep-serve');
-    grunt.loadNpmTasks('web-component-tester');
 
-    // Default task.
-    grunt.registerTask('default', 'Basic build', [
-        'sass'
-    ]);
+  // Default task.
+  grunt.registerTask('default', 'Basic build', [
+    'sass',
+    'autoprefixer',
+    'copy'
+  ]);
 
     // First run task.
     grunt.registerTask('firstrun', 'Basic first run', function() {
@@ -99,8 +117,7 @@ module.exports = function (grunt) {
 
     // Default task.
     grunt.registerTask('test', 'Test', [
-        'jshint',
-        'wct-test:local'
+        'jshint'
     ]);
 
     grunt.registerTask('release', 'Release', [

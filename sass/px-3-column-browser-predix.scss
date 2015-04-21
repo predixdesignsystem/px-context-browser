@@ -20,112 +20,25 @@ common/abstract rules go in px-3-column-browser-sketch.scss, not in this file.
 */
 
 @import 'px-3-column-browser-sketch';
+@import "../px-colors-design/settings.colors";
 
-.asset-browser {
-  color: rgb(134,134,134); /* @gray */
-  background-color: rgb(20,20,20); /* @black */
-  border-style: none;
+
+:host > * {
+  @include inuit-font-size(15px);
+  //background-color: $gray-dark;
+  //color: $white;
 }
 
-.px-tree-nav {
-  border-radius: 3px;
-  font-size: 13px;
-  line-height: 29px;
-  background-color: rgb(65, 65, 65); /* @grayDarker */
-}
-
-.px-tree-breadcrumbs, .px-tree-search {
-  background-color: rgb(43, 43, 43); /* @greyDarkest */
-  border-bottom-style: none;
-}
-
-.px-tree-level {
-  width: 265px;
-  scrollbar-base-color: rgb(43, 43, 43);
-  scrollbar-face-color: rgb(134, 134, 134);
-
-  &:last-child {
-    padding-right: 0;
+a {
+  text-decoration: none;
+  color: $white;
+  &.selected {
+    background-color: $blue;
   }
-
-  &::-webkit-scrollbar {
-    width: 6px;
+  &:hover {
+    background-color: $gray;
   }
-
-  &::-webkit-scrollbar-track {
-    background-color: rgb(43, 43, 43); /* @greyDarkest */
-  }
-
-  &::-webkit-scrollbar-thumb {
-    border: solid transparent;
-    border-width: 0 2px;
-    background-clip: content-box;
-    background-color: rgb(134, 134, 134); /* @gray */
+  &:active {
+    background-color: $blue-light;
   }
 }
-
-.table {
-  th {
-    background-color: transparent;
-  }
-
-  > tbody {
-    > tr {
-
-      > td {
-        border-top: 0;
-        padding: 0 5px 0 10px;
-        line-height: 31px;
-        color: rgb(212, 212, 212); /* @grayLighter */
-      }
-
-      > .active {
-        color: rgb(255, 255, 255); /* @white */
-        background-color: rgb(0, 92, 185); /* @blue */
-      }
-    }
-
-    &.empty {
-      color: #868686;
-
-      > tr, > tr > td {
-        color: inherit;
-      }
-    }
-  }
-}
-
-[class^="icon-"],
-[class*=" icon-"] {
-  font-size: .75em;
-  line-height: 29px;
-}
-
-.px-tree-open-btn {
-  border-color: rgb(65, 65, 65); /* @grayDarker */
-  padding-right: 10px;
-  padding-left: 10px;
-  font-size: 13px;
-  color: rgb(188, 188, 188); /* @grayLight */
-  background-color: rgb(20, 20, 20); /* @black */
-}
-
-li.selected > a {
-  background-color: #0057af;
-  color: #fff;
-}
-
-.px-tree-footer {
-  background-color: rgb(43, 43, 43); /* @greyDarkest */
-}
-
-.px-tree-additional-info {
-  color: rgb(212, 212, 212);
-  li {
-    margin-right: 7px;
-  }
-  ul {
-    margin-bottom: 0px;
-  }
-}
-

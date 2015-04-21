@@ -25,57 +25,45 @@
 @homepage index.html
 -->
 <dom-module id="px-3-column-browser">
-  <link rel="stylesheet" href="css/px-3-column-browser.css"/>
+  <link rel="import" type="css" href="css/px-3-column-browser.css" polyfill-next-selector/>
   <template>
-    <div class="asset-browser">
-      <div class="px-tree-nav">
-        <div class="px-tree-breadcrumbs" hidden$="[[!showBreadcrumbs]]">
-          <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
-            <span class="px-tree-breadcrumb" on-click="handleBreadcrumbClick">
-              <span>[[item.name]]</span>
-              <span>&gt;</span>
-            </span>
-          </template>
-        </div>
+    <header class="p-">
+      <div hidden$="[[!showBreadcrumbs]]">
+        <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+          <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
+          &gt;
+        </template>
       </div>
-      <div class="px-tree-additional-info">
+      <div>
         <content></content>
       </div>
-    <div class="px-tree-nav-row clearfix">
+    </header>
+    <section class="flex">
       <template is="x-repeat" id="levels" items="{{displayNodes}}">
-        <div class="px-tree-level" on-scroll="scrollEndHandler">
-          <table class="table table-condensed px-tree-table">
-            <thead>
-            <th class="px-tree-header">{{item.header}}</th>
-            </thead>
-            <tbody>
+        <div class="flex__item p-">
+          <span>{{item.header}}</span>
+          <ul class="list-bare" on-scroll="scrollEndHandler">
             <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
             <template is="x-repeat" items="{{item.children}}" id="level">
-              <tr>
+              <li>
                 <!--<td class$="[[getItemStyleClass(item)]]" on-click="{{rowClickHandler}}">-->
                 <!--<span class="px-tree-item">[[getItemLabel(item)]]</span>-->
                 <!--<i class="fa fa-chevron-right" hidden$="[[item | selectedFilter}}"></i>-->
                 <!--</td>-->
-                <td on-click="rowClickHandler">
-                  <span class="px-tree-item">[[item.name]]</span>
+                <div class="selectable-item" on-click="rowClickHandler">
+                  <span>[[item.name]]</span>
                   <i class="fa fa-chevron-right" hidden$="[[item]]"></i>
-                </td>
-              </tr>
+                </div>
+              </li>
             </template>
-            <template>
-              <tr class="empty">
-                <td>This context has no children.</td> <!-- todo: i18n / messages. Runtime or build-time?? -->
-              </tr>
-            </template>
-            </tbody>
-          </table>
+            <li hidden$="[[!item.children || item.children.length > 0]]">This context has no children.</li> <!-- todo: i18n / messages. Runtime or build-time?? -->
+          </ul>
         </div>
       </template>
-    </div>
-    <div class="px-tree-footer">
-      <button class="btn px-tree-open-btn" on-click="openClickHandler" hidden$="[[!isOpenable(selectedItem)]]">Open</button>
-    </div>
-    </div>
+    </section>
+    <footer class="p- clearfix">
+      <button class="btn btn--bare pull-right" on-click="openClickHandler" hidden$="[[!isOpenable(selectedItem)]]">Open</button>
+    </footer>
   </template>
 </dom-module>
 

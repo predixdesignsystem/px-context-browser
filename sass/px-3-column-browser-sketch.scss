@@ -30,93 +30,55 @@ in import paths
 
 // Settings
 @import "../inuit-defaults/settings.defaults";
+@import "../inuit-responsive-settings/settings.responsive";
 
 // Tools
 @import "../px-functions-design/tools.functions";
 @import "../px-mixins-design/tools.mixins";
+@import "../inuit-responsive-tools/tools.responsive";
 
 // Generic
 @import "../px-normalize-design/generic.normalize";
 @import "../px-box-sizing-design/generic.box-sizing";
 @import "../px-helpers-design/generic.helpers";
 
+// Meta
+@import "../px-meta-lists-design/meta.lists";
+
 // Base
+@import "../px-flexbox-design/base.flexbox";
 @import "../px-typography-design/base.typography";
 @import "../px-iconography-design/base.iconography";
 
-// Trumps
-@import "../px-clearfix-design/trumps.clearfix";
-@import "../px-spacing-responsive-design/trumps.spacing-responsive";
-@import "../px-widths-responsive-design/trumps.widths-responsive";
+// Objects
+$inuit-enable-btn--bare                 : true;
 
+@import "../px-buttons-design/objects.buttons";
 
-.asset-browser {
+:host {
+  display:block;
   width: 795px;
-  padding: 0;
   border: 1px dashed black;
 }
 
-.px-tree-nav {
-  overflow-x: auto;
+section {
+  height: 20rem;
 }
 
-.px-tree-breadcrumbs, .px-tree-search, .px-tree-additional-info {
-  padding-right: 10px;
-  padding-left: 10px;
-
-  .px-tree-breadcrumb {
-    cursor: pointer;
-  }
+.breadcrumb,
+.selectable-item {
+  cursor: pointer;
 }
 
-.px-tree-breadcrumbs, .px-tree-search {
-  height: 29px;
+.breadcrumb:first-of-type {
+  cursor: default;
 }
 
-.px-tree-breadcrumbs {
-  border-bottom: 1px dashed black;
-}
-
-.px-tree-level {
-  float: left;
-  overflow-y: scroll;
-  height: 225px;
-}
-
-.table {
-  table-layout: fixed;
-  margin-bottom: 0;
-  width: 100%;
-
-  th {
-    padding: 0;
-  }
-
-  > tbody {
-    > tr {
-
-      > td {
-        overflow: hidden;
-        position: relative;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-
-        i {
-          position: absolute;
-          right: 5px;
-          top: 0;
-        }
-      }
-    }
-  }
-}
-
-.px-tree-open-btn {
-  float: right;
-  margin-right: 10px;
-  margin-top: 5px;
-}
-
-.px-tree-footer {
-  height: 46px;
-}
+// Trumps
+$inuit-enable-paddings:                 true !default;
+$inuit-enable-paddings--tiny:           true !default;
+$inuit-enable-paddings--small:          true !default;
+$inuit-enable-paddings--large:          true !default;
+@import "../px-clearfix-design/trumps.clearfix";
+@import "../px-spacing-responsive-design/trumps.spacing-responsive";
+@import "../px-widths-responsive-design/trumps.widths-responsive";
