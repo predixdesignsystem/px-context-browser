@@ -39,12 +39,12 @@
         <script>
             var initialContexts = {
                 data: [{
-                    "name": "Mustang",
+                    "name": "Lots of children",
                     "identifier": "001-1",
                     "parent": "top",
                     "classification": "truck"
                 }, {
-                    "name": "Sandy Bridges",
+                    "name": "Deep nested",
                     "identifier": "001-2",
                     "parent": "top",
                     "classification": "car"
@@ -66,9 +66,12 @@
                 colBrowser.initialContexts = initialContexts;
             }, 2000);
 
-            function demoGetChildren(nodeId, newIndex) {
+            function demoGetChildren(nodeId, rangeStart) {
                 var deferred = Q.defer();
-                var mustangChildren = {
+              if(!rangeStart) {
+                rangeStart = 0;
+              }
+                var lotsOfChildren = {
                     data: [{
                         "name": "A",
                         "identifier": "001-1a",
@@ -114,14 +117,106 @@
                         "identifier": "001-1i",
                         "parent": "001-1",
                         "classification": "car"
-                    }],
+                    },
+                      {
+                        "name": "AA",
+                        "identifier": "001-1a",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "BB",
+                        "identifier": "001-1b",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "CC",
+                        "identifier": "001-1c",
+                        "parent": "001-1",
+                        "classification": "car"
+                      },{
+                        "name": "DD",
+                        "identifier": "001-1d",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "EE",
+                        "identifier": "001-1e",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "FF",
+                        "identifier": "001-1f",
+                        "parent": "001-1",
+                        "classification": "car"
+                      },{
+                        "name": "GG",
+                        "identifier": "001-1g",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "HH",
+                        "identifier": "001-1h",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "II",
+                        "identifier": "001-1i",
+                        "parent": "001-1",
+                        "classification": "car"
+                      },
+                      {
+                        "name": "AAA",
+                        "identifier": "001-1a",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "BBB",
+                        "identifier": "001-1b",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "CCC",
+                        "identifier": "001-1c",
+                        "parent": "001-1",
+                        "classification": "car"
+                      },{
+                        "name": "DDD",
+                        "identifier": "001-1d",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "EEE",
+                        "identifier": "001-1e",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "FFF",
+                        "identifier": "001-1f",
+                        "parent": "001-1",
+                        "classification": "car"
+                      },{
+                        "name": "GGG",
+                        "identifier": "001-1g",
+                        "parent": "001-1",
+                        "classification": "truck"
+                      }, {
+                        "name": "HHH",
+                        "identifier": "001-1h",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }, {
+                        "name": "III",
+                        "identifier": "001-1i",
+                        "parent": "001-1",
+                        "classification": "car"
+                      }],
                     meta: {
-                        total: 9 // total number of entities on all pages (to support pagination)
+                        total: 27 // total number of entities on all pages (to support pagination)
                     }
                 };
-                var bridgesChildren = {
+                var deepNestedChildren = {
                     data: [{
-                        "name": "BridgeChild",
+                        "name": "Nested Child",
                         "identifier": "001-2a",
                         "parent": "001-2",
                         "classification": "truck",
@@ -132,9 +227,9 @@
                     }
                 };
 
-                var bridgesGrandchildren = {
+                var deepNestedGrandchildren = {
                     data: [{
-                        "name": "BridgeGrandchild",
+                        "name": "Nested Grandchild",
                         "identifier": "001-2aa",
                         "parent": "001-2a",
                         "classification": "truck"
@@ -144,9 +239,9 @@
                     }
                 };
 
-                var bridgesGreatGrandchild = {
+                var deepNestedGreatGrandchild = {
                     data: [{
-                        "name": "BridgeGreatGrandchild",
+                        "name": "Nested Great Grandchild",
                         "identifier": "001-2aaa",
                         "parent": "001-2aa",
                         "classification": "truck",
@@ -157,24 +252,29 @@
                     }
                 };
 
-                var children = {
-                    data: [],
-                    meta: {
-                        total: 0
-                    }
-                };
+                var children;
 
                 if (nodeId === "001-1") {
-                    children = mustangChildren;
+                    children = lotsOfChildren;
+                    var rangeEnd = Math.min(rangeStart + 9, children.data.length); //groups of nine
+                    children.data = children.data.slice(rangeStart, rangeEnd);
                 }
-                if (nodeId === "001-2") {
-                    children = bridgesChildren;
+                else if (nodeId === "001-2") {
+                    children = deepNestedChildren;
                 }
-                if (nodeId === "001-2a") {
-                    children = bridgesGrandchildren;
+                else if (nodeId === "001-2a") {
+                    children = deepNestedGrandchildren;
                 }
-                if (nodeId === "001-2aa") {
-                    children = bridgesGreatGrandchild;
+                else if (nodeId === "001-2aa") {
+                    children = deepNestedGreatGrandchild;
+                }
+                else {
+                  children = {
+                    data: [],
+                    meta: {
+                      total: 0
+                    }
+                  };
                 }
 
                 deferred.resolve(children);

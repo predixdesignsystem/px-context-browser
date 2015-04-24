@@ -62,7 +62,12 @@ $inuit-enable-btn--bare                 : true;
 }
 
 section {
-  height: 20rem;
+  height: 11rem;
+
+  .level {
+    height: 10rem;
+    overflow: auto;
+  }
 }
 
 .breadcrumb,

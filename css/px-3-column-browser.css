@@ -2689,7 +2689,10 @@ html {
   border: 1px dashed black; }
 
 section {
-  height: 20rem; }
+  height: 11rem; }
+  section .level {
+    height: 10rem;
+    overflow: auto; }
 
 .breadcrumb, .selectable-item {
   cursor: pointer; }

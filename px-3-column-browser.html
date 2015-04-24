@@ -42,7 +42,7 @@
       <template is="x-repeat" id="levels" items="{{displayNodes}}">
         <div class="flex__item p-">
           <span>{{item.header}}</span>
-          <ul class="list-bare" on-scroll="scrollEndHandler">
+          <ul class="list-bare level" on-scroll="scrollEndHandler">
             <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
             <template is="x-repeat" items="{{item.children}}" id="level">
               <li>
@@ -296,9 +296,9 @@ Polymer({
     return !node.selected;
   },
 
-  rowClickHandler: function(event, detail, sender) {
+  rowClickHandler: function(evt, detail, sender) {
     var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
-    var node = levelTemplateRepeat.itemForElement(event.target);
+    var node = levelTemplateRepeat.itemForElement(evt.target);
     if (this.handlers.itemClickHandler) {
       this.handlers.itemClickHandler(node);
     }
@@ -306,13 +306,13 @@ Polymer({
     this.selectNode(node);
   },
 
-  scrollEndHandler: function (event, detail, sender) {
+  scrollEndHandler: function (evt, detail, sender) {
     // executes when it hasn't been called for 500ms
     var _this = this;
-    var levelIdx = this.$.levels.itemForElement(event.target);
-    this.job('scroll-panel', function() {
+    var levelIdx = this.$.levels.indexForElement(evt.target);
+    this.debounce('scroll-panel', function() {
       if (this.handlers.getChildren) {
-        var node = _this.parentNodes[levelIdx];
+        var node = this.parentNodes[levelIdx];
         if (!node || !node.childrenCount || (node.childrenCount !== undefined && node.children.length >= node.childrenCount)) {
           return;
         }
@@ -323,7 +323,7 @@ Polymer({
     }, 500);
   },
 
-  openClickHandler: function(event, detail, sender) {
+  openClickHandler: function(evt, detail, sender) {
     if (this.selectedItem && this.handlers.itemOpenHandler) {
       var breadcrumbs = [];
       for (var index in this.parentNodes) {
