@@ -1,4 +1,4 @@
-Px-3-Column-Browser
+Px-Context-Browser
 -----------------------------------------------
 
 ## Overview
