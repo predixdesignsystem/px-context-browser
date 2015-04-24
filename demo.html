@@ -2,13 +2,16 @@
 
 <html>
     <head>
-        <title>px-3-column-browser Demo</title>
+        <title>px-context-browser Demo</title>
 
         <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
         <script src="../webcomponentsjs/webcomponents.js"></script>
 
+        <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
+        <script src="../q/q.js"></script>
+
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-        <link rel="import" href="px-3-column-browser.html"/>
+        <link rel="import" href="px-context-browser.html"/>
     </head>
 
     <body>
@@ -25,16 +28,13 @@
         </p>
 
 
-        <px-3-column-browser
+        <px-context-browser
                 label-field="name"
                 parent-id-field="category"
                 id-field="identifier"
                 tree-display-levels="3"
                 child-key="children">
-        </px-3-column-browser>
-
-        <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/q.js/0.9.6/q.js"></script>
+        </px-context-browser>
 
         <script>
             var initialContexts = {
@@ -61,7 +61,7 @@
 
             window.setTimeout(function() {
 
-                var colBrowser = document.querySelector('px-3-column-browser');
+                var colBrowser = document.querySelector('px-context-browser');
                 colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
                 colBrowser.initialContexts = initialContexts;
             }, 2000);

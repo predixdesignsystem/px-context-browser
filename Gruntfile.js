@@ -22,8 +22,8 @@ module.exports = function (grunt) {
         },
         dist: {
           files: {
-            'css/noprefix/px-3-column-browser-sketch.css': 'sass/px-3-column-browser-sketch.scss',
-            'css/noprefix/px-3-column-browser.css': 'sass/px-3-column-browser-predix.scss'
+            'css/noprefix/px-context-browser-sketch.css': 'sass/px-context-browser-sketch.scss',
+            'css/noprefix/px-context-browser.css': 'sass/px-context-browser-predix.scss'
           }
         }
       },

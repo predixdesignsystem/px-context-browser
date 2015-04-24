@@ -1,7 +1,7 @@
 {
-    "id": "px-3-column-browser",
-    "name": "3 Column Browser",
-    "type": "px-3-column-browser",
+    "id": "px-context-browser",
+    "name": "Context Browser",
+    "type": "px-context-browser",
     "schema": {
         "type": "object",
         "properties": {

@@ -12,20 +12,20 @@
 
 ##### Usage
 
-    <px-3-column-browser initial-contexts="{{ ... }}"
+    <px-context-browser initial-contexts="{{ ... }}"
                         handlers="{{ ... }}"
                         label-field="{{ ... }}"
                         parent-id-field="{{ ... }}"
                         id-field="{{ ... }}"
                         headers="{{ ... }}"
-                        child-key="{{ ... }}"></px-3-column-browser>
+                        child-key="{{ ... }}"></px-context-browser>
 
-@element px-3-column-browser
+@element px-context-browser
 @blurb 3-column browser element
 @homepage index.html
 -->
-<dom-module id="px-3-column-browser">
-  <link rel="import" type="css" href="css/px-3-column-browser.css" polyfill-next-selector/>
+<dom-module id="px-context-browser">
+  <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
     <header class="p-">
       <div hidden$="[[!showBreadcrumbs]]">
@@ -70,7 +70,7 @@
 <script>
 Polymer({
 
-  is: 'px-3-column-browser',
+  is: 'px-context-browser',
   properties: {
     parentIdField: {
       type: String
