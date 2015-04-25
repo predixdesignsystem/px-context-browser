@@ -42,12 +42,14 @@
                     "name": "Lots of children",
                     "identifier": "001-1",
                     "parent": "top",
-                    "classification": "truck"
+                    "classification": "truck",
+                    "hasChildren": true
                 }, {
                     "name": "Deep nested",
                     "identifier": "001-2",
                     "parent": "top",
-                    "classification": "car"
+                    "classification": "car",
+                    "hasChildren": true
                 }, {
                     "name": "Nothing Below Me",
                     "identifier": "001-3",
@@ -220,7 +222,8 @@
                         "identifier": "001-2a",
                         "parent": "001-2",
                         "classification": "truck",
-                        "isOpenable": true
+                        "isOpenable": true,
+                        "hasChildren": true
                     }],
                     meta: {
                         total: 1 // total number of entities on all pages (to support pagination)
@@ -232,7 +235,8 @@
                         "name": "Nested Grandchild",
                         "identifier": "001-2aa",
                         "parent": "001-2a",
-                        "classification": "truck"
+                        "classification": "truck",
+                        "hasChildren": true
                     }],
                     meta: {
                         total: 1 // total number of entities on all pages (to support pagination)

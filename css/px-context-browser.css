@@ -2677,20 +2677,28 @@ html {
 
 :host {
   display: block;
-  width: 795px;
+  width: 100%;
   border: 1px dashed black; }
 
-section {
-  height: 11rem; }
-  section .level {
-    height: 10rem;
-    overflow: auto; }
+section.columns .level {
+  height: 70vh;
+  overflow: auto; }
+  section.columns .level li .opener {
+    cursor: pointer; }
+    section.columns .level li .opener.unopenable {
+      display: none; }
+  section.columns .level li:not(.selected) .opener.openable {
+    display: none; }
+  section.columns .level:not(.selected) li:not(.selected) .opener.openable {
+    display: none; }
+  section.columns .level li:not(.selected):hover .opener.openable {
+    display: inline; }
 
 .breadcrumb, .selectable-item {
   cursor: pointer; }
 
-.breadcrumb:first-of-type {
-  cursor: default; }
+.breadcrumbConnector:last-of-type {
+  display: none; }
 
 /*------------------------------------*\
     #PX-CLEARFIX-DESIGN
@@ -3318,12 +3326,9 @@ section {
   font-size: 0.9375rem;
   line-height: 1.6; }
 
-a {
-  text-decoration: none;
+section.columns .level.selected li.selected {
+  background-color: #005cb9;
   color: white; }
-  a.selected {
-    background-color: #005cb9; }
-  a:hover {
-    background-color: #868686; }
-  a:active {
-    background-color: #3693f8; }
+section.columns .level.selected li:active {
+  background-color: #3693f8;
+  color: white; }

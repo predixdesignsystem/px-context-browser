@@ -57,16 +57,33 @@ $inuit-enable-btn--bare                 : true;
 
 :host {
   display:block;
-  width: 795px;
+  width: 100%;
   border: 1px dashed black;
 }
 
-section {
-  height: 11rem;
-
+section.columns {
   .level {
-    height: 10rem;
+    height: 70vh;
     overflow: auto;
+    li {
+      .opener {
+        cursor: pointer;
+        &.unopenable {
+          display: none; //opener on unopenable items is never displayed and not seen by screen readers
+        }
+      }
+    }
+    li:not(.selected) .opener.openable {
+      display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+    }
+    &:not(.selected) {
+      li:not(.selected) .opener.openable {
+        display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+      }
+    }
+    li:not(.selected):hover .opener.openable {
+      display: inline;//opener on openenable items is shown on hover regardless of selected state
+    }
   }
 }
 
@@ -75,8 +92,8 @@ section {
   cursor: pointer;
 }
 
-.breadcrumb:first-of-type {
-  cursor: default;
+.breadcrumbConnector:last-of-type {
+  display: none;
 }
 
 // Trumps
