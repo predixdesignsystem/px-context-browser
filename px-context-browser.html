@@ -30,7 +30,8 @@
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <header class="p-">
+    <div class="flex flex--column context-browser-container">
+    <header class="p-- flex__item">
       <div hidden$="[[!showBreadcrumbs]]">
         <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
           <span hidden$="[[item.hideBreadcrumb]]">
@@ -44,7 +45,7 @@
         <content select=".context-info"></content>
       </div>
     </header>
-    <section class="flex columns">
+    <section class="flex columns flex__item">
       <template is="x-repeat" id="levels" items="{{displayNodes}}">
         <div class="flex__item p- column" data-column>
           <span>{{item.header}}</span>
@@ -64,10 +65,11 @@
         </div>
       </template>
     </section>
-    <footer class="p- clearfix">
+    <footer class="p-- clearfix flex__item" hidden$="[[!hasFooter]]">
       <content select="footer"></content>
       <content select=".footer"></content>
     </footer>
+    </div>
   </template>
 </dom-module>
 
@@ -120,6 +122,10 @@ Polymer({
   ngScopeToken: "ngScope:",
 
   ready: function() {
+
+    //hide the footer if empty (hidden$="..." doesn't help us here(?)
+    var pDom = Polymer.dom(this.root);
+    this.toggleClass('empty', (!pDom.querySelector('content .footer') && !pDom.querySelector('content footer')), pDom.querySelector('footer'));
 
     if (window['angular'] && this.hasAttributes()) {
       //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
@@ -206,11 +212,6 @@ Polymer({
 
   computeLocalizedBreadcrumbConnector: function() {
     return document.documentElement.getAttribute("dir") === "rtl" ? "<" : ">";
-  },
-
-  isEllipsisShown: function() {
-    // since parentNodes has 1 more than breadcrumbs (for the initial header support), add 1
-    return this.parentNodes.length > (this.treeDisplayLevels + 1);
   },
 
   isShowChildren: function(item) {
@@ -366,6 +367,10 @@ Polymer({
       beginIndex = this.parentNodes.length - this.treeDisplayLevels;
     }
     this.displayNodes = this.parentNodes.slice(beginIndex);
+    while (this.displayNodes.length < this.treeDisplayLevels) {
+      //pad to the end
+      this.displayNodes.push({});
+    }
   }
 
 });

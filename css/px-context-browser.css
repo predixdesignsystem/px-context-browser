@@ -2678,21 +2678,39 @@ html {
 :host {
   display: block;
   width: 100%;
-  border: 1px dashed black; }
+  border: 1px dashed black;
+  height: 70vh; }
 
-section.columns .level {
-  height: 70vh;
-  overflow: auto; }
-  section.columns .level li .opener {
-    cursor: pointer; }
-    section.columns .level li .opener.unopenable {
+.context-browser-container {
+  height: 100%; }
+
+header, footer {
+  min-height: 2.5rem; }
+
+footer.empty {
+  display: none; }
+
+section.columns {
+  border-top: 1px dashed black;
+  -webkit-flex: 1 1 100%;
+      -ms-flex: 1 1 100%;
+          flex: 1 1 100%;
+  height: 100%; }
+  section.columns .column {
+    height: 100%; }
+  section.columns .level {
+    height: 100%;
+    overflow: auto; }
+    section.columns .level li .opener {
+      cursor: pointer; }
+      section.columns .level li .opener.unopenable {
+        display: none; }
+    section.columns .level li:not(.selected) .opener.openable {
       display: none; }
-  section.columns .level li:not(.selected) .opener.openable {
-    display: none; }
-  section.columns .level:not(.selected) li:not(.selected) .opener.openable {
-    display: none; }
-  section.columns .level li:not(.selected):hover .opener.openable {
-    display: inline; }
+    section.columns .level:not(.selected) li:not(.selected) .opener.openable {
+      display: none; }
+    section.columns .level li:not(.selected):hover .opener.openable {
+      display: inline; }
 
 .breadcrumb, .selectable-item {
   cursor: pointer; }
