@@ -366,11 +366,12 @@ Polymer({
     if (this.treeDisplayLevels < this.parentNodes.length) {
       beginIndex = this.parentNodes.length - this.treeDisplayLevels;
     }
-    this.displayNodes = this.parentNodes.slice(beginIndex);
-    while (this.displayNodes.length < this.treeDisplayLevels) {
+    var displayNodes = this.parentNodes.slice(beginIndex);
+    while (displayNodes.length < this.treeDisplayLevels) {
       //pad to the end
-      this.displayNodes.push({});
+      displayNodes.push({});
     }
+    this.displayNodes = displayNodes;
   }
 
 });
