@@ -8,7 +8,7 @@
 
 
 <!--
-3-column browser element
+Context browser element
 
 ##### Usage
 
@@ -17,14 +17,13 @@
                         label-field="{{ ... }}"
                         parent-id-field="{{ ... }}"
                         id-field="{{ ... }}"
-                        headers="{{ ... }}"
                         child-key="{{ ... }}">
         <section class="context-info">optional, will appear below the breadcrumbs</section>
         <footer>optional, will appear in the footer</footer>
     </px-context-browser>
 
 @element px-context-browser
-@blurb 3-column browser element
+@blurb Context browser element
 @homepage index.html
 -->
 <dom-module id="px-context-browser">
@@ -32,12 +31,14 @@
   <template>
     <div class="flex flex--column context-browser-container">
     <header class="p-- flex__item">
-      <div hidden$="[[!showBreadcrumbs]]">
+      <div>
         <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
           <span hidden$="[[item.hideBreadcrumb]]">
             <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
           </span>
-          <span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]">[[parent.breadcrumbConnector]]</span>
+          <span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]">
+            <i class$="[[parent.itemConnectorClass]]"></i>
+          </span>
         </template>
         &nbsp;
       </div>
@@ -55,7 +56,7 @@
               <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="selectable-item">
                 <span>[[parent.parent.getItemLabel(item)]]</span>
                 <span hidden$="[[!item.hasChildren]]" class="pull-right pl-">
-                  <i class="fa fa-chevron-right"></i>
+                  <i class$="[[parent.parent.itemConnectorClass]]"></i>
                 </span>
                 <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
               </li>
@@ -78,55 +79,137 @@ Polymer({
 
   is: 'px-context-browser',
   properties: {
-    parentIdField: {
-      type: String
-    },
-    idField: {
-      type: String
-    },
-    headers: {
-    },
-    treeDisplayLevels: {
-      value : 1,
-      type: Number
-    },
+
+    /**
+     * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
+     * long as it has the notion of a 'display label' in it.
+     *
+     * @type {String}
+     * @default "name"
+     */
     labelField: {
-      type: String
+      type: String,
+      value: "name"
     },
-    selectedItemId: {
-      value: null,
-      type: String //need to reflect back properties to attributes per angular-bind-polymer
+
+    /**
+     * Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as
+     * long as it has the notion of a 'unique id' in it.
+     *
+     * @type {String}
+     * @default "id"
+     */
+    idField: {
+      type: String,
+      value: "id"
     },
-    showBreadcrumbs: {
-      value: true,
-      type: Boolean
+
+    /**
+     * Mapping for the field name in the context data that points up to the parent id of an item. This property allows data of any
+     * form/keys to be used as long as it has the notion of a 'parent id' in it.
+     *
+     * @type {String}
+     * @default "parent"
+     */
+    parentIdField: {
+      type: String,
+      value: "parent"
     },
-    handlers:{
-      type: Object,
-      value:function(){ return {};}
-    },
+
+    /**
+     * Starting level of context. Contains an Array of items that include keys that match the "idField", "parentId"
+     * field, and "labelField" properties on this component.
+     *
+     * Required. Setting this property is essentially this component's 'main' function.
+     *
+     * @type {Object}
+     * @required
+     */
     initialContexts:{
       value: null,
       observer: 'initialContextsChanged'
     },
+
+    /**
+     * "Preferred" number of columns in the browser. Actual number of columns will be responsive depending on width.
+     *
+     * @type {Number}
+     * @default 3
+     */
+    treeDisplayLevels: {
+      value : 3,
+      type: Number
+    },
+
+    /**
+     * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
+     * (e.g. via angular-bind-polymer)
+     *
+     * @type {String}
+     */
+    selectedItemId: {
+      type: String,
+      value: null,
+      reflectToAttribute: true
+    },
+
+    /**
+     * Object defining some or all of the following functions as members:
+     *
+     * isOpenable: function(item) {} returns whether the given context item is open-able as a context
+     * itemOpenHandler: function(item) {} returns special callback behavior when a given context item is opened
+     * itemClickHandler: function(item) {} returns special callback behavior when a given context is selected
+     * getChildren: function (parentId, startIdx) {} returns a JavaScript promise that will resolve to children of the given id and starting with the given index (to support lazy loading)
+     *
+     * @type {Object}
+     */
+    handlers:{
+      type: Object
+    },
+
+    /**
+     * Hierarchy of items down to currently selected item. Set here as a property to expose it to the template, but managed internally. Do not set this.
+     *
+     * @type {Array}
+     * @default []
+     */
     parentNodes: {
       type: Array,
       value: []
     },
-    breadcrumbConnector: {
+
+    /**
+     * Item connector css class ("<" or ">") for breadcrumbs and item children affordance.
+     * Set here as a property to expose it to the template, but managed internally. Do not set this.
+     *
+     * Re-evaluates when items are selected
+     *
+     * @type {String}
+     * @default
+     */
+    itemConnectorClass: {
       type: String,
-      computed: 'computeLocalizedBreadcrumbConnector(selectedItemId)' //passing in selectedItemId as computed only fires when an arg passed to the fn changes
+      computed: 'computeLocalizedItemConnector(selectedItemId)' //passing in selectedItemId as computed only fires when an arg passed to the fn changes
     }
   },
 
-  ngScopeToken: "ngScope:",
+  /**
+   * Which items are displayed given the number of visible columns
+   *
+   * @private
+   */
+  displayNodes: null,
 
+  /**
+   * Ready lifecycle callback
+   */
   ready: function() {
 
     //hide the footer if empty (hidden$="..." doesn't help us here(?)
     var pDom = Polymer.dom(this.root);
     this.toggleClass('empty', (!pDom.querySelector('content .footer') && !pDom.querySelector('content footer')), pDom.querySelector('footer'));
 
+    //TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
     if (window['angular'] && this.hasAttributes()) {
       //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
       var ngScope = angular.element(this).scope();
@@ -136,21 +219,111 @@ Polymer({
     }
   },
 
-  resolveNgScopeAttr: function(ngScope, attrName, attrValue) {
-    var scopePath, scopeTokens, i, resolvedValue;
-    if (attrValue.indexOf(this.ngScopeToken) === 0) {
-      scopePath = attrValue.substring(this.ngScopeToken.length);
-      console.log("scopePath=" + scopePath);
-      scopeTokens = scopePath.split('.');
-      resolvedValue = ngScope;
-      for (i = 0; i < scopeTokens.length; i++) {
-        //iterate over the dots values in 'a.b.c' to find the final resolved value
-        resolvedValue = resolvedValue[scopeTokens[i]];
+  /**
+   * Event listener on breadcrumb clicks, listener is registered from the template
+   *
+   * @param {Event} evt
+   * @private
+   */
+  handleBreadcrumbClick: function(evt) {
+    var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with x-repeat
+    this.selectItem(this.parentNodes[level]);
+  },
+
+  /**
+   * Event listener on item clicks, listener is registered from the template
+   *
+   * @param {Event} evt
+   * @private
+   */
+  itemClickHandler: function(evt) {
+    var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
+    var item = levelTemplateRepeat.itemForElement(evt.target);
+    this.selectItem(item, evt.currentTarget);
+  },
+
+  /**
+   * Event listener on scroll of item panels/columns, listener is registered from the template
+   *
+   * @param {Event} evt
+   * @private
+   */
+  scrollEndHandler: function (evt) {
+    // executes when it hasn't been called for 500ms
+    var _this = this;
+    var levelIdx = this.$.levels.indexForElement(evt.target);
+    this.debounce('scroll-panel', function() {
+      if (this.handlers.getChildren) {
+        var item = this.parentNodes[levelIdx];
+        if (!item || !item.childrenCount || (item.childrenCount !== undefined && item.children.length >= item.childrenCount)) {
+          return;
+        }
+        this.handlers.getChildren(item[_this.idField], item.children.length).then(function (children) {
+          _this.appendChildren(item, children);
+        });
       }
-      this[attrName] = resolvedValue;
+    }, 500);
+  },
+
+  /**
+   * Event listener on 'open' button of open-able items, listener is registered from the template
+   *
+   * @param {Event} evt
+   * @private
+   */
+  openClickHandler: function(evt) {
+    evt.stopPropagation();
+    if (this.selectedItem && this.handlers.itemOpenHandler) {
+      var breadcrumbs = [];
+      for (var index in this.parentNodes) {
+        if (index < this.parentNodes.length - 1) {
+          breadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
+        }
+      }
+      this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
     }
   },
 
+  /**
+   * Observer / sets the value of the itemConnectorClass
+   *
+   * @return {String} CSS class values depending on whether document has attr dir="rtl"
+   * @private
+   */
+  computeLocalizedItemConnector: function() {
+    return document.documentElement.getAttribute("dir") === "rtl" ? "fa fa-chevron-left" : "fa fa-chevron-right";
+  },
+
+  /**
+   * @param {Object} item
+   * @return {String} Display label for given item
+   */
+  getItemLabel: function(item) {
+    return item ? item[this.labelField] || '' : '';
+  },
+
+  /**
+   * @param {Object} item
+   * @return {String} Id for given item
+   */
+  getItemId: function(item) {
+    return item ? item[this.idField] : null;
+  },
+
+  /**
+   * @param {Object} item
+   * @return {String} CSS class for item opener
+   */
+  getItemOpenerClass: function(item) {
+    var base = "opener fa fa-share pull-right";
+    return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable ? base +" openable" : base + " unopenable";
+  },
+
+  /**
+   * Observer on initial-contexts attribute / initiatlContexts property. Functions as the 'main' function of the component
+   *
+   * @private
+   */
   initialContextsChanged: function(newValue, oldValue) {
     var initialContexts = this.initialContexts;
     if (typeof initialContexts === 'string') {
@@ -166,8 +339,14 @@ Polymer({
     this.addChildren(root, initialContexts);
   },
 
-  displayNodes: null,
-
+  /**
+   * Appends children to those already at a level and calls setDisplayNodes()
+   *
+   * @param {Object} item The parent
+   * @param {Object} results Describes the children
+   *  @config {Array} data List of children objects
+   *  @config {Object} meta Keys describe the data.
+   */
   appendChildren: function (item, results) {
     if (results === undefined || results === null) {
       return;
@@ -186,6 +365,14 @@ Polymer({
     this.setDisplayNodes();
   },
 
+  /**
+   * Add children to a level, overwriting any existing, and calls setDisplayNodes()
+   *
+   * @param {Object} parentNode The parent
+   * @param {Object} results Describes the children
+   *  @config {Array} data List of children objects
+   *  @config {Object} meta Keys describe the data.
+   */
   addChildren: function(parentNode, results) {
 
     if (results === undefined || results === null) {
@@ -205,40 +392,11 @@ Polymer({
     this.setDisplayNodes();
   },
 
-  handleBreadcrumbClick: function(evt) {
-    var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with x-repeat
-    this.selectItem(this.parentNodes[level]);
-  },
-
-  computeLocalizedBreadcrumbConnector: function() {
-    return document.documentElement.getAttribute("dir") === "rtl" ? "<" : ">";
-  },
-
-  isShowChildren: function(item) {
-    return item.children.length > 0 && this.selectedItem;
-  },
-
-  isShowEmptyMsg: function(item) {
-    return !item.children || item.children.length === 0;
-  },
-
-  getItemLabel: function(item) {
-    return item[this.labelField];
-  },
-
-  getItemBreadcrumb: function(item) {
-    return item ? item[this.labelField] || '' : '';
-  },
-
-  getItemId: function(item) {
-    return item ? item[this.idField] : null;
-  },
-
-  getItemOpenerClass: function(item) {
-    var base = "opener fa fa-share pull-right";
-    return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable ? base +" openable" : base + " unopenable";
-  },
-
+  /**
+   * Drops all children of a given item and calls setDisplayNodes();
+   *
+   * @param {Object} item
+   */
   dropCurrentChildren: function(item) {
     // drop the children from the master list of nodes (and update the level)
     for (var i = 0; i < this.parentNodes.length - 1; i++) {
@@ -255,6 +413,11 @@ Polymer({
     }
   },
 
+  /**
+   * Fetches all children of a given item
+   *
+   * @param {Object} item
+   */
   getNewChildren: function(item) {
     if (this.handlers.getChildren) {
       // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
@@ -279,12 +442,12 @@ Polymer({
     }
   },
 
-  itemClickHandler: function(evt) {
-    var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
-    var item = levelTemplateRepeat.itemForElement(evt.target);
-    this.selectItem(item, evt.currentTarget);
-  },
-
+  /**
+   * Marks an item as selected and fetches its children
+   *
+   * @param {Object} item
+   * @param {Element} itemElement The element in the local DOM representing the given item. If not passed, will try to find it in the DOM based on item[this.idField]
+   */
   selectItem: function(item, itemElement) {
     var columnEl, containerEl, _this = this, pDom = Polymer.dom;
 
@@ -331,36 +494,12 @@ Polymer({
     this.getNewChildren(item);
   },
 
-  scrollEndHandler: function (evt, detail, sender) {
-    // executes when it hasn't been called for 500ms
-    var _this = this;
-    var levelIdx = this.$.levels.indexForElement(evt.target);
-    this.debounce('scroll-panel', function() {
-      if (this.handlers.getChildren) {
-        var item = this.parentNodes[levelIdx];
-        if (!item || !item.childrenCount || (item.childrenCount !== undefined && item.children.length >= item.childrenCount)) {
-          return;
-        }
-        this.handlers.getChildren(item[_this.idField], item.children.length).then(function (children) {
-          _this.appendChildren(item, children);
-        });
-      }
-    }, 500);
-  },
-
-  openClickHandler: function(evt) {
-    evt.stopPropagation();
-    if (this.selectedItem && this.handlers.itemOpenHandler) {
-      var breadcrumbs = [];
-      for (var index in this.parentNodes) {
-        if (index < this.parentNodes.length - 1) {
-          breadcrumbs.push(this.getItemBreadcrumb(this.parentNodes[index], index));
-        }
-      }
-      this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
-    }
-  },
-
+  /**
+   * Recalculates which items to display based on number of visible columns, and copies them into an Array used by the template.
+   *
+   * TBD if we need this if/when we move to more of a carousel approach, where we "render" all panels/columns but chosse to show/hide/shift them based on number of visible columns
+   * @private
+   */
   setDisplayNodes: function() {
     var beginIndex = 0;
     if (this.treeDisplayLevels < this.parentNodes.length) {
@@ -372,6 +511,33 @@ Polymer({
       displayNodes.push({});
     }
     this.displayNodes = displayNodes;
+  },
+
+  /**
+   * TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
+   *
+   * @private
+   */
+  ngScopeToken: "ngScope:",
+
+  /**
+   * TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
+   *
+   * @private
+   */
+  resolveNgScopeAttr: function(ngScope, attrName, attrValue) {
+    var scopePath, scopeTokens, i, resolvedValue;
+    if (attrValue.indexOf(this.ngScopeToken) === 0) {
+      scopePath = attrValue.substring(this.ngScopeToken.length);
+      console.log("scopePath=" + scopePath);
+      scopeTokens = scopePath.split('.');
+      resolvedValue = ngScope;
+      for (i = 0; i < scopeTokens.length; i++) {
+        //iterate over the dots values in 'a.b.c' to find the final resolved value
+        resolvedValue = resolvedValue[scopeTokens[i]];
+      }
+      this[attrName] = resolvedValue;
+    }
   }
 
 });

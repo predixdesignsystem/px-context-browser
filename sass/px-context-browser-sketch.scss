@@ -62,6 +62,11 @@ $inuit-enable-btn--bare                 : true;
   height: 70vh; //to be overridden on instances as needed.
 }
 
+//TODO: support RTL by flipping float:left / float:right...not sure why the below doesn't work. See also https://github.com/webcomponents/webcomponentsjs/issues/16
+//:host-context([dir="rtl"])::shadow .pull-right {
+//  float:left;
+//}
+
 .context-browser-container {
   height: 100%;
 }
@@ -114,6 +119,7 @@ section.columns {
 .breadcrumbConnector:last-of-type {
   display: none;
 }
+
 
 // Trumps
 $inuit-enable-paddings:                 true !default;
