@@ -1,0 +1,259 @@
+.if (@condition, @property, @value) when (@condition = true) {
+	//noinspection SpellCheckingInspection
+	@{property}: @value;
+}
+
+// Transitions must apply to both.
+
+.width(@value) {
+	width: @value;
+	min-width: @value;
+}
+
+.height(@value) {
+	height: @value;
+	min-height: @value;
+}
+
+.setSize(@width,@height:@width) {
+	width: @width;
+	height: @height;
+}
+
+.prop-LR(@prop, @value) {
+	@{prop}-left: @value;
+	@{prop}-right: @value;
+}
+
+.prop-TB(@prop, @value) {
+	@{prop}-top: @value;
+	@{prop}-bottom: @value;
+}
+
+.margin-LR(@value) {
+	.prop-LR(margin, @value);
+}
+
+.margin-TB(@value) {
+	.prop-TB(margin, @value);
+}
+
+.padding-LR(@value) {
+	.prop-LR(padding, @value);
+}
+
+.padding-TB(@value) {
+	.prop-TB(padding, @value);
+}
+
+.border-LR(@value) {
+	.prop-LR(border, @value);
+}
+
+.border-TB(@value) {
+	.prop-TB(border, @value);
+}
+
+.border-collapse-adjacent-LR() {
+	&:nth-child(n+2) {
+		html:not([dir=rtl]) & {
+			border-left:0;
+		}
+
+		html[dir=rtl] & {
+			border-right:0;
+		}
+	}
+
+}
+
+.border-collapse-adjacent-TB() {
+	&:nth-child(n+2) {
+		border-top:0;
+	}
+}
+
+.spacer {
+
+	&, &-x, &-y {
+		span& {
+			display: inline-block;
+		}
+	}
+
+	@default-spacer: 1ex;
+	&, &-x {
+		width: @default-spacer;
+	}
+	&, &-y {
+		height: @default-spacer;
+	}
+}
+
+.flexBox() {
+	// This is only really needed because of Safari 2015-04-07...  Might as well include them all.
+	display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+	display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+	display: -ms-flexbox; /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Chrome */
+	display: flex;
+}
+
+.flexInline() {
+	display: -webkit-inline-flex;
+	display: -moz-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+}
+
+.flexRatio(@value) {
+	-webkit-box-flex: 1;
+	-moz-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+
+.flexOrder(@value) {
+	-webkit-box-ordinal-group: @value;
+	-moz-box-ordinal-group: @value;
+	-ms-flex-order: @value;
+	-webkit-order: @value;
+	order: @value;
+}
+
+.flexDirectionOrient(@value) when (@value = column) {
+	-webkit-box-orient: vertical;
+}
+
+.flexDirectionOrient(@value) when (@value = row) {
+	-webkit-box-orient: horizontal;
+}
+
+.flexDirection(@value) {
+	.flexDirectionOrient(@value);
+	-webkit-box-direction: @value;
+	-webkit-flex-direction: @value;
+	-moz-box-direction: @value;
+	-ms-flex-direction: @value;
+	flex-direction: @value;
+}
+
+.flexHorizontal() {
+	.flexDirection(row);
+}
+
+.flexVertical() {
+	.flexDirection(column);
+}
+
+// A shortcut for flexBox + Vertical.
+.flexBoxVertical() {
+	.flexBox();
+	.flexDirection(column);
+}
+
+.flexAlignItems(@value) {
+	-webkit-align-items: @value;
+	-ms-flex-align: @value;
+	align-items: center;
+}
+
+.flex {
+	&, &-x, &-y {
+
+		.flexBox();
+
+		&.align-center {
+			.flexAlignItems(center);
+		}
+	}
+
+	&-x {
+		.flexDirection(row);
+	}
+
+	&-y {
+		.flexDirection(column);
+	}
+
+	// For tagging a fixed box.
+	&-1 {
+		.flexRatio(1);
+	}
+}
+
+.full {
+	&-x {
+		width: 100%;
+	}
+	&-y {
+		height: 100%;
+	}
+}
+
+.scroll {
+
+	.scrollOptions(@prop) {
+		@{prop}: scroll;
+		&-hidden {
+			@{prop}: hidden;
+		}
+		&-auto {
+			@{prop}: auto;
+		}
+	}
+
+	.scrollOptions(overflow);
+
+	&-x {
+		.scrollOptions(overflow-x);
+	}
+	&-y {
+		.scrollOptions(overflow-y);
+	}
+}
+
+.elide() {
+	overflow:hidden;
+	text-overflow:ellipsis;
+	-o-text-overflow: ellipsis;
+}
+
+.block {
+	display: block;
+}
+
+.inline-block {
+	display: inline-block;
+}
+
+.font-face(@name, @path, @weight:normal, @style:normal) {
+	@font-face {
+		font-family: "@{name}";
+		src: url("@{path}.eot");
+		src: url("@{path}.eot?#iefix") format("embedded-opentype"),
+		url("@{path}.woff") format("woff"),
+		url("@{path}.ttf") format("truetype"),
+		url("@{path}.svg#@{name}") format("svg");
+		font-weight: @weight;
+		font-style: @style;
+	}
+}
+
+.invisible {
+	visibility: hidden;
+}
+
+.icon {
+	line-height: 0; // vertical centering.
+	text-align: center;
+
+	> * {
+		text-align: center;
+		display: inline-block;
+		vertical-align: middle;
+		margin: auto;
+		background-repeat: no-repeat;
+	}
+}
