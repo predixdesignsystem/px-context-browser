@@ -40,9 +40,9 @@ Context browser element
           <content select=".context-info"></content>
         </div>
       </header>
-      <section class="flex flex__item columns">
+      <section class="flex columns">
         <template is="x-repeat" id="levels" items="{{displayNodes}}">
-          <div class="flex__item column" data-column>
+          <div class="u-1/3 column" data-column>
             <span>{{item.header}}</span>
             <ul class="list-bare level" on-scroll="scrollEndHandler">
               <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
