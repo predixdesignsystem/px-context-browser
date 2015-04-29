@@ -1,58 +1,19 @@
 @import "_helpers";
 @import "_spec-variables";
 
-.contextBrowserToggle {
-  cursor:pointer;
-  z-index: 1001;
-}
+// The actual column browser resides within...
+.column-browser {
 
-.contextBrowserContainer,
-.contextBrowserTray {
-  width:100%;
-  z-index: 1000;
-}
-
-.contextBrowserContainer {
-  overflow: visible;
-  position: relative;
-
-  @height: @side-nav-em-pixel-ratio * 340;
-  @shadow-margin: 10px;
-
-  .contextBrowserTray {
-    overflow: hidden;
-    position: absolute;
-    top:0;
-    left:0;
-
-    background-color: white;
-    box-shadow: 0 0 @shadow-margin black;
-
-    > div {
-      height: @height;
-      width: 100%;
-      transition: margin-top 0.5s ease 0s;
-      margin-top: -@height - @shadow-margin;
-      > div {
-        min-height: @height;
-      }
-    }
-
-    &.open {
-      > div {
-        margin-top: 0;
-      }
-    }
-  }
-
-}
-
-.columnBrowser {
-
+  overflow: hidden;
   @min-width: 240;
   @ruler-width: @side-nav-em-pixel-ratio * @min-width;
 
-  > div {
+  .flexBoxVertical();
+  height: 100%;
+
+  > div { // To facilitate future scrolling or boundary constraints.
+
+    height: 100%;
 
     .flexBox();
 
@@ -64,7 +25,7 @@
       }
       &.column-index-@{columns} {
         > div {
-          &:nth-child( -n + @{columns}) {
+          &:nth-child(-n + @{columns}) {
             margin-left:-@ruler-width;
             width:@ruler-width;
             overflow: hidden;
@@ -96,19 +57,27 @@
       overflow: hidden;
 
       transition:
-      width @default-transition-params,
-      min-width @default-transition-params,
-      margin-left @default-transition-params,
-      margin-right @default-transition-params,
-      opacity @default-transition-params;
+        width @default-transition-params,
+        min-width @default-transition-params,
+        margin-left @default-transition-params,
+        margin-right @default-transition-params,
+        opacity @default-transition-params;
 
-      &, > div {
+      &, > div { // An extra div is required to enforce the inner boundary even when the outer is animating.
         min-width: @ruler-width;
       }
 
       box-sizing: border-box;
-      .border-LR(1px solid #DDD);
-      .border-collapse-adjacent-LR();
+      border:1px solid #DDD;
+      border-bottom: 0;
+      html:not([dir=rtl]) & {
+        border-left:0;
+      }
+
+      html[dir=rtl] & {
+        border-right:0;
+      }
+
 
       &.new, &.removed {
         width:0;
@@ -128,5 +97,8 @@
     position: absolute;
     visibility: hidden;
     width: @ruler-width; // Make sure this isn't overridden.
+    height: 0;
+    top:0;
+    left:0;
   }
 }
