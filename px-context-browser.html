@@ -48,7 +48,7 @@ Context browser element
           <content select=".context-info"></content>
         </div>
       </header>
-      <section id="columnBrowser" class="column-browser flex-1">
+      <section id="columnBrowser" class="column-browser">
         <div>
           <template is="x-repeat" id="levels" items="{{displayNodes}}">
             <div>
@@ -232,7 +232,7 @@ Polymer(
       }
 
 
-      // Need to watch the width of the browser.
+      // Need to watch the width of the column-browser.
       var columnBrowser = this.$.columnBrowser;
       var columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler');
       var columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-child');
