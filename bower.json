@@ -14,7 +14,7 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~v0.8.0"
+    "polymer": "v0.8.0-rc.7"
   },
   "devDependencies": {
     "px-starter-kit-design": "git://github.sw.ge.com/pxc/px-starter-kit-design.git#master",
@@ -26,6 +26,6 @@
     "q": "~v1.2.0"
   },
   "resolutions": {
-    "polymer": "v0.8.0-rc.4"
+    "polymer": "v0.8.0-rc.7"
   }
 }
