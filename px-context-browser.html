@@ -4,6 +4,7 @@
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
     See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
 -->
+<!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
 
 
@@ -277,6 +278,7 @@ Polymer({
       var breadcrumbs = [];
       for (var index in this.parentNodes) {
         if (index < this.parentNodes.length - 1) {
+          //noinspection JSUnfilteredForInLoop
           breadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
         }
       }
@@ -320,7 +322,7 @@ Polymer({
   },
 
   /**
-   * Observer on initial-contexts attribute / initiatlContexts property. Functions as the 'main' function of the component
+   * Observer on initial-contexts attribute / initialContexts property. Functions as the 'main' function of the component
    *
    * @private
    */
@@ -497,7 +499,7 @@ Polymer({
   /**
    * Recalculates which items to display based on number of visible columns, and copies them into an Array used by the template.
    *
-   * TBD if we need this if/when we move to more of a carousel approach, where we "render" all panels/columns but chosse to show/hide/shift them based on number of visible columns
+   * TBD if we need this if/when we move to more of a carousel approach, where we "render" all panels/columns but choose to show/hide/shift them based on number of visible columns
    * @private
    */
   setDisplayNodes: function() {
