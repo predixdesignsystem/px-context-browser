@@ -106,7 +106,7 @@ section.columns {
       }
     }
     li:not(.selected):hover .opener.openable {
-      display: inline;//opener on openenable items is shown on hover regardless of selected state
+      display: inline;//opener on openable items is shown on hover regardless of selected state
     }
   }
 }
