@@ -31,6 +31,7 @@ in import paths
 // Settings
 @import "../px-defaults-design/settings.defaults";
 @import "../inuit-responsive-settings/settings.responsive";
+@import "../px-colors-design/settings.colors";
 
 // Tools
 @import "../px-functions-design/tools.functions";
@@ -56,9 +57,8 @@ $inuit-enable-btn--bare                 : true;
 @import "../px-buttons-design/objects.buttons";
 
 :host {
-  display:block;
+  display: block;
   width: 100%;
-  border: 1px dashed black;
   height: 70vh; //to be overridden on instances as needed.
 }
 
@@ -67,20 +67,20 @@ $inuit-enable-btn--bare                 : true;
 //  float:left;
 //}
 
+header {
+  height: calculateRem(45px);
+  border-top: 1px solid $gray-light;
+  border-bottom: 1px solid $gray;
+  div {
+    line-height: 3;
+  }
+}
+
 .context-browser-container {
   height: 100%;
 }
 
-header, footer {
-  min-height: 2.5rem;
-}
-
-footer.empty {
-  display:none;
-}
-
-section.columns {
-  border-top: 1px dashed black;
+.columns {
   flex: 1 1 100%;
   height: 100%;
   .column {
@@ -88,8 +88,23 @@ section.columns {
   }
   .level {
     height: 100%;
-    overflow: auto;
+    overflow-y: scroll;
+    scrollbar-base-color: $gray-lightest;
+    scrollbar-face-color: $gray;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: $gray-lightest;
+    }
+    &::-webkit-scrollbar-thumb {
+      border: solid transparent;
+      border-width: 0 2px;
+      background-clip: content-box;
+      background-color: $gray;
+    }
     li {
+      line-height: 2;
       .opener {
         cursor: pointer;
         &.unopenable {
@@ -122,10 +137,13 @@ section.columns {
 
 
 // Trumps
-$inuit-enable-paddings:                 true !default;
-$inuit-enable-paddings--tiny:           true !default;
-$inuit-enable-paddings--small:          true !default;
-$inuit-enable-paddings--large:          true !default;
 @import "../px-clearfix-design/trumps.clearfix";
+
+$inuit-enable-margins--tiny:            true;
+$inuit-enable-paddings:                 true;
+$inuit-enable-paddings--tiny:           true;
+$inuit-enable-paddings--small:          true;
+$inuit-enable-paddings--large:          true;
+
 @import "../px-spacing-responsive-design/trumps.spacing-responsive";
 @import "../px-widths-responsive-design/trumps.widths-responsive";

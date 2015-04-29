@@ -29,48 +29,40 @@ Context browser element
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <div class="flex flex--column context-browser-container">
-    <header class="p-- flex__item">
-      <div>
-        <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
-          <span hidden$="[[item.hideBreadcrumb]]">
-            <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
-          </span>
-          <span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]">
-            <i class="fa fa-chevron-right"></i>
-          </span>
-        </template>
-        &nbsp;
-      </div>
-      <div>
-        <content select=".context-info"></content>
-      </div>
-    </header>
-    <section class="flex columns flex__item">
-      <template is="x-repeat" id="levels" items="{{displayNodes}}">
-        <div class="flex__item p- column" data-column>
-          <span>{{item.header}}</span>
-          <ul class="list-bare level" on-scroll="scrollEndHandler">
-            <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-            <template is="x-repeat" items="{{item.children}}" id="level">
-              <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="selectable-item">
-                <span>[[parent.parent.getItemLabel(item)]]</span>
-                <span hidden$="[[!item.hasChildren]]" class="pull-right pl-">
-                  <i class="fa fa-chevron-right"></i>
-                </span>
-                <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
-              </li>
-            </template>
-            <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li> <!-- todo: i18n / messages. Runtime or build-time?? -->
-          </ul>
+    <section class="context-browser-container">
+      <header class="ph">
+        <div>
+          <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+            <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right mh--"></i></span>
+          </template>
         </div>
-      </template>
+        <div>
+          <content select=".context-info"></content>
+        </div>
+      </header>
+      <section class="flex flex__item columns">
+        <template is="x-repeat" id="levels" items="{{displayNodes}}">
+          <div class="flex__item column" data-column>
+            <span>{{item.header}}</span>
+            <ul class="list-bare level" on-scroll="scrollEndHandler">
+              <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
+              <template is="x-repeat" items="{{item.children}}" id="level">
+                <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="pl pr- flex flex--justify selectable-item">
+                  <span>[[parent.parent.getItemLabel(item)]]</span>
+                  <span>
+                    <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
+                    <span hidden$="[[!item.hasChildren]]" class="pl-">
+                      <i class="fa fa-angle-right"></i>
+                    </span>
+                  </span>
+                </li>
+              </template>
+              <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li> <!-- todo: i18n / messages. Runtime or build-time?? -->
+            </ul>
+          </div>
+        </template>
+      </section>
     </section>
-    <footer class="p-- clearfix flex__item" hidden$="[[!hasFooter]]">
-      <content select="footer"></content>
-      <content select=".footer"></content>
-    </footer>
-    </div>
   </template>
 </dom-module>
 
@@ -291,7 +283,7 @@ Polymer({
    * @return {String} CSS class for item opener
    */
   getItemOpenerClass: function(item) {
-    var base = "opener fa fa-share pull-right";
+    var base = "opener fa fa-share";
     return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable ? base +" openable" : base + " unopenable";
   },
 
