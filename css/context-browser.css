@@ -1,0 +1,329 @@
+span.spacer,
+span.spacer-x,
+span.spacer-y {
+  display: inline-block;
+}
+.spacer,
+.spacer-x {
+  width: 1ex;
+}
+.spacer,
+.spacer-y {
+  height: 1ex;
+}
+.flex,
+.flex-x,
+.flex-y {
+  display: -webkit-box;
+  /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;
+  /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;
+  /* TWEENER - IE 10 */
+  display: -webkit-flex;
+  /* NEW - Chrome */
+  display: flex;
+}
+.flex.align-center,
+.flex-x.align-center,
+.flex-y.align-center {
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.flex-x {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: row;
+  -webkit-flex-direction: row;
+  -moz-box-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.flex-y {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: column;
+  -webkit-flex-direction: column;
+  -moz-box-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.flex-1 {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.full-x {
+  width: 100%;
+}
+.full-y {
+  height: 100%;
+}
+.scroll {
+  overflow: scroll;
+}
+.scroll-hidden {
+  overflow: hidden;
+}
+.scroll-auto {
+  overflow: auto;
+}
+.scroll-x {
+  overflow-x: scroll;
+}
+.scroll-x-hidden {
+  overflow-x: hidden;
+}
+.scroll-x-auto {
+  overflow-x: auto;
+}
+.scroll-y {
+  overflow-y: scroll;
+}
+.scroll-y-hidden {
+  overflow-y: hidden;
+}
+.scroll-y-auto {
+  overflow-y: auto;
+}
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
+.invisible {
+  visibility: hidden;
+}
+.icon {
+  line-height: 0;
+  text-align: center;
+}
+.icon > * {
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  margin: auto;
+  background-repeat: no-repeat;
+}
+.contextBrowserToggle {
+  cursor: pointer;
+  z-index: 1001;
+}
+.contextBrowserContainer,
+.contextBrowserTray {
+  width: 100%;
+  z-index: 1000;
+}
+.contextBrowserContainer {
+  overflow: visible;
+  position: relative;
+}
+.contextBrowserContainer .contextBrowserTray {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 0 10px black;
+}
+.contextBrowserContainer .contextBrowserTray > div {
+  height: 22.66666667em;
+  width: 100%;
+  transition: margin-top 0.5s ease 0s;
+  margin-top: -32.66666667em;
+}
+.contextBrowserContainer .contextBrowserTray > div > div {
+  min-height: 22.66666667em;
+}
+.contextBrowserContainer .contextBrowserTray.open > div {
+  margin-top: 0;
+}
+.columnBrowser > div {
+  display: -webkit-box;
+  /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;
+  /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;
+  /* TWEENER - IE 10 */
+  display: -webkit-flex;
+  /* NEW - Chrome */
+  display: flex;
+}
+.columnBrowser > div.columns-1 > div {
+  width: 100%;
+}
+.columnBrowser > div.column-index-1 > div:nth-child( -n + 1) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-1 > div:nth-child( -n + 1) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-2 > div {
+  width: 50%;
+}
+.columnBrowser > div.column-index-2 > div:nth-child( -n + 2) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-2 > div:nth-child( -n + 2) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-3 > div {
+  width: 33.33333333%;
+}
+.columnBrowser > div.column-index-3 > div:nth-child( -n + 3) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-3 > div:nth-child( -n + 3) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-4 > div {
+  width: 25%;
+}
+.columnBrowser > div.column-index-4 > div:nth-child( -n + 4) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-4 > div:nth-child( -n + 4) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-5 > div {
+  width: 20%;
+}
+.columnBrowser > div.column-index-5 > div:nth-child( -n + 5) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-5 > div:nth-child( -n + 5) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-6 > div {
+  width: 16.66666667%;
+}
+.columnBrowser > div.column-index-6 > div:nth-child( -n + 6) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-6 > div:nth-child( -n + 6) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-7 > div {
+  width: 14.28571429%;
+}
+.columnBrowser > div.column-index-7 > div:nth-child( -n + 7) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-7 > div:nth-child( -n + 7) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-8 > div {
+  width: 12.5%;
+}
+.columnBrowser > div.column-index-8 > div:nth-child( -n + 8) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-8 > div:nth-child( -n + 8) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-9 > div {
+  width: 11.11111111%;
+}
+.columnBrowser > div.column-index-9 > div:nth-child( -n + 9) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-9 > div:nth-child( -n + 9) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-10 > div {
+  width: 10%;
+}
+.columnBrowser > div.column-index-10 > div:nth-child( -n + 10) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-10 > div:nth-child( -n + 10) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-11 > div {
+  width: 9.09090909%;
+}
+.columnBrowser > div.column-index-11 > div:nth-child( -n + 11) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-11 > div:nth-child( -n + 11) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div.columns-12 > div {
+  width: 8.33333333%;
+}
+.columnBrowser > div.column-index-12 > div:nth-child( -n + 12) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden;
+}
+html[dir=rtl] .columnBrowser > div.column-index-12 > div:nth-child( -n + 12) {
+  margin-right: -16em;
+  margin-left: 0;
+}
+.columnBrowser > div > div {
+  background: white;
+  overflow: hidden;
+  transition: width 0.35s ease 0s, min-width 0.35s ease 0s, margin-left 0.35s ease 0s, margin-right 0.35s ease 0s, opacity 0.35s ease 0s;
+  box-sizing: border-box;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
+}
+.columnBrowser > div > div,
+.columnBrowser > div > div > div {
+  min-width: 16em;
+}
+html:not([dir=rtl]) .columnBrowser > div > div:nth-child(n+2) {
+  border-left: 0;
+}
+html[dir=rtl] .columnBrowser > div > div:nth-child(n+2) {
+  border-right: 0;
+}
+.columnBrowser > div > div.new,
+.columnBrowser > div > div.removed {
+  width: 0;
+  min-width: 0;
+  opacity: 0;
+}
+.columnBrowser > div > div.new {
+  visibility: hidden;
+}
+.columnBrowser .ruler {
+  position: absolute;
+  visibility: hidden;
+  width: 16em;
+}
