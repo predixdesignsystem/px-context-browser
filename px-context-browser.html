@@ -212,7 +212,7 @@ Polymer({
     //TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
     if (window['angular'] && this.hasAttributes()) {
       //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
-      var ngScope = angular.element(this).scope();
+      var ngScope = angular.element(this.root).scope();
       for (var i = 0; i < this.attributes.length; i++) {
         this.resolveNgScopeAttr(ngScope, this.attributes[i].name, this.attributes[i].value);
       }
@@ -327,7 +327,7 @@ Polymer({
   initialContextsChanged: function(newValue, oldValue) {
     var initialContexts = this.initialContexts;
     if (typeof initialContexts === 'string') {
-      if (initialContexts.length > 0) {
+      if (initialContexts.length > 0 && initialContexts.indexOf("{{") === -1) {
         initialContexts = JSON.parse(initialContexts);
       }
       else {
