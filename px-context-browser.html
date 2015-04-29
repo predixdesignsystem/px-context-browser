@@ -37,7 +37,7 @@ Context browser element
             <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
           </span>
           <span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]">
-            <i class$="[[parent.itemConnectorClass]]"></i>
+            <i class="fa fa-chevron-right"></i>
           </span>
         </template>
         &nbsp;
@@ -56,7 +56,7 @@ Context browser element
               <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="selectable-item">
                 <span>[[parent.parent.getItemLabel(item)]]</span>
                 <span hidden$="[[!item.hasChildren]]" class="pull-right pl-">
-                  <i class$="[[parent.parent.itemConnectorClass]]"></i>
+                  <i class="fa fa-chevron-right"></i>
                 </span>
                 <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
               </li>
@@ -176,20 +176,6 @@ Polymer({
     parentNodes: {
       type: Array,
       value: []
-    },
-
-    /**
-     * Item connector css class ("<" or ">") for breadcrumbs and item children affordance.
-     * Set here as a property to expose it to the template, but managed internally. Do not set this.
-     *
-     * Re-evaluates when items are selected
-     *
-     * @type {String}
-     * @default
-     */
-    itemConnectorClass: {
-      type: String,
-      computed: 'computeLocalizedItemConnector(selectedItemId)' //passing in selectedItemId as computed only fires when an arg passed to the fn changes
     }
   },
 
@@ -282,16 +268,6 @@ Polymer({
       }
       this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
     }
-  },
-
-  /**
-   * Observer / sets the value of the itemConnectorClass
-   *
-   * @return {String} CSS class values depending on whether document has attr dir="rtl"
-   * @private
-   */
-  computeLocalizedItemConnector: function() {
-    return document.documentElement.getAttribute("dir") === "rtl" ? "fa fa-chevron-left" : "fa fa-chevron-right";
   },
 
   /**
