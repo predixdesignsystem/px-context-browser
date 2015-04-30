@@ -50,8 +50,8 @@ Context browser element
       </header>
       <section id="columnBrowser" class="column-browser">
         <div>
-          <template is="x-repeat" id="levels" items="{{displayNodes}}">
-            <div>
+          <template is="x-repeat" id="levels" items="{{parentNodes}}">
+            <div class="new">
               <div data-column>
                 <span>{{item.header}}</span>
                 <ul class="list-bare level" on-scroll="scrollEndHandler">
@@ -142,17 +142,6 @@ Polymer(
       },
 
       /**
-       * "Preferred" number of columns in the browser. Actual number of columns will be responsive depending on width.
-       *
-       * @type {Number}
-       * @default 3
-       */
-      treeDisplayLevels: {
-        value: 3,
-        type: Number
-      },
-
-      /**
        * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
        * (e.g. via angular-bind-polymer)
        *
@@ -205,13 +194,6 @@ Polymer(
     },
 
     /**
-     * Which items are displayed given the number of visible columns
-     *
-     * @private
-     */
-    displayNodes: null,
-
-    /**
      * Ready lifecycle callback
      */
     ready: function() {
@@ -240,6 +222,13 @@ Polymer(
       var $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
       // Watch the container size change.
       var contextBrowserWidth, contextBrowserChildrenCount;
+
+      var getColumns = function() {
+        return $columnBrowserColumns.childNodes.filter(function(n){
+          return n.tagName=='DIV';
+        });
+      };
+
       setInterval(function(){
         var width = columnBrowser.offsetWidth;
         var removedCount = $columnBrowserColumns.querySelectorAll('.removed').length;
@@ -247,9 +236,7 @@ Polymer(
         if(width!==contextBrowserWidth || cCount!=contextBrowserChildrenCount) {
           contextBrowserWidth = width;
           contextBrowserChildrenCount = cCount;
-          var count = $columnBrowserColumns.childNodes.filter(function(n){
-              return n.tagName=='DIV';
-            }).length - removedCount;
+          var count = getColumns().length - removedCount;
           var columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth);
           var desiredClass = columnBrowserColumnsBaseCss + ' columns-'+columns;
 
@@ -263,7 +250,53 @@ Polymer(
         }
       },1000/20); // ms/fps
 
+      /*
+      Dilemma:
+      How to synchronize with databinding.
+      Steps that have to happen:
+      1) Item gets added to dom.
+      2) A frame passes to allow for rendering.
+      3) Then remove 'new' class.
+      */
+
+
+      var removeNewTagInternal = function(){
+        var found = false;
+        getColumns().forEach(
+          function(c) {
+            // 1) We detect the 'new' item in the actual dom.
+            if(c.classList.contains('new'))
+            {
+              // 2) delay one frame to remove it.
+              requestAnimationFrame(function(){
+                // 3) Remove
+                c.classList.remove('new');
+              });
+              found = true;
+            }
+          });
+        return found;
+      };
+
+      var removeNewTag = function(){
+        var wait = function(){
+          // A new item is expected, so wait till it arrives.
+          if(!removeNewTagInternal()) // Not found?  Wait for next frame.
+            requestAnimationFrame(wait);
+        };
+        requestAnimationFrame(wait);
+      };
+
+      this.removeNewTag = removeNewTag;
+      removeNewTag();
     },
+
+    /**
+     * Removes 'new' tag from class name to allow for css animation.
+     *
+     * @private
+     */
+    removeNewTag: function(){},
 
     /**
      * Event listener on breadcrumb clicks, listener is registered from the template
@@ -396,10 +429,11 @@ Polymer(
       var root = {hideBreadcrumb: true};
       this.parentNodes = [root];
       this.addChildren(root, initialContexts);
+      this.removeNewTag();
     },
 
     /**
-     * Appends children to those already at a level and calls setDisplayNodes()
+     * Appends children to those already at a level.
      *
      * @param {Object} item The parent
      * @param {Object} results Describes the children
@@ -422,12 +456,10 @@ Polymer(
       // adding all the new children onto the node's children
       Array.prototype.push.apply(item.children, children);
 
-      // update the display
-      this.setDisplayNodes();
     },
 
     /**
-     * Add children to a level, overwriting any existing, and calls setDisplayNodes()
+     * Add children to a level, overwriting any existing.
      *
      * @param {Object} parentNode The parent
      * @param {Object} results Describes the children
@@ -450,13 +482,10 @@ Polymer(
 
       parentNode.children = children;
       parentNode.childrenCount = results.meta.total;
-
-      // update the display
-      this.setDisplayNodes();
     },
 
     /**
-     * Drops all children of a given item and calls setDisplayNodes();
+     * Drops all children of a given item;
      *
      * @param {Object} item
      */
@@ -469,15 +498,6 @@ Polymer(
           this.parentNodes = this.parentNodes.slice(0, i + 1);
         }
       }
-
-      // drop the children from the displayed nodes (so old nodes don't linger during next GET for children)
-      for(var j = 0; j<this.displayNodes.length - 1; j++)
-      {
-        if(this.displayNodes[j]===item.parent)
-        {
-          this.displayNodes = this.displayNodes.slice(0, j + 1);
-        }
-      }
     },
 
     /**
@@ -486,6 +506,8 @@ Polymer(
      * @param {Object} item
      */
     getNewChildren: function(item) {
+      this.removeNewTag();
+
       if(this.handlers.getChildren)
       {
         // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
@@ -513,6 +535,7 @@ Polymer(
         }
         this.parentNodes.push(item);
       }
+
     },
 
     /**
@@ -572,27 +595,6 @@ Polymer(
 
       this.dropCurrentChildren(item);
       this.getNewChildren(item);
-    },
-
-    /**
-     * Recalculates which items to display based on number of visible columns, and copies them into an Array used by the template.
-     *
-     * TBD if we need this if/when we move to more of a carousel approach, where we "render" all panels/columns but choose to show/hide/shift them based on number of visible columns
-     * @private
-     */
-    setDisplayNodes: function() {
-      var beginIndex = 0;
-      if(this.treeDisplayLevels<this.parentNodes.length)
-      {
-        beginIndex = this.parentNodes.length - this.treeDisplayLevels;
-      }
-      var displayNodes = this.parentNodes.slice(beginIndex);
-      while(displayNodes.length<this.treeDisplayLevels)
-      {
-        //pad to the end
-        displayNodes.push({});
-      }
-      this.displayNodes = displayNodes;
     },
 
     /**
