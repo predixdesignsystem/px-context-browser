@@ -43,7 +43,7 @@ Context browser element
         <div>
           <template is="x-repeat" id="levels" items="{{parentNodes}}">
             <div class="new">
-              <div data-column>
+              <div class="full-height" data-column>
                 <span>{{item.header}}</span>
                 <ul class="list-bare level full-height" on-scroll="scrollEndHandler">
                   <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
