@@ -40,12 +40,13 @@ Context browser element
         <content select=".context-info"></content>
       </header>
       <section id="columnBrowser" class="column-browser">
-        <div>
+        <div class="columns">
           <template is="x-repeat" id="levels" items="{{parentNodes}}">
-            <div class="new">
+            <div class="column new">
               <div class="full-height" data-column>
                 <span>{{item.header}}</span>
-                <ul class="list-bare level full-height" on-scroll="scrollEndHandler">
+                <ul class="list-bare level full-height"
+                    on-scroll="scrollEndHandler">
                   <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
                   <template is="x-repeat"
                             id="level"

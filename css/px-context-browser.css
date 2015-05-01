@@ -3647,8 +3647,10 @@ header {
 /**
  * Monochrome
  */
-.columns li:hover {
-  background-color: #e9e9e9; }
+.columns li {
+  transition: background-color 0.2s ease 0s; }
+  .columns li:hover {
+    background-color: #e9e9e9; }
 .columns .level.selected li.selected {
   background-color: #3693f8;
   color: white; }
