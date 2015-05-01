@@ -29,8 +29,9 @@ Context browser element
 -->
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
+  <link rel="import" type="css" href="css/px-context-browser-2.css" polyfill-next-selector/>
   <template>
-    <section class="full-height">
+    <section class="full-height context-browser-container">
       <header class="ph flex flex--middle">
         <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
           <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right mh--"></i></span>
@@ -127,17 +128,6 @@ Polymer({
     },
 
     /**
-     * "Preferred" number of columns in the browser. Actual number of columns will be responsive depending on width.
-     *
-     * @type {Number}
-     * @default 3
-     */
-    treeDisplayLevels: {
-      value : 3,
-      type: Number
-    },
-
-    /**
      * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
      * (e.g. via angular-bind-polymer)
      *
@@ -179,10 +169,6 @@ Polymer({
            * Ready lifecycle callback
            */
           ready: function() {
-
-            //hide the footer if empty (hidden$="..." doesn't help us here(?)
-            var pDom = Polymer.dom(this.root);
-            this.toggleClass('empty', (!pDom.querySelector('content .footer') && !pDom.querySelector('content footer')), pDom.querySelector('footer'));
 
             //TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
             if(window['angular'] && this.hasAttributes())
