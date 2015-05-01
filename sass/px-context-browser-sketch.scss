@@ -71,57 +71,43 @@ header {
   height: calculateRem(45px);
   border-top: 1px solid $gray-light;
   border-bottom: 1px solid $gray;
-  div {
-    line-height: 3;
-  }
 }
 
-.context-browser-container {
-  height: 100%;
-}
-
-.columns {
-  height: 100%;
-  .column {
-    height: 100%;
+.level {
+  overflow-y: scroll;
+  scrollbar-base-color: $gray-lightest;
+  scrollbar-face-color: $gray;
+  &::-webkit-scrollbar {
+    width: 6px;
   }
-  .level {
-    height: 100%;
-    overflow-y: scroll;
-    scrollbar-base-color: $gray-lightest;
-    scrollbar-face-color: $gray;
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-    &::-webkit-scrollbar-track {
-      background-color: $gray-lightest;
-    }
-    &::-webkit-scrollbar-thumb {
-      border: solid transparent;
-      border-width: 0 2px;
-      background-clip: content-box;
-      background-color: $gray;
-    }
-    li {
-      line-height: 2;
-      .opener {
-        cursor: pointer;
-        &.unopenable {
-          display: none; //opener on unopenable items is never displayed and not seen by screen readers
-        }
+  &::-webkit-scrollbar-track {
+    background-color: $gray-lightest;
+  }
+  &::-webkit-scrollbar-thumb {
+    border: solid transparent;
+    border-width: 0 2px;
+    background-clip: content-box;
+    background-color: $gray;
+  }
+  li {
+    line-height: 2;
+    .opener {
+      cursor: pointer;
+      &.unopenable {
+        display: none; //opener on unopenable items is never displayed and not seen by screen readers
       }
     }
+  }
+  li:not(.selected) .opener.openable {
+    display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+  }
+  &:not(.selected) {
     li:not(.selected) .opener.openable {
       display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
     }
-    &:not(.selected) {
-      li:not(.selected) .opener.openable {
-        display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
-      }
-    }
-    li:not(.selected):hover .opener.openable {
-      display: inline;//opener on openenable items is shown on hover regardless of selected state
-    }
+  }
+  li:not(.selected):hover .opener.openable {
+    display: inline;//opener on openenable items is shown on hover regardless of selected state
   }
 }
 
