@@ -22,6 +22,12 @@ in import paths
  * github.com/inuitcss | inuitcss.com
  */
 /*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
+/*------------------------------------*\
     #PX-COLORS-DESIGN
 \*------------------------------------*/
 /**
@@ -59,11 +65,23 @@ in import paths
  *
  * github.com/inuitcss | inuitcss.com
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 /*!
  * inuitcss, by @csswizardry
  *
  * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
  */
 /*------------------------------------*\
     #PX-FUNCTIONS-DESIGN
@@ -154,8 +172,7 @@ audio:not([controls]) {
    * As per: csswizardry.com/2012/06/single-direction-margin-declarations
    */
 h1, h2, h3, h4, h5, h6, ul, ol, dl, blockquote, p, address, hr, table, fieldset, figure, pre {
-  margin-bottom: 20px;
-  margin-bottom: 1.3333333333rem; }
+  margin-bottom: 1rem; }
 
 /**
    * Remove extra vertical spacing when nesting lists.
@@ -168,8 +185,7 @@ li > ul, li > ol {
    * by a consistent amount. Define that amount once,here.
    */
 ul, ol, dd {
-  margin-left: 40px;
-  margin-left: 2.6666666667rem; }
+  margin-left: 2rem; }
 
 /* Links
      ========================================================================== */
@@ -510,6 +526,12 @@ html {
   text-align: right !important; }
 
 /**
+   * Full height element
+   */
+.full-height {
+  height: 100% !important; }
+
+/**
    * Add a help cursor to any element that gives the user extra information on
    * `:hover`.
    */
@@ -659,6 +681,12 @@ html {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 .list-bare {
   margin: 0;
   padding: 0;
@@ -681,8 +709,30 @@ html {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-MIXINS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass mixins for Predix Experience
+ */
+/*!
+ * inuitcss, by @csswizardry
+ *
+ * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 .list-btn {
-  font-size: 20px;
   font-size: 1.3333333333rem;
   line-height: 1; }
   .list-btn li {
@@ -704,6 +754,12 @@ html {
  * inuitcss, by @csswizardry
  *
  * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
  */
 /*------------------------------------*\
     #PX-FUNCTIONS-DESIGN
@@ -746,6 +802,12 @@ html {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 .list-ui, .list-ui__item, .list-ui > li {
   border: 0 solid #ccc; }
 
@@ -757,32 +819,32 @@ html {
   color: inherit; }
 
 .list-ui__item, .list-ui > li {
-  padding: 20px;
+  padding: 1rem;
   border-bottom-width: 1px; }
 
 /**
      * Tiny list-uis.
      */
 .list-ui--tiny > .list-ui__item, .list-ui.list-ui--tiny > li {
-  padding: 5px; }
+  padding: 0.3333333333rem; }
 
 /**
      * Small list-uis.
      */
 .list-ui--small > .list-ui__item, .list-ui.list-ui--small > li {
-  padding: 10px; }
+  padding: 0.6666666667rem; }
 
 /**
      * Large list-uis.
      */
 .list-ui--large > .list-ui__item, .list-ui.list-ui--large > li {
-  padding: 40px; }
+  padding: 1.3333333333rem; }
 
 /**
      * Huge list-uis.
      */
 .list-ui--huge > .list-ui__item, .list-ui.list-ui--huge > li {
-  padding: 80px; }
+  padding: 2rem; }
 
 .list-ui > li:last-child, .list-ui__item:last-child {
   border-bottom-width: 0; }
@@ -917,6 +979,12 @@ html {
  *
  * github.com/inuitcss | inuitcss.com
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 @font-face {
   font-family: 'GE Inspira';
   font-weight: normal;
@@ -1026,15 +1094,15 @@ html {
  * Base icon styles for Predix Experience
  */
 /*!
- *  Font Awesome 4.2.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  Font Awesome 4.3.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
 /* FONT PATH
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../icons/fontawesome-webfont.eot?v=4.2.0');
-  src: url('../icons/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../icons/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../icons/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../icons/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+  src: url('../icons/fontawesome-webfont.eot?v=4.3.0');
+  src: url('../icons/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../icons/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('../icons/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../icons/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../icons/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal; }
 
@@ -1044,7 +1112,9 @@ html {
   font-size: inherit;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-transform: translate(0, 0);
+          transform: translate(0, 0); }
 
 /* makes the font 33% larger relative to the icon container */
 .fa-lg {
@@ -1103,6 +1173,10 @@ html {
 .fa-spin {
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear; }
+
+.fa-pulse {
+  -webkit-animation: fa-spin 1s infinite steps(8);
+  animation: fa-spin 1s infinite steps(8); }
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -1611,7 +1685,7 @@ html {
 .fa-twitter:before {
   content: "\f099"; }
 
-.fa-facebook:before {
+.fa-facebook-f:before, .fa-facebook:before {
   content: "\f09a"; }
 
 .fa-github:before {
@@ -2226,7 +2300,7 @@ html {
 .fa-male:before {
   content: "\f183"; }
 
-.fa-gittip:before {
+.fa-gittip:before, .fa-gratipay:before {
   content: "\f184"; }
 
 .fa-sun-o:before {
@@ -2472,7 +2546,7 @@ html {
 .fa-history:before {
   content: "\f1da"; }
 
-.fa-circle-thin:before {
+.fa-genderless:before, .fa-circle-thin:before {
   content: "\f1db"; }
 
 .fa-header:before {
@@ -2613,10 +2687,157 @@ html {
 .fa-meanpath:before {
   content: "\f20c"; }
 
+.fa-buysellads:before {
+  content: "\f20d"; }
+
+.fa-connectdevelop:before {
+  content: "\f20e"; }
+
+.fa-dashcube:before {
+  content: "\f210"; }
+
+.fa-forumbee:before {
+  content: "\f211"; }
+
+.fa-leanpub:before {
+  content: "\f212"; }
+
+.fa-sellsy:before {
+  content: "\f213"; }
+
+.fa-shirtsinbulk:before {
+  content: "\f214"; }
+
+.fa-simplybuilt:before {
+  content: "\f215"; }
+
+.fa-skyatlas:before {
+  content: "\f216"; }
+
+.fa-cart-plus:before {
+  content: "\f217"; }
+
+.fa-cart-arrow-down:before {
+  content: "\f218"; }
+
+.fa-diamond:before {
+  content: "\f219"; }
+
+.fa-ship:before {
+  content: "\f21a"; }
+
+.fa-user-secret:before {
+  content: "\f21b"; }
+
+.fa-motorcycle:before {
+  content: "\f21c"; }
+
+.fa-street-view:before {
+  content: "\f21d"; }
+
+.fa-heartbeat:before {
+  content: "\f21e"; }
+
+.fa-venus:before {
+  content: "\f221"; }
+
+.fa-mars:before {
+  content: "\f222"; }
+
+.fa-mercury:before {
+  content: "\f223"; }
+
+.fa-transgender:before {
+  content: "\f224"; }
+
+.fa-transgender-alt:before {
+  content: "\f225"; }
+
+.fa-venus-double:before {
+  content: "\f226"; }
+
+.fa-mars-double:before {
+  content: "\f227"; }
+
+.fa-venus-mars:before {
+  content: "\f228"; }
+
+.fa-mars-stroke:before {
+  content: "\f229"; }
+
+.fa-mars-stroke-v:before {
+  content: "\f22a"; }
+
+.fa-mars-stroke-h:before {
+  content: "\f22b"; }
+
+.fa-neuter:before {
+  content: "\f22c"; }
+
+.fa-facebook-official:before {
+  content: "\f230"; }
+
+.fa-pinterest-p:before {
+  content: "\f231"; }
+
+.fa-whatsapp:before {
+  content: "\f232"; }
+
+.fa-server:before {
+  content: "\f233"; }
+
+.fa-user-plus:before {
+  content: "\f234"; }
+
+.fa-user-times:before {
+  content: "\f235"; }
+
+.fa-hotel:before, .fa-bed:before {
+  content: "\f236"; }
+
+.fa-viacoin:before {
+  content: "\f237"; }
+
+.fa-train:before {
+  content: "\f238"; }
+
+.fa-subway:before {
+  content: "\f239"; }
+
+.fa-medium:before {
+  content: "\f23a"; }
+
+[dir=rtl] .fa-chevron-left, [dir=rtl] .fa-chevron-right, [dir=rtl] .fa-chevron-circle-left, [dir=rtl] .fa-chevron-circle-right, [dir=rtl] .fa-angle-left, [dir=rtl] .fa-angle-right, [dir=rtl] .fa-angle-double-left, [dir=rtl] .fa-angle-double-right, [dir=rtl] .fa-arrow-circle-left, [dir=rtl] .fa-arrow-circle-right, [dir=rtl] .fa-arrow-circle-o-left, [dir=rtl] .fa-arrow-circle-o-right {
+  -webkit-transform: scale(-1, 1);
+          transform: scale(-1, 1); }
+
 /*!
  * inuitcss, by @csswizardry
  *
  * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
+/*------------------------------------*\
+    #PX-MIXINS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass mixins for Predix Experience
+ */
+/*!
+ * inuitcss, by @csswizardry
+ *
+ * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
  */
 /*------------------------------------*\
     #PX-FUNCTIONS-DESIGN
@@ -2646,6 +2867,8 @@ html {
   /* [4] */
   margin: 0;
   /* [4] */
+  padding-right: 1em;
+  padding-left: 1em;
   cursor: pointer;
   /* [5] */
   overflow: visible;
@@ -2653,7 +2876,9 @@ html {
   background: #3171e3;
   -webkit-font-smoothing: antialiased;
   border: 0;
-  padding: 5px 1em;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  line-height: calc(2em - 2px);
   border-radius: 3px; }
   .btn, .btn:hover, .btn:active, .btn:focus {
     text-decoration: none;
@@ -2668,7 +2893,7 @@ html {
   * Establish default space between adjacent buttons
   */
 .btn + .btn {
-  margin-left: 10px; }
+  margin-left: 0.6666666667rem; }
 
 /**
      * Buttons with no styles (good a11y practice to use <button> for actions rather than <a>.
@@ -2677,6 +2902,7 @@ html {
   border: 0;
   border-radius: 0;
   padding: 0;
+  line-height: inherit;
   text-transform: none; }
   .btn--bare, .btn--bare:hover, .btn--bare:active, .btn--bare:focus {
     background: transparent;
@@ -2765,6 +2991,12 @@ header {
  * Sass functions for Predix Experience
  */
 /*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
+/*------------------------------------*\
     #PX-SPACING-DESIGN
 \*------------------------------------*/
 /**
@@ -2784,31 +3016,37 @@ header {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 /**
        * Add tiny margins.
        */
 .m-- {
-  margin: 5px !important; }
+  margin: 0.3333333333rem !important; }
 
 .mt-- {
-  margin-top: 5px !important; }
+  margin-top: 0.3333333333rem !important; }
 
 .mr-- {
-  margin-right: 5px !important; }
+  margin-right: 0.3333333333rem !important; }
 
 .mb-- {
-  margin-bottom: 5px !important; }
+  margin-bottom: 0.3333333333rem !important; }
 
 .ml-- {
-  margin-left: 5px !important; }
+  margin-left: 0.3333333333rem !important; }
 
 .mh-- {
-  margin-right: 5px !important;
-  margin-left: 5px !important; }
+  margin-right: 0.3333333333rem !important;
+  margin-left: 0.3333333333rem !important; }
 
 .mv-- {
-  margin-top: 5px !important;
-  margin-bottom: 5px !important; }
+  margin-top: 0.3333333333rem !important;
+  margin-bottom: 0.3333333333rem !important; }
 
 /**
        * Padding helper classes.
@@ -2816,105 +3054,105 @@ header {
        * Add paddings.
        */
 .p {
-  padding: 20px !important; }
+  padding: 1rem !important; }
 
 .pt {
-  padding-top: 20px !important; }
+  padding-top: 1rem !important; }
 
 .pr {
-  padding-right: 20px !important; }
+  padding-right: 1rem !important; }
 
 .pb {
-  padding-bottom: 20px !important; }
+  padding-bottom: 1rem !important; }
 
 .pl {
-  padding-left: 20px !important; }
+  padding-left: 1rem !important; }
 
 .ph {
-  padding-right: 20px !important;
-  padding-left: 20px !important; }
+  padding-right: 1rem !important;
+  padding-left: 1rem !important; }
 
 .pv {
-  padding-top: 20px !important;
-  padding-bottom: 20px !important; }
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important; }
 
 /**
        * Add tiny paddings.
        */
 .p-- {
-  padding: 5px !important; }
+  padding: 0.3333333333rem !important; }
 
 .pt-- {
-  padding-top: 5px !important; }
+  padding-top: 0.3333333333rem !important; }
 
 .pr-- {
-  padding-right: 5px !important; }
+  padding-right: 0.3333333333rem !important; }
 
 .pb-- {
-  padding-bottom: 5px !important; }
+  padding-bottom: 0.3333333333rem !important; }
 
 .pl-- {
-  padding-left: 5px !important; }
+  padding-left: 0.3333333333rem !important; }
 
 .ph-- {
-  padding-right: 5px !important;
-  padding-left: 5px !important; }
+  padding-right: 0.3333333333rem !important;
+  padding-left: 0.3333333333rem !important; }
 
 .pv-- {
-  padding-top: 5px !important;
-  padding-bottom: 5px !important; }
+  padding-top: 0.3333333333rem !important;
+  padding-bottom: 0.3333333333rem !important; }
 
 /**
        * Add small paddings.
        */
 .p- {
-  padding: 10px !important; }
+  padding: 0.6666666667rem !important; }
 
 .pt- {
-  padding-top: 10px !important; }
+  padding-top: 0.6666666667rem !important; }
 
 .pr- {
-  padding-right: 10px !important; }
+  padding-right: 0.6666666667rem !important; }
 
 .pb- {
-  padding-bottom: 10px !important; }
+  padding-bottom: 0.6666666667rem !important; }
 
 .pl- {
-  padding-left: 10px !important; }
+  padding-left: 0.6666666667rem !important; }
 
 .ph- {
-  padding-right: 10px !important;
-  padding-left: 10px !important; }
+  padding-right: 0.6666666667rem !important;
+  padding-left: 0.6666666667rem !important; }
 
 .pv- {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important; }
+  padding-top: 0.6666666667rem !important;
+  padding-bottom: 0.6666666667rem !important; }
 
 /**
        * Add large paddings.
        */
 .p\+ {
-  padding: 40px !important; }
+  padding: 1.3333333333rem !important; }
 
 .pt\+ {
-  padding-top: 40px !important; }
+  padding-top: 1.3333333333rem !important; }
 
 .pr\+ {
-  padding-right: 40px !important; }
+  padding-right: 1.3333333333rem !important; }
 
 .pb\+ {
-  padding-bottom: 40px !important; }
+  padding-bottom: 1.3333333333rem !important; }
 
 .pl\+ {
-  padding-left: 40px !important; }
+  padding-left: 1.3333333333rem !important; }
 
 .ph\+ {
-  padding-right: 40px !important;
-  padding-left: 40px !important; }
+  padding-right: 1.3333333333rem !important;
+  padding-left: 1.3333333333rem !important; }
 
 .pv\+ {
-  padding-top: 40px !important;
-  padding-bottom: 40px !important; }
+  padding-top: 1.3333333333rem !important;
+  padding-bottom: 1.3333333333rem !important; }
 
 /*------------------------------------*\
     #PX-WIDTHS-RESPONSIVE-DESIGN
@@ -2933,10 +3171,22 @@ header {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 /*!
  * inuitcss, by @csswizardry
  *
  * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
  */
 /*------------------------------------*\
     #WIDTHS
@@ -2959,10 +3209,22 @@ header {
 /**
  * Sass functions for Predix Experience
  */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
 /*!
  * inuitcss, by @csswizardry
  *
  * github.com/inuitcss | inuitcss.com
+ */
+/*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
  */
 .u-1\/1 {
   width: 100% !important; }
