@@ -982,12 +982,6 @@ html {
  * Sass functions for Predix Experience
  */
 /*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
     #PX-MIXINS-DESIGN
 \*------------------------------------*/
 /**
@@ -1105,10 +1099,6 @@ html {
 
 .weight--semibold {
   font-weight: 600 !important; }
-
-small {
-  font-size: 0.8rem;
-  line-height: 1.6666666667; }
 
 /*------------------------------------*\
     #PX-ICONOGRAPHY-DESIGN
