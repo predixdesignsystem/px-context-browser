@@ -478,12 +478,13 @@ Polymer({
 
             if(this.handlers.getChildren)
             {
-              // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
-              this.parentNodes.push(item);
               var _this = this;
               this.handlers.getChildren(item[_this.idField]).then(
                 function(children) {
                   _this.addChildren(item, children);
+
+                  // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
+                  _this.parentNodes.push(item);
                 });
             }
             else
