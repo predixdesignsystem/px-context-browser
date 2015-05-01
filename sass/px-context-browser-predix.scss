@@ -22,20 +22,12 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 @import 'px-context-browser-sketch';
 @import "../px-colors-design/settings.colors";
 
-
-:host > * {
-  @include inuit-font-size(15px);
-  //background-color: $gray-dark;
-  //color: $white;
-}
-
-section.columns {
+.columns {
+  li:hover {
+    background-color: $gray-lightest;
+  }
   .level.selected {
     li.selected {
-      background-color: $blue;
-      color: $white;
-    }
-    li:active {
       background-color: $blue-light;
       color: $white;
     }
