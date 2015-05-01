@@ -29,22 +29,18 @@ Context browser element
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <section class="context-browser-container">
-      <header class="ph">
-        <div>
+    <section class="full-height">
+      <header class="ph flex flex--middle">
           <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
             <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right mh--"></i></span>
           </template>
-        </div>
-        <div>
           <content select=".context-info"></content>
-        </div>
       </header>
-      <section class="flex columns">
+      <section class="flex full-height columns">
         <template is="x-repeat" id="levels" items="{{displayNodes}}">
-          <div class="u-1/3 column" data-column>
+          <div class="flex__item full-height column" data-column>
             <span>{{item.header}}</span>
-            <ul class="list-bare level" on-scroll="scrollEndHandler">
+            <ul class="list-bare level full-height" on-scroll="scrollEndHandler">
               <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
               <template is="x-repeat" items="{{item.children}}" id="level">
                 <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="pl pr- flex flex--justify selectable-item">
