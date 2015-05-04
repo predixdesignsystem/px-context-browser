@@ -1,21 +1,18 @@
-@import "_helpers";
-@import "_spec-variables";
+@side-nav-em-pixel-ratio: 1.0em / 15; // 1.6em = 24px;
+
+// Default Transition Length
+@default-transition-length: 0.35s;
+@default-transition-params: @default-transition-length ease 0s;
 
 // The actual column browser resides within...
 .column-browser {
 
   overflow: hidden;
+
   @min-width: 240;
   @ruler-width: @side-nav-em-pixel-ratio * @min-width;
 
-  .flexBoxVertical();
-  height: 100%;
-
   > div { // To facilitate future scrolling or boundary constraints.
-
-    height: 100%;
-
-    .flexBox();
 
     .columnConfig(@columns) {
       &.columns-@{columns} {
