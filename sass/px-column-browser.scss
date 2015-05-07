@@ -1,0 +1,101 @@
+$side-nav-em-pixel-ratio: 1.0em / 15;
+// 1.6em = 24px;
+
+// Default Transition Length
+$default-transition-length: 0.35s;
+$default-transition-params: $default-transition-length ease 0s;
+
+$min-width: 240;
+$ruler-width: $side-nav-em-pixel-ratio * $min-width;
+
+@mixin columnConfig($columns) {
+  &.columns-#{$columns} {
+    > div {
+      width: 100%/$columns;
+    }
+  }
+  &.column-index-#{$columns} {
+    > div {
+      &:nth-child(-n + #{$columns}) {
+        margin-left: -$ruler-width;
+        width: $ruler-width;
+        overflow: hidden;
+
+        html[dir=rtl] & {
+          margin-right: -$ruler-width;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+// The actual column browser resides within...
+.column-browser {
+
+  overflow: hidden;
+
+  > div {
+    // To facilitate future scrolling or boundary constraints.
+
+    @include columnConfig(1);
+    @include columnConfig(2);
+    @include columnConfig(3);
+    @include columnConfig(4);
+    @include columnConfig(5);
+    @include columnConfig(6);
+    @include columnConfig(7);
+    @include columnConfig(8);
+    @include columnConfig(9);
+    @include columnConfig(10);
+    @include columnConfig(11);
+    @include columnConfig(12);
+
+    > div {
+      background: white;
+      overflow: hidden;
+
+      transition: width $default-transition-params,
+      min-width $default-transition-params,
+      margin-left $default-transition-params,
+      margin-right $default-transition-params,
+      opacity $default-transition-params;
+
+      &, > div {
+        // An extra div is required to enforce the inner boundary even when the outer is animating.
+        min-width: $ruler-width;
+      }
+
+      box-sizing: border-box;
+      border: 1px solid #DDD;
+      border-bottom: 0;
+      html:not([dir=rtl]) & {
+        border-left: 0;
+      }
+
+      html[dir=rtl] & {
+        border-right: 0;
+      }
+
+      &.new, &.removed {
+        width: 0;
+        min-width: 0;
+        opacity: 0;
+      }
+
+      &.new {
+        visibility: hidden;
+      }
+    }
+
+  }
+
+  .ruler {
+    position: absolute;
+    visibility: hidden;
+    width: $ruler-width; // Make sure this isn't overridden.
+    height: 0;
+    top: 0;
+    left: 0;
+  }
+}

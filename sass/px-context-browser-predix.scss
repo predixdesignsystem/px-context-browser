@@ -11,7 +11,7 @@
 //
 // Sass for the Predix notion of the px-context-browser component
 //
-// @author 
+// @author
 //
 
 /*
@@ -23,8 +23,11 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 @import "../px-colors-design/settings.colors";
 
 .columns {
-  li:hover {
-    background-color: $gray-lightest;
+  li {
+    transition: background-color 0.2s ease 0s; // TODO: establish default transition length;
+    &:hover {
+      background-color: $gray-lightest;
+    }
   }
   .level.selected {
     li.selected {
@@ -33,3 +36,6 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
     }
   }
 }
+
+// For now, use the rendered css from less until we 100% integrate.
+@import 'px-column-browser';
