@@ -30,7 +30,7 @@ Context browser element
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <section class="full-height context-browser-container">
+    <section class="full-height context-browser-container flex flex--column">
       <header class="ph flex flex--middle">
         <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
           <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span
