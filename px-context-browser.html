@@ -7,6 +7,16 @@
 <!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
 
+<style>
+  [dir=rtl] .fa.px-context-browser {
+    -webkit-transform: scale(-1,1);
+    transform: scale(-1,1);
+  }
+  [dir=rtl] .fa.px-context-browser {
+    -webkit-transform: scale(-1,1);
+    transform: scale(-1,1);
+  }
+</style>
 
 <!--
 Context browser element
@@ -52,16 +62,15 @@ Context browser element
                             items="{{item.children}}">
                     <li on-click="itemClickHandler"
                         id$="[[parent.parent.getItemId(item)]]"
-                        class="pl pr- flex flex--justify selectable-item">
-                      <span>[[parent.parent.getItemLabel(item)]]</span>
-                  <span>
-                    <i class$="[[parent.parent.getItemOpenerClass(item)]]"
-                       on-click="openClickHandler"></i>
-                    <span hidden$="[[!item.hasChildren]]"
-                          class="pl-">
-                      <i class="fa fa-angle-right"></i>
-                    </span>
-                  </span>
+                        class="flex-x full selectable-item">
+                      <span class="spacer-x-2"></span>
+                      <span class="flex-1">[[parent.parent.getItemLabel(item)]]</span>
+                      <span>
+                        <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
+                        <span class="spacer-x"></span>
+                        <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
+                      </span>
+                      <span class="spacer-x"></span>
                     </li>
                   </template>
                   <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
@@ -479,7 +488,6 @@ Polymer(
      * @param {Object} item
      */
     getNewChildren: function(item) {
-      this.removeNewTag();
 
       if(this.handlers.getChildren)
       {
@@ -488,7 +496,11 @@ Polymer(
           function(children) {
             _this.addChildren(item, children);
             // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
-            _this.parentNodes.push(item);
+            if(children && children.data && children.data.length)
+            {
+              _this.parentNodes.push(item);
+              _this.removeNewTag();
+            }
           });
       }
       else
@@ -507,6 +519,7 @@ Polymer(
           return; //do not put anything else in tree
         }
         this.parentNodes.push(item);
+        this.removeNewTag();
       }
 
     },
