@@ -28,6 +28,9 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
     &:hover {
       background-color: $gray-lightest;
     }
+    &.selected {
+      background-color: $gray-lightest;
+    }
   }
   .level.selected {
     li.selected {

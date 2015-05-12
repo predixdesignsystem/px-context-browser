@@ -562,7 +562,7 @@ Polymer(
       }
 
       //mark list/column as selected in display and deselect others
-      pDom(containerEl.parentNode).querySelectorAll('ul').forEach(
+      pDom(containerEl.parentNode.parentNode.parentNode).querySelectorAll('ul').forEach(
         function(el) {
           _this.toggleClass("selected", (el===columnEl), el);
         });
