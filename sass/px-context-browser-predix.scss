@@ -26,7 +26,7 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
   li {
     transition: background-color 0.2s ease 0s; // TODO: establish default transition length;
     &:hover {
-      background-color: $gray-lightest;
+      background-color: $off-white;
     }
     &.selected {
       background-color: $gray-lightest;

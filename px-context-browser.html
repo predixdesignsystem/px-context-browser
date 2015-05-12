@@ -375,7 +375,7 @@ Polymer(
      * @return {String} CSS class for item opener
      */
     getItemOpenerClass: function(item) {
-      var base = "opener fa fa-share";
+      var base = "opener fa fa-arrow-circle-o-right"; // Current suggestion by Hans.
       return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable
         ? base + " openable"
         : base + " unopenable";
