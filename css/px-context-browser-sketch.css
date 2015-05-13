@@ -2939,11 +2939,11 @@ header {
       .level li .opener.unopenable {
         display: none; }
   .level li:not(.selected) .opener.openable {
-    display: none; }
+    visibility: hidden; }
   .level:not(.selected) li:not(.selected) .opener.openable {
-    display: none; }
+    visibility: hidden; }
   .level li:not(.selected):hover .opener.openable {
-    display: inline; }
+    visibility: visible; }
 
 .breadcrumb, .selectable-item {
   cursor: pointer; }

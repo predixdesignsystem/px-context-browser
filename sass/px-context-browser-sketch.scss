@@ -99,15 +99,16 @@ header {
     }
   }
   li:not(.selected) .opener.openable {
-    display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+    // Do not use display:none to avoid altering visual tree structure live or conflicting with flex layout.
+    visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
   }
   &:not(.selected) {
     li:not(.selected) .opener.openable {
-      display: none; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+      visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
     }
   }
   li:not(.selected):hover .opener.openable {
-    display: inline;//opener on openenable items is shown on hover regardless of selected state
+    visibility: visible; //opener on openable items not in a selected row is not displayed and not seen by screen readers
   }
 }
 

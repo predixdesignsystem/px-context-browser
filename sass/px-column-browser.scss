@@ -8,76 +8,68 @@ $default-transition-params: $default-transition-length ease 0s;
 $min-width: 240;
 $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 
-span.spacer,
-span.spacer-x,
-span.spacer-y,
-span.spacer-2,
-span.spacer-x-2,
-span.spacer-y-2 {
-  display: inline-block;
-}
-.spacer,
-.spacer-x {
-  width: 1ex;
-}
-.spacer,
-.spacer-y {
-  height: 1ex;
-}
-.spacer-2,
-.spacer-x-2 {
-  width: 2ex;
-}
-.spacer-2,
-.spacer-y-2 {
-  height: 2ex;
-}
-.flex,
-.flex-x,
-.flex-y {
-  display: -webkit-box;
-  /* OLD - iOS 6-, Safari 3.1-6 */
-  display: -moz-box;
-  /* OLD - Firefox 19- (buggy but mostly works) */
-  display: -ms-flexbox;
-  /* TWEENER - IE 10 */
-  display: -webkit-flex;
-  /* NEW - Chrome */
-  display: flex;
-}
-.flex.align-center,
-.flex-x.align-center,
-.flex-y.align-center {
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-.flex-x {
-  -webkit-box-orient: horizontal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-.flex-y {
-  -webkit-box-orient: vertical;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-.flex-1 {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-}
-.full-x, .full-xy {
-  width: 100%;
-}
-.full-y, .full-xy {
-  height: 100%;
+.spacer {
+
+  &, &-x {
+    width: 1ex;
+  }
+
+  &, &-2-x {
+    width: 2ex;
+  }
+
 }
 
+span.spacer {
+  &, &-2 {
+    &, &-x {
+      display: inline-block;
+    }
+  }
+}
+
+.flex {
+  &, &-x, &-y {
+    display: -webkit-box;
+    /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;
+    /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;
+    /* TWEENER - IE 10 */
+    display: -webkit-flex;
+    /* NEW - Chrome */
+    display: flex;
+  }
+
+  &-x {
+    -webkit-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  &-y {
+    -webkit-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  &-1 {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+}
+
+.full {
+  &-xy, &-x {
+    width: 100%;
+  }
+  &-xy, &-y {
+    height: 100%;
+  }
+}
 
 @mixin columnConfig($columns) {
   &.columns-#{$columns} {
@@ -126,6 +118,7 @@ span.spacer-y-2 {
       background: white;
       overflow: hidden;
 
+      transform: translateZ(0); // This is a special hack to prevent font-awesome (or any other transformed element) from rendering on top of this unexpectedly.
       transition: width $default-transition-params,
       min-width $default-transition-params,
       margin-left $default-transition-params,

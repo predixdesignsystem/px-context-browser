@@ -62,8 +62,8 @@ Context browser element
                             items="{{item.children}}">
                     <li on-click="itemClickHandler"
                         id$="[[parent.parent.getItemId(item)]]"
-                        class="flex-x full selectable-item">
-                      <span class="spacer-x-2"></span>
+                        class="flex-x selectable-item">
+                      <span class="spacer-2-x"></span>
                       <span class="flex-1">[[parent.parent.getItemLabel(item)]]</span>
                       <span>
                         <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
