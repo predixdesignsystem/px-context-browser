@@ -11,9 +11,9 @@
 
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
         <link rel="import" href="../px-theme/px-theme.html"/>
-        
+
         <link rel="import" href="px-context-browser.html"/>
-        
+
         <style is="x-style">
           html {
             height: 100%;
@@ -30,7 +30,7 @@
     </head>
 
     <body>
-      
+
       <article class="demo">
 
         <h3>Demo</h3>
@@ -43,7 +43,9 @@
         <p>
             Also see the <a href="index.html">documentation</a> and the <a href="test/spec.html">UI test fixture</a>.
         </p>
-      
+
+        <label><input type="checkbox" onchange="document.querySelector('html').setAttribute('dir',this.checked?'rtl':'ltr')">Invert Horizontal Direction</label>
+
       </article>
 
 
