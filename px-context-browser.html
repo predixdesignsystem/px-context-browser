@@ -534,54 +534,61 @@ Polymer(
 
       var columnEl, containerEl, _this = this, pDom = Polymer.dom;
 
-      //execute callback
-      if(this.handlers.itemClickHandler)
-      {
-        this.handlers.itemClickHandler(item);
-      }
+      // Defer this execution since event handlers may be listening to dom targets that will end up getting removed and can cause unexpected problems.
+      // By doing so, we allow an event to complete before changing the DOM.
+      setTimeout(function(){
 
-      //logically mark item as selected
-      this.selectedItem = item;
-      this.selectedItemId = item ? item[this.idField] : null;
 
-      if(!itemElement && this.selectedItemId)
-      {
-        //if coming from breadcrumbs, we don't have an itemElement clicked...try to find it.
-        pDom(this.root).querySelectorAll('li').every(
+        //execute callback
+        if(_this.handlers.itemClickHandler)
+        {
+          _this.handlers.itemClickHandler(item);
+        }
+
+        //logically mark item as selected
+        _this.selectedItem = item;
+        _this.selectedItemId = item ? item[_this.idField] : null;
+
+        if(!itemElement && _this.selectedItemId)
+        {
+          //if coming from breadcrumbs, we don't have an itemElement clicked...try to find it.
+          pDom(_this.root).querySelectorAll('li').every(
+            function(el) {
+              if(el.id===_this.selectedItemId)
+              {
+                itemElement = el;
+                return false;
+              }
+              return true;
+            });
+        }
+
+        //node finding...
+        columnEl = itemElement ? pDom(itemElement).parentNode : pDom(_this.root);
+
+        //mark list item as selected in display and deselect others
+        pDom(columnEl).querySelectorAll('li').forEach(
           function(el) {
-            if(el.id===_this.selectedItemId)
-            {
-              itemElement = el;
-              return false;
-            }
-            return true;
+            _this.toggleClass("selected", (el===itemElement), el);
           });
-      }
 
-      //node finding...
-      columnEl = itemElement ? pDom(itemElement).parentNode : pDom(this.root);
+        //handle nesting of column els, such that they are not necessarily direct siblings
+        containerEl = columnEl;
+        while(containerEl && !containerEl.hasAttribute("data-column"))
+        {
+          containerEl = containerEl.parentNode;
+        }
 
-      //mark list item as selected in display and deselect others
-      pDom(columnEl).querySelectorAll('li').forEach(
-        function(el) {
-          _this.toggleClass("selected", (el===itemElement), el);
-        });
+        //mark list/column as selected in display and deselect others
+        pDom(containerEl.parentNode.parentNode.parentNode).querySelectorAll('ul').forEach(
+          function(el) {
+            _this.toggleClass("selected", (el===columnEl), el);
+          });
 
-      //handle nesting of column els, such that they are not necessarily direct siblings
-      containerEl = columnEl;
-      while(containerEl && !containerEl.hasAttribute("data-column"))
-      {
-        containerEl = containerEl.parentNode;
-      }
+        _this.dropCurrentChildren(item);
+        _this.getNewChildren(item);
+      },0);
 
-      //mark list/column as selected in display and deselect others
-      pDom(containerEl.parentNode.parentNode.parentNode).querySelectorAll('ul').forEach(
-        function(el) {
-          _this.toggleClass("selected", (el===columnEl), el);
-        });
-
-      this.dropCurrentChildren(item);
-      this.getNewChildren(item);
     },
 
     /**
