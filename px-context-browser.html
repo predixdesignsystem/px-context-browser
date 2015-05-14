@@ -37,54 +37,65 @@ Context browser element
 @blurb Context browser element
 @homepage index.html
 -->
-<dom-module id="px-context-browser">
-  <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
+<dom-module   id="px-context-browser">
+  <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
   <template>
-    <section class="full-height context-browser-container flex flex--column">
-      <header class="ph flex flex--middle">
-        <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
-          <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span
-            class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right mh--"></i></span>
-        </template>
-        <content select=".context-info"></content>
-      </header>
-      <section id="columnBrowser" class="column-browser flex flex--column full-height">
-        <div class="columns flex full-height">
-          <template is="x-repeat" id="levels" items="{{parentNodes}}">
-            <div class="full-height column new">
-              <div class="full-height flex flex--column" data-column>
-                <div>{{ item.header || '' }}</div>
-                <ul class="list-bare level full-height"
-                    on-scroll="scrollEndHandler">
-                  <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-                  <template is="x-repeat"
-                            id="level"
-                            items="{{item.children}}">
-                    <li on-click="itemClickHandler"
-                        id$="[[parent.parent.getItemId(item)]]"
-                        class="flex-x selectable-item">
-                      <span class="spacer-2-x"></span>
-                      <span class="flex-1">[[parent.parent.getItemLabel(item)]]</span>
-                      <span>
-                        <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
-                        <span class="spacer-x"></span>
-                        <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
-                      </span>
-                      <span class="spacer-x"></span>
-                    </li>
-                  </template>
-                  <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
-                  <!-- todo: i18n / messages. Runtime or build-time?? -->
-                </ul>
-              </div>
-            </div>
+
+    <div class="column-browser-container flex-y">
+      <div class="flexible-body flex-1">
+        <div class="head flex-middle">
+          <span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
+          <span class="spacer-2-x"></span>
+          <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+            <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span>
+            <span class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right"></i></span>
           </template>
+          <content select=".context-info"></content>
+          <span><span class="breadcrumb">&nbsp;</span></span>
+          <span class="spacer-2-x"></span>
         </div>
-        <div class="ruler">
-          <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
+        <div class="body flex-y column-browser" id="columnBrowser">
+          <div class="flex flex-1">
+            <template is="x-repeat" id="levels" items="{{parentNodes}}">
+              <div class="flexible-body column new" data-column>
+                <div class="head">{{ item.header || '' }}</div>
+                <div class="body scroll-y" on-scroll="scrollEndHandler">
+                  <div>
+                    <ul class="list-bare level">
+                      <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
+                      <template is="x-repeat"
+                                id="level"
+                                items="{{item.children}}">
+                        <li on-click="itemClickHandler"
+                            id$="[[parent.parent.getItemId(item)]]"
+                            class="flex-middle selectable-item">
+                          <span class="spacer-2-x"></span>
+                          <span class="flex-1">[[parent.parent.getItemLabel(item)]]</span>
+                        <span>
+                          <i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i>
+                          <span class="spacer-x"></span>
+                          <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
+                        </span>
+                          <span class="spacer-x"></span>
+                        </li>
+                      </template>
+                      <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
+                      <!-- todo: i18n / messages. Runtime or build-time?? -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+          <!-- Avoid ruler being part of the structure but being within a container that can enforce its relative size -->
+          <div class="ruler">
+            <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
+          </div>
         </div>
-      </section>
-    </section>
+
+      </div>
+    </div>
+
   </template>
 </dom-module>
 

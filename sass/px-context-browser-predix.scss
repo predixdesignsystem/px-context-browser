@@ -19,26 +19,61 @@ THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
 common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 */
 
-@import 'px-context-browser-sketch';
+//noinspection CssUnknownTarget
 @import "../px-colors-design/settings.colors";
 
-.columns {
-  li {
-    transition: background-color 0.2s ease 0s; // TODO: establish default transition length;
-    &:hover {
-      background-color: $off-white;
-    }
-    &.selected {
+.scroll-y {
+  scrollbar-base-color: $gray-lightest;
+  scrollbar-face-color: $gray;
+
+  // TODO: Since this only works on web-kit, validate that the inconsistency is known and authorized.
+  &::-webkit-scrollbar {
+    width: 6px;
+
+    &-track {
       background-color: $gray-lightest;
     }
-  }
-  .level.selected {
-    li.selected {
-      background-color: $blue-light;
-      color: $white;
+    &-thumb {
+      border: solid transparent;
+      border-width: 0 2px;
+      background-clip: content-box;
+      background-color: $gray;
     }
   }
+
 }
 
-// For now, use the rendered css from less until we 100% integrate.
-@import 'px-column-browser';
+.column-browser {
+
+  &-container, > div > div {
+    background-color: white;
+  }
+
+  &-container {
+    > div > .head {
+      border-bottom: 1px solid $gray;
+    }
+  }
+
+  .column {
+
+    border-color: $gray-light;
+
+    li {
+      &:hover {
+        background-color: $off-white;
+      }
+      &.selected {
+        background-color: $gray-lightest;
+      }
+    }
+    .level.selected {
+      li.selected {
+        background-color: $blue-light;
+        color: $white;
+      }
+    }
+
+  }
+
+}

@@ -22,9 +22,15 @@
           body {
             height: 100%;
             margin: 0;
+            background-color: #DDD;
           }
           .demo {
             padding: 1rem;
+          }
+        </style>
+        <style>
+          .column-browser-container {
+            height: 240px; /* MUST SPECIFY and cannot be 100% without another container */
           }
         </style>
     </head>
@@ -48,7 +54,6 @@
 
       </article>
 
-
         <px-context-browser
                 label-field="name"
                 parent-id-field="category"
@@ -56,7 +61,6 @@
                 tree-display-levels="3"
                 child-key="children">
         </px-context-browser>
-
         <script>
             var initialContexts = {
                 data: [{
