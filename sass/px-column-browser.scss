@@ -27,11 +27,15 @@ $default-transition-params: $default-transition-length ease 0s;
 $min-width: 240;
 $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 
-.relative {
-  position: relative;
-}
-.absolute {
-  position: absolute;
+.invisible-width {
+  width: 0;
+
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+
+  visibility: hidden;
 }
 
 .spacer {
@@ -49,6 +53,7 @@ $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 span.spacer {
   &, &-2 {
     &, &-x {
+      visibility: hidden;
       display: inline-block;
     }
   }
@@ -91,27 +96,22 @@ span.spacer {
     -webkit-align-items: center;
     -ms-flex-align: center;
     align-items: center;
+
+    > span {
+      display: inline-flex;
+    }
   }
 
-}
-
-.full {
-  &-xy, &-x {
-    width: 100%;
-  }
-  &-xy, &-y {
-    height: 100%;
-  }
 }
 
 @mixin columnConfig($columns) {
   &.columns-#{$columns} {
-    > div {
+    .column {
       width: 100%/$columns;
     }
   }
   &.column-index-#{$columns} {
-    > div {
+    .column {
       &:nth-child(-n + #{$columns}) {
         margin-left: -$ruler-width;
         width: $ruler-width;
@@ -143,21 +143,31 @@ span.spacer {
       cursor: pointer;
     }
 
-    // Height enforcement.
-    .breadcrumbConnector:first-of-type {
-      width:0;
-      visibility: hidden;
+    .breadcrumbConnector {
+      margin-left: 1ex;
+      margin-right: 1ex;
+
+      &:last-of-type {
+        display: none;
+      }
+
     }
 
-    .breadcrumbConnector:last-of-type {
-      display: none;
+    .spacer-2-x > .breadcrumbConnector {
+      margin:0;
     }
+
 
     > div > .head {
-      line-height: 2;
+      line-height: 2.5;
     }
   }
 
+  // Ensures proper visibility for some icons that get cut off past their edge.
+  .fa {
+    padding-left:1px;
+    padding-right:1px;
+  }
 
   > div {
     @include columnConfig(1);
@@ -198,7 +208,7 @@ span.spacer {
     }
 
     &.new, &.removed {
-      width: 0;
+      width: 0 !important; // specificity is to refined.
       min-width: 0;
       opacity: 0;
     }
@@ -209,6 +219,7 @@ span.spacer {
   }
 
   .ruler {
+    width: $ruler-width;
     position: absolute;
     visibility: hidden;
     height: 0;
@@ -216,11 +227,6 @@ span.spacer {
     left: 0;
   }
 
-
-  .column,
-  .ruler {
-    width: $ruler-width;
-  }
 
   // An extra div is required to enforce the inner boundary even when the outer is animating.
   .column > div
@@ -261,6 +267,8 @@ span.spacer {
     }
   }
 }
+
+[hidden] { display: none !important; }
 
 @import "px-context-browser-predix";
 

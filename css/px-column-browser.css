@@ -3580,11 +3580,13 @@ html {
         -ms-flex: none !important;
             flex: none !important; } }
 
-.relative {
-  position: relative; }
-
-.absolute {
-  position: absolute; }
+.invisible-width {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  visibility: hidden; }
 
 .spacer, .spacer-x {
   width: 1ex; }
@@ -3592,6 +3594,7 @@ html {
   width: 2ex; }
 
 span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
+  visibility: hidden;
   display: inline-block; }
 
 .scroll-y {
@@ -3617,11 +3620,10 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center; }
-
-.full-xy, .full-x {
-  width: 100%; }
-.full-xy, .full-y {
-  height: 100%; }
+  .flex-middle > span {
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex; }
 
 .column-browser-container * {
   overflow: hidden; }
@@ -3629,119 +3631,124 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
   overflow-y: scroll; }
 .column-browser-container .breadcrumb, .column-browser-container .selectable-item {
   cursor: pointer; }
-.column-browser-container .breadcrumbConnector:first-of-type {
-  width: 0;
-  visibility: hidden; }
-.column-browser-container .breadcrumbConnector:last-of-type {
-  display: none; }
+.column-browser-container .breadcrumbConnector {
+  margin-left: 1ex;
+  margin-right: 1ex; }
+  .column-browser-container .breadcrumbConnector:last-of-type {
+    display: none; }
+.column-browser-container .spacer-2-x > .breadcrumbConnector {
+  margin: 0; }
 .column-browser-container > div > .head {
-  line-height: 2; }
-.column-browser > div.columns-1 > div {
+  line-height: 2.5; }
+.column-browser .fa {
+  padding-left: 1px;
+  padding-right: 1px; }
+.column-browser > div.columns-1 .column {
   width: 100%; }
-.column-browser > div.column-index-1 > div:nth-child(-n+1) {
+.column-browser > div.column-index-1 .column:nth-child(-n+1) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-1 > div:nth-child(-n+1) {
+  html[dir=rtl] .column-browser > div.column-index-1 .column:nth-child(-n+1) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-2 > div {
+.column-browser > div.columns-2 .column {
   width: 50%; }
-.column-browser > div.column-index-2 > div:nth-child(-n+2) {
+.column-browser > div.column-index-2 .column:nth-child(-n+2) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-2 > div:nth-child(-n+2) {
+  html[dir=rtl] .column-browser > div.column-index-2 .column:nth-child(-n+2) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-3 > div {
+.column-browser > div.columns-3 .column {
   width: 33.3333333333%; }
-.column-browser > div.column-index-3 > div:nth-child(-n+3) {
+.column-browser > div.column-index-3 .column:nth-child(-n+3) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-3 > div:nth-child(-n+3) {
+  html[dir=rtl] .column-browser > div.column-index-3 .column:nth-child(-n+3) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-4 > div {
+.column-browser > div.columns-4 .column {
   width: 25%; }
-.column-browser > div.column-index-4 > div:nth-child(-n+4) {
+.column-browser > div.column-index-4 .column:nth-child(-n+4) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-4 > div:nth-child(-n+4) {
+  html[dir=rtl] .column-browser > div.column-index-4 .column:nth-child(-n+4) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-5 > div {
+.column-browser > div.columns-5 .column {
   width: 20%; }
-.column-browser > div.column-index-5 > div:nth-child(-n+5) {
+.column-browser > div.column-index-5 .column:nth-child(-n+5) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-5 > div:nth-child(-n+5) {
+  html[dir=rtl] .column-browser > div.column-index-5 .column:nth-child(-n+5) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-6 > div {
+.column-browser > div.columns-6 .column {
   width: 16.6666666667%; }
-.column-browser > div.column-index-6 > div:nth-child(-n+6) {
+.column-browser > div.column-index-6 .column:nth-child(-n+6) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-6 > div:nth-child(-n+6) {
+  html[dir=rtl] .column-browser > div.column-index-6 .column:nth-child(-n+6) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-7 > div {
+.column-browser > div.columns-7 .column {
   width: 14.2857142857%; }
-.column-browser > div.column-index-7 > div:nth-child(-n+7) {
+.column-browser > div.column-index-7 .column:nth-child(-n+7) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-7 > div:nth-child(-n+7) {
+  html[dir=rtl] .column-browser > div.column-index-7 .column:nth-child(-n+7) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-8 > div {
+.column-browser > div.columns-8 .column {
   width: 12.5%; }
-.column-browser > div.column-index-8 > div:nth-child(-n+8) {
+.column-browser > div.column-index-8 .column:nth-child(-n+8) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-8 > div:nth-child(-n+8) {
+  html[dir=rtl] .column-browser > div.column-index-8 .column:nth-child(-n+8) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-9 > div {
+.column-browser > div.columns-9 .column {
   width: 11.1111111111%; }
-.column-browser > div.column-index-9 > div:nth-child(-n+9) {
+.column-browser > div.column-index-9 .column:nth-child(-n+9) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-9 > div:nth-child(-n+9) {
+  html[dir=rtl] .column-browser > div.column-index-9 .column:nth-child(-n+9) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-10 > div {
+.column-browser > div.columns-10 .column {
   width: 10%; }
-.column-browser > div.column-index-10 > div:nth-child(-n+10) {
+.column-browser > div.column-index-10 .column:nth-child(-n+10) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-10 > div:nth-child(-n+10) {
+  html[dir=rtl] .column-browser > div.column-index-10 .column:nth-child(-n+10) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-11 > div {
+.column-browser > div.columns-11 .column {
   width: 9.0909090909%; }
-.column-browser > div.column-index-11 > div:nth-child(-n+11) {
+.column-browser > div.column-index-11 .column:nth-child(-n+11) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-11 > div:nth-child(-n+11) {
+  html[dir=rtl] .column-browser > div.column-index-11 .column:nth-child(-n+11) {
     margin-right: -16em;
     margin-left: 0; }
-.column-browser > div.columns-12 > div {
+.column-browser > div.columns-12 .column {
   width: 8.3333333333%; }
-.column-browser > div.column-index-12 > div:nth-child(-n+12) {
+.column-browser > div.column-index-12 .column:nth-child(-n+12) {
   margin-left: -16em;
   width: 16em;
   overflow: hidden; }
-  html[dir=rtl] .column-browser > div.column-index-12 > div:nth-child(-n+12) {
+  html[dir=rtl] .column-browser > div.column-index-12 .column:nth-child(-n+12) {
     margin-right: -16em;
     margin-left: 0; }
 .column-browser .column {
@@ -3758,19 +3765,18 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
   html[dir=rtl] .column-browser .column {
     border-right-width: 0; }
   .column-browser .column.new, .column-browser .column.removed {
-    width: 0;
+    width: 0 !important;
     min-width: 0;
     opacity: 0; }
   .column-browser .column.new {
     visibility: hidden; }
 .column-browser .ruler {
+  width: 16em;
   position: absolute;
   visibility: hidden;
   height: 0;
   top: 0;
   left: 0; }
-.column-browser .column, .column-browser .ruler {
-  width: 16em; }
 .column-browser .column > div {
   min-width: 16em;
   width: 100.5%; }
@@ -3790,6 +3796,9 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
   visibility: hidden; }
 .column-browser .level li:not(.selected):hover .opener.openable {
   visibility: visible; }
+
+[hidden] {
+  display: none !important; }
 
 /*
  * Copyright (c) 2014 GE Global Research. All rights reserved.
