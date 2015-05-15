@@ -37,7 +37,7 @@ Context browser element
 @blurb Context browser element
 @homepage index.html
 -->
-<dom-module   id="px-context-browser">
+<dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
   <template>
 
@@ -46,7 +46,7 @@ Context browser element
         <div class="head flex-middle">
           <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
           <span class="invisible-width"><span class="breadcrumb">&nbsp;</span></span>
-          <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+          <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
             <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span>
             <span hidden$="[[item.hideBreadcrumb]]" class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
           </template>
@@ -54,13 +54,13 @@ Context browser element
         </div>
         <div class="body flex-y column-browser" id="columnBrowser">
           <div class="flex flex-1">
-            <template is="x-repeat" id="levels" items="{{parentNodes}}">
+            <template is="dom-repeat" id="levels" items="{{parentNodes}}">
               <div class="flexible-body column new" data-column>
                 <div class="head">{{ item.header || '' }}</div>
                 <div class="body scroll-y" on-scroll="scrollEndHandler">
                   <ul class="list-bare level">
                     <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-                    <template is="x-repeat"
+                    <template is="dom-repeat"
                               id="level"
                               items="{{item.children}}">
                       <li on-click="itemClickHandler"
@@ -302,7 +302,7 @@ Polymer(
      * @private
      */
     handleBreadcrumbClick: function(evt) {
-      var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with x-repeat
+      var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with a dom-repeat
       this.selectItem(this.parentNodes[level]);
     },
 
@@ -313,9 +313,7 @@ Polymer(
      * @private
      */
     itemClickHandler: function(evt) {
-      var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
-      var item = levelTemplateRepeat.itemForElement(evt.target);
-      this.selectItem(item, evt.currentTarget);
+      this.selectItem(evt.model.item, evt.currentTarget);
     },
 
     /**
@@ -503,8 +501,9 @@ Polymer(
             // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
             if(children && children.data && children.data.length)
             {
-              _this.parentNodes.push(item);
+              _this.push('parentNodes', item);
               _this.removeNewTag();
+
             }
           });
       }
@@ -523,7 +522,7 @@ Polymer(
           console.log('The next level of children could not be returned.');
           return; //do not put anything else in tree
         }
-        this.parentNodes.push(item);
+        this.push('parentNodes', item);
         this.removeNewTag();
       }
 
