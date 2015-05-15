@@ -982,6 +982,12 @@ html {
  * Sass functions for Predix Experience
  */
 /*------------------------------------*\
+    #PX-FUNCTIONS-DESIGN
+\*------------------------------------*/
+/**
+ * Sass functions for Predix Experience
+ */
+/*------------------------------------*\
     #PX-MIXINS-DESIGN
 \*------------------------------------*/
 /**
@@ -1099,6 +1105,10 @@ html {
 
 .weight--semibold {
   font-weight: 600 !important; }
+
+small {
+  font-size: 0.8rem;
+  line-height: 1.6666666667; }
 
 /*------------------------------------*\
     #PX-ICONOGRAPHY-DESIGN
@@ -3144,26 +3154,26 @@ header {
 /**
        * Add large paddings.
        */
-.p\+ {
+.p\00002b {
   padding: 1.3333333333rem !important; }
 
-.pt\+ {
+.pt\00002b {
   padding-top: 1.3333333333rem !important; }
 
-.pr\+ {
+.pr\00002b {
   padding-right: 1.3333333333rem !important; }
 
-.pb\+ {
+.pb\00002b {
   padding-bottom: 1.3333333333rem !important; }
 
-.pl\+ {
+.pl\00002b {
   padding-left: 1.3333333333rem !important; }
 
-.ph\+ {
+.ph\00002b {
   padding-right: 1.3333333333rem !important;
   padding-left: 1.3333333333rem !important; }
 
-.pv\+ {
+.pv\00002b {
   padding-top: 1.3333333333rem !important;
   padding-bottom: 1.3333333333rem !important; }
 
@@ -3686,9 +3696,9 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
   -ms-flex: 1;
   flex: 1; }
 
-.full, .full-x {
+.full-xy, .full-x {
   width: 100%; }
-.full, .full-y {
+.full-xy, .full-y {
   height: 100%; }
 
 .column-browser {

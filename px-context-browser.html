@@ -42,7 +42,7 @@ Context browser element
   <template>
     <section class="full-height context-browser-container flex flex--column">
       <header class="ph flex flex--middle">
-        <template is="x-repeat" id="breadcrumbs" items="{{parentNodes}}">
+        <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
           <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span><span
             class="breadcrumbConnector" hidden$="[[item.hideBreadcrumb]]"><i class="fa fa-angle-right mh--"></i></span>
         </template>
@@ -50,14 +50,14 @@ Context browser element
       </header>
       <section id="columnBrowser" class="column-browser flex flex--column full-height">
         <div class="columns flex full-height">
-          <template is="x-repeat" id="levels" items="{{parentNodes}}">
+          <template is="dom-repeat" id="levels" items="{{parentNodes}}">
             <div class="full-height column new">
               <div class="full-height flex flex--column" data-column>
                 <div>{{ item.header || '' }}</div>
                 <ul class="list-bare level full-height"
                     on-scroll="scrollEndHandler">
                   <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-                  <template is="x-repeat"
+                  <template is="dom-repeat"
                             id="level"
                             items="{{item.children}}">
                     <li on-click="itemClickHandler"
@@ -297,7 +297,7 @@ Polymer(
      * @private
      */
     handleBreadcrumbClick: function(evt) {
-      var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with x-repeat
+      var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with dom-repeat
       this.selectItem(this.parentNodes[level]);
     },
 
@@ -308,7 +308,7 @@ Polymer(
      * @private
      */
     itemClickHandler: function(evt) {
-      var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within an x-repeat
+      var levelTemplateRepeat = Polymer.dom(this.root).querySelector('template#level');//can't use this.$.id to find this template as it is within a dom-repeat
       var item = levelTemplateRepeat.itemForElement(evt.target);
       this.selectItem(item, evt.currentTarget);
     },

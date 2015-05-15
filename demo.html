@@ -4,7 +4,7 @@
         <title>px-context-browser Demo</title>
 
         <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-        <script src="../webcomponentsjs/webcomponents.js"></script>
+        <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
 
         <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
         <script src="../q/q.js"></script>
@@ -82,12 +82,11 @@
                 }
             };
 
-            window.setTimeout(function() {
-
-                var colBrowser = document.querySelector('px-context-browser');
-                colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
-                colBrowser.initialContexts = initialContexts;
-            }, 2000);
+            window.addEventListener('WebComponentsReady', function() {
+              var colBrowser = document.querySelector('px-context-browser');
+              colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
+              colBrowser.initialContexts = initialContexts;
+            });
 
             function demoGetChildren(nodeId, rangeStart) {
                 var deferred = Q.defer();
