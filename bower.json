@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "polymer": "~v0.9.0",
-    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~v0.1.6"
+    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~v0.1.6",
     "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.1.1"
   },
   "devDependencies": {
