@@ -9,6 +9,15 @@
  * under which the software has been supplied.
  */
 /*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+/*
 THIS FILE SHOULD CONTAIN ONLY ABSTRACT/'SKETCH' THEME RULES, NOT SPECIFIC TO PREDIX BRANDING
 Predix branding rules go in px-comp-two-predix.scss, not in this file.
 */
@@ -969,12 +978,6 @@ html {
  * Sass functions for Predix Experience
  */
 /*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
     #PX-MIXINS-DESIGN
 \*------------------------------------*/
 /**
@@ -1092,10 +1095,6 @@ html {
 
 .weight--semibold {
   font-weight: 600 !important; }
-
-small {
-  font-size: 0.8rem;
-  line-height: 1.6666666667; }
 
 /*------------------------------------*\
     #PX-ICONOGRAPHY-DESIGN
@@ -3099,26 +3098,26 @@ small {
 /**
        * Add large paddings.
        */
-.p\00002b {
+.p\+ {
   padding: 1.3333333333rem !important; }
 
-.pt\00002b {
+.pt\+ {
   padding-top: 1.3333333333rem !important; }
 
-.pr\00002b {
+.pr\+ {
   padding-right: 1.3333333333rem !important; }
 
-.pb\00002b {
+.pb\+ {
   padding-bottom: 1.3333333333rem !important; }
 
-.pl\00002b {
+.pl\+ {
   padding-left: 1.3333333333rem !important; }
 
-.ph\00002b {
+.ph\+ {
   padding-right: 1.3333333333rem !important;
   padding-left: 1.3333333333rem !important; }
 
-.pv\00002b {
+.pv\+ {
   padding-top: 1.3333333333rem !important;
   padding-bottom: 1.3333333333rem !important; }
 
@@ -3580,3 +3579,289 @@ small {
     -webkit-flex: none !important;
         -ms-flex: none !important;
             flex: none !important; } }
+
+.invisible-width {
+  width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+  visibility: hidden; }
+
+.spacer, .spacer-x {
+  width: 1ex; }
+.spacer, .spacer-2-x {
+  width: 2ex; }
+
+span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
+  visibility: hidden;
+  display: inline-block; }
+
+.scroll-y {
+  overflow-y: scroll; }
+
+.flex, .flex-x, .flex-y, .flexible-body, .flex-middle {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex; }
+.flex-x {
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row; }
+.flex-y, .flexible-body {
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column; }
+.flex-1, .flexible-body > .body {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1; }
+.flex-middle {
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center; }
+  .flex-middle > span {
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex; }
+
+:host {
+  display: block; }
+
+.column-browser-container {
+  height: 100%; }
+  .column-browser-container * {
+    overflow: hidden; }
+  .column-browser-container .scroll-y {
+    overflow-y: scroll; }
+  .column-browser-container .breadcrumb, .column-browser-container .selectable-item {
+    cursor: pointer; }
+  .column-browser-container .breadcrumbConnector {
+    margin-left: 1ex;
+    margin-right: 1ex; }
+    .column-browser-container .breadcrumbConnector:last-of-type {
+      display: none; }
+  .column-browser-container .spacer-2-x > .breadcrumbConnector {
+    margin: 0; }
+  .column-browser-container > div > .head {
+    line-height: 2.5; }
+.column-browser .fa {
+  padding-left: 1px;
+  padding-right: 1px; }
+.column-browser > div.columns-1 .column {
+  width: 100%; }
+.column-browser > div.column-index-1 .column:nth-child(-n+1) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-1 .column:nth-child(-n+1) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-2 .column {
+  width: 50%; }
+.column-browser > div.column-index-2 .column:nth-child(-n+2) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-2 .column:nth-child(-n+2) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-3 .column {
+  width: 33.3333333333%; }
+.column-browser > div.column-index-3 .column:nth-child(-n+3) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-3 .column:nth-child(-n+3) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-4 .column {
+  width: 25%; }
+.column-browser > div.column-index-4 .column:nth-child(-n+4) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-4 .column:nth-child(-n+4) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-5 .column {
+  width: 20%; }
+.column-browser > div.column-index-5 .column:nth-child(-n+5) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-5 .column:nth-child(-n+5) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-6 .column {
+  width: 16.6666666667%; }
+.column-browser > div.column-index-6 .column:nth-child(-n+6) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-6 .column:nth-child(-n+6) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-7 .column {
+  width: 14.2857142857%; }
+.column-browser > div.column-index-7 .column:nth-child(-n+7) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-7 .column:nth-child(-n+7) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-8 .column {
+  width: 12.5%; }
+.column-browser > div.column-index-8 .column:nth-child(-n+8) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-8 .column:nth-child(-n+8) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-9 .column {
+  width: 11.1111111111%; }
+.column-browser > div.column-index-9 .column:nth-child(-n+9) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-9 .column:nth-child(-n+9) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-10 .column {
+  width: 10%; }
+.column-browser > div.column-index-10 .column:nth-child(-n+10) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-10 .column:nth-child(-n+10) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-11 .column {
+  width: 9.0909090909%; }
+.column-browser > div.column-index-11 .column:nth-child(-n+11) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-11 .column:nth-child(-n+11) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser > div.columns-12 .column {
+  width: 8.3333333333%; }
+.column-browser > div.column-index-12 .column:nth-child(-n+12) {
+  margin-left: -16em;
+  width: 16em;
+  overflow: hidden; }
+  html[dir=rtl] .column-browser > div.column-index-12 .column:nth-child(-n+12) {
+    margin-right: -16em;
+    margin-left: 0; }
+.column-browser .column {
+  -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+  transition: width 0.35s ease 0s, min-width 0.35s ease 0s, margin-left 0.35s ease 0s, margin-right 0.35s ease 0s, opacity 0.35s ease 0s;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-top: 0;
+  border-bottom: 0; }
+  html:not([dir=rtl]) .column-browser .column {
+    border-left-width: 0; }
+  html[dir=rtl] .column-browser .column {
+    border-right-width: 0; }
+  .column-browser .column.new, .column-browser .column.removed {
+    width: 0 !important;
+    min-width: 0;
+    opacity: 0; }
+  .column-browser .column.new {
+    visibility: hidden; }
+.column-browser .ruler {
+  width: 16em;
+  position: absolute;
+  visibility: hidden;
+  height: 0;
+  top: 0;
+  left: 0; }
+.column-browser .column > div {
+  min-width: 16em;
+  width: 100.5%; }
+.column-browser ul {
+  margin: 0;
+  padding: 0; }
+.column-browser .level li {
+  transition: color 0.2s ease 0s, background-color 0.2s ease 0s;
+  line-height: 2; }
+  .column-browser .level li .opener {
+    cursor: pointer; }
+    .column-browser .level li .opener.unopenable {
+      display: none; }
+.column-browser .level li:not(.selected) .opener.openable {
+  visibility: hidden; }
+.column-browser .level:not(.selected) li:not(.selected) .opener.openable {
+  visibility: hidden; }
+.column-browser .level li:not(.selected):hover .opener.openable {
+  visibility: visible; }
+
+[hidden] {
+  display: none !important; }
+
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+/*
+THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
+common/abstract rules go in px-context-browser-sketch.scss, not in this file.
+*/
+/*------------------------------------*\
+    #PX-COLORS-DESIGN
+\*------------------------------------*/
+/**
+ * GE Color Palette
+ */
+/**
+ * Primary
+ */
+/**
+ * Light
+ */
+/**
+ * Dark
+ */
+/**
+ * Circle
+ */
+/**
+ * Monochrome
+ */
+.scroll-y {
+  scrollbar-base-color: #e9e9e9;
+  scrollbar-face-color: #868686; }
+  .scroll-y::-webkit-scrollbar {
+    width: 6px; }
+    .scroll-y::-webkit-scrollbar-track {
+      background-color: #e9e9e9; }
+    .scroll-y::-webkit-scrollbar-thumb {
+      border: solid transparent;
+      border-width: 0 2px;
+      background-clip: content-box;
+      background-color: #868686; }
+
+.column-browser-container, .column-browser > div > div {
+  background-color: white; }
+.column-browser-container > div > .head {
+  border-bottom: 1px solid #868686; }
+.column-browser .column {
+  border-color: #bcbcbc; }
+  .column-browser .column li:hover {
+    background-color: whitesmoke; }
+  .column-browser .column li.selected {
+    background-color: #e9e9e9; }
+  .column-browser .column .level.selected li.selected {
+    background-color: #3693f8;
+    color: white; }

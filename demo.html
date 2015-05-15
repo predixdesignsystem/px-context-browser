@@ -22,6 +22,7 @@
           body {
             height: 100%;
             margin: 0;
+            background-color: #DDD;
           }
           .demo {
             padding: 1rem;
@@ -48,15 +49,14 @@
 
       </article>
 
-
         <px-context-browser
+          style="height: 240px"
                 label-field="name"
                 parent-id-field="category"
                 id-field="identifier"
                 tree-display-levels="3"
                 child-key="children">
         </px-context-browser>
-
         <script>
             var initialContexts = {
                 data: [{

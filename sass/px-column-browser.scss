@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+//
+// Sass for the Predix notion of the px-context-browser component
+//
+// @author: Oren J. Ferrari
+//
+
+@import "px-context-browser-sketch";
+
+
 $side-nav-em-pixel-ratio: 1.0em / 15;
 // 1.6em = 24px;
 
@@ -7,6 +26,17 @@ $default-transition-params: $default-transition-length ease 0s;
 
 $min-width: 240;
 $ruler-width: $side-nav-em-pixel-ratio * $min-width;
+
+.invisible-width {
+  width: 0;
+
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+
+  visibility: hidden;
+}
 
 .spacer {
 
@@ -23,21 +53,22 @@ $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 span.spacer {
   &, &-2 {
     &, &-x {
+      visibility: hidden;
       display: inline-block;
     }
   }
 }
 
+.scroll-y {
+  overflow-y: scroll;
+}
+
 .flex {
-  &, &-x, &-y {
-    display: -webkit-box;
-    /* OLD - iOS 6-, Safari 3.1-6 */
-    display: -moz-box;
-    /* OLD - Firefox 19- (buggy but mostly works) */
-    display: -ms-flexbox;
-    /* TWEENER - IE 10 */
-    display: -webkit-flex;
-    /* NEW - Chrome */
+  &, &-x, &-y, &ible-body, &-middle {
+    display: -webkit-box; // OLD - iOS 6-, Safari 3.1-6
+    display: -moz-box; // OLD - Firefox 19- (buggy but mostly works)
+    display: -ms-flexbox; // TWEENER - IE 10
+    display: -webkit-flex; // NEW - Chrome
     display: flex;
   }
 
@@ -47,38 +78,44 @@ span.spacer {
     -ms-flex-direction: row;
     flex-direction: row;
   }
-  &-y {
+  &-y, &ible-body {
     -webkit-box-orient: vertical;
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
   }
-  &-1 {
+  &-1, &ible-body > .body {
     -webkit-box-flex: 1;
     -moz-box-flex: 1;
     -webkit-flex: 1;
     -ms-flex: 1;
     flex: 1;
   }
+
+  &-middle {
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    > span {
+      display: inline-flex;
+    }
+  }
+
 }
 
-.full {
-  &-xy, &-x {
-    width: 100%;
-  }
-  &-xy, &-y {
-    height: 100%;
-  }
+:host {
+  display: block;
 }
 
 @mixin columnConfig($columns) {
   &.columns-#{$columns} {
-    > div {
+    .column {
       width: 100%/$columns;
     }
   }
   &.column-index-#{$columns} {
-    > div {
+    .column {
       &:nth-child(-n + #{$columns}) {
         margin-left: -$ruler-width;
         width: $ruler-width;
@@ -96,11 +133,50 @@ span.spacer {
 // The actual column browser resides within...
 .column-browser {
 
-  overflow: hidden;
+  // column-browser-container is on the outside of .column-browser
+  &-container {
+
+    height: 100%;
+
+    * {
+      overflow: hidden;
+    }
+    .scroll-y {
+      overflow-y: scroll;
+    }
+
+    .breadcrumb,
+    .selectable-item {
+      cursor: pointer;
+    }
+
+    .breadcrumbConnector {
+      margin-left: 1ex;
+      margin-right: 1ex;
+
+      &:last-of-type {
+        display: none;
+      }
+
+    }
+
+    .spacer-2-x > .breadcrumbConnector {
+      margin:0;
+    }
+
+
+    > div > .head {
+      line-height: 2.5;
+    }
+  }
+
+  // Ensures proper visibility for some icons that get cut off past their edge.
+  .fa {
+    padding-left:1px;
+    padding-right:1px;
+  }
 
   > div {
-    // To facilitate future scrolling or boundary constraints.
-
     @include columnConfig(1);
     @include columnConfig(2);
     @include columnConfig(3);
@@ -113,53 +189,93 @@ span.spacer {
     @include columnConfig(10);
     @include columnConfig(11);
     @include columnConfig(12);
+  }
 
-    > div {
-      background: white;
-      overflow: hidden;
+  .column {
 
-      transform: translateZ(0); // This is a special hack to prevent font-awesome (or any other transformed element) from rendering on top of this unexpectedly.
-      transition: width $default-transition-params,
+    transform: translateZ(0); // This is a special hack to prevent font-awesome (or any other transformed element) from rendering on top of this unexpectedly.
+    transition:
+      width $default-transition-params,
       min-width $default-transition-params,
       margin-left $default-transition-params,
       margin-right $default-transition-params,
       opacity $default-transition-params;
 
-      &, > div {
-        // An extra div is required to enforce the inner boundary even when the outer is animating.
-        min-width: $ruler-width;
-      }
-
-      box-sizing: border-box;
-      border: 1px solid #DDD;
-      border-bottom: 0;
-      html:not([dir=rtl]) & {
-        border-left: 0;
-      }
-
-      html[dir=rtl] & {
-        border-right: 0;
-      }
-
-      &.new, &.removed {
-        width: 0;
-        min-width: 0;
-        opacity: 0;
-      }
-
-      &.new {
-        visibility: hidden;
-      }
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-top: 0;
+    border-bottom: 0;
+    html:not([dir=rtl]) & {
+      border-left-width: 0;
     }
 
+    html[dir=rtl] & {
+      border-right-width: 0;
+    }
+
+    &.new, &.removed {
+      width: 0 !important; // specificity is to refined.
+      min-width: 0;
+      opacity: 0;
+    }
+
+    &.new {
+      visibility: hidden;
+    }
   }
 
   .ruler {
+    width: $ruler-width;
     position: absolute;
     visibility: hidden;
-    width: $ruler-width; // Make sure this isn't overridden.
     height: 0;
     top: 0;
     left: 0;
   }
+
+
+  // An extra div is required to enforce the inner boundary even when the outer is animating.
+  .column > div
+  {
+    min-width: $ruler-width;
+    width:100.5%; // Ensures pixels fill out at the edge of a % defined container width.
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  .level {
+    li {
+      transition: color 0.2s ease 0s, background-color 0.2s ease 0s; // TODO: establish default transition length;
+
+      line-height: 2;
+      .opener {
+        cursor: pointer;
+        &.unopenable {
+          display: none; //opener on unopenable items is never displayed and not seen by screen readers
+        }
+      }
+    }
+
+    li:not(.selected) .opener.openable {
+      // Do not use display:none to avoid altering visual tree structure live or conflicting with flex layout.
+      visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+    }
+    &:not(.selected) {
+      li:not(.selected) .opener.openable {
+        visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+      }
+    }
+    li:not(.selected):hover .opener.openable {
+      visibility: visible; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+    }
+  }
 }
+
+[hidden] { display: none !important; }
+
+@import "px-context-browser-predix";
+
