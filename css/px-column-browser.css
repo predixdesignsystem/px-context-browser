@@ -3625,21 +3625,26 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
     display: -ms-inline-flexbox;
     display: inline-flex; }
 
-.column-browser-container * {
-  overflow: hidden; }
-.column-browser-container .scroll-y {
-  overflow-y: scroll; }
-.column-browser-container .breadcrumb, .column-browser-container .selectable-item {
-  cursor: pointer; }
-.column-browser-container .breadcrumbConnector {
-  margin-left: 1ex;
-  margin-right: 1ex; }
-  .column-browser-container .breadcrumbConnector:last-of-type {
-    display: none; }
-.column-browser-container .spacer-2-x > .breadcrumbConnector {
-  margin: 0; }
-.column-browser-container > div > .head {
-  line-height: 2.5; }
+:host {
+  display: block; }
+
+.column-browser-container {
+  height: 100%; }
+  .column-browser-container * {
+    overflow: hidden; }
+  .column-browser-container .scroll-y {
+    overflow-y: scroll; }
+  .column-browser-container .breadcrumb, .column-browser-container .selectable-item {
+    cursor: pointer; }
+  .column-browser-container .breadcrumbConnector {
+    margin-left: 1ex;
+    margin-right: 1ex; }
+    .column-browser-container .breadcrumbConnector:last-of-type {
+      display: none; }
+  .column-browser-container .spacer-2-x > .breadcrumbConnector {
+    margin: 0; }
+  .column-browser-container > div > .head {
+    line-height: 2.5; }
 .column-browser .fa {
   padding-left: 1px;
   padding-right: 1px; }

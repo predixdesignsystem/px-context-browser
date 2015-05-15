@@ -45,5 +45,10 @@ GE Coding Style Guide
 [GE JS Developer's Guide](https://github.com/GeneralElectric/javascript)
 
 
+### Implementation
+
+It is important to convey that to be able to correctly scroll columns at the container's height the entire component must be flex-box styled with the outer container somehow having a defined height.
+
+
 ### Known Issues
 

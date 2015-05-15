@@ -104,6 +104,10 @@ span.spacer {
 
 }
 
+:host {
+  display: block;
+}
+
 @mixin columnConfig($columns) {
   &.columns-#{$columns} {
     .column {
@@ -131,6 +135,9 @@ span.spacer {
 
   // column-browser-container is on the outside of .column-browser
   &-container {
+
+    height: 100%;
+
     * {
       overflow: hidden;
     }
