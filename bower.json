@@ -14,12 +14,12 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~v0.9.0",
-    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~v0.1.6",
+    "polymer": "~v1.0.3",
+    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~v0.1.13",
     "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.1.1"
   },
   "devDependencies": {
-    "iron-doc-viewer": "PolymerElements/iron-doc-viewer#~v0.9.1",
+    "iron-component-page": "PolymerElements/iron-component-page#~v1.0.4",
     "px-buttons-design": "git://github.build.ge.com/pxc/px-buttons-design.git#~0.1.0",
     "px-colors-design": "git://github.build.ge.com/pxc/px-colors-design.git#~0.1.0",
     "px-meta-lists-design": "git://github.build.ge.com/pxc/px-meta-lists-design.git#~0.1.0",

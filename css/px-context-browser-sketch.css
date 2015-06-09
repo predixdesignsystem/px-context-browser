@@ -16,17 +16,6 @@ Predix branding rules go in px-comp-two-predix.scss, not in this file.
 See https://github.sw.ge.com/pxc/px-getting-started#a-note-about-relative-import-paths for an explanation of the `../`
 in import paths
 */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /*------------------------------------*\
     #PX-COLORS-DESIGN
 \*------------------------------------*/
@@ -48,47 +37,7 @@ in import paths
 /**
  * Monochrome
  */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-MIXINS-DESIGN
-\*------------------------------------*/
-/**
- * Sass mixins for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /**
    *
    * 1. Set the default `font-size` and `line-height` for the entire project,
@@ -107,8 +56,8 @@ html {
   /* [1] */
   line-height: 1.3333333333;
   /* [1] */
-  background-color: #fff;
-  color: #000;
+  background-color: white;
+  color: black;
   overflow-y: scroll;
   /* [2] */
   min-height: 100%;
@@ -222,14 +171,6 @@ dfn {
   font-style: italic; }
 
 /**
-   * Address variable `h1` font-size and margin within `section` and `article`
-   * contexts in Firefox 4+, Safari, and Chrome.
-   */
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0; }
-
-/**
    * Address styling not present in IE 8/9.
    */
 mark {
@@ -274,10 +215,10 @@ svg:not(:root) {
 /* Grouping content
      ========================================================================== */
 /**
-   * Address margin not present in IE 8/9 and Safari.
+   * Zero margins for figure.
    */
 figure {
-  margin: 1em 40px; }
+  margin: 0; }
 
 /**
    * Address differences between Firefox and other browsers.
@@ -299,153 +240,6 @@ code, kbd, pre, samp {
   font-family: monospace, monospace;
   font-size: 1em; }
 
-/* Forms
-     ========================================================================== */
-/**
-   * Known limitation: by default, Chrome and Safari on OS X allow very limited
-   * styling of `select`, unless a `border` property is set.
-   */
-/**
-   * 1. Correct color not being inherited.
-   *    Known issue: affects color of disabled elements.
-   * 2. Correct font properties not being inherited.
-   * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
-   */
-button, input, optgroup, select, textarea {
-  color: inherit;
-  /* 1 */
-  font: inherit;
-  /* 2 */
-  margin: 0;
-  /* 3 */ }
-
-/**
-   * Address `overflow` set to `hidden` in IE 8/9/10/11.
-   */
-button {
-  overflow: visible; }
-
-/**
-   * Address inconsistent `text-transform` inheritance for `button` and `select`.
-   * All other form control elements do not inherit `text-transform` values.
-   * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
-   * Correct `select` style inheritance in Firefox.
-   */
-button, select {
-  text-transform: none; }
-
-/**
-   * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
-   *    and `video` controls.
-   * 2. Correct inability to style clickable `input` types in iOS.
-   * 3. Improve usability and consistency of cursor style between image-type
-   *    `input` and others.
-   */
-button, html input[type="button"], input[type="reset"], input[type="submit"] {
-  -webkit-appearance: button;
-  /* 2 */
-  cursor: pointer;
-  /* 3 */ }
-
-:host input[type="button"] {
-  -webkit-appearance: button;
-  /* 2 */
-  cursor: pointer;
-  /* 3 */ }
-
-/**
-   * Re-set default cursor for disabled elements.
-   */
-button[disabled], html input[disabled] {
-  cursor: default; }
-
-:host input[disabled] {
-  cursor: default; }
-
-/**
-   * Address Firefox 4+ setting `line-height` on `input` using `!important` in
-   * the UA stylesheet.
-   */
-input {
-  line-height: normal; }
-
-/**
-   * It's recommended that you don't attempt to style these elements.
-   * Firefox's implementation doesn't respect box-sizing, padding, or width.
-   *
-   * 1. Address box sizing set to `content-box` in IE 8/9/10.
-   * 2. Remove excess padding in IE 8/9/10.
-   */
-input[type="checkbox"], input[type="radio"] {
-  box-sizing: border-box;
-  /* 1 */
-  padding: 0;
-  /* 2 */ }
-
-/**
-   * Fix the cursor style for Chrome's increment/decrement buttons. For certain
-   * `font-size` values of the `input`, it causes the cursor style of the
-   * decrement button to change from `default` to `text`.
-   */
-/*
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    height: auto;
-  }
-*/
-/**
-   * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
-   * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
-   *    (include `-moz` to future-proof).
-   */
-input[type="search"] {
-  -webkit-appearance: textfield;
-  /* 1 */
-  /* 2 */
-  box-sizing: content-box; }
-
-/**
-   * Remove inner padding and search cancel button in Safari and Chrome on OS X.
-   * Safari (but not Chrome) clips the cancel button when the search input has
-   * padding (and `textfield` appearance).
-   */
-/*
-  input[type="search"]::-webkit-search-cancel-button,
-  input[type="search"]::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-*/
-/**
-   * Define consistent border, margin, and padding.
-   */
-fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em; }
-
-/**
-   * 1. Correct `color` not being inherited in IE 8/9/10/11.
-   * 2. Remove padding so people aren't caught out if they zero out fieldsets.
-   */
-legend {
-  border: 0;
-  /* 1 */
-  padding: 0;
-  /* 2 */ }
-
-/**
-   * Remove default vertical scrollbar in IE 8/9/10/11.
-   */
-textarea {
-  overflow: auto; }
-
-/**
-   * Don't inherit the `font-weight` (applied by a rule above).
-   * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
-   */
-optgroup {
-  font-weight: bold; }
-
 /* Tables
      ========================================================================== */
 /**
@@ -458,21 +252,12 @@ table {
 td, th {
   padding: 0; }
 
-/*------------------------------------*\
-    #PX-BOX-SIZING-DESIGN
-\*------------------------------------*/
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
 /**
- * Sass functions for Predix Experience
+ * Set the global `box-sizing` state to `border-box`.
+ *
+ * css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice
+ * paulirish.com/2012/box-sizing-border-box-ftw
  */
-/**
-   * Set the global `box-sizing` state to `border-box`.
-   *
-   * css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice
-   * paulirish.com/2012/box-sizing-border-box-ftw
-   */
 html {
   box-sizing: border-box; }
 
@@ -483,9 +268,6 @@ html {
 *, *:before, *:after {
   box-sizing: inherit; }
 
-/*------------------------------------*\
-    #PX-HELPERS-DESIGN
-\*------------------------------------*/
 /**
  * A series of helper classes to use arbitrarily. Only use a helper class if an
  * element/component doesn’t already have a class to which you could apply this
@@ -494,12 +276,6 @@ html {
  *
  * A lot of these classes carry `!important` as you will always want them to win
  * out over other selectors.
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
  */
 /**
    * Add/remove floats
@@ -542,8 +318,7 @@ html {
    * Mute an object by reducing its opacity.
    */
 .muted {
-  opacity: 0.5 !important;
-  filter: alpha(opacity=50) !important; }
+  opacity: 0.5 !important; }
 
 /**
    * Align items to the right where they imply progression/movement forward, e.g.:
@@ -659,114 +434,16 @@ html {
    * Hide visually and from screen readers, but maintain layout
    */
 .invisible {
-  visibility: hidden; }
+  visibility: hidden !important; }
 
 /*------------------------------------*\
     #PX-META-LISTS-DESIGN
 \*------------------------------------*/
-/*------------------------------------*\
-    #PX-LIST-BARE-DESIGN
-\*------------------------------------*/
-/**
- * The list-bare object simply removes any indents and bullet points from lists.
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 .list-bare {
   margin: 0;
   padding: 0;
   list-style: none; }
 
-/*------------------------------------*\
-    #PX-LIST-BUTTONS-DESIGN
-\*------------------------------------*/
-/**
- * Styles for lists of buttons in Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-MIXINS-DESIGN
-\*------------------------------------*/
-/**
- * Sass mixins for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-.list-btn {
-  font-size: 1.3333333333rem;
-  line-height: 1; }
-  .list-btn li {
-    margin-right: 1em; }
-    .list-btn li:last-child {
-      margin-right: 0; }
-
-.list-btn .btn {
-  font-size: inherit;
-  line-height: 1; }
-
-/*------------------------------------*\
-    #PX-LIST-INLINE-DESIGN
-\*------------------------------------*/
-/**
- * The list-inline object simply displays a list of items in one line.
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 .list-inline {
   margin: 0;
   padding: 0;
@@ -775,14 +452,11 @@ html {
     display: inline-block; }
 
 /**
-       * Comma delimited list to semantically mark up lists of tags, etc.
+       * Pipe delimited list to semantically mark up lists of tags, etc.
        *
-       * N.B. This component requires that you remove the whitespace between LIs.
-       *      The simplest (and valid) way to achieve this is by omitting the
-       *      closing `</li>` tag.
        */
 .list-inline--delimited > li + li:before {
-  content: ",\00A0"; }
+  content: "\00A0|\00A0"; }
 
 /*------------------------------------*\
     #PX-LIST-UI-DESIGN
@@ -790,23 +464,6 @@ html {
 /**
  * The UI list object creates blocky list items with a keyline separator out of
  * a `ul` or `ol`.
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
  */
 .list-ui, .list-ui__item, .list-ui > li {
   border: 0 solid #ccc; }
@@ -855,12 +512,6 @@ html {
 /**
 * Flexbox for Predix Experience
 */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 .flex {
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -957,123 +608,89 @@ html {
 /**
  * Base typographic styles for Predix Experience
  */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-MIXINS-DESIGN
-\*------------------------------------*/
-/**
- * Sass mixins for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 @font-face {
   font-family: 'GE Inspira';
   font-weight: normal;
   font-style: normal;
-  src: url('../type/GEInspMd.eot');
-  src: url('../type/GEInspMd.eot?#iefix') format('embedded-opentype'), url('../type/GEInspMd.woff') format('woff'), url('../type/GEInspMd.ttf') format('truetype'), url('../type/GEInspMd.svg#GE Inspira') format('svg'); }
+  src: url('../px-typography-design/type/GEInspMd.eot');
+  src: url('../px-typography-design/type/GEInspMd.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspMd.woff') format('woff'), url('../px-typography-design/type/GEInspMd.ttf') format('truetype'), url('../px-typography-design/type/GEInspMd.svg#GE Inspira') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira';
   font-weight: normal;
   font-style: italic;
-  src: url('../type/GEInspMdIt.eot');
-  src: url('../type/GEInspMdIt.eot?#iefix') format('embedded-opentype'), url('../type/GEInspMdIt.woff') format('woff'), url('../type/GEInspMdIt.ttf') format('truetype'), url('../type/GEInspMdIt.svg#GE Inspira') format('svg'); }
+  src: url('../px-typography-design/type/GEInspMdIt.eot');
+  src: url('../px-typography-design/type/GEInspMdIt.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspMdIt.woff') format('woff'), url('../px-typography-design/type/GEInspMdIt.ttf') format('truetype'), url('../px-typography-design/type/GEInspMdIt.svg#GE Inspira') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira';
   font-weight: bold;
   font-style: normal;
-  src: url('../type/GEInspBd.eot');
-  src: url('../type/GEInspBd.eot?#iefix') format('embedded-opentype'), url('../type/GEInspBd.woff') format('woff'), url('../type/GEInspBd.ttf') format('truetype'), url('../type/GEInspBd.svg#GE Inspira') format('svg'); }
+  src: url('../px-typography-design/type/GEInspBd.eot');
+  src: url('../px-typography-design/type/GEInspBd.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspBd.woff') format('woff'), url('../px-typography-design/type/GEInspBd.ttf') format('truetype'), url('../px-typography-design/type/GEInspBd.svg#GE Inspira') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira';
   font-weight: bold;
   font-style: italic;
-  src: url('../type/GEInspBI.eot');
-  src: url('../type/GEInspBI.eot?#iefix') format('embedded-opentype'), url('../type/GEInspBI.woff') format('woff'), url('../type/GEInspBI.ttf') format('truetype'), url('../type/GEInspBI.svg#GE Inspira') format('svg'); }
+  src: url('../px-typography-design/type/GEInspBI.eot');
+  src: url('../px-typography-design/type/GEInspBI.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspBI.woff') format('woff'), url('../px-typography-design/type/GEInspBI.ttf') format('truetype'), url('../px-typography-design/type/GEInspBI.svg#GE Inspira') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Sans';
   font-weight: normal;
   font-style: normal;
-  src: url('../type/GEInspiraSans-Regular-v01.eot');
-  src: url('../type/GEInspiraSans-Regular-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSans-Regular-v01.woff') format('woff'), url('../type/GEInspiraSans-Regular-v01.ttf') format('truetype'), url('../type/GEInspiraSans-Regular-v01.svg#GE Inspira Sans') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSans-Regular-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSans-Regular-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSans-Regular-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSans-Regular-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSans-Regular-v01.svg#GE Inspira Sans') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Sans';
   font-weight: normal;
   font-style: italic;
-  src: url('../type/GEInspiraSans-Italic-v01.eot');
-  src: url('../type/GEInspiraSans-Italic-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSans-Italic-v01.woff') format('woff'), url('../type/GEInspiraSans-Italic-v01.ttf') format('truetype'), url('../type/GEInspiraSans-Italic-v01.svg#GE Inspira Sans') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSans-Italic-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSans-Italic-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSans-Italic-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSans-Italic-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSans-Italic-v01.svg#GE Inspira Sans') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Sans';
   font-weight: bold;
   font-style: normal;
-  src: url('../type/GEInspiraSans-Bold-v01.eot');
-  src: url('../type/GEInspiraSans-Bold-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSans-Bold-v01.woff') format('woff'), url('../type/GEInspiraSans-Bold-v01.ttf') format('truetype'), url('../type/GEInspiraSans-Bold-v01.svg#GE Inspira Sans') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSans-Bold-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSans-Bold-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSans-Bold-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSans-Bold-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSans-Bold-v01.svg#GE Inspira Sans') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Sans';
   font-weight: bold;
   font-style: italic;
-  src: url('../type/GEInspiraSans-BoldItalic-v01.eot');
-  src: url('../type/GEInspiraSans-BoldItalic-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSans-BoldItalic-v01.woff') format('woff'), url('../type/GEInspiraSans-BoldItalic-v01.ttf') format('truetype'), url('../type/GEInspiraSans-BoldItalic-v01.svg#GE Inspira Sans') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSans-BoldItalic-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSans-BoldItalic-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSans-BoldItalic-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSans-BoldItalic-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSans-BoldItalic-v01.svg#GE Inspira Sans') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Serif';
   font-weight: normal;
   font-style: normal;
-  src: url('../type/GEInspiraSerif-Regular-v01.eot');
-  src: url('../type/GEInspiraSerif-Regular-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSerif-Regular-v01.woff') format('woff'), url('../type/GEInspiraSerif-Regular-v01.ttf') format('truetype'), url('../type/GEInspiraSerif-Regular-v01.svg#GE Inspira Serif') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSerif-Regular-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSerif-Regular-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSerif-Regular-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSerif-Regular-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSerif-Regular-v01.svg#GE Inspira Serif') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Serif';
   font-weight: normal;
   font-style: italic;
-  src: url('../type/GEInspiraSerif-Italic-v01.eot');
-  src: url('../type/GEInspiraSerif-Italic-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSerif-Italic-v01.woff') format('woff'), url('../type/GEInspiraSerif-Italic-v01.ttf') format('truetype'), url('../type/GEInspiraSerif-Italic-v01.svg#GE Inspira Serif') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSerif-Italic-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSerif-Italic-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSerif-Italic-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSerif-Italic-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSerif-Italic-v01.svg#GE Inspira Serif') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Serif';
   font-weight: bold;
   font-style: normal;
-  src: url('../type/GEInspiraSerif-Bold-v01.eot');
-  src: url('../type/GEInspiraSerif-Bold-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSerif-Bold-v01.woff') format('woff'), url('../type/GEInspiraSerif-Bold-v01.ttf') format('truetype'), url('../type/GEInspiraSerif-Bold-v01.svg#GE Inspira Serif') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSerif-Bold-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSerif-Bold-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSerif-Bold-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSerif-Bold-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSerif-Bold-v01.svg#GE Inspira Serif') format('svg'); }
 
 @font-face {
   font-family: 'GE Inspira Serif';
   font-weight: bold;
   font-style: italic;
-  src: url('../type/GEInspiraSerif-BoldItalic-v01.eot');
-  src: url('../type/GEInspiraSerif-BoldItalic-v01.eot?#iefix') format('embedded-opentype'), url('../type/GEInspiraSerif-BoldItalic-v01.woff') format('woff'), url('../type/GEInspiraSerif-BoldItalic-v01.ttf') format('truetype'), url('../type/GEInspiraSerif-BoldItalic-v01.svg#GE Inspira Serif') format('svg'); }
+  src: url('../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.eot');
+  src: url('../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.eot?#iefix') format('embedded-opentype'), url('../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.woff') format('woff'), url('../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.ttf') format('truetype'), url('../px-typography-design/type/GEInspiraSerif-BoldItalic-v01.svg#GE Inspira Serif') format('svg'); }
 
 html {
   font-family: "GE Inspira Sans", sans-serif; }
@@ -1097,12 +714,6 @@ small {
   font-size: 0.8rem;
   line-height: 1.6666666667; }
 
-/*------------------------------------*\
-    #PX-ICONOGRAPHY-DESIGN
-\*------------------------------------*/
-/**
- * Base icon styles for Predix Experience
- */
 /*!
  *  Font Awesome 4.3.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -1111,8 +722,8 @@ small {
  * -------------------------- */
 @font-face {
   font-family: 'FontAwesome';
-  src: url('../icons/fontawesome-webfont.eot?v=4.3.0');
-  src: url('../icons/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../icons/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('../icons/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../icons/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../icons/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+  src: url('../font-awesome/fonts/fontawesome-webfont.eot?v=4.3.0');
+  src: url('../font-awesome/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'), url('../font-awesome/fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'), url('../font-awesome/fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'), url('../font-awesome/fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'), url('../font-awesome/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
   font-weight: normal;
   font-style: normal; }
 
@@ -2821,40 +2432,6 @@ small {
   -webkit-transform: scale(-1, 1);
           transform: scale(-1, 1); }
 
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-MIXINS-DESIGN
-\*------------------------------------*/
-/**
- * Sass mixins for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /**
   * 1. Allow us to style box model properties.
   * 2. Line different sized buttons up a little nicer.
@@ -2922,12 +2499,6 @@ small {
 /*------------------------------------*\
     #PX-CLEARFIX-DESIGN
 \*------------------------------------*/
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /**
    * Micro clearfix, as per: css-101.org/articles/clearfix/latest-new-clearfix-so-far.php
    * Extend the clearfix class with Sass to avoid the `.clearfix` class appearing
@@ -2947,23 +2518,6 @@ small {
  *
  * `.(m|p)(t|r|b|l|h|v)(-|+|0) {}` = margin/padding top/right/bottom/left/horizontal/vertical less/more/none
  */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /*------------------------------------*\
     #PX-SPACING-DESIGN
 \*------------------------------------*/
@@ -2972,23 +2526,6 @@ small {
  * level.
  *
  * `.(m|p)(t|r|b|l|h|v)(-|+|0) {}` = margin/padding top/right/bottom/left/horizontal/vertical less/more/none
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
  */
 /**
        * Add tiny margins.
@@ -3128,34 +2665,6 @@ small {
 /**
  * Responsive width classes based on your responsive settings.
  */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
 /*------------------------------------*\
     #WIDTHS
 \*------------------------------------*/
@@ -3165,34 +2674,6 @@ small {
  * word format (e.g. `.u-2-of-3`). Use these in your markup:
  *
  * <div class="u-7/12">
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
- */
-/*!
- * inuitcss, by @csswizardry
- *
- * github.com/inuitcss | inuitcss.com
- */
-/*------------------------------------*\
-    #PX-FUNCTIONS-DESIGN
-\*------------------------------------*/
-/**
- * Sass functions for Predix Experience
  */
 .u-1\/1 {
   width: 100% !important; }
