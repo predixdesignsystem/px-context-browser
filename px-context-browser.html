@@ -332,11 +332,8 @@ Polymer(
           if(this.handlers.getChildren)
           {
             var item = this.parentNodes[levelIdx];
-            if(!item || !item.childrenCount || (item.childrenCount!==undefined && item.children.length>=item.childrenCount))
-            {
-              return;
-            }
-            this.handlers.getChildren(item[_this.idField], item.children.length).then(
+
+            this.handlers.getChildren(item[_this.idField], item.meta).then(
               function(children) {
                 _this.appendChildren(item, children);
               });
@@ -467,7 +464,7 @@ Polymer(
       }
 
       parentNode.children = children;
-      parentNode.childrenCount = results.meta.total;
+      parentNode.meta = results.meta;
     },
 
     /**
