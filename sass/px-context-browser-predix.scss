@@ -20,24 +20,24 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 */
 
 //noinspection CssUnknownTarget
-@import "../px-colors-design/settings.colors";
+@import "px-colors-design/_settings.colors.scss";
 
 .scroll-y {
-  scrollbar-base-color: $gray-lightest;
-  scrollbar-face-color: $gray;
+  scrollbar-base-color: $gray2;
+  scrollbar-face-color: $gray7;
 
   // TODO: Since this only works on web-kit, validate that the inconsistency is known and authorized.
   &::-webkit-scrollbar {
     width: 6px;
 
     &-track {
-      background-color: $gray-lightest;
+      background-color: $gray2;
     }
     &-thumb {
       border: solid transparent;
       border-width: 0 2px;
       background-clip: content-box;
-      background-color: $gray;
+      background-color: $gray7;
     }
   }
 
@@ -51,20 +51,20 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 
   &-container {
     > div > .head {
-      border-bottom: 1px solid $gray;
+      border-bottom: 1px solid $gray7;
     }
   }
 
   .column {
 
-    border-color: $gray-light;
+    border-color: $gray5;
 
     li {
       &:hover {
-        background-color: $off-white;
+        background-color: $gray1;
       }
       &.selected {
-        background-color: $gray-lightest;
+        background-color: $gray2;
       }
     }
     .level.selected {
