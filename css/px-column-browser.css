@@ -3356,6 +3356,8 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 .column-browser-container > div > .head {
   border-bottom: 1px solid #868686; }
 .column-browser .column {
+    overflow-y: auto;
+    height: 60px;
   border-color: #bcbcbc; }
   .column-browser .column li:hover {
     background-color: whitesmoke; }
