@@ -3337,29 +3337,29 @@ span.spacer, span.spacer-x, span.spacer-2, span.spacer-2-x {
       overflow-y: scroll !important; }
 
 .flex, .flex-x, .flex-y, .flexible-body, .flex-middle {
-  display: -ms-flexbox;
   display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex; }
 
 .flex-x {
   -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row; }
+      -ms-flex-direction: row;
+          flex-direction: row; }
 
 .flex-y, .flexible-body {
   -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column; }
+      -ms-flex-direction: column;
+          flex-direction: column; }
 
 .flex-1, .flexible-body > .body {
   -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1; }
+      -ms-flex: 1;
+          flex: 1; }
 
 .flex-middle {
   -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center; }
+      -ms-flex-align: center;
+          align-items: center; }
   .flex-middle > span {
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
