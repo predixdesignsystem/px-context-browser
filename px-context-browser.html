@@ -332,12 +332,21 @@ Polymer(
           if(this.handlers.getChildren)
           {
             var item = this.parentNodes[levelIdx];
+            var options = {};
             if (item && item.meta){
-                if(item.meta.total && item.children.length >= item.meta.total){
-                    return;
+                if(item.meta.total){
+                    if (item.children.length >= item.meta.total){
+                        return;
+                    }
+                    else {
+                        options.rangeStart = item.children.length + 1;
+                    }
+                }
+                else{
+                    options = item.meta;
                 }
 
-                this.handlers.getChildren(item[_this.idField], item.children.length, item.meta).then(
+                this.handlers.getChildren(item[_this.idField], options).then(
                         function(children) {
                             _this.appendChildren(item, children);
                         });
