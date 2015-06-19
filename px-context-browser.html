@@ -314,7 +314,10 @@ Polymer(
      * @private
      */
     itemClickHandler: function(evt) {
-      this.selectItem(evt.model.item, evt.currentTarget);
+      this.debounce('itemClick', function(){
+          this.selectItem(evt.model.item, evt.currentTarget);
+      },200);
+
     },
 
     /**
@@ -324,35 +327,42 @@ Polymer(
      * @private
      */
     scrollEndHandler: function(evt) {
-      // executes when it hasn't been called for 500ms
-      var _this = this;
-      var levelIdx = this.$.levels.indexForElement(evt.target);
-      this.debounce(
-        'scroll-panel', function() {
-          if(this.handlers.getChildren)
-          {
-            var item = this.parentNodes[levelIdx];
-            var options = {};
-            if (item && item.meta){
-                if(item.meta.total){
-                    if (item.children.length >= item.meta.total){
-                        return;
-                    }
-                    else {
-                        options.rangeStart = item.children.length;
-                    }
-                }
-                else{
-                    options = item.meta;
-                }
+            this.debounce(
+                'scroll-panel', function() {
+                        // executes when it hasn't been called for 500ms
+                        var _this = this;
+                        var levelIdx = this.$.levels.indexForElement(evt.target);
 
-                this.handlers.getChildren(item[_this.idField], options).then(
-                        function(children) {
-                            _this.appendChildren(item, children);
-                        });
-            }
-          }
-        }, 500);
+                        var scrollableHeight = evt.target.scrollHeight;
+                        var visibleHeight = evt.target.offsetHeight;
+                        var threshold = 10;
+
+                        var hiddenContentHeight = scrollableHeight - visibleHeight;
+                        if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
+                            if (this.handlers.getChildren) {
+                                var item = this.parentNodes[levelIdx];
+                                var options = {};
+                                if (item && item.meta) {
+                                    if (item.meta.total) {
+                                        if (item.children.length >= item.meta.total) {
+                                            return;
+                                        }
+                                        else {
+                                            options.rangeStart = item.children.length;
+                                        }
+                                    }
+                                    else {
+                                        options = item.meta;
+                                    }
+
+                                    this.handlers.getChildren(item[_this.idField], options).then(
+                                            function (children) {
+                                                _this.appendChildren(item, children);
+                                            });
+                                }
+                            }
+                        }
+                    }, 200);
     },
 
     /**
@@ -449,7 +459,7 @@ Polymer(
       {
         children[i].parent = item;
       }
-
+      item.meta = results.meta;
       // adding all the new children onto the node's children
       Array.prototype.push.apply(item.children, children);
 
