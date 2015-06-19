@@ -14,7 +14,7 @@
 // @author: Oren J. Ferrari
 //
 
-@import "px-context-browser-sketch";
+@import "px-context-browser-sketch.scss";
 
 
 $side-nav-em-pixel-ratio: 1.0em / 15;
@@ -27,7 +27,7 @@ $default-transition-params: $default-transition-length ease 0s;
 $min-width: 240;
 $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 
-@import "flex-helpers";
+@import "_flex-helpers.scss";
 
 :host {
   display: block;
@@ -202,5 +202,5 @@ $ruler-width: $side-nav-em-pixel-ratio * $min-width;
 
 [hidden] { display: none !important; }
 
-@import "px-context-browser-predix";
+@import "px-context-browser-predix.scss";
 

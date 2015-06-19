@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "0.2.1",
+  "version": "0.3.2",
   "main": [
     "src/js/px-context-browser.html"
   ],
@@ -15,15 +15,15 @@
   ],
   "dependencies": {
     "polymer": "~v1.0.3",
-    "px-theme": "git://github.build.ge.com/PXc/px-theme.git#~v0.1.13",
-    "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.1.0"
+    "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.2.0",
+    "px-theme": "https://github.build.ge.com/PXc/px-theme.git#~v0.2.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~v1.0.4",
-    "px-buttons-design": "git://github.build.ge.com/PXd/px-buttons-design.git#~0.3.0",
-    "px-colors-design": "git://github.build.ge.com/PXd/px-colors-design.git#~0.2.0",
-    "px-meta-lists-design": "git://github.build.ge.com/PXd/px-meta-lists-design.git#~0.1.0",
-    "px-starter-kit-design": "git://github.build.ge.com/PXd/px-starter-kit-design.git#~0.1.0",
+    "px-buttons-design": "https://github.build.ge.com/PXd/px-buttons-design.git#~0.4.0",
+    "px-colors-design": "https://github.build.ge.com/PXd/px-colors-design.git#~0.2.0",
+    "px-meta-lists-design": "https://github.build.ge.com/PXd/px-meta-lists-design.git#~0.2.0",
+    "px-starter-kit-design": "https://github.build.ge.com/PXd/px-starter-kit-design.git#~0.3.0",
     "q": "~v1.2.0"
   }
 }
