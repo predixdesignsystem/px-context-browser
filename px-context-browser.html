@@ -640,7 +640,7 @@ Polymer(
       if(attrValue.indexOf(this.ngScopeToken)===0)
       {
         scopePath = attrValue.substring(this.ngScopeToken.length);
-        console.log("scopePath=" + scopePath);
+        //console.log("scopePath=" + scopePath);
         scopeTokens = scopePath.split('.');
         resolvedValue = ngScope;
         for(i = 0; i<scopeTokens.length; i++)
