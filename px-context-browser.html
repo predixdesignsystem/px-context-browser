@@ -193,18 +193,22 @@ Polymer(
      * Ready lifecycle callback
      */
     ready: function() {
+      var self = this;
 
-      //TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
-      if(window['angular'] && this.hasAttributes())
-      {
-        //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
-        var ngScope = angular.element(this.root).scope();
-        for(var i = 0; i<this.attributes.length; i++)
-        {
-          this.resolveNgScopeAttr(ngScope, this.attributes[i].name, this.attributes[i].value);
-        }
-      }
+      //use setTimeout to yield for angular databind to populate the handlers
+      setTimeout(function(){
+          //TBD whether we need self...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
+          if(window['angular'] && self.hasAttributes())
+          {
+              //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
 
+              var ngScope = angular.element(self.root).scope();
+              for(var i = 0; i<self.attributes.length; i++)
+              {
+                  self.resolveNgScopeAttr(ngScope, self.attributes[i].name, self.attributes[i].value);
+              }
+          }
+      },0);
 
       // Need to watch the width of the column-browser.
       var columnBrowser = this.$.columnBrowser;
@@ -216,36 +220,36 @@ Polymer(
       var contextBrowserWidth, contextBrowserChildrenCount;
 
       var getColumns = function() {
-        return $columnBrowserColumns.childNodes.filter(
-          function(n) {
-            return n.tagName=='DIV';
-          });
+          return $columnBrowserColumns.childNodes.filter(
+                  function(n) {
+                      return n.tagName=='DIV';
+                  });
       };
 
       setInterval(
-        function() {
-          var width = columnBrowser.offsetWidth;
-          var removedCount = $columnBrowserColumns.querySelectorAll('.removed').length;
-          var cCount = columnBrowserColumns.childNodes.length - removedCount;
-          if(width!==contextBrowserWidth || cCount!=contextBrowserChildrenCount)
-          {
-            contextBrowserWidth = width;
-            contextBrowserChildrenCount = cCount;
-            var count = getColumns().length - removedCount;
-            var columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth);
-            var desiredClass = columnBrowserColumnsBaseCss + ' columns-' + columns;
+              function() {
+                  var width = columnBrowser.offsetWidth;
+                  var removedCount = $columnBrowserColumns.querySelectorAll('.removed').length;
+                  var cCount = columnBrowserColumns.childNodes.length - removedCount;
+                  if(width!==contextBrowserWidth || cCount!=contextBrowserChildrenCount)
+                  {
+                      contextBrowserWidth = width;
+                      contextBrowserChildrenCount = cCount;
+                      var count = getColumns().length - removedCount;
+                      var columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth);
+                      var desiredClass = columnBrowserColumnsBaseCss + ' columns-' + columns;
 
-            if(count>columns)
-            {
-              desiredClass += " column-index-" + (count - columns);
-            }
+                      if(count>columns)
+                      {
+                          desiredClass += " column-index-" + (count - columns);
+                      }
 
-            if(columnBrowserColumns.className!=desiredClass)
-            {
-              columnBrowserColumns.className = desiredClass;
-            }
-          }
-        }, 1000 / 20); // ms/fps
+                      if(columnBrowserColumns.className!=desiredClass)
+                      {
+                          columnBrowserColumns.className = desiredClass;
+                      }
+                  }
+              }, 1000 / 20); // ms/fps
 
       /*
        Dilemma:
@@ -258,35 +262,37 @@ Polymer(
 
 
       var removeNewTagInternal = function() {
-        var found = false;
-        getColumns().forEach(
-          function(c) {
-            // 1) We detect the 'new' item in the actual dom.
-            if(c.classList.contains('new'))
-            {
-              // 2) delay one frame to remove it.
-              requestAnimationFrame(
-                function() {
-                  // 3) Remove
-                  c.classList.remove('new');
-                });
-              found = true;
-            }
-          });
-        return found;
+          var found = false;
+          getColumns().forEach(
+                  function(c) {
+                      // 1) We detect the 'new' item in the actual dom.
+                      if(c.classList.contains('new'))
+                      {
+                          // 2) delay one frame to remove it.
+                          requestAnimationFrame(
+                                  function() {
+                                      // 3) Remove
+                                      c.classList.remove('new');
+                                  });
+                          found = true;
+                      }
+                  });
+          return found;
       };
 
       var removeNewTag = function() {
-        var wait = function() {
-          // A new item is expected, so wait till it arrives.
-          if(!removeNewTagInternal()) // Not found?  Wait for next frame.
-            requestAnimationFrame(wait);
-        };
-        requestAnimationFrame(wait);
+          var wait = function() {
+              // A new item is expected, so wait till it arrives.
+              if(!removeNewTagInternal()) // Not found?  Wait for next frame.
+                  requestAnimationFrame(wait);
+          };
+          requestAnimationFrame(wait);
       };
 
       this.removeNewTag = removeNewTag;
       removeNewTag();
+
+
     },
 
     /**
