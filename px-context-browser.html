@@ -41,8 +41,8 @@ Context browser element
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
   <template>
-
     <div class="column-browser-container flex-y">
+      <h1 on-click="toggleColumnBrowser"><span>{{selectedItemName}}</span><i class="fa fa-angle-down"></i></h1>
       <div class="flexible-body flex-1">
         <div class="head flex-middle">
           <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
@@ -53,7 +53,7 @@ Context browser element
           </template>
           <content select=".context-info"></content>
         </div>
-        <div class="body flex-y column-browser" id="columnBrowser">
+        <div class="body flex-y column-browser" id="columnBrowser" hidden$="{{!showColumnBrowser}}">
           <div class="flex flex-1">
             <template is="dom-repeat" id="levels" items="{{parentNodes}}">
               <div class="flexible-body column new" data-column>
@@ -186,6 +186,28 @@ Polymer(
       parentNodes: {
         type: Array,
         value: []
+      },
+
+        /**
+         * Initial context name to be shown on page
+         *
+         * @type {String}
+         * @default 'Selected Context'
+         */
+      selectedItemName : {
+          type: String,
+          value: 'Select Context'
+      },
+
+      /**
+       * flag to show column browser
+       * @type {Boolean}
+       * @default false
+       */
+
+      showColumnBrowser : {
+          type: Boolean,
+          value: false
       }
     },
 
@@ -390,6 +412,7 @@ Polymer(
             breadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
           }
         }
+        this.toggleColumnBrowser();
         this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
       }
     },
@@ -566,6 +589,7 @@ Polymer(
 
       var columnEl, containerEl, _this = this, pDom = Polymer.dom;
 
+      this.selectedItemName = item.name;
       // Defer this execution since event handlers may be listening to dom targets that will end up getting removed and can cause unexpected problems.
       // By doing so, we allow an event to complete before changing the DOM.
       setTimeout(function(){
@@ -650,6 +674,12 @@ Polymer(
         }
         this[attrName] = resolvedValue;
       }
+    },
+      /**
+       * toggle visbility of the column browser
+       */
+    toggleColumnBrowser: function(){
+        this.showColumnBrowser = !this.showColumnBrowser;
     }
 
   });
