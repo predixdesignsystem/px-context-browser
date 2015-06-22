@@ -42,8 +42,8 @@ Context browser element
   <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
   <template>
     <div class="column-browser-container flex-y">
-      <h1 on-click="toggleColumnBrowser"><span>{{selectedItemName}}</span><i class="fa fa-angle-down"></i></h1>
-      <div class="flexible-body flex-1">
+      <h1 on-click="toggleColumnBrowser"><span>{{openedItemName}}</span><i class="fa fa-angle-down"></i></h1>
+      <div class="flexible-body flex-1" hidden$="{{!showColumnBrowser}}">
         <div class="head flex-middle">
           <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
           <span class="invisible-width"><span class="breadcrumb">&nbsp;</span></span>
@@ -53,7 +53,7 @@ Context browser element
           </template>
           <content select=".context-info"></content>
         </div>
-        <div class="body flex-y column-browser" id="columnBrowser" hidden$="{{!showColumnBrowser}}">
+        <div class="body flex-y column-browser" id="columnBrowser">
           <div class="flex flex-1">
             <template is="dom-repeat" id="levels" items="{{parentNodes}}">
               <div class="flexible-body column new" data-column>
@@ -194,7 +194,7 @@ Polymer(
          * @type {String}
          * @default 'Selected Context'
          */
-      selectedItemName : {
+      openedItemName : {
           type: String,
           value: 'Select Context'
       },
@@ -412,6 +412,7 @@ Polymer(
             breadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
           }
         }
+        this.openedItemName = this.selectedItem.name;
         this.toggleColumnBrowser();
         this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
       }
@@ -589,7 +590,6 @@ Polymer(
 
       var columnEl, containerEl, _this = this, pDom = Polymer.dom;
 
-      this.selectedItemName = item.name;
       // Defer this execution since event handlers may be listening to dom targets that will end up getting removed and can cause unexpected problems.
       // By doing so, we allow an event to complete before changing the DOM.
       setTimeout(function(){

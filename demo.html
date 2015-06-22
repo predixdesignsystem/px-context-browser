@@ -84,7 +84,11 @@
 
             window.addEventListener('WebComponentsReady', function() {
               var colBrowser = document.querySelector('px-context-browser');
-              colBrowser.handlers = {getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )}, isOpenable: function(node) {return node && node.isOpenable}};
+              colBrowser.handlers = {
+                  getChildren: function(parentId, newIndex) {return demoGetChildren(parentId, newIndex )},
+                  isOpenable: function(node) {return node && node.isOpenable},
+                  itemOpenHandler: function(context) {console.log('Opened: ', context);}
+              };
               colBrowser.initialContexts = initialContexts;
             });
 
