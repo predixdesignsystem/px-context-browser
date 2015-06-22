@@ -42,7 +42,12 @@ Context browser element
   <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
   <template>
     <div class="column-browser-container flex-y">
-      <h1 on-click="toggleColumnBrowser"><span>{{openedItemName}}</span><i class="fa fa-angle-down"></i></h1>
+        <div class="flex-middle">
+            <template is="dom-repeat" items="{{openedBreadcrumbs}}">
+                <span class="breadcrumb">[[item]]</span><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
+            </template>
+        </div>
+        <h1 on-click="toggleColumnBrowser"><span>{{openedItemName}}</span><i class="fa fa-angle-down"></i></h1>
       <div class="flexible-body flex-1" hidden$="{{!showColumnBrowser}}">
         <div class="head flex-middle">
           <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
@@ -208,6 +213,16 @@ Polymer(
       showColumnBrowser : {
           type: Boolean,
           value: false
+      },
+
+      /**
+       * opened item breadcrumb
+       * @type {Array}
+       * @default []
+       */
+      openedBreadcrumbs: {
+          type: Array,
+          value: []
       }
     },
 
@@ -403,18 +418,23 @@ Polymer(
       evt.stopPropagation();
       if(this.selectedItem && this.handlers.itemOpenHandler)
       {
-        var breadcrumbs = [];
+        //clean up breadcrumbs array
+        this.splice('openedBreadcrumbs', 0, this.openedBreadcrumbs.length);
         for(var index in this.parentNodes)
         {
           if(index<this.parentNodes.length - 1)
           {
             //noinspection JSUnfilteredForInLoop
-            breadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
+            //this.openedBreadcrumbs.push(this.getItemLabel(this.parentNodes[index]));
+            if (this.getItemLabel(this.parentNodes[index]) !== ''){
+                this.push('openedBreadcrumbs',this.getItemLabel(this.parentNodes[index]));
+            }
           }
         }
+
         this.openedItemName = this.selectedItem.name;
         this.toggleColumnBrowser();
-        this.handlers.itemOpenHandler(this.selectedItem, breadcrumbs);
+        this.handlers.itemOpenHandler(this.selectedItem, this.openedBreadcrumbs);
       }
     },
 
@@ -675,9 +695,9 @@ Polymer(
         this[attrName] = resolvedValue;
       }
     },
-      /**
-       * toggle visbility of the column browser
-       */
+    /**
+    * toggle visbility of the column browser
+    */
     toggleColumnBrowser: function(){
         this.showColumnBrowser = !this.showColumnBrowser;
     }
