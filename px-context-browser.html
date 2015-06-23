@@ -52,10 +52,12 @@ Context browser element
         <div class="head flex-middle">
           <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
           <span class="invisible-width"><span class="breadcrumb">&nbsp;</span></span>
+
           <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
             <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span>
             <span hidden$="[[item.hideBreadcrumb]]" class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
           </template>
+
           <content select=".context-info"></content>
         </div>
         <div class="body flex-y column-browser" id="columnBrowser">
@@ -484,7 +486,8 @@ Polymer(
         }
       }
       var root = {hideBreadcrumb: true};
-      this.parentNodes = [root];
+      this.parentNodes= [];
+      this.push('parentNodes', root);
       this.addChildren(root, initialContexts);
       this.removeNewTag();
     },
@@ -573,10 +576,9 @@ Polymer(
             // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
             if(children && children.data && children.data.length)
             {
-              _this.push('parentNodes', item);
               _this.removeNewTag();
-
             }
+            _this.push('parentNodes', item);
           });
       }
       else
