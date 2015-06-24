@@ -24,8 +24,7 @@ module.exports = function (grunt) {
         dist: {
           files: {
             'css/noprefix/px-context-browser-sketch.css': 'sass/px-context-browser-sketch.scss',
-            'css/noprefix/px-context-browser.css': 'sass/px-context-browser-predix.scss',
-            'css/noprefix/px-column-browser.css': 'sass/px-column-browser.scss'
+            'css/noprefix/px-context-browser.css': 'sass/px-context-browser-predix.scss'
           }
         }
       },
@@ -39,21 +38,6 @@ module.exports = function (grunt) {
           flatten: true,
           src: 'css/noprefix/*.css',
           dest: 'css'
-        }
-      },
-
-      copy: {
-        icons: {
-          expand: true,
-          flatten: true,
-          src: '*/font-awesome/fonts/*',
-          dest: 'icons'
-        },
-        type: {
-          expand: true,
-          flatten: true,
-          src: '*/px-typography-design/type/*',
-          dest: 'type'
         }
       },
 
@@ -100,14 +84,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-dep-serve');
-    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-autoprefixer');
 
   // Default task.
   grunt.registerTask('default', 'Basic build', [
     'sass',
-    'autoprefixer',
-    'copy'
+    'autoprefixer'
   ]);
 
     // First run task.
