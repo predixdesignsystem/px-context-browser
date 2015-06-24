@@ -486,7 +486,8 @@ Polymer(
         }
       }
       var root = {hideBreadcrumb: true};
-      this.parentNodes= [];
+      this.parentNodes = [];
+      this.openedBreadcrumbs = [];
       this.push('parentNodes', root);
       this.addChildren(root, initialContexts);
       this.removeNewTag();
