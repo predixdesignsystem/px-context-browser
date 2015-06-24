@@ -78,6 +78,7 @@ $column-width: calculateRem(240px);
 
 :host {
   display: block;
+  margin-bottom: $inuit-base-spacing-unit--tiny;
 }
 
 header {
@@ -93,6 +94,7 @@ header {
 
 .column-browser-container {
   height: 100%;
+  overflow: hidden;
 }
 
 .column-browser > div {

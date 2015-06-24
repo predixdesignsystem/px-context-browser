@@ -2671,7 +2671,8 @@ sub {
   content: " > "; }
 
 :host {
-  display: block; }
+  display: block;
+  margin-bottom: 0.3333333333rem; }
 
 header {
   height: 4rem; }
@@ -2683,7 +2684,8 @@ header {
     text-transform: uppercase; }
 
 .column-browser-container {
-  height: 100%; }
+  height: 100%;
+  overflow: hidden; }
 
 .column-browser > div.columns-1 .column {
   width: 100%; }
