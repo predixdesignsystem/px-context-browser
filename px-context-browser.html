@@ -39,47 +39,43 @@ Context browser element
 @demo demo.html
 -->
 <dom-module id="px-context-browser">
-  <link rel="import" type="css" href="css/px-column-browser.css" polyfill-next-selector/>
+  <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <div class="column-browser-container flex-y">
-        <div class="flex-middle">
+    <div class="column-browser-container flex flex--col">
+      <header class="flex flex--middle u-pl">
+        <div>
+          <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
+            <span>{{openedItemName}}</span>
+            <i class="fa fa-caret-down"></i>
+          </h1>
+          <ul class="list-inline list-inline--delimited">
             <template is="dom-repeat" items="{{openedBreadcrumbs}}">
-                <span class="breadcrumb">[[item]]</span><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
+              <li>[[item]]</li>
             </template>
+          </ul>
         </div>
-        <h1 on-click="toggleColumnBrowser"><span>{{openedItemName}}</span><i class="fa fa-angle-down"></i></h1>
-      <div class="flexible-body flex-1" hidden$="{{!showColumnBrowser}}">
-        <div class="head flex-middle">
-          <span class="spacer-2-x"><span class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span></span>
-          <span class="invisible-width"><span class="breadcrumb">&nbsp;</span></span>
-
+      </header>
+      <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
+        <ul class="breadcrumbs list-inline list-inline--delimited">
           <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-            <span hidden$="[[item.hideBreadcrumb]]"><span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span></span>
-            <span hidden$="[[item.hideBreadcrumb]]" class="breadcrumbConnector"><i class="fa fa-angle-right"></i></span>
+            <li hidden$="[[item.hideBreadcrumb]]">
+              <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
+            </li>
           </template>
-
           <content select=".context-info"></content>
-        </div>
-        <div class="body flex-y column-browser" id="columnBrowser">
-          <div class="flex flex-1">
+        </ul>
+        <div class="flex flex--col column-browser" id="columnBrowser">
+          <div class="flex flex__item">
             <template is="dom-repeat" id="levels" items="{{parentNodes}}">
-              <div class="flexible-body column new" data-column>
+              <div class="flex flex--col column new" data-column>
                 <div class="head">{{ item.header || '' }}</div>
-                <div class="body scroll-y" on-scroll="scrollEndHandler">
+                <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
                   <ul class="list-bare level">
-                    <!-- see https://groups.google.com/forum/#!topic/polymer-dev/CMQRzKPV5Ww for explanation of the '&& selectedItem' part below -->
-                    <template is="dom-repeat"
-                              id="level"
-                              items="{{item.children}}">
-                      <li on-click="itemClickHandler"
-                          id$="[[parent.parent.getItemId(item)]]"
-                          class="flex-middle selectable-item">
-
-                        <span class="spacer-2-x"></span>
-                        <span class="flex-1">[[parent.parent.getItemLabel(item)]]</span>
-                        <span class="spacer-x"></span>
-                        <span><i class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"></i><span class="spacer-x"></span></span>
-                        <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i><span class="spacer-x"></span></span>
+                    <template is="dom-repeat" id="level" items="{{item.children}}">
+                      <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="flex flex--middle selectable-item">
+                        <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
+                        <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler">Open</btn>
+                        <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
                       </li>
                     </template>
                     <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
@@ -461,7 +457,7 @@ Polymer(
      * @return {String} CSS class for item opener
      */
     getItemOpenerClass: function(item) {
-      var base = "opener fa fa-arrow-circle-o-right"; // Current suggestion by Hans.
+      var base = "opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
       return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable
         ? base + " openable"
         : base + " unopenable";
