@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "main": [
     "src/js/px-context-browser.html"
   ],
@@ -15,15 +15,17 @@
   ],
   "dependencies": {
     "polymer": "~v1.0.3",
-    "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.2.0",
     "px-theme": "https://github.build.ge.com/PXc/px-theme.git#~v0.2.0"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~v1.0.4",
     "px-buttons-design": "https://github.build.ge.com/PXd/px-buttons-design.git#~0.4.0",
     "px-colors-design": "https://github.build.ge.com/PXd/px-colors-design.git#~0.2.0",
-    "px-meta-lists-design": "https://github.build.ge.com/PXd/px-meta-lists-design.git#~0.2.0",
-    "px-starter-kit-design": "https://github.build.ge.com/PXd/px-starter-kit-design.git#~0.3.0",
+    "px-headings-design": "https://github.build.ge.com/PXd/px-headings-design.git#~0.2.0",
+    "px-iconography-design": "https://github.build.ge.com/PXd/px-iconography-design.git#~0.2.0",
+    "px-list-bare-design": "https://github.build.ge.com/PXd/px-list-bare-design.git#~0.2.0",
+    "px-list-inline-design": "https://github.build.ge.com/PXd/px-list-inline-design.git#~0.2.0",
+    "px-starter-kit-design": "https://github.build.ge.com/PXd/px-starter-kit-design.git#~0.4.0",
     "q": "~v1.2.0"
   }
 }
