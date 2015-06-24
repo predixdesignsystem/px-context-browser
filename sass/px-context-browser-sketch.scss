@@ -33,21 +33,175 @@ Predix branding rules go in px-comp-two-predix.scss, not in this file.
 @import "px-typography-design/_base.typography.scss";
 @import "px-iconography-design/_base.iconography.scss";
 @import "px-viewport-design/_base.viewport.scss";
-
-// Meta
-@import "px-meta-lists-design/_meta.lists.scss";
+@import "px-headings-design/_base.headings.scss";
 
 // Objects
-$inuit-enable-btn--bare                 : true;
+$inuit-enable-btn--small              : true;
+$inuit-enable-btn--tertiary           : true;
 
 @import "px-buttons-design/_objects.buttons.scss";
+@import "px-list-bare-design/_objects.list-bare.scss";
+
+$inuit-enable-list-inline--delimited  : true;
+$inuit-list-inline-delimit-character  : "\00A0>\00A0";
+
+@import "px-list-inline-design/_objects.list-inline.scss";
+
+// Component
+
+// Default Transition Length
+$default-transition-length: 0.35s;
+$default-transition-params: $default-transition-length ease 0s;
+$column-width: calculateRem(240px);
+
+@mixin columnConfig($columns) {
+  &.columns-#{$columns} {
+    .column {
+      width: 100%/$columns;
+    }
+  }
+  &.column-index-#{$columns} {
+    .column {
+      &:nth-child(-n + #{$columns}) {
+        margin-left: -$column-width;
+        width: $column-width;
+        overflow: hidden;
+
+        html[dir=rtl] & {
+          margin-right: -$column-width;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}
+
+:host {
+  display: block;
+}
+
+header {
+  height: calculateRem(60px);
+  h1 {
+    cursor: pointer;
+  }
+  .list-inline {
+    @include inuit-font-size(12px,14px);
+    text-transform: uppercase;
+  }
+}
+
+.column-browser-container {
+  height: 100%;
+}
+
+.column-browser > div {
+  @include columnConfig(1);
+  @include columnConfig(2);
+  @include columnConfig(3);
+  @include columnConfig(4);
+  @include columnConfig(5);
+  @include columnConfig(6);
+  @include columnConfig(7);
+  @include columnConfig(8);
+  @include columnConfig(9);
+  @include columnConfig(10);
+  @include columnConfig(11);
+  @include columnConfig(12);
+}
+
+.breadcrumbs {
+  height: calculateRem(45px);
+  padding-left: $inuit-base-spacing-unit;
+  li {
+    line-height: 3;
+    &:nth-child(2):before {
+      content: " "!important;
+      width: 0;
+    }
+  }
+}
+
+.breadcrumb, .selectable-item {
+  cursor: pointer;
+}
+
+.column {
+  height: calculateRem(300px);
+  transform: translateZ(0);
+  transition: width $default-transition-params,
+              min-width $default-transition-params,
+              margin-left $default-transition-params,
+              margin-right $default-transition-params,
+              opacity $default-transition-params;
+  &.new, &.removed {
+    width: 0 !important; // specificity is to refined.
+    min-width: 0;
+    opacity: 0;
+  }
+
+  &.new {
+    visibility: hidden;
+  }
+  &:first-of-type .level li {
+    padding-left: $inuit-base-spacing-unit;
+  }
+}
+
+.scroll-y {
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-vertical;
+}
+
+.ruler {
+  width: $column-width;
+  position: absolute;
+  visibility: hidden;
+  height: 0;
+  top: 0;
+  left: 0;
+}
+
+// An extra div is required to enforce the inner boundary even when the outer is animating.
+.column > div {
+  min-width: $column-width;
+  width:100.5%; // Ensures pixels fill out at the edge of a % defined container width.
+}
+
+.level {
+  li {
+    padding-right: $inuit-base-spacing-unit--small;
+    padding-left: $inuit-base-spacing-unit--small;
+    line-height: 2;
+    transition: color 0.2s ease 0s, background-color 0.2s ease 0s; // TODO: establish default transition length;
+    .opener.unopenable {
+      display: none; //opener on unopenable items is never displayed and not seen by screen readers
+    }
+    .btn.opener {
+      margin-top: -2px;
+      margin-right: $inuit-base-spacing-unit--tiny;
+      margin-left: $inuit-base-spacing-unit--tiny;
+      padding: 2px 3px 1px;
+      line-height: 1;
+      text-transform: uppercase;
+      -webkit-appearance: none;
+    }
+    &:not(.selected) .opener.openable {
+      // Do not use display:none to avoid altering visual tree structure live or conflicting with flex layout.
+      visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+    }
+  }
+  &:not(.selected) li .opener.openable {
+    visibility: hidden; //opener on openable items not in a selected row is not displayed and not seen by screen readers
+  }
+}
+
+[hidden] {
+  @include accessibility;
+}
 
 // Trumps
-$inuit-enable-margins--tiny:            true;
-$inuit-enable-paddings:                 true;
-$inuit-enable-paddings--tiny:           true;
-$inuit-enable-paddings--small:          true;
-$inuit-enable-paddings--large:          true;
+$inuit-enable-margins--none         : true;
+$inuit-enable-paddings              : true;
 
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
-@import "px-widths-responsive-design/_trumps.widths-responsive.scss";
