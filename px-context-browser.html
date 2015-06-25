@@ -458,7 +458,7 @@ Polymer(
      */
     getItemOpenerClass: function(item) {
       var base = "opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
-      return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.openable
+      return (this.handlers.isOpenable && this.handlers.isOpenable(item)) || item.isOpenable
         ? base + " openable"
         : base + " unopenable";
     },
