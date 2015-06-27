@@ -524,7 +524,7 @@ Polymer(
      *  @config {Object} meta Keys describe the data.
      */
     addChildren: function(parentNode, results) {
-
+      
       if(results===undefined || results===null)
       {
         return;
@@ -568,14 +568,32 @@ Polymer(
       {
         var _this = this;
         this.handlers.getChildren(item[_this.idField]).then(
-          function(children) {
-            _this.addChildren(item, children);
-            // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
-            if(children && children.data && children.data.length)
-            {
-              _this.removeNewTag();
+          function(data) {
+
+            var children = data.data;
+            var parentId = data.meta.parentId;
+            var selectedNode = _this.selectedItem;
+
+            if(parentId === selectedNode.id) {
+
+              _this.addChildren(item, data);
+
+              if (children.length > 0) {
+                _this.removeNewTag();
+              }
+
+              var found = false;
+              var i = 0;
+              while(i < _this.parentNodes.length && !found){
+                if (_this.parentNodes[i][_this.idField] && _this.parentNodes[i][_this.idField].toLowerCase() === item[_this.idField].toLowerCase()){
+                  return; //return if there is a match
+                }
+                i++;
+              };
+
+              _this.push('parentNodes', item);
+
             }
-            _this.push('parentNodes', item);
           });
       }
       else
