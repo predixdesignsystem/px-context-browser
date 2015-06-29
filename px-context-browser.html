@@ -557,6 +557,20 @@ Polymer(
       }
     },
 
+    addToParentNodes: function(item) {
+        var found = false;
+        var i = 0;
+        while(i < this.parentNodes.length && !found){
+            if (this.parentNodes[i][this.idField] && this.parentNodes[i][this.idField] === item[this.idField]){
+                // if it is already in the parent nodes, then don't add it
+                return;
+            }
+            i++;
+        };
+
+        this.push('parentNodes', item);
+    },
+
     /**
      * Fetches all children of a given item
      *
@@ -574,6 +588,7 @@ Polymer(
             var parentId = data.meta.parentId;
             var selectedNode = _this.selectedItem;
 
+            //check response is for the current selected node
             if(parentId === selectedNode.id) {
 
               _this.addChildren(item, data);
@@ -582,16 +597,7 @@ Polymer(
                 _this.removeNewTag();
               }
 
-              var found = false;
-              var i = 0;
-              while(i < _this.parentNodes.length && !found){
-                if (_this.parentNodes[i][_this.idField] && _this.parentNodes[i][_this.idField].toLowerCase() === item[_this.idField].toLowerCase()){
-                  return; //return if there is a match
-                }
-                i++;
-              };
-
-              _this.push('parentNodes', item);
+              _this.addToParentNodes(item);
 
             }
           });
