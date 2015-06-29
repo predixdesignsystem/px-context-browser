@@ -524,7 +524,7 @@ Polymer(
      *  @config {Object} meta Keys describe the data.
      */
     addChildren: function(parentNode, results) {
-
+      
       if(results===undefined || results===null)
       {
         return;
@@ -557,6 +557,20 @@ Polymer(
       }
     },
 
+    addToParentNodes: function(item) {
+        var found = false;
+        var i = 0;
+        while(i < this.parentNodes.length && !found){
+            if (this.parentNodes[i][this.idField] && this.parentNodes[i][this.idField] === item[this.idField]){
+                // if it is already in the parent nodes, then don't add it
+                return;
+            }
+            i++;
+        };
+
+        this.push('parentNodes', item);
+    },
+
     /**
      * Fetches all children of a given item
      *
@@ -568,14 +582,24 @@ Polymer(
       {
         var _this = this;
         this.handlers.getChildren(item[_this.idField]).then(
-          function(children) {
-            _this.addChildren(item, children);
-            // push the item to the parentNodes so breadcrumbs updated even if children not successfully returned
-            if(children && children.data && children.data.length)
-            {
-              _this.removeNewTag();
+          function(data) {
+
+            var children = data.data;
+            var parentId = data.meta.parentId;
+            var selectedNode = _this.selectedItem;
+
+            //check response is for the current selected node
+            if(parentId === selectedNode.id) {
+
+              _this.addChildren(item, data);
+
+              if (children.length > 0) {
+                _this.removeNewTag();
+              }
+
+              _this.addToParentNodes(item);
+
             }
-            _this.push('parentNodes', item);
           });
       }
       else
