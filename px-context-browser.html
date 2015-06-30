@@ -74,7 +74,7 @@ Context browser element
                     <template is="dom-repeat" id="level" items="{{item.children}}">
                       <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]" class="flex flex--middle selectable-item">
                         <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
-                        <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler">Open</btn>
+                        <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[parent.parent.getItemId(item)]]" hidden>Open</btn>
                         <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
                       </li>
                     </template>
@@ -577,7 +577,7 @@ Polymer(
      * @param {Object} item
      */
     getNewChildren: function(item) {
-
+      this.$$("[key='"+item.id+"']").hidden = true;
       if(this.handlers.getChildren)
       {
         var _this = this;
@@ -599,6 +599,7 @@ Polymer(
 
               _this.addToParentNodes(item);
 
+              _this.$$("[key='"+selectedNode.id+"']").hidden = false;
             }
           });
       }
