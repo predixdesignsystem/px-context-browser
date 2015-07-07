@@ -169,7 +169,6 @@ Polymer(
                 /**
                  * Object defining some or all of the following functions as members:
                  *
-                 * isOpenable: function(item) {} returns whether the given context item is open-able as a context
                  * itemOpenHandler: function(item) {} returns special callback behavior when a given context item is opened
                  * itemClickHandler: function(item) {} returns special callback behavior when a given context is selected
                  * getChildren: function (parentId, startIdx) {} returns a JavaScript promise that will resolve to children of the given id and starting with the given index (to support lazy loading)
@@ -460,7 +459,7 @@ Polymer(
                 var base = "opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
                 var openableClass = "unopenable";
 
-                if ((this.handlers.isOpenable && this.handlers.isOpenable(item)) || (typeof item.isOpenable === 'boolean' && item.isOpenable)) {
+                if (typeof item.isOpenable === 'boolean' && item.isOpenable) {
                     openableClass = "openable";
                 }
 
