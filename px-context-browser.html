@@ -20,20 +20,78 @@
 </style>
 
 <!--
-Context browser element
+Context browser element.  See the demo page (demo.html) for a working example.
 
-##### Usage
+#### Simple Usage
 
-    <px-context-browser initial-contexts="{{ ... }}"
-                        handlers="{{ ... }}"
-                        label-field="{{ ... }}"
-                        parent-id-field="{{ ... }}"
-                        id-field="{{ ... }}"
-                        child-key="{{ ... }}">
-        <section class="context-info">optional, will appear below the breadcrumbs</section>
-        <footer>optional, will appear in the footer</footer>
+    <px-context-browser></px-context-browser>
+
+```js
+  var initialContexts = {
+    data: [{
+      "name": "Turbine 74",
+      "id": "001-1",
+      "isOpenable": true
+    }, {
+      "name": "Turbine 57",
+      "id": "001-2",
+      "isOpenable": false
+    }],
+    meta: {
+      total: 2 // total number of entities on all pages (to support pagination)
+    }
+  };
+
+  var colBrowser = document.querySelector('px-context-browser');
+  colBrowser.initialContexts = initialContexts;
+  colBrowser.handlers = {
+      getChildren: function(parentId, newIndex) {
+        return new Promise(function(resolve, reject) {
+          resolve({
+            data: [{
+              "name": "Part 123",
+              "id": "001-2a",
+              "isOpenable": true
+            }],
+            meta: {
+              total: 1, // number of entities
+              parentId: parentId // the id of the entity that was clicked on (Turbine 57)
+            }
+          });
+        });
+      },
+      itemOpenHandler: function(context) {
+        console.log('Opened: ', context);
+      }
+  };
+```
+
+
+#### Custom Data Format Support
+
+    <px-context-browser label-field="description"
+                        parent-id-field="parent"
+                        id-field="identifier">
     </px-context-browser>
 
+```js
+  var initialContexts = {
+    data: [{
+      "description": "Turbine 1",
+      "identifier": "001-1",
+      "parent": "top",
+      "hasChildren": true
+    }, {
+      "description": "Turbine 2",
+      "identifier": "001-2",
+      "parent": "top",
+      "hasChildren": true
+    }],
+    meta: {
+      total: 2 // total number of entities on all pages (to support pagination)
+    }
+  };
+```
 @element px-context-browser
 @blurb Context browser element
 @homepage index.html
@@ -63,7 +121,6 @@ Context browser element
               <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
             </li>
           </template>
-          <content select=".context-info"></content>
         </ul>
         <div class="flex flex--col column-browser" id="columnBrowser">
           <div class="flex flex__item">
@@ -133,20 +190,8 @@ Context browser element
         },
 
         /**
-         * Mapping for the field name in the context data that points up to the parent id of an item. This property allows data of any
-         * form/keys to be used as long as it has the notion of a 'parent id' in it.
-         *
-         * @type {String}
-         * @default "parent"
-         */
-        parentIdField: {
-          type: String,
-          value: "parent"
-        },
-
-        /**
-         * Starting level of context. Contains an Array of items that include keys that match the "idField", "parentId"
-         * field, and "labelField" properties on this component.
+         * Starting level of context. Contains an Array of items that include keys that match the "idField"
+         *  and "labelField" properties on this component.
          *
          * Required. Setting this property is essentially this component's 'main' function.
          *
@@ -173,9 +218,18 @@ Context browser element
         /**
          * Object defining some or all of the following functions as members:
          *
-         * itemOpenHandler: function(item) {} returns special callback behavior when a given context item is opened
-         * itemClickHandler: function(item) {} returns special callback behavior when a given context is selected
-         * getChildren: function (parentId, startIdx) {} returns a JavaScript promise that will resolve to children of the given id and starting with the given index (to support lazy loading)
+         * ```js
+         * itemOpenHandler: function(item) {}
+         *  // returns special callback behavior when
+         *  // a given context item is opened
+         * itemClickHandler: function(item) {}
+         *   // returns special callback behavior when
+         *   // a given context is selected
+         * getChildren: function (parentId, startIdx) {}
+         *   // returns a JavaScript promise that will
+         *   // resolve to children of the given id and
+         *   // starting with the given index (to support lazy loading)
+         *```
          *
          * @type {Object}
          */
@@ -188,6 +242,7 @@ Context browser element
          *
          * @type {Array}
          * @default []
+         * @private
          */
         parentNodes: {
           type: Array,
@@ -220,6 +275,7 @@ Context browser element
          * opened item breadcrumb
          * @type {Array}
          * @default []
+         * @private
          */
         openedBreadcrumbs: {
           type: Array,
@@ -434,6 +490,7 @@ Context browser element
       /**
        * @param {Object} item
        * @return {String} Display label for given item
+       * @private
        */
       getItemLabel: function(item) {
         return item ? item[this.labelField] || '' : '';
@@ -442,6 +499,7 @@ Context browser element
       /**
        * @param {Object} item
        * @return {String} Id for given item
+       * @private
        */
       getItemId: function(item) {
         return item ? item[this.idField] : null;
@@ -450,6 +508,7 @@ Context browser element
       /**
        * @param {Object} item
        * @return {String} CSS class for item opener
+       * @private
        */
       getItemOpenerClass: function(item) {
         var base = "opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
@@ -492,6 +551,7 @@ Context browser element
        * @param {Object} results Describes the children
        *  @config {Array} data List of children objects
        *  @config {Object} meta Keys describe the data.
+       *  @private
        */
       appendChildren: function(item, results) {
         if (results === undefined || results === null) {
@@ -516,6 +576,7 @@ Context browser element
        * @param {Object} results Describes the children
        *  @config {Array} data List of children objects
        *  @config {Object} meta Keys describe the data.
+       *  @private
        */
       addChildren: function(parentNode, results) {
 
@@ -537,6 +598,7 @@ Context browser element
        * Drops all children of a given item;
        *
        * @param {Object} item
+       * @private
        */
       dropCurrentChildren: function(item) {
         // drop the children from the master list of nodes (and update the level)
@@ -547,6 +609,9 @@ Context browser element
         }
       },
 
+      /**
+       * @private
+       */
       addToParentNodes: function(item) {
         var found = false;
         var i = 0;
@@ -566,6 +631,7 @@ Context browser element
        * Fetches all children of a given item
        *
        * @param {Object} item
+       * @private
        */
       getNewChildren: function(item) {
         this.$$("[key='" + item[this.idField] + "']").hidden = true;
@@ -578,8 +644,11 @@ Context browser element
               var parentId = data.meta.parentId;
               var selectedNode = _this.selectedItem;
 
+              if (parentId === undefined || parentId === null) {
+                console.warn('Context tree getChildren response must have meta.parentId defined.');
+              }
               //check response is for the current selected node
-              if (parentId === selectedNode.id) {
+              else if (parentId === selectedNode[_this.idField]) {
 
                 _this.addChildren(item, data);
 
@@ -589,7 +658,10 @@ Context browser element
 
                 _this.addToParentNodes(item);
 
-                _this.$$("[key='" + selectedNode.id + "']").hidden = false;
+                _this.$$("[key='" + selectedNode[_this.idField] + "']").hidden = false;
+              }
+              else {
+                // disregard response, it's from an old getChildren call
               }
             });
         }
@@ -615,6 +687,7 @@ Context browser element
        *
        * @param {Object} item
        * @param {Element} itemElement The element in the local DOM representing the given item. If not passed, will try to find it in the DOM based on item[this.idField]
+       * @private
        */
       selectItem: function(item, itemElement) {
 
