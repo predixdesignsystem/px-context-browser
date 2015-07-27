@@ -580,7 +580,7 @@ Polymer(
              * @param {Object} item
              */
             getNewChildren: function (item) {
-                this.$$("[key='" + item.id + "']").hidden = true;
+                this.$$("[key='" + item[this.idField] + "']").hidden = true;
       if(this.handlers.getChildren)
       {
                     var _this = this;
