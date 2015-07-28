@@ -78,7 +78,7 @@ $column-width: calculateRem(240px);
 
 :host {
   display: block;
-  margin: -$inuit-base-spacing-unit--tiny -$inuit-base-spacing-unit--tiny $inuit-base-spacing-unit--tiny;
+  margin: -#{$inuit-base-spacing-unit--tiny} -#{$inuit-base-spacing-unit--tiny} $inuit-base-spacing-unit--tiny;
 }
 
 header {
