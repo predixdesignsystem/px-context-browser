@@ -2659,7 +2659,7 @@ sub {
 
 :host {
   display: block;
-  margin-bottom: 0.3333333333rem; }
+  margin: -0.6666666667rem 0.3333333333rem; }
 
 header {
   height: 4rem; }
