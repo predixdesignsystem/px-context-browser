@@ -38,7 +38,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
       "isOpenable": false
     }],
     meta: {
-      total: 2 // total number of entities on all pages (to support pagination)
+      parentId: null
     }
   };
 
@@ -54,7 +54,6 @@ Context browser element.  See the demo page (demo.html) for a working example.
               "isOpenable": true
             }],
             meta: {
-              total: 1, // number of entities
               parentId: parentId // the id of the entity that was clicked on (Turbine 57)
             }
           });
@@ -88,7 +87,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
       "hasChildren": true
     }],
     meta: {
-      total: 2 // total number of entities on all pages (to support pagination)
+      parentId: null
     }
   };
 ```
