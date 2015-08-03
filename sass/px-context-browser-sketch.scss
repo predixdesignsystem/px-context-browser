@@ -149,7 +149,9 @@ header {
     padding-left: $inuit-base-spacing-unit;
   }
 }
-
+.column-browser {
+    height: calculateRem(300px);
+}
 .scroll-y {
   overflow-y: scroll;
   overflow: -moz-scrollbars-vertical;
