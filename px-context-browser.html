@@ -99,56 +99,61 @@ Context browser element.  See the demo page (demo.html) for a working example.
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <div class="column-browser-container flex flex--col">
-      <header class="flex flex--middle u-pl">
-        <div>
-          <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
-            <span>{{openedItemName}}</span>
-            <i class="fa fa-caret-down"></i>
-          </h1>
-          <ul class="list-inline list-inline--delimited">
-            <template is="dom-repeat" items="{{openedBreadcrumbs}}">
-              <li>[[item]]</li>
-            </template>
-          </ul>
-        </div>
-      </header>
-      <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
-        <ul class="breadcrumbs list-inline list-inline--delimited">
-          <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-            <li hidden$="[[item.hideBreadcrumb]]">
-              <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
-            </li>
-          </template>
-        </ul>
-        <div class="flex flex--col column-browser" id="columnBrowser">
-          <div class="flex flex__item">
-            <template is="dom-repeat" id="levels" items="{{parentNodes}}">
-              <div class="flex flex--col column new" data-column>
-                <div class="head">{{ item.header || '' }}</div>
-                <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
-                  <ul class="list-bare level">
-                    <template is="dom-repeat" id="level" items="{{item.children}}">
-                      <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]"
-                          class="flex flex--middle selectable-item">
-                        <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
-                        <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"
-                             key$="[[parent.parent.getItemId(item)]]" hidden>Open
-                        </btn>
-                        <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
-                      </li>
-                    </template>
-                    <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
-                    <!-- todo: i18n / messages. Runtime or build-time?? -->
-                  </ul>
+    <div id="modal"  hidden$="{{!showColumnBrowser}}"></div>
+    <div id="back">
+      <div class="column-browser-container flex flex--col">
+        <header class="flex flex--middle u-pl" id="selectContext">
+          <div>
+            <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
+              <span>{{openedItemName}}</span>
+              <i class="fa fa-caret-down"></i>
+            </h1>
+            <ul class="list-inline list-inline--delimited">
+              <template is="dom-repeat" items="{{openedBreadcrumbs}}">
+                <li>[[item]]</li>
+              </template>
+            </ul>
+          </div>
+        </header>
+        <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">
+            <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
+              <ul class="breadcrumbs list-inline list-inline--delimited">
+                <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
+                  <li hidden$="[[item.hideBreadcrumb]]">
+                    <span class="breadcrumb" on-click="handleBreadcrumbClick">[[item.name]]</span>
+                  </li>
+                </template>
+              </ul>
+              <div class="flex flex--col column-browser" id="columnBrowser">
+                <div class="flex flex__item">
+                  <template is="dom-repeat" id="levels" items="{{parentNodes}}">
+                    <div class="flex flex--col column new" data-column>
+                      <div class="head">{{ item.header || '' }}</div>
+                      <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
+                        <ul class="list-bare level">
+                          <template is="dom-repeat" id="level" items="{{item.children}}">
+                            <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]"
+                                class="flex flex--middle selectable-item">
+                              <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
+                              <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"
+                                   key$="[[parent.parent.getItemId(item)]]" hidden>Open
+                              </btn>
+                              <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
+                            </li>
+                          </template>
+                          <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
+                          <!-- todo: i18n / messages. Runtime or build-time?? -->
+                        </ul>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <!-- Avoid ruler being part of the structure but being within a container that can enforce its relative size -->
+                <div class="ruler">
+                  <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
                 </div>
               </div>
-            </template>
-          </div>
-          <!-- Avoid ruler being part of the structure but being within a container that can enforce its relative size -->
-          <div class="ruler">
-            <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
-          </div>
+            </div>
         </div>
 
       </div>
