@@ -132,11 +132,11 @@ Context browser element.  See the demo page (demo.html) for a working example.
                       <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
                         <ul class="list-bare level">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
-                            <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]"
+                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]"
                                 class="flex flex--middle selectable-item">
-                              <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
-                              <button class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"
-                                   key$="[[parent.parent.getItemId(item)]]">Open
+                              <span class="flex__item">[[getItemLabel(item)]]</span>
+                              <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler"
+                                   key$="[[getItemId(item)]]">Open
                               </button>
                               <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
                             </li>
