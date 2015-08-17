@@ -135,9 +135,9 @@ Context browser element.  See the demo page (demo.html) for a working example.
                             <li on-click="itemClickHandler" id$="[[parent.parent.getItemId(item)]]"
                                 class="flex flex--middle selectable-item">
                               <span class="flex__item">[[parent.parent.getItemLabel(item)]]</span>
-                              <btn class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"
+                              <button class$="[[parent.parent.getItemOpenerClass(item)]]" on-click="openClickHandler"
                                    key$="[[parent.parent.getItemId(item)]]" hidden>Open
-                              </btn>
+                              </button>
                               <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
                             </li>
                           </template>
