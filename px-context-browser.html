@@ -515,7 +515,8 @@ Context browser element.  See the demo page (demo.html) for a working example.
        * @private
        */
       getItemOpenerClass: function(item) {
-        var base = "visuallyhidden opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
+        //var base = "visuallyhidden opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
+        var base = "opener btn btn--small btn--tertiary"; // Current suggestion by Hans.
         var openableClass = "unopenable";
 
         if (typeof item.isOpenable === 'boolean' && item.isOpenable) {
@@ -638,7 +639,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
        * @private
        */
       getNewChildren: function(item) {
-        this.toggleClass('visuallyhidden', true, this.$$("[key='" + item[this.idField] + "']"));
+        //this.toggleClass('visuallyhidden', true, this.$$("[key='" + item[this.idField] + "']"));
         if (this.handlers.getChildren) {
           var _this = this;
           this.handlers.getChildren(item[_this.idField]).then(
@@ -662,14 +663,14 @@ Context browser element.  See the demo page (demo.html) for a working example.
 
                 _this.addToParentNodes(item);
 
-                _this.toggleClass('visuallyhidden', false, _this.$$("[key='" + selectedNode[_this.idField] + "']"));
-              }
-              else {
+                //_this.toggleClass('visuallyhidden', false, _this.$$("[key='" + selectedNode[_this.idField] + "']"));
+
+              } else {
                 // disregard response, it's from an old getChildren call
               }
             });
-        }
-        else {
+
+        } else {
           if (this.childKey) {
             this.addChildren(item, item[this.childKey]);
           }
@@ -683,7 +684,6 @@ Context browser element.  See the demo page (demo.html) for a working example.
           this.push('parentNodes', item);
           this.removeNewTag();
         }
-
       },
 
       /**
