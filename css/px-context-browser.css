@@ -2505,7 +2505,7 @@ button.btn {
 
 :host {
   display: block;
-  margin: -0.3333333333rem -0.3333333333rem 0.3333333333rem; }
+  margin-bottom: 5px; }
 
 header {
   height: 4rem; }
