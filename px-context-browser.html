@@ -45,7 +45,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
   var colBrowser = document.querySelector('px-context-browser');
   colBrowser.initialContexts = initialContexts;
   colBrowser.handlers = {
-      getChildren: function(parentId, newIndex) {
+      getChildren: function(parent, newIndex) {
         return new Promise(function(resolve, reject) {
           resolve({
             data: [{
@@ -54,7 +54,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
               "isOpenable": true
             }],
             meta: {
-              parentId: parentId // the id of the entity that was clicked on (Turbine 57)
+              parentId: parent.id // the id of the entity that was clicked on (Turbine 57)
             }
           });
         });
@@ -229,9 +229,9 @@ Context browser element.  See the demo page (demo.html) for a working example.
          * itemClickHandler: function(item) {}
          *   // returns special callback behavior when
          *   // a given context is selected
-         * getChildren: function (parentId, startIdx) {}
+         * getChildren: function (parent, startIdx) {}
          *   // returns a JavaScript promise that will
-         *   // resolve to children of the given id and
+         *   // resolve to children of the item and
          *   // starting with the given index (to support lazy loading)
          *```
          *
@@ -454,7 +454,11 @@ Context browser element.  See the demo page (demo.html) for a working example.
                     options = item.meta;
                   }
 
-                  this.handlers.getChildren(item[_this.idField], options).then(
+                  // var isObject = function(obj) {
+                  //   return obj === Object(obj);
+                  // };
+
+                  this.handlers.getChildren(item, options).then(
                     function(children) {
                       _this.appendChildren(item, children);
                     });
@@ -642,7 +646,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
         //this.toggleClass('visuallyhidden', true, this.$$("[key='" + item[this.idField] + "']"));
         if (this.handlers.getChildren) {
           var _this = this;
-          this.handlers.getChildren(item[_this.idField]).then(
+          this.handlers.getChildren(item).then(
             function(data) {
 
               var children = data.data;

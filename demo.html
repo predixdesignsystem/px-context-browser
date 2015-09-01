@@ -87,8 +87,8 @@
     window.addEventListener('WebComponentsReady', function() {
       var colBrowser = document.querySelector('px-context-browser');
       colBrowser.handlers = {
-        getChildren: function(parentId, newIndex) {
-          return demoGetChildren(parentId, newIndex)
+        getChildren: function(parent, newIndex) {
+          return demoGetChildren(parent, newIndex)
         },
         itemOpenHandler: function(context) {
           console.log('Opened: ', context);
@@ -97,7 +97,8 @@
       colBrowser.initialContexts = initialContexts;
     });
 
-    function demoGetChildren(nodeId, rangeStart) {
+    function demoGetChildren(node, rangeStart) {
+      var nodeId = node.identifier;
       var deferred = Q.defer();
       if (!rangeStart) {
         rangeStart = 0;
