@@ -209,7 +209,7 @@ $inuit-enable-paddings              : true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 
 #modal{
-  z-index:1;
+  z-index:1000;
   position: fixed;
   background: black;
   opacity:0.5;
@@ -222,13 +222,13 @@ $inuit-enable-paddings              : true;
   position:relative;
 }
 #selectContext{
-  z-index:2;
+  z-index:1001;
   background:white;
 }
 #ruler{
   position: absolute;
   background: white;
   width:100%;
-  z-index: 2;
+  z-index: 1001;
   overflow:hidden;
 }

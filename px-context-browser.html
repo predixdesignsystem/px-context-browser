@@ -99,7 +99,7 @@ Context browser element.  See the demo page (demo.html) for a working example.
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <div id="modal"  hidden$="{{!showColumnBrowser}}"></div>
+    <div id="modal" on-click="toggleColumnBrowser" hidden$="{{!showColumnBrowser}}"></div>
     <div id="back">
       <div class="column-browser-container flex flex--col">
         <header class="flex flex--middle u-pl" id="selectContext">
