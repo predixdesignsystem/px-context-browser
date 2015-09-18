@@ -203,6 +203,13 @@ header {
   @include accessibility;
 }
 
+.content-wrapper > ::content {
+  position: absolute;
+  top: 50%;
+  left: 40%; // really no idea how wide it will be, so just always sticking at 40%
+  margin-top: -10px; // half of epsilon heading height 
+}
+
 // Trumps
 $inuit-enable-margins--none         : true;
 $inuit-enable-paddings              : true;
