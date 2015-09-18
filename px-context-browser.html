@@ -102,8 +102,8 @@ Context browser element.  See the demo page (demo.html) for a working example.
     <div id="modal" on-click="toggleColumnBrowser" hidden$="{{!showColumnBrowser}}"></div>
     <div id="back">
       <div class="column-browser-container flex flex--col">
-        <header class="flex flex--middle u-pl" id="selectContext">
-          <div>
+        <header class="flex u-pl" id="selectContext">
+          <div class="flex__item--middle">
             <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
               <span>{{openedItemName}}</span>
               <i class="fa fa-caret-down"></i>
@@ -113,6 +113,9 @@ Context browser element.  See the demo page (demo.html) for a working example.
                 <li>[[item]]</li>
               </template>
             </ul>
+          </div>
+          <div class="content-wrapper">
+            <content></content>
           </div>
         </header>
         <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">

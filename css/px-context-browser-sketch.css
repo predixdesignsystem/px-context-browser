@@ -584,7 +584,6 @@ html {
 .btn {
   display: inline-block;
   overflow: visible;
-  height: 2em;
   margin: 0;
   border: 1px solid #b1b1bc;
   border-radius: 3px;
@@ -651,7 +650,6 @@ button.btn {
    * Small buttons.
    */
 .btn--small {
-  height: 1.6666666667em;
   font-size: 0.8rem;
   line-height: calc(1.6666666667em - 2px); }
 
@@ -681,7 +679,9 @@ button.btn {
 header {
   height: 4rem; }
   header h1 {
-    cursor: pointer; }
+    cursor: pointer;
+    position: relative;
+    z-index: 1; }
   header .list-inline {
     font-size: 0.8rem;
     line-height: 1.1666666667;
@@ -898,6 +898,21 @@ header {
   border: 0 !important;
   padding: 0 !important;
   clip: rect(0 0 0 0) !important; }
+
+.content-wrapper > ::content {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 /**
  * Margin and padding helper classes with breakpoint prefixes. Use these to tweak layout on a micro
