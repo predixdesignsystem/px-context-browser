@@ -679,7 +679,9 @@ button.btn {
 header {
   height: 4rem; }
   header h1 {
-    cursor: pointer; }
+    cursor: pointer;
+    position: relative;
+    z-index: 1; }
   header .list-inline {
     font-size: 0.8rem;
     line-height: 1.1666666667;
@@ -899,9 +901,18 @@ header {
 
 .content-wrapper > ::content {
   position: absolute;
-  top: 50%;
-  left: 40%;
-  margin-top: -10px; }
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center; }
 
 /**
  * Margin and padding helper classes with breakpoint prefixes. Use these to tweak layout on a micro
