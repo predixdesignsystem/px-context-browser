@@ -248,6 +248,30 @@ html {
  * A lot of these classes carry `!important` as you will always want them to win
  * out over other selectors.
  */
+/* Links
+   ========================================================================== */
+/**
+ * Remove the gray background color from active links in IE 10.
+ */
+a {
+  background-color: transparent;
+  /**
+ * Default link colors
+ */
+  /**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */ }
+  a:link,
+  a:visited {
+    color: #3e87e8; }
+  a:hover {
+    color: #3573c5; }
+  a:active {
+    color: #2b5ea2; }
+  a:active,
+  a:hover {
+    outline: 0; }
+
 /**
  * Add/remove floats
  */
@@ -597,6 +621,7 @@ html {
 .btn {
   display: inline-block;
   overflow: visible;
+  height: 2em;
   margin: 0;
   border: 1px solid #b1b1bc;
   border-radius: 3px;
@@ -663,6 +688,7 @@ button.btn {
    * Small buttons.
    */
 .btn--small {
+  height: 1.6666666667em;
   font-size: 0.8rem;
   line-height: calc(1.6666666667em - 2px); }
 
@@ -1047,7 +1073,7 @@ header .list-inline {
   background-color: #efeff4; }
 
 .column-browser .level.selected li.selected {
-  background-color: #3693f8;
+  background-color: #0a9ec1;
   color: white; }
 
 .column-browser .level.selected .btn.opener {
