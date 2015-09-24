@@ -1,0 +1,28 @@
+{
+    "id": "px-context-browser",
+    "name": "Context Browser",
+    "type": "px-context-browser",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "labelField": {
+                "type": "string",
+                "title": "Field with asset name"
+            },
+            "parentIdField": {
+                "type": "string",
+                "title": "Field with parent ID"
+            },
+            "idField": {
+                "type": "string",
+                "title": "Field with ID"
+            }
+        },
+        "required": ["labelField", "parentIdField", "idField"]
+    },
+    "defaultOptions": {
+        "labelField": "name",
+        "parentIdField": "parentID",
+        "idField": "id"
+    }
+}

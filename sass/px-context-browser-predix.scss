@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+//
+// Sass for the Predix notion of the px-context-browser component
+//
+// @author
+//
+
+/*
+THIS FILE SHOULD CONTAIN ONLY RULES SPECIFIC TO PREDIX BRANDING
+common/abstract rules go in px-context-browser-sketch.scss, not in this file.
+*/
+
+@import "px-context-browser-sketch.scss";
+
+:host {
+  background-color: $white;
+}
+
+.scroll-y {
+  scrollbar-base-color: $gray2;
+  scrollbar-face-color: $gray7;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $gray2;
+  }
+  &::-webkit-scrollbar-thumb {
+    border: solid transparent;
+    border-width: 0 2px;
+    background-clip: content-box;
+    background-color: $gray7;
+  }
+}
+
+header .list-inline {
+  color: $gray7;
+}
+
+.breadcrumbs {
+  border-top: 1px solid $gray5;
+  border-bottom: 1px solid $gray7;
+}
+
+.column-browser {
+  li {
+    &:hover {
+      background-color: $gray1;
+    }
+    &.selected {
+      background-color: $gray2;
+    }
+  }
+  .level.selected {
+    li.selected {
+      background-color: $blue-light;
+      color: $white;
+    }
+    .btn.opener {
+      border-color: $white;
+      color: $white;
+      background: none;
+    }
+  }
+}

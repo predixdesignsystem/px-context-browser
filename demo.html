@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>px-context-browser Demo</title>
+
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+  <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
+
+  <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
+  <script src="../q/q.js"></script>
+
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <link rel="import" href="../px-theme/px-theme.html"/>
+
+  <link rel="import" href="px-context-browser.html"/>
+
+  <style is="x-style">
+    html {
+      height: 100%;
+      font-size: 0.9375em;
+    }
+
+    body {
+      height: 100%;
+      margin: 0;
+      background-color: #DDD;
+    }
+
+    .demo {
+      padding: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <article class="demo">
+
+    <h3>Demo</h3>
+
+    <p>
+      Although related, examples are /not/ the same as the test fixtures.
+      Tests are tests, examples are examples.
+    </p>
+
+    <p>
+      Also see the <a href="index.html">documentation</a> and the <a href="test/spec.html">UI test fixture</a>.
+    </p>
+
+    <label><input type="checkbox"
+                  onchange="document.querySelector('html').setAttribute('dir',this.checked?'rtl':'ltr')">Invert
+                                                                                                         Horizontal
+                                                                                                         Direction</label>
+
+  </article>
+
+  <px-context-browser
+    label-field="name"
+    id-field="identifier">
+  </px-context-browser>
+
+  <script>
+    var initialContexts = {
+      data: [{
+        "name": "Lots of children",
+        "identifier": "001-1",
+        "isOpenable": true
+      }, {
+        "name": "Deep nested",
+        "identifier": "001-2",
+        "isOpenable": true
+      }, {
+        "name": "Nothing Below Me",
+        "identifier": "001-3",
+        "isOpenable": true
+      }, {
+        "name": "Nothing Below, Not openable",
+        "identifier": "001-4",
+        "isOpenable": false
+      }],
+      meta: {
+        parentId: null // the id of the asset of the tree above
+      }
+    };
+
+    window.addEventListener('WebComponentsReady', function() {
+      var colBrowser = document.querySelector('px-context-browser');
+      colBrowser.handlers = {
+        getChildren: function(parent, newIndex) {
+          return demoGetChildren(parent, newIndex)
+        },
+        itemOpenHandler: function(context) {
+          console.log('Opened: ', context);
+        }
+      };
+      colBrowser.initialContexts = initialContexts;
+    });
+
+    function demoGetChildren(node, rangeStart) {
+      var nodeId = node.identifier;
+      var deferred = Q.defer();
+      if (!rangeStart) {
+        rangeStart = 0;
+      }
+      var lotsOfChildren = {
+        data: [{
+          "name": "A",
+          "identifier": "001-1a"
+        }, {
+          "name": "B",
+          "identifier": "001-1b"
+        }, {
+          "name": "C",
+          "identifier": "001-1c"
+        }, {
+          "name": "D",
+          "identifier": "001-1d"
+        }, {
+          "name": "E",
+          "identifier": "001-1e"
+        }, {
+          "name": "F",
+          "identifier": "001-1f"
+        }, {
+          "name": "G",
+          "identifier": "001-1g"
+        }, {
+          "name": "H",
+          "identifier": "001-1h"
+        }, {
+          "name": "I",
+          "identifier": "001-1i"
+        }, {
+          "name": "AA",
+          "identifier": "001-1a"
+        }, {
+          "name": "BB",
+          "identifier": "001-1b"
+        }, {
+          "name": "CC",
+          "identifier": "001-1c"
+        }, {
+          "name": "DD",
+          "identifier": "001-1d"
+        }, {
+          "name": "EE",
+          "identifier": "001-1e"
+        }, {
+          "name": "FF",
+          "identifier": "001-1f"
+        }, {
+          "name": "GG",
+          "identifier": "001-1g"
+        }, {
+          "name": "HH",
+          "identifier": "001-1h"
+        }, {
+          "name": "II",
+          "identifier": "001-1i"
+        }, {
+          "name": "AAA",
+          "identifier": "001-1a"
+        }, {
+          "name": "BBB",
+          "identifier": "001-1b"
+        }, {
+          "name": "CCC",
+          "identifier": "001-1c"
+        }, {
+          "name": "DDD",
+          "identifier": "001-1d"
+        }, {
+          "name": "EEE",
+          "identifier": "001-1e"
+        }, {
+          "name": "FFF",
+          "identifier": "001-1f"
+        }, {
+          "name": "GGG",
+          "identifier": "001-1g"
+        }, {
+          "name": "HHH",
+          "identifier": "001-1h"
+        }, {
+          "name": "III",
+          "identifier": "001-1i"
+        }],
+        meta: {
+          parentId: '001-1'
+        }
+      };
+      var deepNestedChildren = {
+        data: [{
+          "name": "Nested Child",
+          "identifier": "001-2a",
+          "isOpenable": true
+        }],
+        meta: {
+          parentId: '001-2'
+        }
+      };
+
+      var deepNestedGrandchildren = {
+        data: [{
+          "name": "Nested Grandchild",
+          "identifier": "001-2aa",
+          "isOpenable": true
+        }],
+        meta: {
+          parentId: '001-2a'
+        }
+      };
+
+      var deepNestedGreatGrandchild = {
+        data: [{
+          "name": "Nested Great Grandchild",
+          "identifier": "001-2aaa",
+          "isOpenable": true
+        }],
+        meta: {
+          parentId: '001-2aa'
+        }
+      };
+
+      var children;
+
+      if (nodeId === "001-1") {
+        children = lotsOfChildren;
+        var rangeEnd = Math.min(rangeStart + 9, children.data.length); //groups of nine
+        children.data = children.data.slice(rangeStart, rangeEnd);
+      }
+      else if (nodeId === "001-2") {
+        children = deepNestedChildren;
+      }
+      else if (nodeId === "001-2a") {
+        children = deepNestedGrandchildren;
+      }
+      else if (nodeId === "001-2aa") {
+        children = deepNestedGreatGrandchild;
+      }
+      else {
+        children = {
+          data: [],
+          meta: {
+            parentId: nodeId
+          }
+        };
+      }
+
+      deferred.resolve(children);
+
+      return deferred.promise;
+    }
+
+  </script>
+
+</body>
+</html>

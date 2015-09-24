@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+  <link rel="stylesheet" href="css/px-column-browser.css"/>
+  <style>
+    /* prototype only specifics */
+    body {
+      background-color: #dddddd;
+      font-family: Arial, sans-serif;
+    }
+    .column-browser-container > div > .foot {
+      text-align: right;
+    }
+    .column-browser-container {
+      max-height: 340px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="column-browser-container flex-y">
+  <div class="flexible-body">
+    <div class="head">Breadcrumb Area</div>
+    <div class="body flex-y column-browser">
+      <div class="flex flex-1">
+
+
+        <div class="flexible-body column">
+          <div class="head">Column Header</div>
+          <div class="body scroll-y">
+            <div>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+              Scroll Me<br/><br/>
+            </div>
+          </div>
+        </div>
+        <div class="flexible-body column">
+          <div class="head">Column Header</div>
+          <div class="body scroll-y">
+            <div>
+              Not enough to scroll
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Avoid ruler being part of the structure but being within a container that can enforce its relative size -->
+      <div class="ruler">
+        <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
+      </div>
+    </div>
+
+    <div class="foot">Footer text example shows what's possible.</div>
+  </div>
+</div>
+
+</body>
+</html>
