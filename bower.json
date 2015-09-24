@@ -2,7 +2,7 @@
   "name": "px-context-browser",
   "version": "0.4.13",
   "main": [
-    "src/js/px-context-browser.html"
+    "px-context-browser.html"
   ],
   "ignore": [
     ".*",
