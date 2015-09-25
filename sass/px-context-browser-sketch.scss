@@ -84,7 +84,6 @@ header {
   h1 {
     cursor: pointer;
     position: relative;
-    z-index: 1;
   }
   .list-inline {
     @include inuit-font-size(12px,14px);
@@ -150,7 +149,7 @@ header {
   }
 }
 .column-browser {
-    height: calculateRem(300px);
+  height: calculateRem(300px);
 }
 .scroll-y {
   overflow-y: scroll;
@@ -207,11 +206,11 @@ header {
 .content-wrapper > ::content {
     position: absolute;
     left: 0;
-    width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 // Trumps
@@ -221,7 +220,6 @@ $inuit-enable-paddings              : true;
 @import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 
 #modal{
-  z-index:1000;
   position: fixed;
   background: black;
   opacity:0.5;
@@ -234,13 +232,12 @@ $inuit-enable-paddings              : true;
   position:relative;
 }
 #selectContext{
-  z-index:1001;
   background:white;
 }
 #ruler{
   position: absolute;
   background: white;
+  z-index:2;
   width:100%;
-  z-index: 1001;
   overflow:hidden;
 }
