@@ -2,7 +2,7 @@
     Relative paths assume component is being run from inside an app or another component, where dependencies are flat
     siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
-    See https://github.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
+    See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
 -->
 <!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
@@ -103,6 +103,9 @@ Context browser element.  See the demo page (demo.html) for a working example.
     <div id="back">
       <div class="column-browser-container flex flex--col">
         <header class="flex u-pl" id="selectContext">
+          <div class="content-wrapper">
+            <content></content>
+          </div>
           <div class="flex__item--middle">
             <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
               <span>{{openedItemName}}</span>
@@ -113,9 +116,6 @@ Context browser element.  See the demo page (demo.html) for a working example.
                 <li>[[item]]</li>
               </template>
             </ul>
-          </div>
-          <div class="content-wrapper">
-            <content></content>
           </div>
         </header>
         <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">

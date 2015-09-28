@@ -62,7 +62,7 @@ header .list-inline {
   }
   .level.selected {
     li.selected {
-      background-color: $blue-light;
+      background-color: $select-blue-default;
       color: $white;
     }
     .btn.opener {
