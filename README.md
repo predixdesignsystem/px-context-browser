@@ -27,7 +27,8 @@ bower install https://github.com/PredixDev/px-context-browser.git --save
 Second, import the component to your application with the following tag in your head.
 
 ```
-<link rel="import" href="/bower_components/px-context-browser/px-context-browser.html" ></link>
+<link rel="import" href="/bower_components/px-context-browser/px-context-browser.html">
+</link>
 ```
 
 Finally, use the component in your application:
