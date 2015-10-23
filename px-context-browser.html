@@ -284,7 +284,6 @@ var directContext ={
           type: String,
           value: "id"
         },
-
         /**
          * Starting level of context. Contains an Array of items that include keys that match the "idField"
          *  and "labelField" properties on this component.
@@ -296,7 +295,6 @@ var directContext ={
           value: null,
           observer: 'initialContextsChanged'
         },
-
         /**
          * Full tree of  directly selected item, drilling all the way down to the selected item.
          * (e.g. via ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
@@ -690,7 +688,6 @@ var directContext ={
         //we have to put out a notifyPath to ensure the correct classes are passes into the lIs and ULs on initialContexts load
         this.notifyPath('selectedItem', '');
       },
-
       /**
        * Appends children to those already at a level.
        *
@@ -714,7 +711,6 @@ var directContext ={
         // adding all the new children onto the node's children
         Array.prototype.push.apply(item.children, children);
       },
-
       /**
        * Add children to a level, overwriting any existing.
        *
@@ -737,7 +733,6 @@ var directContext ={
         parentNode.children = children;
         parentNode.meta = results.meta;
       },
-
       /**
        * Drops all children of a given item;
        *
@@ -867,11 +862,10 @@ var directContext ={
             sib.selectedAsset = true;
           }
         });
+        item.parent.selectedColumn = true;
         //change the itemId, and notify polymer to re-run the templates
         this.set('selectedItem', item);
-        item.parent.selectedColumn = true;
       },
-
       /**
        * TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
        *

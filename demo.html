@@ -60,105 +60,105 @@
   </px-context-browser>
 
   <script>
-  var directContext ={
-    "data": [
-        {
-            "identifier": "001-1",
-            "name": "Lots of Children",
-            "isOpenable" : true
-        },
-        {
-          "identifier": "001-2",
-          "name": "Deep nested",
-          "isOpenable" : true,
-          "children": [
-                {
-                    "identifier": "001-2a",
-                    "name": "Nested Child 1",
-                    "isOpenable" : true,
-                    "children": [
-                      {
-                        "identifier": "001-2aa",
-                        "name": "Nested Grandchild 1",
-                        "isOpenable" : true,
-                        "children" : [{
-                          "identifier": "001-2aba",
-                          "name": "Nested Great Grandchild 1",
-                          "isOpenable" : true
-                        },
-                        {
-                          "identifier": "001-2abb",
-                          "name": "Nested Great Grandchild 2",
-                          "isOpenable" : true
-                        },
-                        {
-                          "identifier": "001-2abc",
-                          "name": "Nested Great Grandchild 3",
-                          "isOpenable" : true,
-                          "selectedAsset": true
-                        }],
-                        "meta": { "parentId": "001-2ab" }
-                      },
-                      {
-                        "identifier": "001-2ab",
-                        "name": "Nested Grandchild 2",
-                        "isOpenable" : true,
-                      },
-                      {
-                        "identifier": "001-2ac",
-                        "name": "Nested Grandchild 3",
-                        "isOpenable" : true
-                      }
-                    ],
-                    "meta": { "parentId": "001-2a" }
-                },
-                {
-                  "identifier": "001-2b",
-                  "name": "Nested Child 2",
-                  "isOpenable" : true
-                },
-                {
-                  "identifier": "001-2c",
-                  "name": "Nested Child 3",
-                  "isOpenable" : true
-                }
-            ],
-            "meta": { "parentId": "001-2" }
-        },
-        {
-        "identifier": "001-3",
+//   var directContext ={
+//     "data": [
+//         {
+//             "identifier": "001-1",
+//             "name": "Lots of Children",
+//             "isOpenable" : true
+//         },
+//         {
+//           "identifier": "001-2",
+//           "name": "Deep nested",
+//           "isOpenable" : true,
+//           "children": [
+//                 {
+//                     "identifier": "001-2a",
+//                     "name": "Nested Child 1",
+//                     "isOpenable" : true,
+//                     "children": [
+//                       {
+//                         "identifier": "001-2aa",
+//                         "name": "Nested Grandchild 1",
+//                         "isOpenable" : true,
+//                         "children" : [{
+//                           "identifier": "001-2aba",
+//                           "name": "Nested Great Grandchild 1",
+//                           "isOpenable" : true
+//                         },
+//                         {
+//                           "identifier": "001-2abb",
+//                           "name": "Nested Great Grandchild 2",
+//                           "isOpenable" : true
+//                         },
+//                         {
+//                           "identifier": "001-2abc",
+//                           "name": "Nested Great Grandchild 3",
+//                           "isOpenable" : true,
+//                           "selectedAsset": true
+//                         }],
+//                         "meta": { "parentId": "001-2ab" }
+//                       },
+//                       {
+//                         "identifier": "001-2ab",
+//                         "name": "Nested Grandchild 2",
+//                         "isOpenable" : true,
+//                       },
+//                       {
+//                         "identifier": "001-2ac",
+//                         "name": "Nested Grandchild 3",
+//                         "isOpenable" : true
+//                       }
+//                     ],
+//                     "meta": { "parentId": "001-2a" }
+//                 },
+//                 {
+//                   "identifier": "001-2b",
+//                   "name": "Nested Child 2",
+//                   "isOpenable" : true
+//                 },
+//                 {
+//                   "identifier": "001-2c",
+//                   "name": "Nested Child 3",
+//                   "isOpenable" : true
+//                 }
+//             ],
+//             "meta": { "parentId": "001-2" }
+//         },
+//         {
+//         "identifier": "001-3",
+//         "name": "Nothing Below Me",
+//         "isOpenable" : true
+//         },
+//         {
+//         "identifier": "001-4",
+//         "name": "Nothing Below, Not openable"
+//        }
+//     ],
+//     "meta": { "parentId": null }
+// };
+    var initialContexts = {
+      data: [{
+        "name": "Lots of children",
+        "identifier": "001-1",
+        "isOpenable": true
+      }, {
+        "name": "Deep nested",
+        "identifier": "001-2",
+        "isOpenable": true
+      }, {
         "name": "Nothing Below Me",
-        "isOpenable" : true
-        },
-        {
+        "identifier": "001-3",
+        "isOpenable": true
+      }, {
+        "name": "Nothing Below, Not openable",
         "identifier": "001-4",
-        "name": "Nothing Below, Not openable"
-       }
-    ],
-    "meta": { "parentId": null }
-};
-    // var initialContexts = {
-    //   data: [{
-    //     "name": "Lots of children",
-    //     "identifier": "001-1",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Deep nested",
-    //     "identifier": "001-2",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below Me",
-    //     "identifier": "001-3",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below, Not openable",
-    //     "identifier": "001-4",
-    //     "isOpenable": false
-    //   }],
-    //   meta: {
-    //     parentId: null // the id of the asset of the tree above
-    //   }
-    // };
+        "isOpenable": false
+      }],
+      meta: {
+        parentId: null // the id of the asset of the tree above
+      }
+    };
 
     function demoGetChildren(node, rangeStart) {
       var nodeId = node.identifier;
@@ -196,58 +196,58 @@
           "identifier": "001-1i"
         }, {
           "name": "AA",
-          "identifier": "001-1a"
+          "identifier": "001-1aa"
         }, {
           "name": "BB",
-          "identifier": "001-1b"
+          "identifier": "001-1bb"
         }, {
           "name": "CC",
-          "identifier": "001-1c"
+          "identifier": "001-1cc"
         }, {
           "name": "DD",
-          "identifier": "001-1d"
+          "identifier": "001-1dd"
         }, {
           "name": "EE",
-          "identifier": "001-1e"
+          "identifier": "001-1ee"
         }, {
           "name": "FF",
-          "identifier": "001-1f"
+          "identifier": "001-1ff"
         }, {
           "name": "GG",
-          "identifier": "001-1g"
+          "identifier": "001-1gg"
         }, {
           "name": "HH",
-          "identifier": "001-1h"
+          "identifier": "001-1hh"
         }, {
           "name": "II",
-          "identifier": "001-1i"
+          "identifier": "001-1ii"
         }, {
           "name": "AAA",
-          "identifier": "001-1a"
+          "identifier": "001-1aaa"
         }, {
           "name": "BBB",
-          "identifier": "001-1b"
+          "identifier": "001-1bbb"
         }, {
           "name": "CCC",
-          "identifier": "001-1c"
+          "identifier": "001-1ccc"
         }, {
           "name": "DDD",
-          "identifier": "001-1d"
+          "identifier": "001-1ddd"
         }, {
           "name": "EEE",
-          "identifier": "001-1e"
+          "identifier": "001-1eee"
         }, {
           "name": "FFF",
-          "identifier": "001-1f"
+          "identifier": "001-1fff"
         }, {
           "name": "GGG",
-          "identifier": "001-1g"
+          "identifier": "001-1ggg"
         }, {
           "name": "HHH",
-          "identifier": "001-1h"
+          "identifier": "001-1hhh"
         }, {
           "name": "III",
-          "identifier": "001-1i"
+          "identifier": "001-1iii"
         }],
         meta: {
           parentId: '001-1'
@@ -320,8 +320,6 @@
       switch (nodeId) {
         case "001-1":
           children = lotsOfChildren;
-          var rangeEnd = Math.min(rangeStart + 9, children.data.length); //groups of nine
-          children.data = children.data.slice(rangeStart, rangeEnd);
         break;
 
         case "001-2":
