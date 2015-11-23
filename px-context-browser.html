@@ -621,35 +621,31 @@ var context ={
         var base = "flex flex--middle selectable-item";
         return base = (item.inSelectedPath) ? base += " selected" : base;
       },
-      contextChanged: function() {
-        console.log('in contextChanged');
-        console.log(this.browserContext);
-      },
       /**
        * Observer on directContext attribute. Functions as the 'main' function of the component if initialContexts is not set
        *
        * @private
        */
-      directContextChanged: function(newValue, oldValue) {
+      contextChanged: function() {
         var _this= this,
-            directContext = this.directContext,
+            context = this.browserContext,
             root;
-
+        console.log(context);
         //make sure it's a json object, and if it is, parse it.
-        if (typeof directContext === 'string') {
-          if (directContext.length > 0 && directContext.indexOf("{{") === -1) {
-            directContext = JSON.parse(directContext);
-          }
-          else {
-            directContext = null;
-          }
+        if (typeof context === 'object' && context !== null) {
+          //if (context.length > 0 && context.indexOf("{{") === -1) {
+            //context = JSON.parse(context);
+          // }
+          // else {
+          //   context = null;
+          // }
         }
         root = {hideBreadcrumb: true};
         this.parentNodes = [];
         this.openedBreadcrumbs = [];
 
         this.push('parentNodes', root);
-        this.addChildren(root, directContext);
+        //this.addChildren(root, context);
 
         //dig into the tree, and keep going while we have children
         //function recursiveAddChildren(currentRoot) {
@@ -670,30 +666,34 @@ var context ={
           //     _this.push('parentNodes',current_elem);
           //   }
           // }
+        if (context !== null) {
+            Object.keys(context.data).forEach(function(i) {
+              console.log(context.data[i]);
+          do {
+            if (context.data[i].children) {
+              current_elem = context.data[i].children;
+            } else {
+              current_elem = context.data[i];
+            }
 
-          // do {
-          //   if (root.children) {
-          //     current_elem = root.children;
-          //   } else {
-          //     current_elem = root;
-          //   }
-          //
-          //
-          //   if (Object.keys(current_elem).indexOf('children') > -1 || current_elem.selectedAsset) {
-          //     current_elem.inSelectedPath = true;
-          //   }
-          //
-          //   if (current_elem.selectedAsset) {
-          //     _this.set('selectedItem',current_elem);
-          //   }
-          //   _this.push('parentNodes',current_elem);
-          //
-          //   if (current_elem.children) {
-          //     var obj = {"data" : current_elem.children};
-          //     _this.addChildren(current_elem, obj);
-          //   }
-          // } while (Object.keys(current_elem).indexOf('children') > -1);
 
+            if (Object.keys(current_elem).indexOf('children') > -1 || current_elem.selectedAsset) {
+              current_elem.inSelectedPath = true;
+            }
+
+            if (current_elem.selectedAsset) {
+              _this.set('selectedItem',current_elem);
+            }
+            _this.push('parentNodes',current_elem);
+
+            if (current_elem.children) {
+              var obj = {"data" : current_elem.children};
+              _this.addChildren(current_elem, obj);
+              //current_elem
+            }
+          } while (Object.keys(current_elem).indexOf('children') > -1);
+        });
+      }
 
       //  }
       //  recursiveAddChildren(root.children);
