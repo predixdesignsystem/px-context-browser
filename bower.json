@@ -20,6 +20,7 @@
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#~v1.0.4",
     "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.0",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.0.3",
     "px-colors-design": "https://github.com/PredixDev/px-colors-design.git#~0.2.0",
     "px-headings-design": "https://github.com/PredixDev/px-headings-design.git#~0.2.0",
     "px-list-bare-design": "https://github.com/PredixDev/px-list-bare-design.git#~0.2.0",

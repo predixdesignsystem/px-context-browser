@@ -27,7 +27,9 @@ Context browser element.  See the demo page (demo.html) for a working example.
     <px-context-browser></px-context-browser>
 
 ```js
-  var initialContexts = {
+// The following object used to be initialContexts, which is now deprecated,
+// and is discouraged.
+  var context = {
     data: [{
       "name": "Turbine 74",
       "id": "001-1",
@@ -42,27 +44,26 @@ Context browser element.  See the demo page (demo.html) for a working example.
     }
   };
 
-  var colBrowser = document.querySelector('px-context-browser');
-  colBrowser.initialContexts = initialContexts;
-  colBrowser.handlers = {
+  window.addEventListener('WebComponentsReady', function() {
+    var colBrowser = document.querySelector('px-context-browser');
+    colBrowser.handlers = {
       getChildren: function(parent, newIndex) {
-        return new Promise(function(resolve, reject) {
-          resolve({
-            data: [{
-              "name": "Part 123",
-              "id": "001-2a",
-              "isOpenable": true
-            }],
-            meta: {
-              parentId: parent.id // the id of the entity that was clicked on (Turbine 57)
-            }
-          });
-        });
+        return demoGetChildren(parent, newIndex);
       },
       itemOpenHandler: function(context) {
         console.log('Opened: ', context);
       }
-  };
+    };
+    if (typeof initialContexts !== "undefined" ) {
+      colBrowser.initialContexts = initialContexts;
+    } else {
+      if (context.contextType === "directContext") {
+        colBrowser.directContext = context;
+      } else if (context.contextType === "initialContext") {
+        colBrowser.initialContexts = initialContexts;
+      }
+    }
+  });
 ```
 
 
@@ -74,7 +75,10 @@ Context browser element.  See the demo page (demo.html) for a working example.
     </px-context-browser>
 
 ```js
-  var initialContexts = {
+
+// The following object used to be initialContexts, which is now deprecated,
+// and is discouraged.
+  var context = {
     data: [{
       "description": "Turbine 1",
       "identifier": "001-1",
@@ -93,9 +97,11 @@ Context browser element.  See the demo page (demo.html) for a working example.
 ```
 
 ### Direct Context use
-<px-context-browser></px-context-browser>
+
+    <px-context-browser></px-context-browser>
+
 ```
-var directContext ={
+var context ={
   "data": [
       {
           "identifier": "001-1",
@@ -284,34 +290,39 @@ var directContext ={
           type: String,
           value: "id"
         },
-        /**
-         * Starting level of context. Contains an Array of items that include keys that match the "idField"
-         *  and "labelField" properties on this component.
-         * Optional. Setting this property is essentially to this component's initialContexts function.
-         * @type {Object}
-         * @Optional
-         */
-        initialContexts: {
-          value: null,
-          observer: 'initialContextsChanged'
+        // /**
+        //  * Starting level of context. Contains an Array of items that include keys that match the "idField"
+        //  *  and "labelField" properties on this component.
+        //  * Optional. Setting this property is essentially to this component's initialContexts function.
+        //  * @type {Object}
+        //  * @Optional
+        //  */
+        // initialContexts: {
+        //   value: null,
+        //   observer: 'initialContextsChanged'
+        // },
+        // /**
+        //  * Full tree of  directly selected item, drilling all the way down to the selected item.
+        //  * (for example, through ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
+        //  * Optional.
+        //  * @type {object}
+        //  * @Optional
+        //  */
+        // directContext : {
+        //   value: null,
+        //   observer: 'directContextChanged'
+        // },
+        // /**
+        //  * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
+        //  * (e.g. via ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
+        //  *
+        //  * @type {String}
+        //  */
+        browserContext : {
+            value: null,
+            type: function() {return {};},
+            observer: 'contextChanged'
         },
-        /**
-         * Full tree of  directly selected item, drilling all the way down to the selected item.
-         * (e.g. via ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
-         * Optional. Setting this property is essentially to this component's directContext function.
-         * @type {object}
-         * @Optional
-         */
-        directContext : {
-          value: null,
-          observer: 'directContextChanged'
-        },
-        /**
-         * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
-         * (e.g. via ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
-         *
-         * @type {String}
-         */
         selectedItemId: {
           type: String,
           value: null,
@@ -610,6 +621,10 @@ var directContext ={
         var base = "flex flex--middle selectable-item";
         return base = (item.inSelectedPath) ? base += " selected" : base;
       },
+      contextChanged: function() {
+        console.log('in contextChanged');
+        console.log(this.browserContext);
+      },
       /**
        * Observer on directContext attribute. Functions as the 'main' function of the component if initialContexts is not set
        *
@@ -637,30 +652,51 @@ var directContext ={
         this.addChildren(root, directContext);
 
         //dig into the tree, and keep going while we have children
-        function recursiveAddChildren(currentRoot) {
+        //function recursiveAddChildren(currentRoot) {
           var current_elem;
-          for (var i in currentRoot) {
-            current_elem = currentRoot[i];
-            if(Object.keys(current_elem).indexOf('children') > -1) {
-              if (current_elem.inSelectedPath) {
-                current_elem.inSelectedPath = true;
-              } else {
-                current_elem.inSelectedPath = true;
-              }
-              //only direct lineage of the selected child have children..
-              _this.push('parentNodes',current_elem);
-              var obj = {"data" : current_elem.children};
-              _this.addChildren(current_elem, obj);
-              recursiveAddChildren(current_elem.children);
-            } else if (current_elem.selectedAsset) {
-                current_elem.inSelectedPath = true;
-                _this.set('selectedItem',current_elem);
-              //we're pushing this item into parentNode to ensure the breadcrumbs work correctly.
-              _this.push('parentNodes',current_elem);
-            }
-          }
-        }
-        recursiveAddChildren(root.children);
+          // for (var i in currentRoot) {
+          //   current_elem = currentRoot[i];
+          //   if(Object.keys(current_elem).indexOf('children') > -1) {
+          //       current_elem.inSelectedPath = true;
+          //     //only direct lineage of the selected child have children..
+          //     _this.push('parentNodes',current_elem);
+          //     var obj = {"data" : current_elem.children};
+          //     _this.addChildren(current_elem, obj);
+          //     recursiveAddChildren(current_elem.children);
+          //   } else if (current_elem.selectedAsset) {
+          //       current_elem.inSelectedPath = true;
+          //       _this.set('selectedItem',current_elem);
+          //     //we're pushing this item into parentNode to ensure the breadcrumbs work correctly.
+          //     _this.push('parentNodes',current_elem);
+          //   }
+          // }
+
+          // do {
+          //   if (root.children) {
+          //     current_elem = root.children;
+          //   } else {
+          //     current_elem = root;
+          //   }
+          //
+          //
+          //   if (Object.keys(current_elem).indexOf('children') > -1 || current_elem.selectedAsset) {
+          //     current_elem.inSelectedPath = true;
+          //   }
+          //
+          //   if (current_elem.selectedAsset) {
+          //     _this.set('selectedItem',current_elem);
+          //   }
+          //   _this.push('parentNodes',current_elem);
+          //
+          //   if (current_elem.children) {
+          //     var obj = {"data" : current_elem.children};
+          //     _this.addChildren(current_elem, obj);
+          //   }
+          // } while (Object.keys(current_elem).indexOf('children') > -1);
+
+
+      //  }
+      //  recursiveAddChildren(root.children);
         this.removeNewTag();
       },
       /**

@@ -11,7 +11,7 @@
 
   <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
   <link rel="import" href="../px-theme/px-theme.html"/>
-
+  <link rel="import" href="../iron-ajax/iron-ajax.html" />
   <link rel="import" href="px-context-browser.html"/>
 
   <style is="x-style">
@@ -32,8 +32,8 @@
   </style>
 </head>
 
-<body>
-
+<body unresolved>
+<template is="dom-bind">
   <article class="demo">
 
     <h3>Demo</h3>
@@ -54,90 +54,117 @@
 
   </article>
 
-  <px-context-browser
-    label-field="name"
-    id-field="identifier">
-  </px-context-browser>
-
+    <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax>
+    <px-context-browser
+      label-field="name"
+      id-field="identifier" browserContext="{{browserContext}}">
+    </px-context-browser>
+  </template>
   <script>
-  var context ={
-    "data": [
-        {
-            "identifier": "001-1",
-            "name": "Lots of Children",
-            "isOpenable" : true
-        },
-        {
-          "identifier": "001-2",
-          "name": "Deep nested",
-          "isOpenable" : true,
-          "children": [
-                {
-                    "identifier": "001-2a",
-                    "name": "Nested Child 1",
-                    "isOpenable" : true,
-                    "children": [
-                      {
-                        "identifier": "001-2aa",
-                        "name": "Nested Grandchild 1",
-                        "isOpenable" : true,
-                        "children" : [{
-                          "identifier": "001-2aba",
-                          "name": "Nested Great Grandchild 1",
-                          "isOpenable" : true
-                        },
-                        {
-                          "identifier": "001-2abb",
-                          "name": "Nested Great Grandchild 2",
-                          "isOpenable" : true
-                        },
-                        {
-                          "identifier": "001-2abc",
-                          "name": "Nested Great Grandchild 3",
-                          "isOpenable" : true,
-                          "selectedAsset": true
-                        }],
-                        "meta": { "parentId": "001-2ab" }
-                      },
-                      {
-                        "identifier": "001-2ab",
-                        "name": "Nested Grandchild 2",
-                        "isOpenable" : true,
-                      },
-                      {
-                        "identifier": "001-2ac",
-                        "name": "Nested Grandchild 3",
-                        "isOpenable" : true
-                      }
-                    ],
-                    "meta": { "parentId": "001-2a" }
-                },
-                {
-                  "identifier": "001-2b",
-                  "name": "Nested Child 2",
-                  "isOpenable" : true
-                },
-                {
-                  "identifier": "001-2c",
-                  "name": "Nested Child 3",
-                  "isOpenable" : true
-                }
-            ],
-            "meta": { "parentId": "001-2" }
-        },
-        {
-        "identifier": "001-3",
-        "name": "Nothing Below Me",
-        "isOpenable" : true
-        },
-        {
-        "identifier": "001-4",
-        "name": "Nothing Below, Not openable"
-       }
-    ],
-    "meta": { "parentId": null },
-    "contextType": "directContext"
-};
+//   var context ={
+//     "data": [
+//         {
+//             "identifier": "001-1",
+//             "name": "Lots of Children",
+//             "isOpenable" : true
+//         },
+//         {
+//           "identifier": "001-2",
+//           "name": "Deep nested",
+//           "isOpenable" : true,
+//           "children": [
+//                 {
+//                     "identifier": "001-2a",
+//                     "name": "Nested Child 1",
+//                     "isOpenable" : true,
+//                     "children": [
+//                       {
+//                         "identifier": "001-2aa",
+//                         "name": "Nested Grandchild 1",
+//                         "isOpenable" : true,
+//                         "children" : [{
+//                           "identifier": "001-2aba",
+//                           "name": "Nested Great Grandchild 1",
+//                           "isOpenable" : true
+//                         },
+//                         {
+//                           "identifier": "001-2abb",
+//                           "name": "Nested Great Grandchild 2",
+//                           "isOpenable" : true
+//                         },
+//                         {
+//                           "identifier": "001-2abc",
+//                           "name": "Nested Great Grandchild 3",
+//                           "isOpenable" : true,
+//                           "selectedAsset": true
+//                         }],
+//                         "meta": { "parentId": "001-2ab" }
+//                       },
+//                       {
+//                         "identifier": "001-2ab",
+//                         "name": "Nested Grandchild 2",
+//                         "isOpenable" : true,
+//                       },
+//                       {
+//                         "identifier": "001-2ac",
+//                         "name": "Nested Grandchild 3",
+//                         "isOpenable" : true
+//                       }
+//                     ],
+//                     "meta": { "parentId": "001-2a" }
+//                 },
+//                 {
+//                   "identifier": "001-2b",
+//                   "name": "Nested Child 2",
+//                   "isOpenable" : true
+//                 },
+//                 {
+//                   "identifier": "001-2c",
+//                   "name": "Nested Child 3",
+//                   "isOpenable" : true
+//                 }
+//             ],
+//             "meta": { "parentId": "001-2" }
+//         },
+//         {
+//         "identifier": "001-3",
+//         "name": "Nothing Below Me",
+//         "isOpenable" : true
+//         },
+//         {
+//         "identifier": "001-4",
+//         "name": "Nothing Below, Not openable"
+//        }
+//     ],
+//     "meta": { "parentId": null },
+//     "contextType": "directContext"
+// };
+
+    // var context = {
+    //   data: [{
+    //     "name": "Lots of children",
+    //     "identifier": "001-1",
+    //     "isOpenable": true
+    //   }, {
+    //     "name": "Deep nested",
+    //     "identifier": "001-2",
+    //     "isOpenable": true
+    //   }, {
+    //     "name": "Nothing Below Me",
+    //     "identifier": "001-3",
+    //     "isOpenable": true
+    //   }, {
+    //     "name": "Nothing Below, Not openable",
+    //     "identifier": "001-4",
+    //     "isOpenable": false
+    //   }],
+    //   meta: {
+    //     parentId: null // the id of the asset of the tree above
+    //   },
+    //   "contextType": "initialContext"
+    // };
+/*
+    OR
     // var initialContexts = {
     //   data: [{
     //     "name": "Lots of children",
@@ -162,214 +189,84 @@
     //   "contextType": "initialContext"
     // };
 
+    */
+
     function demoGetChildren(node, rangeStart) {
+      console.log('inside demoGetChildren');
       var nodeId = node.identifier;
       var deferred = Q.defer();
+
+      var children,
+          response,
+          ironAjaxEl = document.createElement('iron-ajax');
+
+      ironAjaxEl.handleAs = "json";
+      ironAjaxEl.addEventListener('response', function(evt) {
+        console.log('evt = ', evt);
+        if(evt.detail.response) {
+          console.log('inside response');
+         children  = evt.detail.response;
+         deferred.resolve(children);
+        } else {
+         return;
+        }
+      });
+
       if (!rangeStart) {
         rangeStart = 0;
       }
-      var lotsOfChildren = {
-        data: [{
-          "name": "A",
-          "identifier": "001-1a"
-        }, {
-          "name": "B",
-          "identifier": "001-1b"
-        }, {
-          "name": "C",
-          "identifier": "001-1c"
-        }, {
-          "name": "D",
-          "identifier": "001-1d"
-        }, {
-          "name": "E",
-          "identifier": "001-1e"
-        }, {
-          "name": "F",
-          "identifier": "001-1f"
-        }, {
-          "name": "G",
-          "identifier": "001-1g"
-        }, {
-          "name": "H",
-          "identifier": "001-1h"
-        }, {
-          "name": "I",
-          "identifier": "001-1i"
-        }, {
-          "name": "AA",
-          "identifier": "001-1aa"
-        }, {
-          "name": "BB",
-          "identifier": "001-1bb"
-        }, {
-          "name": "CC",
-          "identifier": "001-1cc"
-        }, {
-          "name": "DD",
-          "identifier": "001-1dd"
-        }, {
-          "name": "EE",
-          "identifier": "001-1ee"
-        }, {
-          "name": "FF",
-          "identifier": "001-1ff"
-        }, {
-          "name": "GG",
-          "identifier": "001-1gg"
-        }, {
-          "name": "HH",
-          "identifier": "001-1hh"
-        }, {
-          "name": "II",
-          "identifier": "001-1ii"
-        }, {
-          "name": "AAA",
-          "identifier": "001-1aaa"
-        }, {
-          "name": "BBB",
-          "identifier": "001-1bbb"
-        }, {
-          "name": "CCC",
-          "identifier": "001-1ccc"
-        }, {
-          "name": "DDD",
-          "identifier": "001-1ddd"
-        }, {
-          "name": "EEE",
-          "identifier": "001-1eee"
-        }, {
-          "name": "FFF",
-          "identifier": "001-1fff"
-        }, {
-          "name": "GGG",
-          "identifier": "001-1ggg"
-        }, {
-          "name": "HHH",
-          "identifier": "001-1hhh"
-        }, {
-          "name": "III",
-          "identifier": "001-1iii"
-        }],
-        meta: {
-          parentId: '001-1'
-        }
-      };
-      var deepNestedChildren = {
-        data: [{
-          "name": "Nested Child 1",
-          "identifier": "001-2a",
-          "isOpenable": true
-        },
-        {
-          "name": "Nested Child 2",
-          "identifier": "001-2b",
-          "isOpenable": true
-        },
-        {
-          "name": "Nested Child 3",
-          "identifier": "001-2c",
-          "isOpenable": true
-        }],
-        meta: {
-          parentId: '001-2'
-        }
-      };
-
-      var deepNestedGrandchildren = {
-        data: [{
-          "name": "Nested Grandchild 1",
-          "identifier": "001-2aa",
-          "isOpenable": true
-        },{
-          "name": "Nested Grandchild 2",
-          "identifier": "001-2ab",
-          "isOpenable": true
-        },
-        {
-          "name": "Nested Grandchild 3",
-          "identifier": "001-2ac",
-          "isOpenable": true
-        }],
-        meta: {
-          parentId: '001-2a'
-        }
-      };
-
-      var deepNestedGreatGrandchild = {
-        data: [{
-          "name": "Nested Great Grandchild 1",
-          "identifier": "001-2aba",
-          "isOpenable": true
-        },
-        {
-          "name": "Nested Great Grandchild 2",
-          "identifier": "001-2abb",
-          "isOpenable": true
-        },
-        {
-          "name": "Nested Great Grandchild 3",
-          "identifier": "001-2abc",
-          "isOpenable": true
-        }],
-        meta: {
-          parentId: '001-2aa'
-        }
-      };
-
-      var children;
 
       switch (nodeId) {
         case "001-1":
-          children = lotsOfChildren;
+        ironAjaxEl.url = "lotsOfChildren.json";
         break;
 
         case "001-2":
-          children = deepNestedChildren;
+        ironAjaxEl.url = "deepNestedChildren.json";
         break;
 
         case "001-2a":
-          children = deepNestedGrandchildren;
+        ironAjaxEl.url = "deepNestedGrandchildren.json";
         break;
 
         case "001-2aa":
-          children = deepNestedGreatGrandchild;
+        ironAjaxEl.url = "deepNestedGreatGrandchild.json";
         break;
 
         default:
-          children = {
+          deferred.resolve({
             data: [],
             meta: {
               parentId: nodeId
             }
-          };
+          });
         break;
       }
 
-      deferred.resolve(children);
-
+      ironAjaxEl.generateRequest();
+      console.log('after request');
       return deferred.promise;
     }
-    window.addEventListener('WebComponentsReady', function() {
-      var colBrowser = document.querySelector('px-context-browser');
-      colBrowser.handlers = {
-        getChildren: function(parent, newIndex) {
-          return demoGetChildren(parent, newIndex);
-        },
-        itemOpenHandler: function(context) {
-          console.log('Opened: ', context);
-        }
-      };
-      if (typeof initialContexts !== "undefined" ) {
-        colBrowser.initialContexts = initialContexts;
-      } else {
-        if (context.contextType === "directContext") {
-          colBrowser.directContext = context;
-        } else if (context.contextType === "initialContext") {
-          colBrowser.initialContexts = initialContexts;
-        }
-      }
-    });
+    // window.addEventListener('WebComponentsReady', function() {
+    //   var colBrowser = document.querySelector('px-context-browser');
+    //   colBrowser.handlers = {
+    //     getChildren: function(parent, newIndex) {
+    //       return demoGetChildren(parent, newIndex);
+    //     },
+    //     itemOpenHandler: function(context) {
+    //       console.log('Opened: ', context);
+    //     }
+    //   };
+    //   if (typeof initialContexts !== "undefined" ) {
+    //     colBrowser.initialContexts = initialContexts;
+    //   } else {
+    //     if (context.contextType === "directContext") {
+    //       colBrowser.directContext = context;
+    //     } else if (context.contextType === "initialContext") {
+    //       colBrowser.initialContexts = context;
+    //     }
+    //   }
+    // });
   </script>
 
 </body>
