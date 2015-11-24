@@ -33,7 +33,8 @@ Second, import the component to your application with the following tag in your 
 Finally, use the component in your application:
 
 ```
-<px-context-browser></px-context-browser>
+<iron-ajax url="<URL.json>" last-response="{{browserContext}}" auto></iron-ajax>
+<px-context-browser browserContext={{browserContext}}></px-context-browser>
 ```
 
 <br />
@@ -67,35 +68,6 @@ Mapping for the field name in the context data that represents a unique id for a
 </px-context-browser>
 ```
 
-#### initial-contexts
-
-*Type:* **Object** - (*Required:*) - *Default:* null
-
-Starting level of context. Contains an Array of items that include keys that match the "idField" and "labelField" properties on this component. Required. Setting this property is essentially this component's 'main' function.
-
-```html
-<px-context-browser
-	...
-	initial-contexts='{
-        data: [{
-          "description": "Turbine 1",
-          "identifier": "001-1",
-          "parent": "top",
-          "hasChildren": true
-        }, {
-          "description": "Turbine 2",
-          "identifier": "001-2",
-          "parent": "top",
-          "hasChildren": true
-        }],
-        meta: {
-          parentId: null
-        }
-    }'>
-</px-context-browser>
-```
-
-
 #### selected-item-id
 
 *Type:* **String** - (*Optional*) - *Default:* null
@@ -116,7 +88,7 @@ Id of item currently selected, reflected back as an attribute so application can
 Object defining some or all of the following functions as members: `itemOpenHandler`, `itemClickHandler`, and `getChildren`.
 
 ```
-<px-context-browser id="my-content-browser"></px-context-browser>
+<px-context-browser id="my-content-browser" browserContext={{browserContext}}></px-context-browser>
 ```
 
 ```javaScript
@@ -130,10 +102,9 @@ colBrowser.handlers = {
         // returns special callback behavior when
         // a given context is selected
     },
-    getChildren: function (parent, startIdx) {
+    getChildren: function (parent) {
         // returns a JavaScript promise that will
-        // resolve to children of the item and
-        // starting with the given index (to support lazy loading)
+        // resolve to children of the item (to support lazy loading)
     }
 };
 ```

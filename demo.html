@@ -2,30 +2,24 @@
 <html>
 <head>
   <title>px-context-browser Demo</title>
-
   <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
   <script src="../webcomponentsjs/webcomponents-lite.min.js"></script>
-
   <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
   <script src="../q/q.js"></script>
-
   <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
   <link rel="import" href="../px-theme/px-theme.html"/>
   <link rel="import" href="../iron-ajax/iron-ajax.html" />
   <link rel="import" href="px-context-browser.html"/>
-
   <style is="x-style">
     html {
       height: 100%;
       font-size: 0.9375em;
     }
-
     body {
       height: 100%;
       margin: 0;
       background-color: #DDD;
     }
-
     .demo {
       padding: 1rem;
     }
@@ -35,239 +29,70 @@
 <body unresolved>
 <template is="dom-bind">
   <article class="demo">
-
     <h3>Demo</h3>
-
     <p>
       Although related, examples are /not/ the same as the test fixtures.
       Tests are tests, examples are examples.
     </p>
-
     <p>
       Also see the <a href="index.html">documentation</a> and the <a href="test/spec.html">UI test fixture</a>.
     </p>
-
-    <label><input type="checkbox"
-                  onchange="document.querySelector('html').setAttribute('dir',this.checked?'rtl':'ltr')">Invert
-                                                                                                         Horizontal
-                                                                                                         Direction</label>
-
+    <label><input type="checkbox" onchange="document.querySelector('html').setAttribute('dir',this.checked?'rtl':'ltr')">Invert Horizontal Direction</label>
   </article>
 
-    <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax>
+    <iron-ajax url="initialContext.json" last-response="{{browserContext}}" auto></iron-ajax>
     <px-context-browser
       label-field="name"
       id-field="identifier" browser-context="{{browserContext}}">
     </px-context-browser>
   </template>
   <script>
-//   var context ={
-//     "data": [
-//         {
-//             "identifier": "001-1",
-//             "name": "Lots of Children",
-//             "isOpenable" : true
-//         },
-//         {
-//           "identifier": "001-2",
-//           "name": "Deep nested",
-//           "isOpenable" : true,
-//           "children": [
-//                 {
-//                     "identifier": "001-2a",
-//                     "name": "Nested Child 1",
-//                     "isOpenable" : true,
-//                     "children": [
-//                       {
-//                         "identifier": "001-2aa",
-//                         "name": "Nested Grandchild 1",
-//                         "isOpenable" : true,
-//                         "children" : [{
-//                           "identifier": "001-2aba",
-//                           "name": "Nested Great Grandchild 1",
-//                           "isOpenable" : true
-//                         },
-//                         {
-//                           "identifier": "001-2abb",
-//                           "name": "Nested Great Grandchild 2",
-//                           "isOpenable" : true
-//                         },
-//                         {
-//                           "identifier": "001-2abc",
-//                           "name": "Nested Great Grandchild 3",
-//                           "isOpenable" : true,
-//                           "selectedAsset": true
-//                         }],
-//                         "meta": { "parentId": "001-2ab" }
-//                       },
-//                       {
-//                         "identifier": "001-2ab",
-//                         "name": "Nested Grandchild 2",
-//                         "isOpenable" : true,
-//                       },
-//                       {
-//                         "identifier": "001-2ac",
-//                         "name": "Nested Grandchild 3",
-//                         "isOpenable" : true
-//                       }
-//                     ],
-//                     "meta": { "parentId": "001-2a" }
-//                 },
-//                 {
-//                   "identifier": "001-2b",
-//                   "name": "Nested Child 2",
-//                   "isOpenable" : true
-//                 },
-//                 {
-//                   "identifier": "001-2c",
-//                   "name": "Nested Child 3",
-//                   "isOpenable" : true
-//                 }
-//             ],
-//             "meta": { "parentId": "001-2" }
-//         },
-//         {
-//         "identifier": "001-3",
-//         "name": "Nothing Below Me",
-//         "isOpenable" : true
-//         },
-//         {
-//         "identifier": "001-4",
-//         "name": "Nothing Below, Not openable"
-//        }
-//     ],
-//     "meta": { "parentId": null },
-//     "contextType": "directContext"
-// };
 
-    // var context = {
-    //   data: [{
-    //     "name": "Lots of children",
-    //     "identifier": "001-1",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Deep nested",
-    //     "identifier": "001-2",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below Me",
-    //     "identifier": "001-3",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below, Not openable",
-    //     "identifier": "001-4",
-    //     "isOpenable": false
-    //   }],
-    //   meta: {
-    //     parentId: null // the id of the asset of the tree above
-    //   },
-    //   "contextType": "initialContext"
-    // };
-/*
-    OR
-    // var initialContexts = {
-    //   data: [{
-    //     "name": "Lots of children",
-    //     "identifier": "001-1",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Deep nested",
-    //     "identifier": "001-2",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below Me",
-    //     "identifier": "001-3",
-    //     "isOpenable": true
-    //   }, {
-    //     "name": "Nothing Below, Not openable",
-    //     "identifier": "001-4",
-    //     "isOpenable": false
-    //   }],
-    //   meta: {
-    //     parentId: null // the id of the asset of the tree above
-    //   },
-    //   "contextType": "initialContext"
-    // };
+  function demoGetChildren(node) {
+    var nodeId = node.identifier,
+        deferred = Q.defer(),
+        children,
+        response,
+        ironAjaxEl = document.createElement('iron-ajax'),
+        nodeIds = {
+          "001-1": "lotsOfChildren.json",
+          "001-2": "deepNestedChildren.json",
+          "001-2a":"deepNestedGrandchildren.json",
+          "001-2aa": "deepNestedGreatGrandchild.json"
+        };
 
-    */
-
-    function demoGetChildren(node, rangeStart) {
-      console.log('inside demoGetChildren');
-      var nodeId = node.identifier;
-      var deferred = Q.defer();
-
-      var children,
-          response,
-          ironAjaxEl = document.createElement('iron-ajax');
-
-      ironAjaxEl.handleAs = "json";
-      ironAjaxEl.addEventListener('response', function(evt) {
-        console.log('evt = ', evt);
-        if(evt.detail.response) {
-          console.log('inside response');
-         children  = evt.detail.response;
-         deferred.resolve(children);
-        } else {
-         return;
-        }
-      });
-
-      if (!rangeStart) {
-        rangeStart = 0;
+    ironAjaxEl.handleAs = "json";
+    ironAjaxEl.addEventListener('response', function(evt) {
+      if(evt.detail.response) {
+       children  = evt.detail.response;
+       deferred.resolve(children);
+      } else {
+       return;
       }
-
-      switch (nodeId) {
-        case "001-1":
-        ironAjaxEl.url = "lotsOfChildren.json";
-        break;
-
-        case "001-2":
-        ironAjaxEl.url = "deepNestedChildren.json";
-        break;
-
-        case "001-2a":
-        ironAjaxEl.url = "deepNestedGrandchildren.json";
-        break;
-
-        case "001-2aa":
-        ironAjaxEl.url = "deepNestedGreatGrandchild.json";
-        break;
-
-        default:
-          deferred.resolve({
-            data: [],
-            meta: {
-              parentId: nodeId
-            }
-          });
-        break;
-      }
-
-      ironAjaxEl.generateRequest();
-      console.log('after request');
-      return deferred.promise;
+    });
+    //get our url - if there's no valid nodeId, resolve an empty promise.
+    if (nodeIds[nodeId]) {
+        ironAjaxEl.url = nodeIds[nodeId];
+    } else {
+      deferred.resolve({ data: [], meta: { parentId: nodeId } });
     }
-    // window.addEventListener('WebComponentsReady', function() {
-    //   var colBrowser = document.querySelector('px-context-browser');
-    //   colBrowser.handlers = {
-    //     getChildren: function(parent, newIndex) {
-    //       return demoGetChildren(parent, newIndex);
-    //     },
-    //     itemOpenHandler: function(context) {
-    //       console.log('Opened: ', context);
-    //     }
-    //   };
-    //   if (typeof initialContexts !== "undefined" ) {
-    //     colBrowser.initialContexts = initialContexts;
-    //   } else {
-    //     if (context.contextType === "directContext") {
-    //       colBrowser.directContext = context;
-    //     } else if (context.contextType === "initialContext") {
-    //       colBrowser.initialContexts = context;
-    //     }
-    //   }
-    // });
-  </script>
+    //and generate the promise.
+    ironAjaxEl.generateRequest();
+    //don't forget to return the promise!
+    return deferred.promise;
+  }
 
+  window.addEventListener('WebComponentsReady', function() {
+    var colBrowser = document.querySelector('px-context-browser');
+    colBrowser.handlers = {
+      getChildren: function(parent, newIndex) {
+        return demoGetChildren(parent);
+      },
+      itemOpenHandler: function(context) {
+        console.log('Opened: ', context);
+      }
+    };
+  });
+</script>
 </body>
 </html>

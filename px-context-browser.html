@@ -2,7 +2,6 @@
     Relative paths assume component is being run from inside an app or another component, where dependencies are flat
     siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
     'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
-    See https://github.sw.ge.com/jreichenberg/grunt-dep-serve#why-do-we-need-this
 -->
 <!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
@@ -22,169 +21,40 @@
 <!--
 Context browser element.  See the demo page (demo.html) for a working example.
 
-#### Initial Context Simple Usage
+#### Usage
+Minimum:
 
-    <px-context-browser></px-context-browser>
+    <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax>
+    <px-context-browser browserContext={{browserContext}}></px-context-browser>
 
-```js
-// The following object used to be initialContexts, which is now deprecated,
-// and is discouraged.
-  var context = {
-    data: [{
-      "name": "Turbine 74",
-      "id": "001-1",
-      "isOpenable": true
-    }, {
-      "name": "Turbine 57",
-      "id": "001-2",
-      "isOpenable": false
-    }],
-    meta: {
-      parentId: null
-    }
-  };
-
-  window.addEventListener('WebComponentsReady', function() {
-    var colBrowser = document.querySelector('px-context-browser');
-    colBrowser.handlers = {
-      getChildren: function(parent, newIndex) {
-        return demoGetChildren(parent, newIndex);
-      },
-      itemOpenHandler: function(context) {
-        console.log('Opened: ', context);
-      }
-    };
-    if (typeof initialContexts !== "undefined" ) {
-      colBrowser.initialContexts = initialContexts;
-    } else {
-      if (context.contextType === "directContext") {
-        colBrowser.directContext = context;
-      } else if (context.contextType === "initialContext") {
-        colBrowser.initialContexts = initialContexts;
-      }
-    }
-  });
-```
-
-
-#### Initial Context Custom Data Format Support
+Advanced:
 
     <px-context-browser label-field="description"
                         parent-id-field="parent"
-                        id-field="identifier">
+                        id-field="identifier"
+                        browserContext={{browserContext}}>
     </px-context-browser>
 
-```js
+### code on your page
 
-// The following object used to be initialContexts, which is now deprecated,
-// and is discouraged.
-  var context = {
-    data: [{
-      "description": "Turbine 1",
-      "identifier": "001-1",
-      "parent": "top",
-      "hasChildren": true
-    }, {
-      "description": "Turbine 2",
-      "identifier": "001-2",
-      "parent": "top",
-      "hasChildren": true
-    }],
-    meta: {
-      parentId: null
-    }
-  };
-```
+we use handlers this way to ensure that the methods defined inside of it are available for a framework to grab them.
 
-### Direct Context use
-
-    <px-context-browser></px-context-browser>
-
-```
-var context ={
-  "data": [
-      {
-          "identifier": "001-1",
-          "name": "Lots of Children",
-          "isOpenable" : true
-      },
-      {
-        "identifier": "001-2",
-        "name": "Deep nested",
-        "isOpenable" : true,
-        "children": [
-              {
-                  "identifier": "001-2a",
-                  "name": "Nested Child 1",
-                  "isOpenable" : true,
-                  "children": [
-                    {
-                      "identifier": "001-2aa",
-                      "name": "Nested Grandchild 1",
-                      "isOpenable" : true,
-                      "children" : [{
-                        "identifier": "001-2aba",
-                        "name": "Nested Great Grandchild 1",
-                        "isOpenable" : true
-                      },
-                      {
-                        "identifier": "001-2abb",
-                        "name": "Nested Great Grandchild 2",
-                        "isOpenable" : true
-                      },
-                      {
-                        "identifier": "001-2abc",
-                        "name": "Nested Great Grandchild 3",
-                        "isOpenable" : true,
-                        "selectedAsset": true
-                      }],
-                      "meta": { "parentId": "001-2ab" }
-                    },
-                    {
-                      "identifier": "001-2ab",
-                      "name": "Nested Grandchild 2",
-                      "isOpenable" : true,
-                    },
-                    {
-                      "identifier": "001-2ac",
-                      "name": "Nested Grandchild 3",
-                      "isOpenable" : true
-                    }
-                  ],
-                  "meta": { "parentId": "001-2a" }
-              },
-              {
-                "identifier": "001-2b",
-                "name": "Nested Child 2",
-                "isOpenable" : true
-              },
-              {
-                "identifier": "001-2c",
-                "name": "Nested Child 3",
-                "isOpenable" : true
-              }
-          ],
-          "meta": { "parentId": "001-2" }
-      },
-      {
-      "identifier": "001-3",
-      "name": "Nothing Below Me",
-      "isOpenable" : true
-      },
-      {
-      "identifier": "001-4",
-      "name": "Nothing Below, Not openable"
-     }
-  ],
-  "meta": { "parentId": null }
-};
-```
+    window.addEventListener('WebComponentsReady', function() {
+        var colBrowser = document.querySelector('px-context-browser');
+        colBrowser.handlers = {
+          getChildren: function(parent) {
+            return demoGetChildren(parent);
+          },
+          itemOpenHandler: function(context) {
+            console.log('Opened: ', context);
+          }
+        };
+    });
 
 @element px-context-browser
 @blurb Context browser element
 @homepage index.html
 @demo demo.html
-
 -->
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
@@ -223,10 +93,10 @@ var context ={
                     <div class="flex flex--col column push" data-column>
                       <div class="head">{{ item.header || '' }}</div>
                       <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
-                        <ul class$="{{directContextUlSelected(item, selectedItem)}}">
+                        <ul class$="{{UlSelected(item, selectedItem)}}">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
                             <li on-click="itemClickHandler" id$="[[getItemId(item)]]"
-                                class$="{{isItemSelected(item, selectedItem)}}"  >
+                                class$="{{isItemSelected(item, selectedItem)}}" >
                               <span class="flex__item">{{getItemLabel(item)}}</span>
                               <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler"
                                    key$="[[getItemId(item)]]">Open
@@ -290,43 +160,26 @@ var context ={
           type: String,
           value: "id"
         },
-        // /**
-        //  * Starting level of context. Contains an Array of items that include keys that match the "idField"
-        //  *  and "labelField" properties on this component.
-        //  * Optional. Setting this property is essentially to this component's initialContexts function.
-        //  * @type {Object}
-        //  * @Optional
-        //  */
-        // initialContexts: {
-        //   value: null,
-        //   observer: 'initialContextsChanged'
-        // },
-        // /**
-        //  * Full tree of  directly selected item, drilling all the way down to the selected item.
-        //  * (for example, through ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
-        //  * Optional.
-        //  * @type {object}
-        //  * @Optional
-        //  */
-        // directContext : {
-        //   value: null,
-        //   observer: 'directContextChanged'
-        // },
-        // /**
-        //  * Id of item currently selected, reflected back as an attribute so application can detect which item is selected
-        //  * (e.g. via ng-bind-polymer - https://github.com/PredixDev/ng-bind-polymer)
-        //  *
-        //  * @type {String}
-        //  */
+        /**
+         * this is where the initial context is stored.
+         *
+         * @type {Polymer empty Object}
+         * @default null
+         */
         browserContext : {
-            value: null,
-            type: function() {return {};},
+            value: function() {return {};},
+            type: Object,
             observer: 'contextChanged'
         },
-        selectedItemId: {
+        /**
+         * if we have a selected Item, it's stored here.
+         * must be null for polymer to determine the correct classes for ULs and LIs
+         * @type {String}
+         * @default ''
+         */
+        selectedItem: {
           type: String,
-          value: null,
-          reflectToAttribute: true
+          value: ''
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -347,6 +200,7 @@ var context ={
          * @type {Object}
          */
         handlers: {
+          value: function(){return {};},
           type: Object
         },
         /**
@@ -364,7 +218,7 @@ var context ={
          * Initial context name to be shown on page
          *
          * @type {String}
-         * @default 'Selected Context'
+         * @default 'Select Context'
          */
         openedItemName: {
           type: String,
@@ -413,7 +267,7 @@ var context ={
             $columnBrowserColumns = Polymer.dom(columnBrowserColumns),
             contextBrowserWidth, contextBrowserChildrenCount;
 
-             // Watch the container size change.
+        // Watch the container size change.
         var getColumns = function() {
           return $columnBrowserColumns.childNodes.filter(
             function(n) {
@@ -547,7 +401,7 @@ var context ={
                     options = item.meta;
                   }
 
-                  this.handlers.getChildren(item, options).then(
+                  this.handlers.getChildren(item).then(
                     function(children) {
                       _this.appendChildren(item, children);
                     });
@@ -622,107 +476,46 @@ var context ={
         return base = (item.inSelectedPath) ? base += " selected" : base;
       },
       /**
-       * Observer on directContext attribute. Functions as the 'main' function of the component if initialContexts is not set
+       * Observer on context attribute. loads up the initial Context of the browser.
        *
        * @private
        */
       contextChanged: function() {
         var _this= this,
-            context = this.browserContext,
+            browserContext = this.browserContext,
             root;
-        console.log(context);
-        //make sure it's a json object, and if it is, parse it.
-        if (typeof context === 'object' && context !== null) {
-          //if (context.length > 0 && context.indexOf("{{") === -1) {
-            //context = JSON.parse(context);
-          // }
-          // else {
-          //   context = null;
-          // }
-        }
+
         root = {hideBreadcrumb: true};
         this.parentNodes = [];
         this.openedBreadcrumbs = [];
 
         this.push('parentNodes', root);
-        //this.addChildren(root, context);
+        this.addChildren(root, browserContext);
 
         //dig into the tree, and keep going while we have children
-        //function recursiveAddChildren(currentRoot) {
+        function recursiveAddChildren(currentRoot) {
           var current_elem;
-          // for (var i in currentRoot) {
-          //   current_elem = currentRoot[i];
-          //   if(Object.keys(current_elem).indexOf('children') > -1) {
-          //       current_elem.inSelectedPath = true;
-          //     //only direct lineage of the selected child have children..
-          //     _this.push('parentNodes',current_elem);
-          //     var obj = {"data" : current_elem.children};
-          //     _this.addChildren(current_elem, obj);
-          //     recursiveAddChildren(current_elem.children);
-          //   } else if (current_elem.selectedAsset) {
-          //       current_elem.inSelectedPath = true;
-          //       _this.set('selectedItem',current_elem);
-          //     //we're pushing this item into parentNode to ensure the breadcrumbs work correctly.
-          //     _this.push('parentNodes',current_elem);
-          //   }
-          // }
-        if (context !== null) {
-            Object.keys(context.data).forEach(function(i) {
-              console.log(context.data[i]);
-          do {
-            if (context.data[i].children) {
-              current_elem = context.data[i].children;
-            } else {
-              current_elem = context.data[i];
+          for (var i in currentRoot) {
+            if (currentRoot.hasOwnProperty(i)) {
+              current_elem = currentRoot[i];
+              if(Object.keys(current_elem).indexOf('children') > -1) {
+                  current_elem.inSelectedPath = true;
+                //only direct lineage of the selected child have children..
+                _this.push('parentNodes',current_elem);
+                var obj = {"data" : current_elem.children};
+                _this.addChildren(current_elem, obj);
+                recursiveAddChildren(current_elem.children);
+              } else if (current_elem.selectedAsset) {
+                  current_elem.inSelectedPath = true;
+                  _this.set('selectedItem',current_elem);
+                //we're pushing this item into parentNode to ensure the breadcrumbs work correctly.
+                _this.push('parentNodes',current_elem);
+              }
             }
-
-
-            if (Object.keys(current_elem).indexOf('children') > -1 || current_elem.selectedAsset) {
-              current_elem.inSelectedPath = true;
-            }
-
-            if (current_elem.selectedAsset) {
-              _this.set('selectedItem',current_elem);
-            }
-            _this.push('parentNodes',current_elem);
-
-            if (current_elem.children) {
-              var obj = {"data" : current_elem.children};
-              _this.addChildren(current_elem, obj);
-              //current_elem
-            }
-          } while (Object.keys(current_elem).indexOf('children') > -1);
-        });
-      }
-
-      //  }
-      //  recursiveAddChildren(root.children);
-        this.removeNewTag();
-      },
-      /**
-       * Observer on initial-contexts attribute / initialContexts property. Functions as the 'main' function of the component
-       *
-       * @private
-       */
-      initialContextsChanged: function(newValue, oldValue) {
-        var initialContexts = this.initialContexts,
-            root;
-        if (typeof initialContexts === 'string') {
-          if (initialContexts.length > 0 && initialContexts.indexOf("{{") === -1) {
-            initialContexts = JSON.parse(initialContexts);
-          }
-          else {
-            initialContexts = null;
           }
         }
-        root = {hideBreadcrumb: true};
-        this.parentNodes = [];
-        this.openedBreadcrumbs = [];
-        this.push('parentNodes', root);
-        this.addChildren(root, initialContexts);
+        recursiveAddChildren(root.children);
         this.removeNewTag();
-        //we have to put out a notifyPath to ensure the correct classes are passes into the lIs and ULs on initialContexts load
-        this.notifyPath('selectedItem', '');
       },
       /**
        * Appends children to those already at a level.
@@ -865,7 +658,7 @@ var context ={
        * @param {selectedItem} the selected item.
        * @private
        */
-      directContextUlSelected: function(item, selectedItem) {
+      UlSelected: function(item, selectedItem) {
         var base = "list-bare level",
             itemId = selectedItem.identifier;
         if (item.children) {
