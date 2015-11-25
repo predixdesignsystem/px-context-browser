@@ -5,7 +5,7 @@
 -->
 <!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
-
+<link rel="import" href="../px-spinner/px-spinner.html"/>
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -24,20 +24,19 @@ Context browser element.  See the demo page (demo.html) for a working example.
 #### Usage
 Minimum:
 
-    <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax>
-    <px-context-browser browserContext={{browserContext}}></px-context-browser>
+    <px-context-browser browser-context={{browserContext}}></px-context-browser>
 
 Advanced:
 
     <px-context-browser label-field="description"
                         parent-id-field="parent"
                         id-field="identifier"
-                        browserContext={{browserContext}}>
+                        browser-context={{browserContext}}>
     </px-context-browser>
 
 ### code on your page
 
-we use handlers this way to ensure that the methods defined inside of it are available for a framework to grab them.
+Define how your data will come in using these methods:
 
     window.addEventListener('WebComponentsReady', function() {
         var colBrowser = document.querySelector('px-context-browser');
@@ -79,6 +78,7 @@ we use handlers this way to ensure that the methods defined inside of it are ava
           </div>
         </header>
         <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">
+
             <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
               <ul class="breadcrumbs list-inline list-inline--delimited">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
@@ -88,6 +88,7 @@ we use handlers this way to ensure that the methods defined inside of it are ava
                 </template>
               </ul>
               <div class="flex flex--col column-browser" id="columnBrowser">
+                <px-spinner finished></px-spinner>
                 <div class="flex">
                   <template is="dom-repeat" id="levels" items="{{parentNodes}}">
                     <div class="flex flex--col column push" data-column>
@@ -262,7 +263,7 @@ we use handlers this way to ensure that the methods defined inside of it are ava
         // Need to watch the width of the column-browser.
         var columnBrowser = this.$.columnBrowser,
             columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
-            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-child'),
+            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
             columnBrowserColumnsBaseCss = columnBrowserColumns.className, // Polymer does weird stuff.
             $columnBrowserColumns = Polymer.dom(columnBrowserColumns),
             contextBrowserWidth, contextBrowserChildrenCount;
@@ -593,7 +594,18 @@ we use handlers this way to ensure that the methods defined inside of it are ava
         }
         this.push('parentNodes', item);
       },
+      spinner: function(state) {
+        var columnBrowser = this.$.columnBrowser,
+            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner');
+        if (state === 'on') {
+          spinner.set('finished', false);
+          console.log('add spinner');
+        } else if (state === 'off'){
+          spinner.set('finished', true);
+          console.log('remove spinner');
+        }
 
+      },
       /**
        * Fetches all children of a given item
        *
@@ -601,10 +613,12 @@ we use handlers this way to ensure that the methods defined inside of it are ava
        * @private
        */
       getNewChildren: function(item) {
+        this.spinner('on');
         if (this.handlers.getChildren) {
           var _this = this;
           this.handlers.getChildren(item).then(
             function(data) {
+              _this.spinner('off');
               var children = data.data,
                   parentId = data.meta.parentId,
                   selectedNode = _this.selectedItem;

@@ -54,6 +54,19 @@ Mapping for the field name in the context data that represents the display label
 	label-field="Custom Name">
 </px-context-browser>
 ```
+#### browser-context
+
+*Type:* **String** - (*Required*) - *Default:* ""
+
+An attribute which expects a *JSON* Object in order to load the context into the browser.
+The object can have 1 or more levels of assets, each group should be grouped under a *children* array. see the *directContext.json* file for an example.
+
+```
+<px-context-browser
+	...
+	browser-context={{browserContext}}>
+</px-context-browser>
+```
 
 #### id-field
 

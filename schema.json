@@ -16,6 +16,10 @@
             "idField": {
                 "type": "string",
                 "title": "Field with ID"
+            },
+            "browserContext": {
+              "type": "string",
+              "title": "Browser Context"
             }
         },
         "required": ["labelField", "parentIdField", "idField"]

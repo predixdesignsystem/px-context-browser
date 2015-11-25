@@ -213,6 +213,12 @@ header {
     height: 100%;
 }
 
+px-spinner {
+  position: absolute;
+  z-index: 10;
+  top:40%;
+  right: 50%;
+}
 // Trumps
 $inuit-enable-margins--none         : true;
 $inuit-enable-paddings              : true;
