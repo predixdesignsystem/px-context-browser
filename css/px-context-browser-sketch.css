@@ -930,8 +930,8 @@ header {
 px-spinner {
   position: absolute;
   z-index: 10;
-  top: 40%;
-  right: 50%; }
+  top: 26%;
+  right: 46.75%; }
 
 /**
  * Margin and padding helper classes with breakpoint prefixes. Use these to tweak layout on a micro
@@ -1020,3 +1020,13 @@ px-spinner {
   z-index: 2;
   width: 100%;
   overflow: hidden; }
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  display: none;
+  opacity: .65; }

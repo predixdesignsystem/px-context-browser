@@ -40,7 +40,7 @@
     <label><input type="checkbox" onchange="document.querySelector('html').setAttribute('dir',this.checked?'rtl':'ltr')">Invert Horizontal Direction</label>
   </article>
 
-    <iron-ajax url="initialContext.json" last-response="{{browserContext}}" auto></iron-ajax>
+    <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax>
     <!-- <iron-ajax url="directContext.json" last-response="{{browserContext}}" auto></iron-ajax> -->
     <px-context-browser
       label-field="name"
@@ -74,11 +74,12 @@
     //get our url - if there's no valid nodeId, resolve an empty promise.
     if (nodeIds[nodeId]) {
         ironAjaxEl.url = nodeIds[nodeId];
+        //and generate the promise.
+        ironAjaxEl.generateRequest();
     } else {
       deferred.resolve({ data: [], meta: { parentId: nodeId } });
     }
-    //and generate the promise.
-    ironAjaxEl.generateRequest();
+
     //don't forget to return the promise!
     return deferred.promise;
   }

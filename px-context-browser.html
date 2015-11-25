@@ -78,7 +78,6 @@ Define how your data will come in using these methods:
           </div>
         </header>
         <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">
-
             <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
               <ul class="breadcrumbs list-inline list-inline--delimited">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
@@ -116,6 +115,8 @@ Define how your data will come in using these methods:
                 <div class="ruler">
                   <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
                 </div>
+                <!-- this overlay is for the spinner -->
+                <div class="overlay"></div>
               </div>
             </div>
         </div>
@@ -129,7 +130,6 @@ Define how your data will come in using these methods:
     {
       is: 'px-context-browser',
       properties: {
-
         /**
          * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
          * long as it has the notion of a 'display label' in it.
@@ -385,6 +385,9 @@ Define how your data will come in using these methods:
                 visibleHeight = evt.target.offsetHeight,
                 threshold = 10,
                 hiddenContentHeight = scrollableHeight - visibleHeight;
+
+            _this.spinner('show');
+
             if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
               if (this.handlers.getChildren) {
                 var item = this.parentNodes[levelIdx],
@@ -404,6 +407,7 @@ Define how your data will come in using these methods:
 
                   this.handlers.getChildren(item).then(
                     function(children) {
+                      _this.spinner('hide');
                       _this.appendChildren(item, children);
                     });
                 }
@@ -594,17 +598,23 @@ Define how your data will come in using these methods:
         }
         this.push('parentNodes', item);
       },
+      /**
+       * turns the spinner on or off when promises are requested.
+       *
+       * @param {String} state
+       * @private
+       */
       spinner: function(state) {
         var columnBrowser = this.$.columnBrowser,
-            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner');
-        if (state === 'on') {
+            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
+            overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
+        if (state === 'show') {
           spinner.set('finished', false);
-          console.log('add spinner');
-        } else if (state === 'off'){
+          overlay.style.display = 'block';
+        } else if (state === 'hide'){
           spinner.set('finished', true);
-          console.log('remove spinner');
+          overlay.style.display = 'none';
         }
-
       },
       /**
        * Fetches all children of a given item
@@ -613,12 +623,12 @@ Define how your data will come in using these methods:
        * @private
        */
       getNewChildren: function(item) {
-        this.spinner('on');
+        this.spinner('show');
         if (this.handlers.getChildren) {
           var _this = this;
           this.handlers.getChildren(item).then(
             function(data) {
-              _this.spinner('off');
+              _this.spinner('hide');
               var children = data.data,
                   parentId = data.meta.parentId,
                   selectedNode = _this.selectedItem;
@@ -676,11 +686,11 @@ Define how your data will come in using these methods:
         var base = "list-bare level",
             itemId = selectedItem.identifier;
         if (item.children) {
-          item.children.forEach(function(child) {
-            if (child.identifier === itemId) {
+          for (var i = 0, len = item.children.length; i < len; i++) {
+            if (item.children[i].identifier === itemId) {
               base += " selected";
             }
-          });
+          }
         }
         return base;
       },
@@ -691,9 +701,12 @@ Define how your data will come in using these methods:
        * @private
        */
       changeSelected: function(item) {
-        //make sure none of the siblings are marked as selected, and only the selected item IS.
-        item.parent.children.forEach(function(sib) {
-          //if you're a sibling, turn off all selectedPath/selectedAsset flags
+        var children = item.parent.children,
+            sib;
+
+        for (var i = 0, len = children.length; i < len; i++) {
+          sib = children[i];
+
           if (sib.identifier !== item.identifier) {
             if (sib.inSelectedPath || sib.selectedAsset) {
               sib.inSelectedPath = false;
@@ -704,7 +717,8 @@ Define how your data will come in using these methods:
             sib.inSelectedPath = true;
             sib.selectedAsset = true;
           }
-        });
+        }
+
         item.parent.selectedColumn = true;
         //change the itemId, and notify polymer to re-run the templates
         this.set('selectedItem', item);
@@ -740,6 +754,7 @@ Define how your data will come in using these methods:
        */
       toggleColumnBrowser: function() {
         this.showColumnBrowser = !this.showColumnBrowser;
+        this.spinner('hide');
       }
     });
 </script>
