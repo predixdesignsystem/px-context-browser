@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": [
     "px-context-browser.html"
   ],
@@ -14,14 +14,14 @@
     "test"
   ],
   "dependencies": {
-    "polymer": "~v1.0.3",
-    "px-spinner": "https://github.com/predixdev/px-spinner.git#~0.0.6",
-    "px-theme": "https://github.com/PredixDev/px-theme.git#~v0.3.0"
+    "polymer": "~v1.2.3",
+    "px-spinner": "https://github.com/predixdev/px-spinner.git#~0.1.0",
+    "px-theme": "https://github.com/PredixDev/px-theme.git#~v0.4.0"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#~v1.0.4",
+    "iron-component-page": "PolymerElements/iron-component-page#~v1.1.0",
     "px-buttons-design": "https://github.com/PredixDev/px-buttons-design.git#~0.4.0",
-    "iron-ajax": "PolymerElements/iron-ajax#~1.0.3",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
     "px-colors-design": "https://github.com/PredixDev/px-colors-design.git#~0.2.0",
     "px-headings-design": "https://github.com/PredixDev/px-headings-design.git#~0.2.0",
     "px-list-bare-design": "https://github.com/PredixDev/px-list-bare-design.git#~0.2.0",
