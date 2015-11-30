@@ -15,7 +15,7 @@
   ],
   "dependencies": {
     "polymer": "~v1.2.3",
-    "px-spinner": "https://github.com/predixdev/px-spinner.git#~0.1.0",
+    "px-spinner": "https://github.com/predixdev/px-spinner.git#~0.1.1",
     "px-theme": "https://github.com/PredixDev/px-theme.git#~v0.4.0"
   },
   "devDependencies": {
