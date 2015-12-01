@@ -47,6 +47,13 @@ $inuit-list-inline-delimit-character  : "\00A0>\00A0";
 
 // Component
 
+// Trumps
+$inuit-enable-margins--none         : true;
+$inuit-enable-paddings              : true;
+$inuit-enable-paddings--tiny: true;
+$inuit-enable-paddings--small: true;
+@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
+
 // Default Transition Length
 $default-transition-length: 0.35s;
 $default-transition-params: $default-transition-length ease 0s;
@@ -112,10 +119,11 @@ header {
 }
 
 .breadcrumbs {
-  height: calculateRem(45px);
+  min-height: calculateRem(45px);
+  height: auto;
   padding-left: $inuit-base-spacing-unit;
   li {
-    line-height: 3;
+    line-height: 1.1;
     &:nth-child(2):before {
       content: " "!important;
       width: 0;
@@ -219,11 +227,7 @@ px-spinner {
   top:26%;
   right: 46.75%;
 }
-// Trumps
-$inuit-enable-margins--none         : true;
-$inuit-enable-paddings              : true;
 
-@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
 
 #modal{
   position: fixed;

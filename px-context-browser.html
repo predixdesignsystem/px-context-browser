@@ -79,9 +79,9 @@ Define how your data will come in using these methods:
         </header>
         <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">
             <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
-              <ul class="breadcrumbs list-inline list-inline--delimited">
+              <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-                  <li hidden$="[[item.hideBreadcrumb]]">
+                  <li hidden$="[[item.hideBreadcrumb]]" class="u-pv--">
                     <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
                   </li>
                 </template>
@@ -386,10 +386,11 @@ Define how your data will come in using these methods:
                 threshold = 10,
                 hiddenContentHeight = scrollableHeight - visibleHeight;
 
-            _this.spinner('show');
+
 
             if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
               if (this.handlers.getChildren) {
+                _this.spinner('show');
                 var item = this.parentNodes[levelIdx],
                     options = {};
                 if (item && item.meta) {
