@@ -972,7 +972,7 @@ header {
   height: auto;
   padding-left: 1rem; }
   .breadcrumbs li {
-    line-height: 1.1; }
+    line-height: 1.4; }
     .breadcrumbs li:nth-child(2):before {
       content: " " !important;
       width: 0; }

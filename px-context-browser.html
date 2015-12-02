@@ -58,7 +58,7 @@ Define how your data will come in using these methods:
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
-    <div id="modal" on-click="toggleColumnBrowser" hidden$="{{!showColumnBrowser}}"></div>
+    <div id="modal" on-click="toggleColumnBrowser" class$="{{isItemHidden(showColumnBrowser)}}"></div>
     <div id="back">
       <div class="column-browser-container flex flex--col">
         <header class="flex u-pl" id="selectContext">
@@ -77,11 +77,11 @@ Define how your data will come in using these methods:
             </ul>
           </div>
         </header>
-        <div id="ruler" hidden$="{{!showColumnBrowser}}" class="flex flex--col">
-            <div hidden$="{{!showColumnBrowser}}" class="flex flex--col">
+        <div id="ruler" class$="{{isItemHidden(showColumnBrowser, 'flex flex--col')}}">
+            <div class$="{{isItemHidden(showColumnBrowser, 'flex flex--col')}}">
               <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-                  <li hidden$="[[item.hideBreadcrumb]]" class="u-pv--">
+                  <li class$="{{isItemHidden(item.hideBreadcrumb, 'u-pv--')}}">
                     <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
                   </li>
                 </template>
@@ -95,17 +95,13 @@ Define how your data will come in using these methods:
                       <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
                         <ul class$="{{UlSelected(item, selectedItem)}}">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
-                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]"
-                                class$="{{isItemSelected(item, selectedItem)}}" >
+                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}}" >
                               <span class="flex__item">{{getItemLabel(item)}}</span>
-                              <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler"
-                                   key$="[[getItemId(item)]]">Open
+                              <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
-                              <span hidden$="[[!item.hasChildren]]"><i class="fa fa-angle-right"></i></span>
+                              <span class$="{{isItemHidden(!item.hasChildren)}}"><i class="fa fa-angle-right"></i></span>
                             </li>
                           </template>
-                          <li hidden$="[[!item.children || item.children.length === 0]]">This context has no children.</li>
-                          <!-- todo: i18n / messages. Runtime or build-time?? -->
                         </ul>
                       </div>
                     </div>
@@ -298,54 +294,7 @@ Define how your data will come in using these methods:
               }
             }
           }, 1000 / 20); // ms/fps
-
-        /*
-         Dilemma:
-         How to synchronize with databinding.
-         Steps that have to happen:
-         1) Item gets added to dom.
-         2) A frame passes to allow for rendering.
-         3) Then remove 'new' class.
-         */
-        var removeNewTagInternal = function() {
-          var found = false;
-          getColumns().forEach(
-            function(c) {
-              // 1) We detect the 'new' item in the actual dom.
-              if (c.classList.contains('new')) {
-                // 2) delay one frame to remove it.
-                requestAnimationFrame(
-                  function() {
-                    // 3) Remove
-                    c.classList.remove('new');
-                  });
-                found = true;
-              }
-            });
-          return found;
-        };
-
-        var removeNewTag = function() {
-          var wait = function() {
-            // A new item is expected, so wait till it arrives.
-            if (!removeNewTagInternal()) {// Not found?  Wait for next frame.
-              requestAnimationFrame(wait);
-            }
-          };
-          requestAnimationFrame(wait);
-        };
-
-        this.removeNewTag = removeNewTag;
-        removeNewTag();
       },
-      /**
-       * Removes 'new' tag from class name to allow for css animation.
-       *
-       * @private
-       */
-      removeNewTag: function() {
-      },
-
       /**
        * Event listener on breadcrumb clicks, listener is registered from the template
        *
@@ -482,6 +431,21 @@ Define how your data will come in using these methods:
         return base = (item.inSelectedPath) ? base += " selected" : base;
       },
       /**
+       * Observer on LI, and whether they should show up. replaces polymer hidden, which seems to be shaky with IE.
+       * if base_classes is passed in, it is returned with the appropriate response.
+       *
+       * @param {string} item
+       * param {string} base_classes
+       * @private
+       */
+      isItemHidden: function(item, base_classes) {
+        if (base_classes  !== undefined) {
+          return base_classes += (!item) ? " visuallyhidden" : '';
+        } else {
+          return (item) ? "visuallyhidden" : '';
+        }
+      },
+      /**
        * Observer on context attribute. loads up the initial Context of the browser.
        *
        * @private
@@ -521,7 +485,6 @@ Define how your data will come in using these methods:
           }
         }
         recursiveAddChildren(root.children);
-        this.removeNewTag();
       },
       /**
        * Appends children to those already at a level.
@@ -640,11 +603,6 @@ Define how your data will come in using these methods:
               //check response is for the current selected node
               else if (parentId === selectedNode[_this.idField]) {
                 _this.addChildren(item, data);
-
-                if (children.length > 0) {
-                  _this.removeNewTag();
-                }
-
                 _this.addToParentNodes(item);
               } else {
                 // disregard response, it's from an old getChildren call
