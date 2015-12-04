@@ -155,7 +155,7 @@ Define how your data will come in using these methods:
          */
         idField: {
           type: String,
-          value: "identifer"
+          value: "id"
         },
         /**
          * this is where the initial context is stored.
@@ -643,10 +643,11 @@ Define how your data will come in using these methods:
        */
       UlSelected: function(item, selectedItem) {
         var base = "list-bare level",
-            itemId = selectedItem.identifier;
+            id = this.idField,
+            itemId = selectedItem[id];
         if (item.children) {
           for (var i = 0, len = item.children.length; i < len; i++) {
-            if (item.children[i].identifier === itemId) {
+            if (item.children[i][id] === itemId) {
               base += " selected";
             }
           }
@@ -661,12 +662,13 @@ Define how your data will come in using these methods:
        */
       changeSelected: function(item) {
         var children = item.parent.children,
-            sib;
+            sib,
+            id = this.idField;
 
         for (var i = 0, len = children.length; i < len; i++) {
           sib = children[i];
 
-          if (sib.identifier !== item.identifier) {
+          if (sib[id] !== item[id]) {
             if (sib.inSelectedPath || sib.selectedAsset) {
               sib.inSelectedPath = false;
               sib.selectedAsset = false;
