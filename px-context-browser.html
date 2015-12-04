@@ -155,7 +155,7 @@ Define how your data will come in using these methods:
          */
         idField: {
           type: String,
-          value: "id"
+          value: "identifer"
         },
         /**
          * this is where the initial context is stored.
@@ -175,8 +175,8 @@ Define how your data will come in using these methods:
          * @default ''
          */
         selectedItem: {
-          type: String,
-          value: ''
+          type: Object,
+          value: function() {return {};}
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -442,7 +442,7 @@ Define how your data will come in using these methods:
         if (base_classes  !== undefined) {
           return base_classes += (!item) ? " visuallyhidden" : '';
         } else {
-          return (item) ? "visuallyhidden" : '';
+          return (!item) ? "visuallyhidden" : '';
         }
       },
       /**

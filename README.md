@@ -70,22 +70,22 @@ The object can have 1 or more levels of assets, each group should be grouped und
 
 #### id-field
 
-*Type:* **String** - (*Optional*) - *Default:* "id"
+*Type:* **String** - (*Optional*) - *Default:* "identifier"
 
 Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'unique id' in it.
 
 ```
 <px-context-browser
 	...
-	id-field="1.3">
+	id-field="identifier">
 </px-context-browser>
 ```
 
-#### selected-item-id
+#### selected-item
 
-*Type:* **String** - (*Optional*) - *Default:* null
+*Type:* **Object** - (*Optional*) - *Default:* null
 
-Id of item currently selected, reflected back as an attribute so application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
+item currently selected, - application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
 
 ```
 <px-context-browser
