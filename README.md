@@ -70,7 +70,7 @@ The object can have 1 or more levels of assets, each group should be grouped und
 
 #### id-field
 
-*Type:* **String** - (*Optional*) - *Default:* "identifier"
+*Type:* **String** - (*Optional*) - *Default:* "id"
 
 Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'unique id' in it.
 
@@ -85,7 +85,7 @@ Mapping for the field name in the context data that represents a unique id for a
 
 *Type:* **Object** - (*Optional*) - *Default:* null
 
-item currently selected, - application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
+The item currently selected - application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
 
 ```
 <px-context-browser
