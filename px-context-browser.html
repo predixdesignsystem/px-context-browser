@@ -472,6 +472,10 @@ Define how your data will come in using these methods:
                   current_elem.inSelectedPath = true;
                 //only direct lineage of the selected child have children..
                 _this.push('parentNodes',current_elem);
+                if (current_elem.selectedAsset) {
+                    current_elem.inSelectedPath = true;
+                    _this.set('selectedItem',current_elem);
+                }
                 var obj = {"data" : current_elem.children};
                 _this.addChildren(current_elem, obj);
                 recursiveAddChildren(current_elem.children);
