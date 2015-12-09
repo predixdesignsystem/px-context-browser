@@ -96,7 +96,7 @@ Define how your data will come in using these methods:
                         <ul class$="{{UlSelected(item, selectedItem)}}">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
                             <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}}" >
-                              <span class="flex__item">{{getItemLabel(item)}}</span>
+                              <span class="flex__item item-label">{{getItemLabel(item)}}</span>
                               <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
                               <span class$="{{isItemHidden(!item.hasChildren)}}"><i class="fa fa-angle-right"></i></span>
