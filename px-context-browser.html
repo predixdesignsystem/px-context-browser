@@ -50,6 +50,13 @@ Define how your data will come in using these methods:
         };
     });
 
+### Styling
+
+The following custom properties and mixins are available for styling:
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-context-browser-content-wrapper` | Mixin applied to the content of the context browser | `{}`
+
 @element px-context-browser
 @blurb Context browser element
 @homepage index.html
@@ -58,6 +65,13 @@ Define how your data will come in using these methods:
 <dom-module id="px-context-browser">
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   <template>
+
+    <style is="custom-style">
+      .content-wrapper {
+        @apply(--px-context-browser-content-wrapper);
+      }
+    </style>
+
     <div id="modal" on-click="toggleColumnBrowser" class$="{{isItemHidden(showColumnBrowser)}}"></div>
     <div id="back">
       <div class="column-browser-container flex flex--col">
