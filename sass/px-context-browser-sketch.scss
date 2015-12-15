@@ -135,6 +135,15 @@ header {
   cursor: pointer;
 }
 
+.selectable-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+
+  .item-label {
+    line-height: 20px;
+  }
+}
+
 .column {
   height: calculateRem(300px);
   transform: translateZ(0);
