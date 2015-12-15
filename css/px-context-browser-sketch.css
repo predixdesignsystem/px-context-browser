@@ -970,9 +970,8 @@ header {
 .selectable-item {
   padding-top: 5px;
   padding-bottom: 5px; }
-
-.selectable-item .item-label {
-  line-height: 20px; }
+  .selectable-item .item-label {
+    line-height: 20px; }
 
 .column {
   height: 20rem;
