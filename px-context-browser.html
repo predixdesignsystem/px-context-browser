@@ -489,6 +489,11 @@ Define how your data will come in using these methods:
           }
         }
         recursiveAddChildren(root.children);
+        // Repopulate the openedItemName and Breadcrumbs if we have a directContext
+        if (this.selectedItem && this.selectedItem.name) {
+          this.configureBreadcrumbs();
+          this.openedItemName = this.selectedItem.name;
+        }
       },
       /**
        * Appends children to those already at a level.
