@@ -2,7 +2,8 @@
   "data": [{
     "name": "Nested Child 1",
     "identifier": "001-2a",
-    "isOpenable": true
+    "isOpenable": true,
+    "hasChildren": true
   },
   {
     "name": "Nested Child 2",

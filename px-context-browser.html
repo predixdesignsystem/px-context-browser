@@ -31,7 +31,8 @@ Advanced:
     <px-context-browser label-field="description"
                         parent-id-field="parent"
                         id-field="identifier"
-                        browser-context={{browserContext}}>
+                        browser-context={{browserContext}}
+                        show-chevron="true">
     </px-context-browser>
 
 ### code on your page
@@ -72,7 +73,7 @@ Define how your data will come in using these methods:
             </h1>
             <ul class="list-inline list-inline--delimited">
               <template is="dom-repeat" items="{{openedBreadcrumbs}}">
-                <li>[[item]]</li>
+                <li>{{item}}</li>
               </template>
             </ul>
           </div>
@@ -91,7 +92,7 @@ Define how your data will come in using these methods:
                 <div class="flex">
                   <template is="dom-repeat" id="levels" items="{{parentNodes}}">
                     <div class="flex flex--col column push" data-column>
-                      <div class="head">{{ item.header || '' }}</div>
+                      <div class="head">{{item.header}}</div>
                       <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
                         <ul class$="{{UlSelected(item, selectedItem)}}">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
@@ -99,7 +100,9 @@ Define how your data will come in using these methods:
                               <span class="flex__item item-label">{{getItemLabel(item)}}</span>
                               <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
-                              <span class$="{{isItemHidden(!item.hasChildren)}}"><i class="fa fa-angle-right"></i></span>
+                              <template is="dom-if" if="{{_hasChildren(item)}}">
+                                <span><i class="fa fa-angle-right"></i></span>
+                              </template>
                             </li>
                           </template>
                         </ul>
@@ -239,6 +242,17 @@ Define how your data will come in using these methods:
         openedBreadcrumbs: {
           type: Array,
           value: function() {return [];}
+        },
+        /**
+         * show chevron
+         * @type {Boolean}
+         * @default false
+         *
+         */
+        showChevron: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
         }
       },
       ready: function() {
@@ -387,14 +401,14 @@ Define how your data will come in using these methods:
        * @private
        */
       configureBreadcrumbs: function(evt) {
-        this.splice('openedBreadcrumbs', 0, this.openedBreadcrumbs.length);
-        for (var index in this.parentNodes) {
-          if (index < this.parentNodes.length) {
-            if (this.getItemLabel(this.parentNodes[index]) !== '') {
-              this.push('openedBreadcrumbs', this.getItemLabel(this.parentNodes[index]));
+        var i,
+            len=this.parentNodes.length;
+        this.openedBreadcrumbs = [];
+          for (i=0; i<len;i++) {
+            if (this.getItemLabel(this.parentNodes[i])) {
+              this.push('openedBreadcrumbs', this.getItemLabel(this.parentNodes[i]));
             }
           }
-        }
       },
       /**
        * @param {Object} item
@@ -446,6 +460,15 @@ Define how your data will come in using these methods:
         }
       },
       /**
+       * this method checks whether the attribute hasChildren has been set to true, and if it has,
+       * whether the item has a property by the name of children or hasChildren
+       * @param {object} item
+       * @private
+       */
+      _hasChildren: function(item) {
+        return (this.showChevron) ? (item.hasChildren || item.children) : false;
+      },
+      /**
        * Observer on context attribute. loads up the initial Context of the browser.
        *
        * @private
@@ -468,7 +491,7 @@ Define how your data will come in using these methods:
           for (var i in currentRoot) {
             if (currentRoot.hasOwnProperty(i)) {
               current_elem = currentRoot[i];
-              if(Object.keys(current_elem).indexOf('children') > -1) {
+              if(Object.keys(current_elem).indexOf('children') > -1 ) {
                   current_elem.inSelectedPath = true;
                 //only direct lineage of the selected child have children..
                 _this.push('parentNodes',current_elem);

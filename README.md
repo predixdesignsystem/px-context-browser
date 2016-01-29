@@ -42,18 +42,6 @@ Finally, use the component in your application:
 
 ## Attributes
 
-#### label-field
-
-*Type:* **String** - (*Optional*) - *Default:* "name"
-
-Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'display label' in it.
-
-```
-<px-context-browser
-	...
-	label-field="Custom Name">
-</px-context-browser>
-```
 #### browser-context
 
 *Type:* **String** - (*Required*) - *Default:* ""
@@ -65,32 +53,6 @@ The object can have 1 or more levels of assets, each group should be grouped und
 <px-context-browser
 	...
 	browser-context={{browserContext}}>
-</px-context-browser>
-```
-
-#### id-field
-
-*Type:* **String** - (*Optional*) - *Default:* "id"
-
-Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'unique id' in it.
-
-```
-<px-context-browser
-	...
-	id-field="identifier">
-</px-context-browser>
-```
-
-#### selected-item
-
-*Type:* **Object** - (*Optional*) - *Default:* null
-
-The item currently selected - application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
-
-```
-<px-context-browser
-	...
-	selected-item-id="1">
 </px-context-browser>
 ```
 
@@ -121,6 +83,43 @@ colBrowser.handlers = {
     }
 };
 ```
+####show-chevron
+*Type:* **Boolean** - (*Optional*) - *Default:* "false"
+
+This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children.
+
+```
+<px-context-browser
+	...
+	show-chevron="true">
+</px-context-browser>
+```
+
+#### id-field
+
+*Type:* **String** - (*Optional*) - *Default:* "id"
+
+Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'unique id' in it.
+
+```
+<px-context-browser
+	...
+	id-field="identifier">
+</px-context-browser>
+```
+
+#### label-field
+
+*Type:* **String** - (*Optional*) - *Default:* "name"
+
+Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as long as it has the notion of a 'display label' in it.
+
+```
+<px-context-browser
+	...
+	label-field="Custom Name">
+</px-context-browser>
+```
 
 #### opened-item-name
 
@@ -132,6 +131,19 @@ Initial context name to be shown on page which defaults to 'Selected Context'.
 <px-context-browser
 	...
 	open-item-name="Special open item name">
+</px-context-browser>
+```
+
+#### selected-item
+
+*Type:* **Object** - (*Optional*) - *Default:* null
+
+The item currently selected - application can detect which item is selected, for example via [ng-bind-polymer](https://github.com/PredixDev/ng-bind-polymer).
+
+```
+<px-context-browser
+	...
+	selected-item-id="1">
 </px-context-browser>
 ```
 

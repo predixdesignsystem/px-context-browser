@@ -3,7 +3,8 @@
       {
           "identifier": "001-1",
           "name": "Lots of Children",
-          "isOpenable" : true
+          "isOpenable" : true,
+          "hasChildren": true
       },
       {
         "identifier": "001-2",

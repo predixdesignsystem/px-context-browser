@@ -3,11 +3,13 @@
     {
       "name": "Lots of children",
       "identifier": "001-1",
-      "isOpenable": true
+      "isOpenable": true,
+      "hasChildren": true
     }, {
       "name": "Deep nested",
       "identifier": "001-2",
-      "isOpenable": true
+      "isOpenable": true,
+      "hasChildren": true
     }, {
       "name": "Nothing Below Me",
       "identifier": "001-3",
