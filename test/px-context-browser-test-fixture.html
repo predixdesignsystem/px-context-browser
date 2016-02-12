@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>px-context-browser Demo</title>
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
+  <script src="../bower_components/q/q.js"></script>
+  <!-- web-component-tester automatically provides local copy of brower.js below
+       for any URL ending with "/web-component-tester/browser.js"
+       when wct is run from the command line -->
+  <script src="../web-component-tester/browser.js"></script>
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <link rel="import" href="../bower_components/px-theme/px-theme.html"/>
+  <!-- <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html" /> -->
+  <link rel="import" href="../px-context-browser.html"/>
+  <!-- This script link will contain the generated script for basic wct test cases -->
+  <script src="px-context-browser-base-tests.js"></script>
+  <!-- This script link will contain the generated script stub for custom, developer-added test cases -->
+  <script src="px-context-browser-custom-tests.js"></script>
+  <style is="x-style">
+    html {
+      height: 100%;
+      font-size: 0.9375em;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      background-color: #DDD;
+    }
+    .demo {
+      padding: 1rem;
+    }
+  </style>
+  <script>
+  </script>
+</head>
+
+<body>
+    <px-context-browser
+      id="px_context_browser_1"
+      label-field="name"
+      id-field="identifier"
+      show-chevron="true">
+    </px-context-browser>
+</body>
+</html>
