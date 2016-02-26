@@ -101,7 +101,7 @@ Define how your data will come in using these methods:
                               <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
                               <template is="dom-if" if="{{_hasChildren(item)}}">
-                                <span><i class="fa fa-angle-right"></i></span>
+                                <span class="chevron"><i class="fa fa-angle-right"></i></span>
                               </template>
                             </li>
                           </template>

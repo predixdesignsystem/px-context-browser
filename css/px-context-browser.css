@@ -1103,6 +1103,9 @@ px-spinner {
   display: none;
   opacity: .65; }
 
+.chevron {
+  line-height: 20px; }
+
 :host {
   background-color: white; }
 

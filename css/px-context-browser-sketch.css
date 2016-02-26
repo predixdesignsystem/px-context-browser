@@ -1089,3 +1089,6 @@ px-spinner {
   background-color: #fff;
   display: none;
   opacity: .65; }
+
+.chevron {
+  line-height: 20px; }
