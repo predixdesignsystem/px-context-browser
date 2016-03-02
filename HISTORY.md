@@ -1,3 +1,7 @@
+v0.8,2
+====================
+* changed line height for selected items to help differentiate them from non-selected items
+
 v0.8.1
 ====================
 * Updated License
