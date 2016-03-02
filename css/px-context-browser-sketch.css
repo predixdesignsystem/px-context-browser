@@ -971,7 +971,7 @@ header {
   padding-top: 5px;
   padding-bottom: 5px; }
   .selectable-item .item-label {
-    line-height: 20px; }
+    line-height: 1; }
 
 .column {
   height: 20rem;
@@ -1009,7 +1009,7 @@ header {
 .level li {
   padding-right: 0.6666666667rem;
   padding-left: 0.6666666667rem;
-  line-height: 2;
+  line-height: 1;
   transition: color 0.2s ease 0s, background-color 0.2s ease 0s; }
   .level li .opener.unopenable {
     display: none; }

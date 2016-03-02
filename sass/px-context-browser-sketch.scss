@@ -140,7 +140,7 @@ header {
   padding-bottom: 5px;
 
   .item-label {
-    line-height: 20px;
+    line-height: 1;
   }
 }
 
@@ -192,7 +192,7 @@ header {
   li {
     padding-right: $inuit-base-spacing-unit--small;
     padding-left: $inuit-base-spacing-unit--small;
-    line-height: 2;
+    line-height: 1;
     transition: color 0.2s ease 0s, background-color 0.2s ease 0s; // TODO: establish default transition length;
     .opener.unopenable {
       display: none; //opener on unopenable items is never displayed and not seen by screen readers
