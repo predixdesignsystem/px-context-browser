@@ -1,4 +1,8 @@
-v0.8,2
+v0.8.3
+====================
+* updated the link for Github Issues
+
+v0.8.2
 ====================
 * changed line height for selected items to help differentiate them from non-selected items
 
