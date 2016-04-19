@@ -132,7 +132,7 @@ Define how your data will come in using these methods:
         /**
          * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
          * long as it has the notion of a 'display label' in it.
-         *
+         * @type {Optional}
          * @type {String}
          * @default "name"
          */
@@ -154,6 +154,7 @@ Define how your data will come in using these methods:
          * Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as
          * long as it has the notion of a 'unique id' in it.
          * @type {String}
+         * @type {Optional}
          * @default "id"
          */
         idField: {
@@ -161,10 +162,18 @@ Define how your data will come in using these methods:
           value: "id"
         },
         /**
-         * this is where the initial context is stored.
-         *
-         * @type {Polymer empty Object}
-         * @default null
+         * An attribute which expects a *JSON* Object in order to load the context into the browser.
+         * The object can have 1 or more levels of assets, each group should be grouped under a *children* array.
+         * see the *directContext.json* file for an example.
+         * @type {Required}
+         * @type {Object}
+         * @default Empty Object
+         * ```html
+         *   <px-context-browser
+	       *      ...
+         *      browser-context={{browserContext}}>
+         *    </px-context-browser>
+         * ```
          */
         browserContext : {
             value: function() {return {};},
@@ -173,8 +182,8 @@ Define how your data will come in using these methods:
         },
         /**
          * if we have a selected Item, it's stored here.
-         * must be null for polymer to determine the correct classes for ULs and LIs
-         * @type {String}
+         * must be empty for polymer to determine the correct classes for ULs and LIs
+         * @type {Object}
          * @default ''
          */
         selectedItem: {
@@ -216,7 +225,7 @@ Define how your data will come in using these methods:
         },
         /**
          * Initial context name to be shown on page
-         *
+         * @type {Optional}
          * @type {String}
          * @default 'Select Context'
          */
@@ -226,6 +235,7 @@ Define how your data will come in using these methods:
         },
         /**
          * flag to show column browser
+         * @type {Optional}
          * @type {Boolean}
          * @default false
          */
@@ -244,8 +254,9 @@ Define how your data will come in using these methods:
           value: function() {return [];}
         },
         /**
-         * show chevron
+         * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children.When this attribute is true, it checks for the "hasChildren" or "children" properties inside your json, and if they exist, the chevron - which indicates this item has children - is shown.
          * @type {Boolean}
+         * @type  {Optional}
          * @default false
          *
          */

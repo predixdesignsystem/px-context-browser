@@ -1,3 +1,7 @@
+v0.8.4
+====================
+* Updated documentation for api only.
+
 v0.8.3
 ====================
 * updated the link for Github Issues
