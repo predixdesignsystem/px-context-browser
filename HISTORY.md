@@ -1,3 +1,7 @@
+v0.8.5
+====================
+* Updated travis file
+
 v0.8.4
 ====================
 * Updated documentation for api only.
