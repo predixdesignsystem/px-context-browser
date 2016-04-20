@@ -78,11 +78,11 @@ Define how your data will come in using these methods:
             </ul>
           </div>
         </header>
-        <div id="ruler" class$="{{isItemHidden(showColumnBrowser, 'flex flex--col')}}">
-            <div class$="{{isItemHidden(showColumnBrowser, 'flex flex--col')}}">
+        <div id="ruler" class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
+            <div class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
               <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-                  <li class$="{{isItemHidden(item.hideBreadcrumb, 'u-pv--')}}">
+                  <li class$="{{isItemHidden(item.hideBreadcrumb)}} u-pv--">
                     <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
                   </li>
                 </template>
@@ -94,11 +94,11 @@ Define how your data will come in using these methods:
                     <div class="flex flex--col column push" data-column>
                       <div class="head">{{item.header}}</div>
                       <div class="flex__item scroll-y" on-scroll="scrollEndHandler">
-                        <ul class$="{{UlSelected(item, selectedItem)}}">
+                        <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
                           <template is="dom-repeat" id="level" items="{{item.children}}">
-                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}}" >
+                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
                               <span class="flex__item item-label">{{getItemLabel(item)}}</span>
-                              <button class$="[[getItemOpenerClass(item)]]" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
+                              <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
                               <template is="dom-if" if="{{_hasChildren(item)}}">
                                 <span class="chevron"><i class="fa fa-angle-right"></i></span>
@@ -132,8 +132,8 @@ Define how your data will come in using these methods:
         /**
          * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
          * long as it has the notion of a 'display label' in it.
-         * @type {Optional}
-         * @type {String}
+         *
+         * @type {String Optional}
          * @default "name"
          */
         labelField: {
@@ -153,8 +153,8 @@ Define how your data will come in using these methods:
         /**
          * Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as
          * long as it has the notion of a 'unique id' in it.
-         * @type {String}
-         * @type {Optional}
+         * @type {String Optional}
+         *
          * @default "id"
          */
         idField: {
@@ -165,8 +165,8 @@ Define how your data will come in using these methods:
          * An attribute which expects a *JSON* Object in order to load the context into the browser.
          * The object can have 1 or more levels of assets, each group should be grouped under a *children* array.
          * see the *directContext.json* file for an example.
-         * @type {Required}
-         * @type {Object}
+         *
+         * @type {Object Required}
          * @default Empty Object
          * ```html
          *   <px-context-browser
@@ -225,8 +225,8 @@ Define how your data will come in using these methods:
         },
         /**
          * Initial context name to be shown on page
-         * @type {Optional}
-         * @type {String}
+         *
+         * @type {String Optional}
          * @default 'Select Context'
          */
         openedItemName: {
@@ -235,8 +235,8 @@ Define how your data will come in using these methods:
         },
         /**
          * flag to show column browser
-         * @type {Optional}
-         * @type {Boolean}
+         *
+         * @type {Boolean Optional}
          * @default false
          */
         showColumnBrowser: {
@@ -255,8 +255,8 @@ Define how your data will come in using these methods:
         },
         /**
          * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children.When this attribute is true, it checks for the "hasChildren" or "children" properties inside your json, and if they exist, the chevron - which indicates this item has children - is shown.
-         * @type {Boolean}
-         * @type  {Optional}
+         * @type {Boolean Optional}
+         *
          * @default false
          *
          */
@@ -360,8 +360,6 @@ Define how your data will come in using these methods:
                 threshold = 10,
                 hiddenContentHeight = scrollableHeight - visibleHeight;
 
-
-
             if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
               if (this.handlers.getChildren) {
                 _this.spinner('show');
@@ -439,21 +437,19 @@ Define how your data will come in using these methods:
       },
       /**
        * @param {Object} item
-       * @return {String} CSS class for item opener
+       * @return {String} openable CSS class for item opener as needed
        * @private
        */
       getItemOpenerClass: function(item) {
-        var base = "opener btn btn--small btn--tertiary ";
-        return base = (item.isOpenable) ? base + "openable" : base + "unopenable";
+        return (item.isOpenable) ? "openable" : "unopenable";
       },
       /**
-       * @param {String} base
-       * @return {String} CSS class for item
+       *
+       * @return {String} selected class for item as needed
        * @private
        */
       isItemSelected: function(item, selectedItem) {
-        var base = "flex flex--middle selectable-item";
-        return base = (item.inSelectedPath) ? base += " selected" : base;
+        return (item.inSelectedPath) ? "selected" : '';
       },
       /**
        * Observer on LI, and whether they should show up. replaces polymer hidden, which seems to be shaky with IE.
@@ -463,12 +459,8 @@ Define how your data will come in using these methods:
        * param {string} base_classes
        * @private
        */
-      isItemHidden: function(item, base_classes) {
-        if (base_classes  !== undefined) {
-          return base_classes += (!item) ? " visuallyhidden" : '';
-        } else {
+      isItemHidden: function(item) {
           return (!item) ? "visuallyhidden" : '';
-        }
       },
       /**
        * this method checks whether the attribute hasChildren has been set to true, and if it has,
@@ -557,9 +549,9 @@ Define how your data will come in using these methods:
        *
        * @param {Object} parentNode The parent
        * @param {Object} results Describes the children
-       *  @config {Array} data List of children objects
-       *  @config {Object} meta Keys describe the data.
-       *  @private
+       * @config {Array} data List of children objects
+       * @config {Object} meta Keys describe the data.
+       * @private
        */
       addChildren: function(parentNode, results) {
         if (results === undefined || results === null) {
@@ -685,17 +677,15 @@ Define how your data will come in using these methods:
        * @private
        */
       UlSelected: function(item, selectedItem) {
-        var base = "list-bare level",
-            id = this.idField,
+        var id = this.idField,
             itemId = selectedItem[id];
         if (item.children) {
           for (var i = 0, len = item.children.length; i < len; i++) {
             if (item.children[i][id] === itemId) {
-              base += " selected";
+              return  "selected";
             }
           }
         }
-        return base;
       },
       /**
        * resets all the selected siblings items, and sets the selected item.
