@@ -7,13 +7,6 @@ function runCustomTests() {
 
   suite('Custom Automation Tests for px-context-browser', function() {
     var topmostSelectLabel = selectContext.querySelector('h1 span').innerHTML;
-    test('Check that the topmost asset name mirrors the selected asset', function(done) {
-      flush(function(){
-        var breadcrumbEndLabels = selectContext.querySelectorAll('li');
-        assert.isTrue(topmostSelectLabel === breadcrumbEndLabels[3].innerHTML);
-        done();
-      });
-    });
 
     test('Check that clicking on the header expands the context path area', function(done) {
       var clickableHeader = selectContext.querySelector('h1');

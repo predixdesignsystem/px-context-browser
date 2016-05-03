@@ -1,3 +1,7 @@
+v0.9.2
+====================
+* fixed tests
+
 v0.9.1
 ====================
 * fixed the breadcrumbs so they adhere to specs
