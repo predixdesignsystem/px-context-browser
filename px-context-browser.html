@@ -72,9 +72,9 @@ Define how your data will come in using these methods:
               <i class="fa fa-caret-down"></i>
             </h1>
             <ul class="list-inline list-inline--delimited">
-              <template is="dom-repeat" items="{{openedBreadcrumbs}}">
-                <li>{{item}}</li>
-              </template>
+              <!-- <template is="dom-repeat" items="{{openedBreadcrumbs}}"> -->
+                <li>{{selectedItemParent}}</li>
+              <!-- </template> -->
             </ul>
           </div>
         </header>
@@ -82,7 +82,7 @@ Define how your data will come in using these methods:
             <div class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
               <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-                  <li class$="{{isItemHidden(item.hideBreadcrumb)}} u-pv--">
+                  <li class$="{{isItemHidden(!item.hideBreadcrumb)}} u-pv--">
                     <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
                   </li>
                 </template>
@@ -254,6 +254,16 @@ Define how your data will come in using these methods:
           value: function() {return [];}
         },
         /**
+         * The parent of the selected Item. used right under the selected item, and shows up when the item is minimized
+         * @type {String}
+         * @default ''
+         * @private  {true}
+         */
+        selectedItemParent: {
+          type: String,
+          value: ''
+        },
+        /**
          * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children.When this attribute is true, it checks for the "hasChildren" or "children" properties inside your json, and if they exist, the chevron - which indicates this item has children - is shown.
          * @type {Boolean Optional}
          *
@@ -413,11 +423,13 @@ Define how your data will come in using these methods:
         var i,
             len=this.parentNodes.length;
         this.openedBreadcrumbs = [];
-          for (i=0; i<len;i++) {
-            if (this.getItemLabel(this.parentNodes[i])) {
-              this.push('openedBreadcrumbs', this.getItemLabel(this.parentNodes[i]));
-            }
+        for (i=0; i<len;i++) {
+          if (this.getItemLabel(this.parentNodes[i])) {
+            this.push('openedBreadcrumbs', this.getItemLabel(this.parentNodes[i]));
           }
+        }
+        //set the selected item's parent for the sudo breadcrumb right below the selected item.
+        this.selectedItemParent = this.openedBreadcrumbs[this.openedBreadcrumbs.length-2];
       },
       /**
        * @param {Object} item
