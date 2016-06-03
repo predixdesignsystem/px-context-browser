@@ -1,5 +1,9 @@
 v0.9.5
 ====================
+* removed unnecessary check on breadcrumbs 
+
+v0.9.5
+====================
 * added oss_notice to bower ignore
 
 v0.9.4

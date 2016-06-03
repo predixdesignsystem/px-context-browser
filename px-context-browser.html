@@ -82,7 +82,7 @@ Define how your data will come in using these methods:
             <div class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
               <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
                 <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
-                  <li class$="{{isItemHidden(!item.hideBreadcrumb)}} u-pv--">
+                  <li class$="u-pv--">
                     <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
                   </li>
                 </template>
