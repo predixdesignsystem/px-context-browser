@@ -378,6 +378,7 @@ Define how your data will come in using these methods:
                 if (item && item.meta) {
                   if (item.meta.total) {
                     if (item.children.length >= item.meta.total) {
+                      _this.spinner('hide');
                       return;
                     }
                     else {
