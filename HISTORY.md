@@ -1,3 +1,7 @@
+v0.9.7
+====================
+* Merged PR which fixed lazy loading spinner bug
+
 v0.9.5
 ====================
 * removed unnecessary check on breadcrumbs 
