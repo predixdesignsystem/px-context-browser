@@ -1,10 +1,14 @@
+v0.10.0
+====================
+* Upgrade to Polymer 1.5.0
+
 v0.9.7
 ====================
 * Merged PR which fixed lazy loading spinner bug
 
 v0.9.5
 ====================
-* removed unnecessary check on breadcrumbs 
+* removed unnecessary check on breadcrumbs
 
 v0.9.5
 ====================
