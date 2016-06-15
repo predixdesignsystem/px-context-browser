@@ -1,4 +1,4 @@
-# Px-Context-Browser
+# Px-Context-Browser [![Build Status](https://travis-ci.org/PredixDev/px-context-browser.svg?branch=master)](https://travis-ci.org/PredixDev/px-context-browser)
 
 Px-Context-Browser is a navigation tree navigation component.
 
