@@ -635,6 +635,11 @@ Define how your data will come in using these methods:
        * @private
        */
       getNewChildren: function(item) {
+        //return if item has no children
+        if(!item.hasChildren()) {
+            return;
+        }
+
         this.spinner('show');
         if (this.handlers.getChildren) {
           var _this = this;
