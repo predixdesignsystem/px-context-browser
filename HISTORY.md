@@ -1,3 +1,8 @@
+v0.10.1
+====================
+* Add import and config of px-iconography-design
+* Add import and config of px-typography-design
+
 v0.10.0
 ====================
 * Upgrade to Polymer 1.5.0
