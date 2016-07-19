@@ -1,4 +1,4 @@
-v0.10.1
+v1.0.0
 ====================
 * Add import and config of px-iconography-design
 * Add import and config of px-typography-design
