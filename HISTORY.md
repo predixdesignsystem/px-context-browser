@@ -1,4 +1,8 @@
-v0.10.0
+v1.0.1
+====================
+* added new demo
+
+v1.0.0 [this was bumped to 1.0.0 by mistake. no going back now!]
 ====================
 * Upgrade to Polymer 1.5.0
 

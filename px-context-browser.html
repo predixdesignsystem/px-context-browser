@@ -29,7 +29,6 @@ Minimum:
 Advanced:
 
     <px-context-browser label-field="description"
-                        parent-id-field="parent"
                         id-field="identifier"
                         browser-context={{browserContext}}
                         show-chevron="true">
@@ -100,7 +99,7 @@ Define how your data will come in using these methods:
                               <span class="flex__item item-label">{{getItemLabel(item)}}</span>
                               <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                               </button>
-                              <template is="dom-if" if="{{_hasChildren(item)}}">
+                              <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
                                 <span class="chevron"><i class="fa fa-angle-right"></i></span>
                               </template>
                             </li>
@@ -273,7 +272,7 @@ Define how your data will come in using these methods:
         showChevron: {
           type: Boolean,
           value: false,
-          reflectToAttribute: true
+          notify: true
         }
       },
       ready: function() {
@@ -756,11 +755,24 @@ Define how your data will come in using these methods:
           this[attrName] = resolvedValue;
         }
       },
+
       /**
-       * toggle visbility of the column browser
-       */
-      toggleColumnBrowser: function() {
+      * Fires whenever the Context Browser is opened
+      * @event contextBrowserOpening
+      */
+      /**
+      * Fires whenever the Context Browser is closed
+      * @event contextBrowserClosing
+      */
+      /**
+      * toggle visbility of the column browser
+      * @method toggleColumnBrowser
+      */
+       toggleColumnBrowser: function() {
         this.showColumnBrowser = !this.showColumnBrowser;
+
+        //fire an opening or closing event
+        this.fire((this.showColumnBrowser) ? 'contextBrowserOpening' : 'contextBrowserClosing');
         this.spinner('hide');
       }
     });

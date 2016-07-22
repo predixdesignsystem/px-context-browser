@@ -24,7 +24,8 @@ module.exports = function (grunt) {
         dist: {
           files: {
             'css/noprefix/px-context-browser-sketch.css': 'sass/px-context-browser-sketch.scss',
-            'css/noprefix/px-context-browser.css': 'sass/px-context-browser-predix.scss'
+            'css/noprefix/px-context-browser.css': 'sass/px-context-browser-predix.scss',
+            'css/noprefix/px-context-browser-demo.css': 'sass/px-context-browser-demo.scss'
           }
         }
       },
