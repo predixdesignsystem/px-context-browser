@@ -32,6 +32,11 @@ Predix branding rules go in px-comp-two-predix.scss, not in this file.
 @import "px-flexbox-design/_base.flexbox.scss";
 @import "px-viewport-design/_base.viewport.scss";
 @import "px-headings-design/_base.headings.scss";
+@import "px-typography-design/_base.typography.scss";
+$inuit-webfont-path: "../px-typography-design/type";
+$fa-font-path: "../font-awesome/fonts";
+@import "px-typography-design/_base.typography.scss";
+@import "px-iconography-design/_base.iconography.scss";
 
 // Objects
 $inuit-enable-btn--small              : true;

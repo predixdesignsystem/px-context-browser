@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": [
     "px-context-browser.html"
   ],
@@ -12,21 +12,22 @@
     "bower_components",
     "node_modules",
     "test",
-    "OSS_Notice.pdf",
-    "importQ.html"
+    "OSS_Notice.pdf"
   ],
   "dependencies": {
     "polymer": "^v1.5.0",
     "px-spinner": "#~0.3.0",
-    "px-theme": "#~v0.8.0"
+    "px-theme": "#~v0.8.0",
+    "px-typography-design": "^0.3.5",
+    "px-iconography-design": "^0.2.10"
   },
   "devDependencies": {
     "px-buttons-design": "~0.4.0",
     "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
     "px-colors-design": "~0.2.0",
-    "px-headings-design": "~0.2.0",
+    "px-headings-design": "^0.2.14",
     "px-list-bare-design": "~0.2.0",
-    "px-list-inline-design": "~0.2.0",
+    "px-list-inline-design": "^0.2.11",
     "px-starter-kit-design": "~0.4.0",
     "q": "~v1.2.0",
     "px-forms-design": "#~0.3.15",
@@ -37,9 +38,7 @@
     "px-api-viewer": "^0.0.3",
     "px-demo-snippet": "^0.0.11",
     "px-toggle-design": "^0.2.12",
-    "px-headings-design": "^0.2.14",
     "px-actionable-text-icons-design": "^0.0.3",
-    "px-code-design": "^0.2.11",
-    "px-list-inline-design": "^0.2.11"
+    "px-code-design": "^0.2.11"
   }
 }
