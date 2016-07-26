@@ -1,3 +1,7 @@
+v1.0.3
+====================
+* updated gh-pages script to vulcanize demo
+
 v1.0.2
 ====================
 * Add import and config of px-iconography-design (again)
