@@ -49,6 +49,20 @@ Define how your data will come in using these methods:
           }
         };
     });
+## Passing context
+
+There are two ways of passing data into the context browser:
+1. Initial Context (initialContext.json file)
+2. Direct Context (directContext.json file)
+
+### Initial Context
+With Initial context you only pass the first level (i.e. the left column). No children are expected - the (customizable) handlers.getChildren callback is relied upon to retrieve further children. Please see the initialContext.json file for an example.
+
+### Direct Context
+This method expects 2 things to be true:
+1. One of the objects in the json file has a "selectedAsset" property set to true.
+2. The objects passed in are ONLY IN THE DIRECT PATH OF THE SELECTED ASSET. This is done to ensure the context browser loads only what's needed, as opposed to (possible) 1000s of items. Siblings along the path are accepted, but children of siblings are neither expected nor accepted. Please see the directContext.json file for an example.
+
 
 @element px-context-browser
 @blurb Context browser element
@@ -140,7 +154,7 @@ Define how your data will come in using these methods:
           value: "name"
         },
         /**
-         * contains the selected item data
+         * Contains the selected item data
          *
          * @type {Object}
          * @default null
@@ -161,9 +175,9 @@ Define how your data will come in using these methods:
           value: "id"
         },
         /**
-         * An attribute which expects a *JSON* Object in order to load the context into the browser.
+         * An attribute which expects an Object literal in order to load the context into the browser.
          * The object can have 1 or more levels of assets, each group should be grouped under a *children* array.
-         * see the *directContext.json* file for an example.
+         * See the explanation above for the two accepted types of context.
          *
          * @type {Object Required}
          * @default Empty Object
@@ -180,8 +194,8 @@ Define how your data will come in using these methods:
             observer: 'contextChanged'
         },
         /**
-         * if we have a selected Item, it's stored here.
-         * must be empty for polymer to determine the correct classes for ULs and LIs
+         * If we have a selected Item, it's stored here.
+         * must be initially empty for polymer to determine the correct classes for ULs and LIs if there's not selected Asset
          * @type {Object}
          * @default ''
          */
@@ -199,7 +213,7 @@ Define how your data will come in using these methods:
          * itemClickHandler: function(item) {}
          *   // returns special callback behavior when
          *   // a given context is selected
-         * getChildren: function (parent, startIdx) {}
+         * getChildren: function (parent, startIndex) {}
          *   // returns a JavaScript promise that will
          *   // resolve to children of the item and
          *   // starting with the given index (to support lazy loading)
@@ -212,7 +226,7 @@ Define how your data will come in using these methods:
           type: Object
         },
         /**
-         * Hierarchy of items down to currently selected item. Set here as a property to expose it to the template, but managed internally. Do not set this.
+         * Hierarchy of items down to currently selected item. used as a property to expose it to the template, but managed internally. Do not set this.
          *
          * @type {Array}
          * @default []
@@ -223,7 +237,7 @@ Define how your data will come in using these methods:
           value: function() {return [];} //this is Polmer's way of defining an empty array in properties
         },
         /**
-         * Initial context name to be shown on page
+         * Initial context name to be shown on page in the upper left corner.
          *
          * @type {String Optional}
          * @default 'Select Context'
@@ -253,7 +267,7 @@ Define how your data will come in using these methods:
           value: function() {return [];}
         },
         /**
-         * The parent of the selected Item. used right under the selected item, and shows up when the item is minimized
+         * The parent of the selected Item. Is also shown right under the selected item when the context browser is minimized.
          * @type {String}
          * @default ''
          * @private  {true}
@@ -263,7 +277,7 @@ Define how your data will come in using these methods:
           value: ''
         },
         /**
-         * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children.When this attribute is true, it checks for the "hasChildren" or "children" properties inside your json, and if they exist, the chevron - which indicates this item has children - is shown.
+         * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children. When this attribute is true, it checks for the "hasChildren" or "children" properties inside your object, and if they exist, the chevron - which indicates this item has children - is shown.
          * @type {Boolean Optional}
          *
          * @default false

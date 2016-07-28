@@ -11,11 +11,12 @@
   <link rel="import" href="../px-api-viewer/px-api-viewer.html" />
   <link rel="import" href="../px-tabs/px-tab-set.html" />
   <link rel="import" href="../iron-ajax/iron-ajax.html" />
+  <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
   <link rel="import" href="px-context-browser.html"/>
-    <link rel="import" href="importQ.html"/>
+  <link rel="import" href="importQ.html"/>
   <link rel="icon" href="favicon.ico" type="image/x-icon"/>
   <link rel="import" href="../px-demo-snippet/px-demo-snippet.html">
-  <link rel="import" href="../polymer-font-awesome/polymer-font-awesome.html">
+  <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
   <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
 
   </head>
@@ -27,6 +28,7 @@
   <template id="just-for-demo" is="dom-bind" >
     <!-- description -->
     <div class="hero u-p++ text--shadow">
+      <a class="actionable flex flex--right flex--middle" href="https://github.com/PredixDev/px-context-browser" target="_blank"><iron-icon class="menu__open" icon="fa:fa-github"></iron-icon>View on Github</a>
   		<h1 class="delta">px-context-browser</h1>
   		<p>
         The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view.<br />
@@ -38,7 +40,6 @@
   			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-context-browser.svg?style=flat-square" alt="Travis"/>
   			<img class="u-mr--" src="https://img.shields.io/bower/v/px-context-browser.svg?style=flat-square" alt="Bower"/>
   			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-context-browser.svg?style=flat-square" alt="Issues"/>
-  			<img class="u-mr--" src="https://img.shields.io/github/watchers/PredixDev/px-context-browser.svg?style=social&label=Watch"/>
   		</div>
   	</div>
     <br />
@@ -270,9 +271,6 @@ window.addEventListener('WebComponentsReady', function() {
   window.addEventListener('contextBrowserOpening', function() {
     template.set('optionsArray.0.showColumnBrowser', true);
   });
-
-
-
 
   template.selected = "0";
   template.optionsArray = optionsArray;
