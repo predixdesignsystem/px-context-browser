@@ -183,7 +183,7 @@ This method expects 2 things to be true:
          * @default Empty Object
          * ```html
          *   <px-context-browser
-	       *      ...
+         *      ...
          *      browser-context={{browserContext}}>
          *    </px-context-browser>
          * ```
@@ -521,21 +521,19 @@ This method expects 2 things to be true:
             if (currentRoot.hasOwnProperty(i)) {
               current_elem = currentRoot[i];
               if(Object.keys(current_elem).indexOf('children') > -1 ) {
-                  current_elem.inSelectedPath = true;
-                //only direct lineage of the selected child have children..
-                _this.push('parentNodes',current_elem);
+                if (current_elem.inSelectedPath) {
+                  _this.push('parentNodes',current_elem);
+                }
                 if (current_elem.selectedAsset) {
-                    current_elem.inSelectedPath = true;
+                    _this.addParents(current_elem);
                     _this.set('selectedItem',current_elem);
                 }
                 var obj = {"data" : current_elem.children};
                 _this.addChildren(current_elem, obj);
                 recursiveAddChildren(current_elem.children);
               } else if (current_elem.selectedAsset) {
-                  current_elem.inSelectedPath = true;
-                  _this.set('selectedItem',current_elem);
-                //we're pushing this item into parentNode to ensure the breadcrumbs work correctly.
-                _this.push('parentNodes',current_elem);
+                _this.addParents(current_elem);                
+                _this.set('selectedItem',current_elem);
               }
             }
           }
@@ -545,6 +543,26 @@ This method expects 2 things to be true:
         if (this.selectedItem && this.selectedItem.name) {
           this.configureBreadcrumbs();
           this.openedItemName = this.selectedItem.name;
+        }
+      },
+     /**
+      * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
+      * 
+      * @param {Object} item The selected item (with selectedAsset to true) 
+      */
+      addParents: function(item) {
+        var array = [];
+        var parent = item;
+
+        while (parent) {
+          parent.inSelectedPath = true;
+          if (parent.parent) {
+            array.push(parent);
+          }                  
+          parent = parent.parent;
+        }
+        for (var i = array.length - 1; i >= 0; i--) {
+          this.push('parentNodes',array[i]);
         }
       },
       /**
