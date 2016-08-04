@@ -1,3 +1,6 @@
+v1.0.6
+====================
+* PR that changed how the breadcrumbs are rebuilt, allowing items with children not in the selected path
 v1.0.5
 ====================
 * removed the old demo vulcanize from the auto build script
