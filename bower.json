@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": [
     "px-context-browser.html"
   ],
@@ -20,7 +20,8 @@
     "px-spinner": "#~0.3.0",
     "px-theme": "#~v0.8.0",
     "px-typography-design": "^0.3.5",
-    "px-iconography-design": "^0.2.10"
+    "px-iconography-design": "^0.2.10",
+    "px-polymer-font-awesome": "^0.1.8"
   },
   "devDependencies": {
     "px-buttons-design": "~0.4.0",
@@ -34,7 +35,6 @@
     "px-forms-design": "#~0.3.15",
     "px-tables-design": "#~0.3.12",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#~1.2.3",
-    "px-polymer-font-awesome": "^0.1.8",
     "px-tabs": "~0.4.0",
     "px-api-viewer": "^0.0.3",
     "px-demo-snippet": "^0.0.11",

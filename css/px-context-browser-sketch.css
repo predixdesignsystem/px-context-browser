@@ -3289,7 +3289,7 @@ px-spinner {
   background: white; }
 
 #ruler {
-  position: absolute;
+  position: relative;
   background: white;
   z-index: 2;
   width: 100%;

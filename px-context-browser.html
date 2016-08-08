@@ -6,6 +6,7 @@
 <!--suppress HtmlUnknownTarget -->
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-spinner/px-spinner.html"/>
+<link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -76,13 +77,10 @@ This method expects 2 things to be true:
     <div id="back">
       <div class="column-browser-container flex flex--col">
         <header class="flex u-pl" id="selectContext">
-          <div class="content-wrapper">
-            <content></content>
-          </div>
           <div class="flex__item--middle">
             <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
               <span>{{openedItemName}}</span>
-              <i class="fa fa-caret-down"></i>
+              <iron-icon icon="fa:fa-caret-down"></iron-icon>
             </h1>
             <ul class="list-inline list-inline--delimited">
               <!-- <template is="dom-repeat" items="{{openedBreadcrumbs}}"> -->
@@ -532,7 +530,7 @@ This method expects 2 things to be true:
                 _this.addChildren(current_elem, obj);
                 recursiveAddChildren(current_elem.children);
               } else if (current_elem.selectedAsset) {
-                _this.addParents(current_elem);                
+                _this.addParents(current_elem);
                 _this.set('selectedItem',current_elem);
               }
             }
@@ -547,8 +545,8 @@ This method expects 2 things to be true:
       },
      /**
       * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
-      * 
-      * @param {Object} item The selected item (with selectedAsset to true) 
+      *
+      * @param {Object} item The selected item (with selectedAsset to true)
       */
       addParents: function(item) {
         var array = [];
@@ -558,7 +556,7 @@ This method expects 2 things to be true:
           parent.inSelectedPath = true;
           if (parent.parent) {
             array.push(parent);
-          }                  
+          }
           parent = parent.parent;
         }
         for (var i = array.length - 1; i >= 0; i--) {
