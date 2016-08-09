@@ -29,35 +29,40 @@
     <div class="hero u-p++ text--shadow">
       <a class="actionable flex flex--right flex--middle" href="https://github.com/PredixDev/px-context-browser" target="_blank"><iron-icon class="menu__open" icon="fa:fa-github"></iron-icon>View on Github</a>
   		<h1 class="delta">px-context-browser</h1>
-  		<p>
-        The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view.<br />
-        Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function.<br />
-        When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. <br />
-        Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.<br />
-  		</p>
+      <div class="description-text">
+    		<p>
+          The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view.
+          Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other
+          classification, or employees organized by department or function.
+        </p>
+        <p>
+          When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page.
+          Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes
+          a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.
+    		</p>
+      </div>
   		<div class="flex">
   			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-context-browser.svg?style=flat-square" alt="Travis"/>
   			<img class="u-mr--" src="https://img.shields.io/bower/v/px-context-browser.svg?style=flat-square" alt="Bower"/>
   			<img class="u-mr--" src="https://img.shields.io/github/issues-raw/PredixDev/px-context-browser.svg?style=flat-square" alt="Issues"/>
   		</div>
   	</div>
-    <br />
 
     <!-- mega demo -->
     <div style="position: relative;" class="u-pb++ flex flex--col" id="defaultTab">
       <div class="tabContainer u-pt++ u-pl++">
         <px-tab-set selected="{{selected}}" bare no-bottom-border>
           <template is="dom-repeat" items="{{optionsArray}}">
-            <px-tab>Configuration {{indexPlusOne(index)}}</px-tab>
+            <px-tab>Option {{indexPlusOne(index)}}</px-tab>
           </template>
         </px-tab-set>
       </div>
       <px-tab-pages selected="{{selected}}">
         <template is="dom-repeat" items="{{optionsArray}}">
-          <section class="tab-page flex flex--right flex--wrap">
-            <div class="mega-demo flex u-pb++">
-            <!-- Properties -->
-            <div class="properties u-ph+ u-pb+  u-m++">
+          <section class="tab-page">
+            <div class="mega-demo flex flex--wrap u-ph++ u-pb++">
+              <!-- Properties -->
+              <div class="properties u-ph+ u-pb+ u-mt+">
               <p class="epsilon">Properties</p>
 
               <div class="u-mb-">Id Field: <input class="text-input" type="text" placeholder="{{item.idField}}" value="{{item.idField::input}}" /></div>
@@ -74,10 +79,12 @@
                 <div class="u-ml-">Show Column Browser</div>
               </div>
             </div>
-            <div class="demoContainer u-mr++">
+
+            <div class="demoContainer u-mt+">
               <!-- demo -->
               <div class="flex flex--col">
-                <div class="flex__item demo u-ph+ u-pb+ u-mt++">
+                <div class="flex__item demo u-p+">
+
                   <px-context-browser
                     label-field="[[item.labelField]]"
                     id-field="[[item.idField]]"

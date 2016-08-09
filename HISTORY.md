@@ -1,3 +1,7 @@
+v1.0.8
+====================
+* updated mega demo styles and bower px-demo-snippet to ^
+
 v1.0.7
 ====================
 * Chrome changed its behavior from version 51 to 52, and was causing the header to be hidden behind the absolutely positioned browser. I changed the positioning to relative. also switched the old font awesome to one that works in shadow dom.

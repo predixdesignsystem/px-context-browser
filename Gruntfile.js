@@ -31,16 +31,16 @@ module.exports = function (grunt) {
       },
 
       autoprefixer: {
-        options: {
-          browsers: ['last 3 version']
+          options: {
+            browsers: ['last 2 version']
+          },
+          multiple_files: {
+            expand: true,
+            flatten: true,
+            src: 'css/noprefix/*.css',
+            dest: 'css'
+          }
         },
-        multiple_files: {
-          expand: true,
-          flatten: true,
-          src: 'css/noprefix/*.css',
-          dest: 'css'
-        }
-      },
 
         shell: {
             options: {
@@ -62,19 +62,45 @@ module.exports = function (grunt) {
             }
         },
 
-      watch: {
-        sass: {
-          files: ['sass/**/*.scss'],
-          tasks: ['sass', 'autoprefixer'],
-          options: {
-            interrupt: true
-          }
-        }
-      },
+        watch: {
+            sass: {
+                files: ['sass/**/*.scss'],
+                tasks: ['sass', 'autoprefixer'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
+            },
+            htmljs: {
+                files: ['*.html', '*.js'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
+            }
+        },
 
         depserve: {
             options: {
                 open: '<%= depserveOpenUrl %>'
+            }
+        },
+
+        webdriver: {
+            options: {
+                specFiles: ['test/*spec.js']
+            },
+            local: {
+                webdrivers: ['chrome']
+            }
+        },
+
+        concurrent: {
+            devmode: {
+                tasks: ['watch', 'depserve'],
+                options: {
+                    logConcurrentOutput: true
+                }
             }
         }
     });
@@ -85,13 +111,19 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-dep-serve');
+    grunt.loadNpmTasks('webdriver-support');
     grunt.loadNpmTasks('grunt-autoprefixer');
+    grunt.loadNpmTasks('grunt-concurrent');
 
-  // Default task.
-  grunt.registerTask('default', 'Basic build', [
-    'sass',
-    'autoprefixer'
-  ]);
+    // Default task.
+    grunt.registerTask('default', 'Basic build', [
+        'sass',
+        'autoprefixer'
+    ]);
+
+    grunt.registerTask('devmode', 'Development Mode', [
+        'concurrent:devmode'
+    ]);
 
     // First run task.
     grunt.registerTask('firstrun', 'Basic first run', function() {
@@ -102,7 +134,8 @@ module.exports = function (grunt) {
 
     // Default task.
     grunt.registerTask('test', 'Test', [
-        'jshint'
+        'jshint',
+        'webdriver'
     ]);
 
     grunt.registerTask('release', 'Release', [
