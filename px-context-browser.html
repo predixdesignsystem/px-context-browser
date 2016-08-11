@@ -358,11 +358,39 @@ This method expects 2 things to be true:
        * @param {Event} evt
        * @private
        */
-      itemClickHandler: function(evt) {
+      itemClickHandler: function(evt, context) {
         this.debounce('itemClick', function() {
-          this.selectItem(evt.model.item, evt.currentTarget);
+          //count = numberOfColumns;
+          var sessionState =  JSON.parse(window.sessionStorage.getItem('_apphub:state'));
+          console.log('session',evt.model.item);
+          //if(evt.model.item.type)
+          var id = evt.model.item.type;
+          var segment = evt.model.item.segmentType;
+          if(id){
+            if(!id.includes(sessionState.type)){
+              //console.log(evt.model.item.segmentType.sourceKey);
+              //var data =
+              if(evt.model.item.segmentType){
+                console.log(evt.model.item.segmentType.sourceKey,sessionState.sourceKey)
+                if(evt.model.item.segmentType.sourceKey != sessionState.sourceKey)
+                  this.selectItem(evt.model.item, evt.currentTarget);
+              }
+              else{
+                this.selectItem(evt.model.item, evt.currentTarget);
+              }
+            }
+            else if(id.includes(sessionState.type) && segment.sourceKey != sessionState.sourceKey){
+              this.selectItem(evt.model.item, evt.currentTarget);
+            }
+
+          }
+          else{
+            this.selectItem(evt.model.item, evt.currentTarget);
+          }
+          // }
         }, 1);
       },
+
 
       /**
        * Event listener on scroll of item panels/columns, listener is registered from the template
