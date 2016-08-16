@@ -261,7 +261,24 @@ window.addEventListener('WebComponentsReady', function() {
             "parentId": null
           }
         }
-      ];
+      ],
+      pxTabs = document.querySelector('px-tab-pages'),
+      lightDomLoaded = function() {
+        var colBrowser = Polymer.dom(pxTabs[0]).querySelectorAll('px-context-browser');
+
+        colBrowser.forEach(function(browser) {
+          browser.handlers = {
+            getChildren: function(parent, newIndex) {
+              return demoGetChildren(parent);
+            },
+            itemOpenHandler: function(context) {
+            }
+          };
+        });
+      },
+      content = Polymer.dom(pxTabs.root).querySelector('content'),
+      //this calls the lightDomLoaded method when the content is loaded
+      _observer = Polymer.dom(content).observeNodes(lightDomLoaded);
 
 
   window.addEventListener('contextBrowserClosing', function() {
@@ -314,21 +331,6 @@ window.addEventListener('WebComponentsReady', function() {
     //don't forget to return the promise!
     return deferred.promise;
   }
-  //we have to wait until the light dom of pax-tabs is loaded. don't do this in your app ;)
-  window.setTimeout(function() {
-    var pxTabs = Polymer.dom(document).querySelectorAll('px-tab-pages'),
-        colBrowser = Polymer.dom(pxTabs[0]).querySelectorAll('px-context-browser');
-        colBrowser.forEach(function(browser) {
-          browser.handlers = {
-            getChildren: function(parent, newIndex) {
-              return demoGetChildren(parent);
-            },
-            itemOpenHandler: function(context) {
-            }
-          };
-        });
-
-  },500);
 });
 </script>
 
