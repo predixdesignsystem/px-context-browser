@@ -1,3 +1,7 @@
+v1.0.9
+====================
+* brought the Q library back in for local dev.
+
 v1.0.8
 ====================
 * updated mega demo styles and bower px-demo-snippet to ^
