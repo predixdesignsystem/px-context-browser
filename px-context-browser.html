@@ -360,18 +360,12 @@ This method expects 2 things to be true:
        */
       itemClickHandler: function(evt, context) {
         this.debounce('itemClick', function() {
-          //count = numberOfColumns;
           var sessionState =  JSON.parse(window.sessionStorage.getItem('_apphub:state'));
-          console.log('session',evt.model.item);
-          //if(evt.model.item.type)
           var id = evt.model.item.type;
           var segment = evt.model.item.segmentType;
           if(id){
             if(!id.includes(sessionState.type)){
-              //console.log(evt.model.item.segmentType.sourceKey);
-              //var data =
               if(evt.model.item.segmentType){
-                console.log(evt.model.item.segmentType.sourceKey,sessionState.sourceKey)
                 if(evt.model.item.segmentType.sourceKey != sessionState.sourceKey)
                   this.selectItem(evt.model.item, evt.currentTarget);
               }
@@ -382,12 +376,14 @@ This method expects 2 things to be true:
             else if(id.includes(sessionState.type) && segment.sourceKey != sessionState.sourceKey){
               this.selectItem(evt.model.item, evt.currentTarget);
             }
+            else{
+              this.toggleColumnBrowser();
+            }
 
           }
           else{
             this.selectItem(evt.model.item, evt.currentTarget);
           }
-          // }
         }, 1);
       },
 
@@ -451,6 +447,11 @@ This method expects 2 things to be true:
           this.openedItemName = this.selectedItem.name;
           this.toggleColumnBrowser();
           this.handlers.itemOpenHandler(this.selectedItem, this.openedBreadcrumbs);
+
+          // Add an fire event to pass selected item
+          var emitObj = {};
+          emitObj.selectedItem = this.selectedItem;
+          this.fire('emitEvent',emitObj);
         }
       },
       /**
@@ -493,7 +494,12 @@ This method expects 2 things to be true:
        * @private
        */
       getItemOpenerClass: function(item) {
-        return (item.isOpenable) ? "openable" : "unopenable";
+        // if (item.isOpenable == undefined){
+        //   return item.isOpenable = "openable";
+        // }
+        // else{
+          return (item.isOpenable) ? "openable" : "unopenable";
+        //}
       },
       /**
        *
