@@ -1,3 +1,7 @@
+v1.0.10
+====================
+* fixed demo bugs
+
 v1.0.9
 ====================
 * brought the Q library back in for local dev.
