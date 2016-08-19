@@ -361,6 +361,7 @@ This method expects 2 things to be true:
       itemClickHandler: function(evt, context) {
         this.debounce('itemClick', function() {
           var sessionState =  JSON.parse(window.sessionStorage.getItem('_apphub:state'));
+          //console.log(evt.model.item);
           var id = evt.model.item.type;
           var segment = evt.model.item.segmentType;
           if(id){
@@ -373,8 +374,10 @@ This method expects 2 things to be true:
                 this.selectItem(evt.model.item, evt.currentTarget);
               }
             }
-            else if(id.includes(sessionState.type) && segment.sourceKey != sessionState.sourceKey){
-              this.selectItem(evt.model.item, evt.currentTarget);
+            else if(segment){
+              if(id.includes(sessionState.type) && segment.sourceKey != sessionState.sourceKey){
+                this.selectItem(evt.model.item, evt.currentTarget);
+              }
             }
             else{
               this.toggleColumnBrowser();
