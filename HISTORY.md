@@ -1,3 +1,7 @@
+v1.1.0
+====================
+* migrate styles to style module
+
 v1.0.10
 ====================
 * fixed demo bugs
