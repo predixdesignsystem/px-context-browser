@@ -7,7 +7,6 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-spinner/px-spinner.html"/>
 <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
-<link rel="import" href="px-context-browser-styles.html" />
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -71,13 +70,20 @@ This method expects 2 things to be true:
 @homepage index.html
 @demo index.html
 -->
+
+<link rel="import" href="css/px-context-browser-styles.html">
+
 <dom-module id="px-context-browser">
   <!--
   <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
   -->
   <template>
     <!-- style mixin using @apply -->
-    <style include="px-context-browser-css">:host {@apply(--px-context-browser)}</style>
+    <style include="px-context-browser-styles">
+      :host {@apply(--px-context-browser)}
+    </style>
+    <style include="px-theme-styles"></style>
+
     <div id="modal" on-click="toggleColumnBrowser" class$="{{isItemHidden(showColumnBrowser)}}"></div>
     <div id="back">
       <div class="column-browser-container flex flex--col">

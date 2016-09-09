@@ -16,33 +16,30 @@
     "px-context-browser.png"
   ],
   "dependencies": {
-    "polymer": "^v1.5.0",
-    "px-spinner": "#~0.3.0",
-    "px-theme": "#~v0.8.0",
-    "px-typography-design": "^0.3.5",
-    "px-iconography-design": "^0.2.10",
-    "px-polymer-font-awesome": "^0.1.8",
-    "px-list-bare-design": "^0.2.13"
+    "polymer": "^v1.6.1",
+    "px-spinner": "~0.4.2",
+    "px-theme": "~v1.1.2",
+    "px-polymer-font-awesome": "^0.1.9"
   },
   "devDependencies": {
+    "px-list-bare-design": "^0.2.13",
     "q": "~v1.2.0",
-    "px-starter-kit-design": "~0.4.0",
-    "px-slider": "~0.5.0",
-    "px-spacing-design": "~0.3.4",
-    "px-buttons-design": "~0.4.13",
-    "px-forms-design": "#~0.3.15",
-    "px-button-group-design": "~0.3.8",
-    "px-typography-design": "~0.3.2",
+    "px-starter-kit-design": "~0.6.0",
+    "px-slider": "~0.6.0",
+    "px-spacing-design": "~0.3.8",
+    "px-buttons-design": "~0.4.26",
+    "px-forms-design": "~0.3.17",
+    "px-button-group-design": "~0.3.12",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#~1.2.3",
-    "px-tabs": "~0.4.0",
-    "px-api-viewer": "^0.0.1",
-    "px-demo-snippet": "^0.1.0",
+    "px-tabs": "~0.5.2",
+    "px-api-viewer": "^0.1.0",
+    "px-demo-snippet": "^0.5.1",
     "px-list-inline-design": "^0.2.11",
     "px-toggle-design": "^0.2.12",
     "px-headings-design": "^0.2.14",
     "px-actionable-text-icons-design": "^0.0.3",
     "px-code-design": "~0.2.11",
-    "px-dropdown": "^0.10.2",
-    "px-polymer-font-awesome": "^0.1.8"
+    "px-dropdown": "^0.12.1",
+    "px-polymer-font-awesome": "^0.1.9"
   }
 }
