@@ -361,29 +361,15 @@ This method expects 2 things to be true:
       itemClickHandler: function(evt, context) {
         this.debounce('itemClick', function() {
           var sessionState =  JSON.parse(window.sessionStorage.getItem('_apphub:state'));
-          var id = evt.model.item.type;
-          var segment = evt.model.item.segmentType;
-          if(id){
-            if(!id.includes(sessionState.type)){
-              if(evt.model.item.segmentType){
-                if(evt.model.item.segmentType.sourceKey != sessionState.sourceKey)
-                  this.selectItem(evt.model.item, evt.currentTarget);
-              }
-              else{
-                this.selectItem(evt.model.item, evt.currentTarget);
-              }
-            }
-            else if(id.includes(sessionState.type) && segment.sourceKey != sessionState.sourceKey){
+          var uri = evt.model.item.uri;
+          if(uri){
+            if(uri.includes(sessionState.type)){
+              this.toggleColumnBrowser();
+             }
+            else{
               this.selectItem(evt.model.item, evt.currentTarget);
             }
-            else{
-              this.toggleColumnBrowser();
-            }
-
-          }
-          else{
-            this.selectItem(evt.model.item, evt.currentTarget);
-          }
+          } 
         }, 1);
       },
 
@@ -451,7 +437,7 @@ This method expects 2 things to be true:
           // Add an fire event to pass selected item
           var emitObj = {};
           emitObj.selectedItem = this.selectedItem;
-          this.fire('emitEvent',emitObj);
+          this.fire('openSelectedItemEvent',emitObj);
         }
       },
       /**
@@ -527,7 +513,18 @@ This method expects 2 things to be true:
        * @private
        */
       _hasChildren: function(item) {
-        return (this.showChevron) ? (item.hasChildren || item.children) : false;
+        var sessionState =  JSON.parse(window.sessionStorage.getItem('_apphub:state'));
+          var uri = item.uri;
+          console.log(item);
+          if(uri){
+            if(uri.includes(sessionState.type)){
+              this.showChevron = false;
+              return this.showChevron;
+            }
+            else{
+              return (this.showChevron) ? (item.hasChildren || item.children) : false;
+            }
+          }
       },
       /**
        * Observer on context attribute. loads up the initial Context of the browser.
