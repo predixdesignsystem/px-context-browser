@@ -47,12 +47,10 @@ $inuit-list-inline-delimit-character  : "\00A0>\00A0";
 
 // Component
 
-// Trumps
-$inuit-enable-margins--none         : true;
-$inuit-enable-paddings              : true;
-$inuit-enable-paddings--tiny: true;
-$inuit-enable-paddings--small: true;
-@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
+:host{
+  --iron-icon-height: $inuit-base-font-size;
+  --iron-icon-width: $inuit-base-font-size;
+}
 
 // Default Transition Length
 $default-transition-length: 0.35s;
@@ -220,7 +218,7 @@ header {
   @include accessibility;
 }
 
-.content-wrapper > ::content {
+.content-wrapper{
     position: absolute;
     left: 0;
     display: flex;
@@ -228,6 +226,10 @@ header {
     align-items: center;
     width: 100%;
     height: 100%;
+}
+
+.content-wrapper__item{
+  margin-bottom: $inuit-base-spacing-unit - calculateRem(1px);
 }
 
 px-spinner {
@@ -274,3 +276,12 @@ px-spinner {
 .chevron {
   line-height: $inuit-base-line-height;
 }
+
+
+// Trumps
+$inuit-enable-margins--none         : true;
+$inuit-enable-margins               : true;
+$inuit-enable-paddings              : true;
+$inuit-enable-paddings--tiny: true;
+$inuit-enable-paddings--small: true;
+@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
