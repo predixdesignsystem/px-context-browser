@@ -2,7 +2,7 @@
   "name": "px-context-browser",
   "author": "General Electric",
   "description": "A Px component",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
   "extName": null,
   "repository": {

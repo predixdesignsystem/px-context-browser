@@ -84,8 +84,10 @@ $column-width: calculateRem(240px);
   margin-bottom: 5px;
 }
 
+$px-context-browser-height : calculateRem(60px);
+
 header {
-  height: calculateRem(60px);
+  height: $px-context-browser-height;
   h1 {
     cursor: pointer;
     position: relative;
@@ -173,14 +175,14 @@ header {
 
 .ruler {
   width: $column-width;
-  position: absolute;
   visibility: hidden;
   height: 0;
-  top: 0;
   left: 0;
 }
 
 #ruler{
+  position: absolute;
+  top: $px-context-browser-height;
   background: white;
   z-index:2;
   width:100%;

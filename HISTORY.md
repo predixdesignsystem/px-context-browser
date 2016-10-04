@@ -1,3 +1,7 @@
+v1.3.3
+====================
+* Add some top to make sure expanded 'ruler' is correctly positioned.
+
 v1.3.2
 ====================
 * Revert position change introduced in v1.0.7. Was causing issues in seed app by pushing content down the page.
