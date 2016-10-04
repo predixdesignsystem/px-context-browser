@@ -1,3 +1,19 @@
+v1.3.2
+====================
+* Revert position change introduced in v1.0.7. Was causing issues in seed app by pushing content down the page.
+
+v1.3.1
+====================
+* Fix dropdown icon size. CSS shadow dom fixes and load order of sass partials.
+
+v1.3.0
+====================
+* Grunt to gulp conversion and move to style modues.
+
+v1.2.0
+====================
+* Add content tag to allow insertion of deck selector.
+
 v1.1.0
 ====================
 * migrate styles to style module

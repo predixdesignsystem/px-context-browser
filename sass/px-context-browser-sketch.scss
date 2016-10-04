@@ -180,6 +180,13 @@ header {
   left: 0;
 }
 
+#ruler{
+  background: white;
+  z-index:2;
+  width:100%;
+  overflow:hidden;
+}
+
 // An extra div is required to enforce the inner boundary even when the outer is animating.
 .column > div {
   min-width: $column-width;
@@ -254,13 +261,6 @@ px-spinner {
 }
 #selectContext{
   background:white;
-}
-#ruler{
-  position: relative;
-  background: white;
-  z-index:2;
-  width:100%;
-  overflow:hidden;
 }
 
 .overlay {
