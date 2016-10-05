@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "main": [
     "px-context-browser.html"
   ],
@@ -33,7 +33,7 @@
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#~1.2.3",
     "px-tabs": "~0.5.2",
     "px-api-viewer": "^0.1.0",
-    "px-demo-snippet": "^0.5.1",
+    "px-demo-snippet": "^0.6.2",
     "px-list-inline-design": "^0.2.11",
     "px-toggle-design": "^0.2.12",
     "px-headings-design": "^0.2.14",
