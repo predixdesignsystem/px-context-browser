@@ -1,3 +1,7 @@
+v1.3.6
+====================
+* Update dependencies
+
 v1.3.3
 ====================
 * Add some top to make sure expanded 'ruler' is correctly positioned.
