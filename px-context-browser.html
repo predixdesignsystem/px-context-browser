@@ -98,11 +98,7 @@ This method expects 2 things to be true:
               <span>{{openedItemName}}</span>
               <iron-icon icon="fa:fa-caret-down"></iron-icon>
             </h1>
-            <ul class="list-inline list-inline--delimited">
-              <!-- <template is="dom-repeat" items="{{openedBreadcrumbs}}"> -->
-                <li>{{selectedItemParent}}</li>
-              <!-- </template> -->
-            </ul>
+            <span>{{selectedItemParent}}</span>
           </div>
         </header>
         <div id="ruler" class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
