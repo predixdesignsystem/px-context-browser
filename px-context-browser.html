@@ -22,7 +22,7 @@
 <!--
 Context browser element.  See the demo page (demo.html) for a working example.
 
-#### Usage
+## Usage
 Minimum:
 
     <px-context-browser browser-context={{browserContext}}></px-context-browser>
@@ -35,7 +35,7 @@ Advanced:
                         show-chevron="true">
     </px-context-browser>
 
-### code on your page
+### Code on Your Page
 
 Define how your data will come in using these methods:
 
@@ -50,7 +50,7 @@ Define how your data will come in using these methods:
           }
         };
     });
-## Passing context
+## Passing Context
 
 There are two ways of passing data into the context browser:
 1. Initial Context (initialContext.json file)
@@ -63,6 +63,20 @@ With Initial context you only pass the first level (i.e. the left column). No ch
 This method expects 2 things to be true:
 1. One of the objects in the json file has a "selectedAsset" property set to true.
 2. The objects passed in are ONLY IN THE DIRECT PATH OF THE SELECTED ASSET. This is done to ensure the context browser loads only what's needed, as opposed to (possible) 1000s of items. Siblings along the path are accepted, but children of siblings are neither expected nor accepted. Please see the directContext.json file for an example.
+
+## Styling
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-cb-background-color` | Background color for the header and panel | `$white`
+`--px-cb-modal-color` | Color to be used (with transparency) for the modal overlay | `$black`
+`--px-cb-scrollbar-track-color` | Color of the scrollbar track (background) | `$gray2`
+`--px-cb-scrollbar-thumb-color` | Color of the scrollbar thumb control | `$gray7`
+`--px-cb-border-color` | Color for borders above and below breadcrumb area | `$gray7`
+`--px-cb-selected-background-color` | Background color of the primary selected node | `$select-blue-default`
+`--px-cb-selected-text-color` | Text color of the primary selected node and OPEN button text/border | `$white`
+`--px-cb-secondary-background-color` | Background color of the primary selected node's parents and grandparents | `$gray2`
 
 
 @element px-context-browser

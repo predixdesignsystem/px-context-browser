@@ -183,7 +183,7 @@ header {
 #ruler{
   position: absolute;
   top: $px-context-browser-height;
-  background: white;
+  background: var(--px-cb-background-color, $white);
   z-index:2;
   width:100%;
   overflow:hidden;
@@ -251,7 +251,7 @@ px-spinner {
 
 #modal{
   position: fixed;
-  background: black;
+  background: var(--px-cb-modal-color, $black);
   opacity:0.5;
   left:0;
   top:0;
@@ -262,7 +262,7 @@ px-spinner {
   position:relative;
 }
 #selectContext{
-  background:white;
+  background: var(--px-cb-background-color, $white);
 }
 
 .overlay {
@@ -271,7 +271,7 @@ px-spinner {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: #fff;
+  background-color: var(--px-cb-background-color, $white);
   display: none;
   opacity: .65;
 }

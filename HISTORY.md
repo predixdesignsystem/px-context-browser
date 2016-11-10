@@ -1,3 +1,7 @@
+v1.3.8
+====================
+* added style variables for theming
+
 v1.3.7
 ====================
 * updated the header so it's always vertically centered.
