@@ -1,3 +1,6 @@
+v1.3.10
+==================
+* changed css variables to be consistent with BEM
 
 v1.3.9
 ==================

@@ -46,20 +46,20 @@ common/abstract rules go in px-context-browser-sketch.scss, not in this file.
 .column-browser {
   li {
     &:hover {
-      background-color: var(--px-cb-secondary-background-color, $gray1);
+      background-color: var(--px-cb-background-color--secondary, $gray1);
     }
     &.selected {
-      background-color: var(--px-cb-secondary-background-color, $gray2);
+      background-color: var(--px-cb-background-color--secondary, $gray2);
     }
   }
   .level.selected {
     li.selected {
-      background-color: var(--px-cb-selected-background-color, $select-blue-default);
-      color: var(--px-cb-selected-text-color, $white);
+      background-color: var(--px-cb-background-color--selected, $select-blue-default);
+      color: var(--px-cb-text-color--selected, $white);
     }
     .btn.opener {
-      border-color: var(--px-cb-selected-text-color, $white);
-      color: var(--px-cb-selected-text-color, $white);
+      border-color: var(--px-cb-text-color--selected, $white);
+      color: var(--px-cb-text-color--selected, $white);
       background: none;
     }
   }
