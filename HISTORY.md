@@ -1,3 +1,7 @@
+v1.3.11
+==================
+* removing px-theme style call
+
 v1.3.10
 ==================
 * changed css variables to be consistent with BEM
