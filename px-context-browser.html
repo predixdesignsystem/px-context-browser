@@ -96,7 +96,7 @@ Custom property | Description | Default
     <style include="px-context-browser-styles">
       :host {@apply(--px-context-browser)}
     </style>
-    
+
 
     <div id="modal" on-click="toggleColumnBrowser" class$="{{isItemHidden(showColumnBrowser)}}"></div>
     <div id="back">
@@ -138,7 +138,7 @@ Custom property | Description | Default
                             <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                             </button>
                             <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
-                              <span class="chevron"><i class="fa fa-angle-right"></i></span>
+                              <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
                             </template>
                           </li>
                         </template>

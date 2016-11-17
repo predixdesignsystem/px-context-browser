@@ -277,8 +277,11 @@ px-spinner {
 }
 .chevron {
   line-height: $inuit-base-line-height;
+  --iron-icon-height: $inuit-base-font-size;
+  --iron-icon-width: $inuit-base-font-size;
+  margin-bottom: calculateRem(2px);
+  margin-left: calculateRem(4px);
 }
-
 
 // Trumps
 $inuit-enable-margins--none         : true;
