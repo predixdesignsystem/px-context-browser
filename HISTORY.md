@@ -1,3 +1,7 @@
+v1.3.13
+==================
+* update dependencies for dropdown
+
 v1.3.12
 ==================
 * changed i to iron-icon
