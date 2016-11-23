@@ -1,3 +1,7 @@
+v1.3.16
+==================
+* updating slider dependency
+
 v1.3.15
 ==================
 * changing all devDeps to ^
