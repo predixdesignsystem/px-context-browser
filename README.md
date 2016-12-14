@@ -62,15 +62,6 @@ $ gulp serve
 
 Navigate to the root of that server (e.g. http://localhost:8080/) in a browser to open the API documentation page, with link to the "Demo" / working examples.
 
-### LiveReload
-
-By default gulp serve is configured to enable LiveReload and will be watching for modifications in your root directory as well as `/css`.
-
-
-
-
-
-
 ### GE Coding Style Guide
 [GE JS Developer's Guide](https://github.com/GeneralElectric/javascript)
 
