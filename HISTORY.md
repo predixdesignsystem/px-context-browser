@@ -1,6 +1,10 @@
+v1.4.3
+==================
+* added an extra visuallyhidden class to ensure the selected context browser item doesn't show up when open is clicked.
+
 v1.4.2
 ==================
-* removed content-wrapper__item class and updated headings design 
+* removed content-wrapper__item class and updated headings design
 
 v1.4.1
 ==================
