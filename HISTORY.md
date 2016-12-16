@@ -1,10 +1,14 @@
+v1.4.4
+==================
+* rebuild sass for headings design update
+
 v1.4.3
 ==================
 * added an extra visuallyhidden class to ensure the selected context browser item doesn't show up when open is clicked.
 
 v1.4.2
 ==================
-* removed content-wrapper__item class and updated headings design
+* removed content-wrapper__item class
 
 v1.4.1
 ==================
