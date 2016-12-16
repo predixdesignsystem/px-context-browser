@@ -237,10 +237,6 @@ header {
     height: 100%;
 }
 
-.content-wrapper__item{
-  margin-bottom: $inuit-base-spacing-unit - calculateRem(1px);
-}
-
 px-spinner {
   position: absolute;
   z-index: 10;
