@@ -1,3 +1,7 @@
+v1.4.2
+==================
+* removed content-wrapper__item class and updated headings design 
+
 v1.4.1
 ==================
 * Update missed design depndencies
