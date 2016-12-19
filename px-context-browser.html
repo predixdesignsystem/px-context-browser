@@ -130,7 +130,7 @@ Custom property | Description | Default
                 <template is="dom-repeat" id="levels" items="{{parentNodes}}">
                   <div class="flex flex--col column push" data-column>
                     <div class="head">{{item.header}}</div>
-                    <div class="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
+                    <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
                       <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
                         <template is="dom-repeat" id="level" items="{{item.children}}">
                           <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >

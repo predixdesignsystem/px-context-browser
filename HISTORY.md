@@ -1,3 +1,7 @@
+v1.4.5
+==================
+* fixed bug that removed the scrollbars
+
 v1.4.4
 ==================
 * rebuild sass for headings design update
