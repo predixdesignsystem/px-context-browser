@@ -7,6 +7,7 @@
 <link rel="import" href="../polymer/polymer.html"/>
 <link rel="import" href="../px-spinner/px-spinner.html"/>
 <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
+<link rel="import" href="px-context-browser-typeahead.html" />
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -131,10 +132,22 @@ Custom property | Description | Default
                   <div class="flex flex--col column push" data-column>
                     <div class="head">{{item.header}}</div>
                     <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
+                    <template is="dom-if" if="[[_toShowColumnTypeahead()]]">
+                      <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
+                    </template>
+                    <div class="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
                       <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
                         <template is="dom-repeat" id="level" items="{{item.children}}">
                           <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
-                            <span class="flex__item item-label">{{getItemLabel(item)}}</span>
+                            <template is="dom-if" if="[[!_toShowColumnTypeahead()]]"><span class="flex__item item-label">{{_getItemLabel(item)}}</span></template>
+                            <template is="dom-if" if="[[_toShowColumnTypeahead()]]">
+                              <template is="dom-if" if="[[!item.searchTerm]]">
+                                <span class="flex__item item-label">{{_getItemLabel(item)}}</span>
+                              </template>
+                              <template is="dom-if" if="{{item.searchTerm}}">
+                                <span class="flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                              </template>
+                            </template>
                             <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
                             </button>
                             <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
@@ -311,6 +324,17 @@ Custom property | Description | Default
           type: Boolean,
           value: false,
           notify: true
+        },
+        /**
+         * This attributes allows you to enable the search box When this attribute is true
+         * @type {String Optional}
+         *
+         * @default "false"
+         *
+         */
+        showColumnTypeahead: {
+          type: Boolean,
+          value: false
         }
       },
       ready: function() {
@@ -344,6 +368,7 @@ Custom property | Description | Default
             });
         };
 
+        this.listen(document, 'force-re-render', 'reRenderDom'); //attaching listener for force rendering of template
         setInterval(
           function() {
             var width = columnBrowser.offsetWidth,
@@ -366,6 +391,9 @@ Custom property | Description | Default
               }
             }
           }, 1000 / 20); // ms/fps
+      },
+      detached: function () {
+        this.unlisten(document, 'force-re-render', 'reRenderDom'); //remove the listener for re rendering
       },
       /**
        * Event listener on breadcrumb clicks, listener is registered from the template
@@ -462,8 +490,8 @@ Custom property | Description | Default
             len=this.parentNodes.length;
         this.openedBreadcrumbs = [];
         for (i=0; i<len;i++) {
-          if (this.getItemLabel(this.parentNodes[i])) {
-            this.push('openedBreadcrumbs', this.getItemLabel(this.parentNodes[i]));
+          if (this._getItemLabel(this.parentNodes[i])) {
+            this.push('openedBreadcrumbs', this._getItemLabel(this.parentNodes[i]));
           }
         }
         //set the selected item's parent for the sudo breadcrumb right below the selected item.
@@ -474,7 +502,7 @@ Custom property | Description | Default
        * @return {String} Display label for given item
        * @private
        */
-      getItemLabel: function(item) {
+      _getItemLabel: function(item) {
         return item ? item[this.labelField] || '' : '';
       },
       /**
@@ -830,6 +858,29 @@ Custom property | Description | Default
         //fire an opening or closing event
         this.fire((this.showColumnBrowser) ? 'contextBrowserOpening' : 'contextBrowserClosing');
         this.spinner('hide');
+      },
+      /**
+       * Checks and returns boolean value if the typeahead is enabled or not for search box
+       * @private
+       */
+      _toShowColumnTypeahead: function () {
+        if (typeof this.showColumnTypeahead === 'boolean') {
+          return this.showColumnTypeahead;
+        } else {
+          return this.showColumnTypeahead == 'true';
+        }
+      },
+      /**
+       * Called whenever the data is changed for context browser from typeahead
+       * @private
+       * @event force-re-render
+       * @param {event} e
+       */
+      reRenderDom: function (e) {
+        var root = Polymer.dom(this.root).querySelector(e.detail.templateId);
+        if (root && root.render) {
+          root.render();
+        }
       }
     });
 </script>
