@@ -1,3 +1,7 @@
+v1.5.0
+==================
+* add search per column (filter) capability
+
 v1.4.5
 ==================
 * fixed bug that removed the scrollbars
