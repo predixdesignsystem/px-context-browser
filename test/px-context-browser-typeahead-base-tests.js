@@ -287,10 +287,11 @@ document.addEventListener("WebComponentsReady", function() {
       console.log('Opened: ', context);
     }
   };
-  runBaseTests();
+
   setTimeout(function() {
+    runBaseTests();
     runCustomTests();
-  }.bind(this),500);
+  }.bind(this),1000);
 
 });
 
