@@ -287,11 +287,11 @@ document.addEventListener("WebComponentsReady", function() {
       console.log('Opened: ', context);
     }
   };
-
-  setTimeout(function() {
+  
+  Polymer.flush(function() {
     runBaseTests();
     runCustomTests();
-  }.bind(this),1000);
+  },500);
 
 });
 
