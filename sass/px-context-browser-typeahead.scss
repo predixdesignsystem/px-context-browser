@@ -1,0 +1,120 @@
+// Settings
+@import "px-colors-design/_settings.colors.scss";
+$predix-font-family : "GE Inspira Sans", sans-serif;
+@import "px-typography-design/_base.typography.scss";
+@import "px-defaults-design/_settings.defaults.scss";
+
+// Tools
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-viewport-design/_base.viewport.scss";
+@import "px-typography-design/_base.typography.scss";
+
+// Meta
+
+// Objects
+@import "px-input-group-design/_objects.input-group.scss";
+
+// Component
+
+.px-context-browser-typeahead-container {
+  position: relative;
+  width: 102%;
+
+  ::-webkit-input-placeholder {
+    text-indent: 0px;
+  }
+  &.scroll-y {
+    overflow-y: scroll;
+    overflow: -moz-scrollbars-vertical;
+    scrollbar-base-color: var(--px-cb-scrollbar-track-color, $gray2);
+    scrollbar-face-color: var(--px-cb-scrollbar-track-color, $gray2);
+    scrollbar-arrow-color: var(--px-cb-scrollbar-track-color, $gray2);
+    scrollbar-track-color: var(--px-cb-scrollbar-track-color, $gray2);
+  }
+  &.scroll-y::-webkit-scrollbar {
+    width: 5px;
+  }
+  &.scroll-y::-webkit-scrollbar-track {
+    background-color: var(--px-cb-scrollbar-track-color, $gray2);
+    width: 2px;
+  }
+  &.scroll-y::-webkit-scrollbar-thumb {
+    border: solid transparent;
+    border-width: 0 2px;
+    background-clip: padding-box;
+    background-color: var(--px-cb-scrollbar-track-color, $gray7);
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  ::-ms-clear {
+    display: none;
+  }
+
+  :-ms-input-placeholder {
+    padding-left: 0.7rem;
+  }
+  iron-icon[hidden] {
+    display: none !important;
+  }
+
+  .px-context-browser-typeahead-close-icon {
+    position: absolute;
+    right: 20px;
+    top: 6px;
+    color: var(--px-cb-scrollbar-track-color, $gray7);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .px-context-browser-typeahead-searchContainer {
+    iron-icon {
+      position: absolute;
+      right: 0px;
+      pointer-events: none;
+      margin-top: 7px;
+      margin-right: 4px;
+      color: var(--px-cb-scrollbar-track-color, $gray6);
+    }
+
+    .px-context-browser-typeahead-searchbox {
+      box-sizing: border-box;
+      width: 100%;
+      border-left: 2px solid var(--px-cb-border-color, $gray2);
+      border-right: 0;
+      border-top: 0;
+      margin: 0;
+      line-height: 1;
+      padding-top: 5px;
+      padding-left: .6rem;
+      padding-bottom: 5px;
+      padding-right: .66667rem;
+      font-size: $inuit-base-font-size;
+      font-family: $predix-font-family;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+@-moz-document url-prefix() {
+  .px-context-browser-typeahead-container {
+    width: 107%;
+  }
+}
+
+// Trumps
+@import "inuit-clearfix/_trumps.clearfix.scss";
+@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
+@import "px-widths-responsive-design/_trumps.widths-responsive.scss";

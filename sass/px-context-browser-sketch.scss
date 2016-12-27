@@ -161,9 +161,6 @@ header {
   &.new {
     visibility: hidden;
   }
-  &:first-of-type .level li {
-    padding-left: $inuit-base-spacing-unit;
-  }
 }
 .column-browser {
   height: calculateRem(300px);
@@ -281,6 +278,9 @@ px-spinner {
   --iron-icon-width: $inuit-base-font-size;
   margin-bottom: calculateRem(2px);
   margin-left: calculateRem(4px);
+}
+.item-label .bold {
+  font-weight: 600;
 }
 
 // Trumps

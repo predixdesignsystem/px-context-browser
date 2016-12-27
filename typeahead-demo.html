@@ -31,18 +31,11 @@
     <!-- description -->
     <div class="hero u-p++ text--shadow">
       <a class="actionable flex flex--right flex--middle" href="https://github.com/PredixDev/px-context-browser" target="_blank"><iron-icon class="menu__open" icon="fa:fa-github"></iron-icon>View on Github</a>
-  		<h1 class="delta">px-context-browser</h1>
+  		<h1 class="delta">px-context-browser-typeahead</h1>
       <div class="description-text">
     		<p>
-          The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view.
-          Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other
-          classification, or employees organized by department or function.
+          The context browser typeahead allows the user to filter through the list items in respective columns. When user have a big list to scroll they can simply type in the search box and the list will be filtered based on the search term
         </p>
-        <p>
-          When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page.
-          Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes
-          a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.
-    		</p>
       </div>
   		<div class="flex">
   			<img class="u-mr--" src="https://img.shields.io/travis/PredixDev/px-context-browser.svg?style=flat-square" alt="Travis"/>
@@ -100,32 +93,16 @@
                   </div>
                 </div>
                 <div>
-                  <px-demo-snippet
-                    element-properties=[[item]]
-                    element-name="px-context-browser">
-                  </px-demo-snippet>
                 </div>
               </div>
             </div>
             <div class="apiContainer">
-              <div class="flex flex--col api u-mt++" >
-                <div class="flex">
-                  <div class="flex__item">
-                    <div class="flex flex--col childrenAssociated">
-                      <div class="componentHeader">Children Component</div>
-                      <div class="componentList">
-                        <ul>
-                          <li><a href="typeahead-demo.html">px-context-browser-typeahead</a></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                  <div>
-                    <px-api-viewer source="px-context-browser"></px-api-viewer>
-                  </div>
+            <div class="flex flex--col api u-mt++" >
+              <div>
+                <px-api-viewer source="px-context-browser-typeahead"></px-api-viewer>
               </div>
             </div>
+          </div>
         </section>
       </template>
     </px-tab-pages>
@@ -164,14 +141,8 @@ window.addEventListener('WebComponentsReady', function() {
           idField:"identifier",
           showChevron:true,
           openedItemName: "Select Context",
-          showColumnBrowser: false
-        },
-        {
-          labelField:"name",
-          idField:"identifier",
-          showChevron:true,
-          openedItemName: "Select Context",
-          showColumnBrowser: false
+          showColumnBrowser: false,
+          showColumnTypeahead: "true"
         },
         {
           labelField:"name",
@@ -290,85 +261,7 @@ window.addEventListener('WebComponentsReady', function() {
           "meta": {
             "parentId": null
           }
-        },
-        {
-          "data": [
-            {
-              "identifier": "001-1",
-              "name": "Lots of Children",
-              "isOpenable" : true,
-              "hasChildren": true
-            },
-            {
-              "identifier": "001-2",
-              "name": "Deep nested",
-              "isOpenable" : true,
-              "children": [
-                {
-                  "identifier": "001-2a",
-                  "name": "Nested Child 1",
-                  "isOpenable" : true,
-                  "children": [
-                    {
-                      "identifier": "001-2aa",
-                      "name": "Nested Grandchild 1",
-                      "isOpenable" : true,
-                      "children" : [{
-                        "identifier": "001-2aba",
-                        "name": "Nested Great Grandchild 1",
-                        "isOpenable" : true
-                      },
-                        {
-                          "identifier": "001-2abb",
-                          "name": "Nested Great Grandchild 2",
-                          "isOpenable" : true
-                        },
-                        {
-                          "identifier": "001-2abc",
-                          "name": "Nested Great Grandchild 3",
-                          "isOpenable" : true,
-                          "selectedAsset": true
-                        }],
-                      "meta": { "parentId": "001-2ab" }
-                    },
-                    {
-                      "identifier": "001-2ab",
-                      "name": "Nested Grandchild 2",
-                      "isOpenable" : true
-                    },
-                    {
-                      "identifier": "001-2ac",
-                      "name": "Nested Grandchild 3",
-                      "isOpenable" : true
-                    }
-                  ],
-                  "meta": { "parentId": "001-2a" }
-                },
-                {
-                  "identifier": "001-2b",
-                  "name": "Nested Child 2",
-                  "isOpenable" : true
-                },
-                {
-                  "identifier": "001-2c",
-                  "name": "Nested Child 3",
-                  "isOpenable" : true
-                }
-              ],
-              "meta": { "parentId": "001-2" }
-          },
-          {
-            "identifier": "001-3",
-            "name": "Nothing Below Me",
-            "isOpenable" : true
-          },
-          {
-            "identifier": "001-4",
-            "name": "Nothing Below, Not openable"
-          }
-        ],
-        "meta": { "parentId": null }
-      }
+        }
       ],
       pxTabs = document.querySelector('px-tab-pages'),
       lightDomLoaded = function() {
