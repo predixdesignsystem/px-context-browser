@@ -135,7 +135,6 @@ Custom property | Description | Default
                     <template is="dom-if" if="[[_toShowColumnTypeahead()]]">
                       <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
                     </template>
-                    <div class="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
                       <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
                         <template is="dom-repeat" id="level" items="{{item.children}}">
                           <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >

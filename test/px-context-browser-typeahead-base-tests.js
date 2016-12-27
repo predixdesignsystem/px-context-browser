@@ -287,12 +287,8 @@ document.addEventListener("WebComponentsReady", function() {
       console.log('Opened: ', context);
     }
   };
-  
-  Polymer.flush(function() {
-    runBaseTests();
-    runCustomTests();
-  },500);
-
+  runBaseTests();
+  runCustomTests();
 });
 
 // This function replaces the first character of a CSS selector segment that
