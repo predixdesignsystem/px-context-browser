@@ -288,7 +288,10 @@ document.addEventListener("WebComponentsReady", function() {
     }
   };
   runBaseTests();
-  runCustomTests();
+  setTimeout(function() {
+    runCustomTests();
+  }.bind(this),500);
+
 });
 
 // This function replaces the first character of a CSS selector segment that
