@@ -1,3 +1,7 @@
+v1.5.1
+==================
+* fixed win8.1 ie11 test bug.
+
 v1.5.0
 ==================
 * add search per column (filter) capability
