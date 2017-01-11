@@ -1,3 +1,7 @@
+v1.5.2
+==================
+* changing ghp.sh to account for Alpha releases
+
 v1.5.1
 ==================
 * fixed win8.1 ie11 test bug.
