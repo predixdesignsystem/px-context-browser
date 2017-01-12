@@ -1,6 +1,6 @@
 {
     "name": "px-context-browser",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "main": [
         "px-context-browser.html"
     ],
@@ -16,7 +16,12 @@
         "px-context-browser.png",
         "scripts",
         "id_rsa.enc",
-        "wct.conf.*"
+        "wct.conf.*",
+        ".github",
+        "HISTORY.md",
+        "CONTRIBUTING.md",
+        "LICENSE.md",
+        "README.md"
     ],
     "dependencies": {
         "polymer": "^1.6.1",

@@ -1,3 +1,7 @@
+v1.5.3
+==================
+* merge PR that fixed typeahead bug
+
 v1.5.2
 ==================
 * changing ghp.sh to account for Alpha releases
