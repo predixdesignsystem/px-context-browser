@@ -590,6 +590,12 @@ Custom property | Description | Default
           }
         }
         recursiveAddChildren(root.children);
+        // Send an event to typeahead when data is updated through browser context
+        if (_this.parentNodes && _this.parentNodes.length > 0) {
+            this.fire('px-browser-context-updated', {
+                items: _this.parentNodes[0].children
+            });
+        }
         // Repopulate the openedItemName and Breadcrumbs if we have a directContext
         if (this.selectedItem && this.selectedItem.name) {
           this.configureBreadcrumbs();

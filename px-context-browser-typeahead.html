@@ -104,6 +104,20 @@ Define how your data will come in using these methods:
     },
     ready: function (e) {
       this._items = this.items ? this.items.slice() : [];
+      document.addEventListener('px-browser-context-updated', this._setPrivateItems.bind(this));
+    },
+    detached: function () {
+      document.removeEventListener('px-browser-context-updated', this._setPrivateItems.bind(this));
+    },
+
+    /**
+     * This method sets the _item for typeahead from event fired by parent component to keep copy of original elements
+     * @method _setPrivateItems
+     * @param {event} e
+     * @private
+     */
+    _setPrivateItems: function (e) {
+        this.set('_items', e.detail.items.slice());
     },
 
     /**
