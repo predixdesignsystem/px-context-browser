@@ -1,3 +1,7 @@
+v1.6.0
+==================
+* merge PR #32, allow CB to be disabled
+
 v1.5.3
 ==================
 * merge PR that fixed typeahead bug
