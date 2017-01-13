@@ -548,7 +548,11 @@ Custom property | Description | Default
        * @private
        */
       isItemHidden: function(item) {
-          return (!item) ? "visuallyhidden" : '';
+          if (this.disabled) {
+              return  'visuallyhidden';
+          } else {
+            return (!item) ? "visuallyhidden" : '';
+          }
       },
       /**
        * this method checks whether the attribute hasChildren has been set to true, and if it has,
