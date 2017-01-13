@@ -135,6 +135,11 @@ header {
   cursor: pointer;
 }
 
+.context-browser-disabled-true {
+  cursor: not-allowed;
+  color: var(--px-cb-text-color--disabled, $gray4);
+}
+
 .selectable-item {
   padding-top: 5px;
   padding-bottom: 5px;
