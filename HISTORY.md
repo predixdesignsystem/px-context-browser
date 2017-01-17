@@ -1,3 +1,7 @@
+v1.6.1
+==================
+* Update colors design to pick up new colors
+
 v1.6.0
 ==================
 * merge PR #32, allow CB to be disabled
