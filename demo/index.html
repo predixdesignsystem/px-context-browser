@@ -485,6 +485,11 @@
     }
   });
 
+  /**
+   * uses iron ajax programatically to fetch the children, according to the request.
+   * @param  {[String]} node [the node id]
+   * @return {[Promise]}      [a json object that contains the children of the requested object]
+   */
   function demoGetChildren(node) {
     var nodeId = node.identifier,
         deferred = Q.defer(),
@@ -520,12 +525,17 @@
     return deferred.promise;
   }
 
+  /**
+   * assigns a new object (handlers) to px-context-browser that has the ajax method which brings in children.
+   * @function lightDomLoaded
+   */
   var lightDomLoaded = function() {
     var localElementDemo = Polymer.dom(document).querySelector('local-element-demo'),
         interactive = Polymer.dom(localElementDemo.root).querySelector('px-demo-interactive'),
         component = Polymer.dom(interactive).querySelector('px-demo-component'),
         colBrowser = Polymer.dom(component).querySelector('px-context-browser');
 
+    //context browser requires us to configure this object under handlers.
     colBrowser.handlers = {
       getChildren: function(parent, newIndex) {
         return demoGetChildren(parent);
@@ -534,9 +544,10 @@
       }
     };
   };
-
+  /**
+   * we are listening to an event that tells us that px-context-browser has been loaded.
+   */
   document.addEventListener('px-demo-component-light-dom-loaded', function() {
-    console.log('component light dom loaded');
     lightDomLoaded();
   });
 </script>
