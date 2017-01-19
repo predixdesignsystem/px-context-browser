@@ -1,0 +1,542 @@
+<!-- Common imports -->
+<link rel="import" href="../../polymer/polymer.html" />
+<link rel="import" href="../../px-polymer-font-awesome/px-polymer-font-awesome.html" />
+
+<!-- Common demo imports -->
+<link rel="import" href="../../px-demo/px-demo-header.html" />
+<link rel="import" href="../../px-demo/px-demo-api-viewer.html" />
+<link rel="import" href="../../px-demo/px-demo-footer.html" />
+<link rel="import" href="../../px-demo/px-demo-configs.html" />
+<link rel="import" href="../../px-demo/px-demo-props.html" />
+<link rel="import" href="../../px-demo/px-demo-interactive.html" />
+<link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+
+<!-- Imports for this componnent -->
+<link rel="import" href="../../px-demo/css/px-demo-styles.html" />
+<link rel="import" href="../px-context-browser.html" />
+<link rel="import" href="../px-context-browser-typeahead.html" />
+<link rel="import" href="importQ.html"/>
+
+<!-- Demo DOM module -->
+<dom-module id="local-element-demo">
+  <template>
+    <style include="px-demo-styles" is="custom-style"></style>
+
+    <!-- Light theme -->
+    <style include="px-theme-styles" is="custom-style"></style>
+
+    <!-- Dark theme -->
+    <style include="px-dark-demo-theme-styles" is="custom-style"></style>
+    <style include="px-dark-theme-styles" is="custom-style"></style>
+
+    <!-- Header -->
+    <px-demo-header
+        module-name="px-context-browser"
+        description="The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view. Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function. When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.">
+    </px-demo-header>
+
+    <!-- Interactive -->
+    <px-demo-interactive>
+      <!-- Configs -->
+      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+
+      <!-- Props -->
+      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+
+      <!-- Component ---------------------------------------------------------->
+      <px-demo-component>
+        <div style="width:250px">
+          <px-context-browser
+            label-field="[[props.labelField.value]]"
+            id-field="[[props.idField.value]]"
+            browser-context="[[props.browserContext.value]]"
+            show-chevron="[[props.showChevron.value]]"
+            show-column-browser="[[props.showColumnBrowser.value]]"
+            show-column-typeahead="[[props.showColumnTypeahead.value]]"
+            opened-item-name="[[props.openedItemName.value]]"
+            disabled="[[props.disabled.value]]"
+            ></px-context-browser>
+        </div>
+      </px-demo-component>
+      <!-- END Component ------------------------------------------------------>
+
+      <px-demo-component-snippet
+          element-properties="{{props}}"
+          element-name="px-context-browser">
+      </px-demo-component-snippet>
+    </px-demo-interactive>
+
+    <!-- API Viewer -->
+    <px-demo-api-viewer source="px-context-browser"></px-demo-api-viewer>
+
+    <!-- Footer -->
+    <px-demo-footer></px-demo-footer>
+
+  </template>
+
+</dom-module>
+<script>
+  Polymer({
+    is: 'local-element-demo',
+
+    properties: {
+
+      /**
+       * Note: The actual data/values for `props` are placed in `this.demoProps`
+       * to create a static reference that Polymer shouldn't overwrite.
+       *
+       * On object containing all the properties the user can configure for this
+       * demo. Usually a pretty similar copy of the component's `properties` block
+       * with some additional sugar added to describe what kind of input the
+       * user will be shown and how that input should be configured.
+       *
+       * Note that `value` for each property is the default that will be set
+       * unless a config from `configs` is applied by default.
+       *
+       * @example
+       *
+       * `demoProps` is an object containing multipe objects. Each sub-object has
+       * should have a key with the name of the configurable property, and a set
+       * of values that describe that property. At a high level, you might have:
+       *
+       * ```
+       *     {
+       *       preventRangeSelection: { ... },
+       *       displayMode: { ... },
+       *       blockDatesBefore: { ... }
+       *     }
+       * ```
+       *
+       * Each sub-object should contain information about the configurable property's
+       * `type` (a reference to the JavaScript literal), a default value, and a set
+       * of additional keys that describe the input it can be changed with.
+       * The following inputs types are currently available:
+       *
+       * - 'toggle' - A toggle switch input to set Boolean values
+       * - 'text' - A simple single-line text input to set String or stringified Array/Object values
+       * - 'dropdown' - A dropdown picker that can be used to select any kind of value from a list of available options
+       *
+       * Full examples for each input:
+       *
+       * ```
+       *     {
+       *       preventRangeSelection: {
+       *         type: Boolean,
+       *         value: false,
+       *         inputType: 'toggle'
+       *       },
+       *       displayMode: {
+       *         type: String,
+       *         value: 'day',
+       *         inputType: 'dropdown',
+       *         inputChoices: ['day', 'month', 'year']
+       *       },
+       *       blockDatesBefore: {
+       *         type: String,
+       *         value: '2016-10-10T00:00:00.000Z',
+       *         inputType: 'text',
+       *         inputPlaceholder: 'ISO 8601 String'
+       *       }
+       *     }
+       * ```
+       *
+       * By default, the configurable property names are converted from camelCase
+       * to Title Case and used as input labels (e.g. 'displayMode' -> 'Display Mode').
+       * Labels can be set manually through the key `inputLabel`:
+       *
+       * ```
+       *     {
+       *       preventRangeSelection: {
+       *         type: Boolean,
+       *         value: false,
+       *         inputType: 'toggle',
+       *         inputLabel: "Stop range selection"
+       *       }
+       *     }
+       * ```
+       *
+       * @property demoProps
+       * @type {Object}
+       */
+      props: {
+        type: Object,
+        value: function(){ return this.demoProps; }
+      },
+
+      /**
+       * An array of pre-configured `props` that can be used to provide the user
+       * with a set of common examples. These configs will be made available
+       * as a set of tabs the user can click that will automatically change
+       * the `props` to specific values.
+       *
+       * @example
+       *
+       * Each config is an object. Its keys should be the names of the configurable
+       * properties defined in your `demoProps` above. Each key's value should
+       * be the new prop value for the configuration. You can also include these
+       * optional keys:
+       *
+       * - `configName` - a String value that will be used for the title of the tab
+       * - `configReset` - a Boolean, if `true` resets all props (even those not specified in the config) when this config is selected. Defaults to `false`.
+       *
+       * Example of two configs:
+       *
+       * ```
+       *     [
+       *       {
+       *         configName: "Basic",
+       *         preventRangeSelection: true,
+       *         displayMode: 'year',
+       *         blockDatesBefore: '2016-10-10T00:00:00.000Z'
+       *       },
+       *       {
+       *         configName: "Advanced",
+       *         preventRangeSelection: false,
+       *         displayMode: 'day',
+       *         blockDatesBefore: '2010-10-10T00:00:00.000Z'
+       *       }
+       *     ]
+       * ```
+       *
+       * @property demoProps
+       * @type {Array}
+       */
+      configs: {
+        type: Array,
+        value: function(){
+          return [
+            { configName: "Default",
+              configReset: true }
+          ];
+        }
+      }
+    },
+
+    /**
+     * A reference for `this.props`. Read the documentation there.
+     */
+    demoProps: {
+      labelField: {
+        type: String,
+        defaultValue: 'name',
+        inputType: 'text'
+    },
+    idField: {
+      type: String,
+      defaultValue: 'identifier',
+        inputType: 'text'
+    },
+    openedItemName: {
+      type: String,
+      defaultValue: 'Select Context',
+        inputType: 'text'
+    },
+    showChevron: {
+      type: Boolean,
+      defaultValue: true,
+      inputType: 'toggle'
+    },
+    showColumnBrowser: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
+    disabled: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
+    showColumnTypeahead: {
+      type:Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
+    browserContext: {
+      type: Array,
+      defaultValue: [{
+        "data": [
+            {
+                "identifier": "001-1",
+                "name": "Lots of Children",
+                "isOpenable" : true,
+                "hasChildren": true
+            },
+            {
+              "identifier": "001-2",
+              "name": "Deep nested",
+              "isOpenable" : true,
+              "children": [
+                    {
+                        "identifier": "001-2a",
+                        "name": "Nested Child 1",
+                        "isOpenable" : true,
+                        "children": [
+                          {
+                            "identifier": "001-2aa",
+                            "name": "Nested Grandchild 1",
+                            "isOpenable" : true,
+                            "children" : [{
+                              "identifier": "001-2aba",
+                              "name": "Nested Great Grandchild 1",
+                              "isOpenable" : true
+                            },
+                            {
+                              "identifier": "001-2abb",
+                              "name": "Nested Great Grandchild 2",
+                              "isOpenable" : true
+                            },
+                            {
+                              "identifier": "001-2abc",
+                              "name": "Nested Great Grandchild 3",
+                              "isOpenable" : true,
+                              "selectedAsset": true
+                            }],
+                            "meta": { "parentId": "001-2ab" }
+                          },
+                          {
+                            "identifier": "001-2ab",
+                            "name": "Nested Grandchild 2",
+                            "isOpenable" : true
+                          },
+                          {
+                            "identifier": "001-2ac",
+                            "name": "Nested Grandchild 3",
+                            "isOpenable" : true
+                          }
+                        ],
+                        "meta": { "parentId": "001-2a" }
+                    },
+                    {
+                      "identifier": "001-2b",
+                      "name": "Nested Child 2",
+                      "isOpenable" : true
+                    },
+                    {
+                      "identifier": "001-2c",
+                      "name": "Nested Child 3",
+                      "isOpenable" : true
+                    }
+                ],
+                "meta": { "parentId": "001-2" }
+            },
+            {
+            "identifier": "001-3",
+            "name": "Nothing Below Me",
+            "isOpenable" : true
+            },
+            {
+            "identifier": "001-4",
+            "name": "Nothing Below, Not openable"
+           }
+        ],
+        "meta": { "parentId": null }
+        }, {
+          "data": [
+            {
+              "name": "Lots of children",
+              "identifier": "001-1",
+              "isOpenable": true,
+              "hasChildren": true
+            }, {
+              "name": "Deep nested",
+              "identifier": "001-2",
+              "isOpenable": true,
+              "hasChildren": true
+            }, {
+              "name": "Nothing Below Me",
+              "identifier": "001-3",
+              "isOpenable": true
+            }, {
+              "name": "Nothing Below, Not openable",
+              "identifier": "001-4",
+              "isOpenable": false
+            }
+          ],
+          "meta": {
+            "parentId": null
+          }
+        },
+        {
+          "data": [
+            {
+              "identifier": "001-1",
+              "name": "Lots of Children",
+              "isOpenable" : true,
+              "hasChildren": true
+            },
+            {
+              "identifier": "001-2",
+              "name": "Deep nested",
+              "isOpenable" : true,
+              "children": [
+                {
+                  "identifier": "001-2a",
+                  "name": "Nested Child 1",
+                  "isOpenable" : true,
+                  "children": [
+                    {
+                      "identifier": "001-2aa",
+                      "name": "Nested Grandchild 1",
+                      "isOpenable" : true,
+                      "children" : [{
+                        "identifier": "001-2aba",
+                        "name": "Nested Great Grandchild 1",
+                        "isOpenable" : true
+                      },
+                        {
+                          "identifier": "001-2abb",
+                          "name": "Nested Great Grandchild 2",
+                          "isOpenable" : true
+                        },
+                        {
+                          "identifier": "001-2abc",
+                          "name": "Nested Great Grandchild 3",
+                          "isOpenable" : true,
+                          "selectedAsset": true
+                        }],
+                      "meta": { "parentId": "001-2ab" }
+                    },
+                    {
+                      "identifier": "001-2ab",
+                      "name": "Nested Grandchild 2",
+                      "isOpenable" : true
+                    },
+                    {
+                      "identifier": "001-2ac",
+                      "name": "Nested Grandchild 3",
+                      "isOpenable" : true
+                    }
+                  ],
+                  "meta": { "parentId": "001-2a" }
+                },
+                {
+                  "identifier": "001-2b",
+                  "name": "Nested Child 2",
+                  "isOpenable" : true
+                },
+                {
+                  "identifier": "001-2c",
+                  "name": "Nested Child 3",
+                  "isOpenable" : true
+                }
+              ],
+              "meta": { "parentId": "001-2" }
+          },
+          {
+            "identifier": "001-3",
+            "name": "Nothing Below Me",
+            "isOpenable" : true
+          },
+          {
+            "identifier": "001-4",
+            "name": "Nothing Below, Not openable"
+          }
+        ],
+        "meta": { "parentId": null }
+      }
+      ],
+      inputType: 'text',
+      inputDisabled: true
+      }
+    },
+
+    ready: function () {
+
+        // this.counter = 0;
+        // this.counterRange = 0;
+
+      // year = year.getFullYear();
+
+      // document.addEventListener('px-calendar-selected', function (evt) {
+      //   counter++;
+      //   for (var i = 1; i <= optionsArray.length; i++) {
+      //     var span = this.$$('#counter' + i);
+      //     if (span) {
+      //       span.innerHTML = '<strong>px-calendar-selected</strong> fired <strong>' + counter + '</strong> time(s)';
+      //     }
+      //   }
+      //
+      //   for (var i = 1; i <= optionsArray.length; i++) {
+      //     var span2 = this.$$('#dateTimeString' + i);
+      //     if (span2) {
+      //       span2.innerHTML = 'Current dateTime object: <strong>' + evt.detail.dateTime + '</strong>';
+      //     }
+      //   }
+      // });
+      //
+      // document.addEventListener('px-calendar-range-selected', function (evt) {
+      //   counterRange++;
+      //   for (var i = 1; i <= optionsArray.length; i++) {
+      //     var span = this.$$('#counterRange' + i);
+      //     if (span) {
+      //       span.innerHTML = '<strong>px-calendar-range-selected</strong> fired <strong>' + counterRange + '</strong> time(s)';
+      //     }
+      //   }
+      //
+      //   for (var i = 1; i <= optionsArray.length; i++) {
+      //     var span2 = this.$$('#rangeString' + i);
+      //     if (span2) {
+      //       span2.innerHTML = 'Current range object: From: <strong>' + evt.detail.range.from + '</strong> To: <strong>' + evt.detail.range.to + '</strong>';
+      //     }
+      //   }
+      // });
+
+      // template.linksIncludes = ['px-datetime-common/px-polygit-imports-datetime.html', 'px-polymer-font-awesome/polymer-font-awesome.html'];
+    }
+  });
+
+  function demoGetChildren(node) {
+    var nodeId = node.identifier,
+        deferred = Q.defer(),
+        children,
+        response,
+        ironAjaxEl = document.createElement('iron-ajax'),
+        nodeIds = {
+          "001-1": "lotsOfChildren.json",
+          "001-2": "deepNestedChildren.json",
+          "001-2a":"deepNestedGrandchildren.json",
+          "001-2aa": "deepNestedGreatGrandchild.json"
+        };
+
+    ironAjaxEl.handleAs = "json";
+    ironAjaxEl.addEventListener('response', function(evt) {
+      if(evt.detail.response) {
+       children  = evt.detail.response;
+       deferred.resolve(children);
+      } else {
+       return;
+      }
+    });
+    //get our url - if there's no valid nodeId, resolve an empty promise.
+    if (nodeIds[nodeId]) {
+        ironAjaxEl.url = nodeIds[nodeId];
+        //and generate the promise.
+        ironAjaxEl.generateRequest();
+    } else {
+      deferred.resolve({ data: [], meta: { parentId: nodeId } });
+    }
+
+    //don't forget to return the promise!
+    return deferred.promise;
+  }
+
+  var lightDomLoaded = function() {
+    var localElementDemo = Polymer.dom(document).querySelector('local-element-demo'),
+        interactive = Polymer.dom(localElementDemo.root).querySelector('px-demo-interactive'),
+        component = Polymer.dom(interactive).querySelector('px-demo-component'),
+        colBrowser = Polymer.dom(component).querySelector('px-context-browser');
+
+    colBrowser.handlers = {
+      getChildren: function(parent, newIndex) {
+        return demoGetChildren(parent);
+      },
+      itemOpenHandler: function(context) {
+      }
+    };
+  };
+
+  document.addEventListener('px-demo-component-light-dom-loaded', function() {
+    console.log('component light dom loaded');
+    lightDomLoaded();
+  });
+</script>

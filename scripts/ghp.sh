@@ -92,27 +92,27 @@ bower install
 # ------------------------------------------------------------------------------
 
 # Go into the component folder we've just installed from bower
-cd ${REPO_NAME}
-
-# @DARK_THEME: Copy `index.html` to new file, where we will add dark theme
-yes | cp index.html index-dark.html
-
-# @DARK_THEME: Import dark-theme on the `index-dark.html` page
-sed 's/px-theme\/px-theme-styles.html/px-dark-theme\/px-dark-theme-styles.html/g;' index-dark.html
-
-# ------------------------------------------------------------------------------
-# SW-PRECACHE
-# ------------------------------------------------------------------------------
-
-# npm install sw-precache
-# sw-precache  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
-
-# ------------------------------------------------------------------------------
-# GIT PUSH TO REMOTES
-# ------------------------------------------------------------------------------
-
-# Remember to exit out of the component before we do any git stuff
-cd ../
+# cd ${REPO_NAME}
+#
+# # @DARK_THEME: Copy `index.html` to new file, where we will add dark theme
+# yes | cp index.html index-dark.html
+#
+# # @DARK_THEME: Import dark-theme on the `index-dark.html` page
+# sed 's/px-theme\/px-theme-styles.html/px-dark-theme\/px-dark-theme-styles.html/g;' index-dark.html
+#
+# # ------------------------------------------------------------------------------
+# # SW-PRECACHE
+# # ------------------------------------------------------------------------------
+#
+# # npm install sw-precache
+# # sw-precache  --root='.' --static-file-globs='**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff}'
+#
+# # ------------------------------------------------------------------------------
+# # GIT PUSH TO REMOTES
+# # ------------------------------------------------------------------------------
+#
+# # Remember to exit out of the component before we do any git stuff
+# cd ../
 
 # Do the git stuff
 
