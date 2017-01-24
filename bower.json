@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "main": [
     "px-context-browser.html"
   ],
@@ -21,7 +21,8 @@
     "HISTORY.md",
     "CONTRIBUTING.md",
     "LICENSE.md",
-    "README.md"
+    "README.md",
+    "monogram-wdmk.png"
   ],
   "dependencies": {
     "polymer": "^1.6.1",
@@ -35,6 +36,6 @@
   "devDependencies": {
     "q": "~1.2.0",
     "px-starter-kit-design": "^0.7.0",
-    "px-demo": "^1.0.8"
+    "px-demo": "^1.2.3"
   }
 }

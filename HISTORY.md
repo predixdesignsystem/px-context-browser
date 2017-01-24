@@ -1,3 +1,7 @@
+v1.6.2
+==================
+* put in new demo
+
 v1.6.1
 ==================
 * Update colors design to pick up new colors
