@@ -333,7 +333,8 @@ Custom property | Description | Default
          */
         showColumnTypeahead: {
           type: Boolean,
-          value: false
+          value: false,
+          notify: true
         },
         /**
          * This attributes allows you to disable the context browser
@@ -882,17 +883,6 @@ Custom property | Description | Default
         //fire an opening or closing event
         this.fire((this.showColumnBrowser) ? 'contextBrowserOpening' : 'contextBrowserClosing');
         this.spinner('hide');
-      },
-      /**
-       * Checks and returns boolean value if the typeahead is enabled or not for search box
-       * @private
-       */
-      _toShowColumnTypeahead: function () {
-        if (typeof this.showColumnTypeahead === 'boolean') {
-          return this.showColumnTypeahead;
-        } else {
-          return this.showColumnTypeahead == 'true';
-        }
       },
       /**
        * Called whenever the data is changed for context browser from typeahead
