@@ -186,7 +186,7 @@ header {
   position: absolute;
   top: $px-context-browser-height;
   background: var(--px-cb-background-color, $white);
-  z-index:2;
+  z-index: var(--px-cb-background-z-index, 5);
   width:100%;
   overflow:hidden;
 }
@@ -245,7 +245,7 @@ header {
 
 px-spinner {
   position: absolute;
-  z-index: 10;
+  z-index: var(--px-cb-spinner-z-index, 10);
   top:26%;
   right: 46.75%;
 }

@@ -1,3 +1,9 @@
+v1.6.4
+==================
+* increased context browser from 2 to 5
+* created css variable --px-cb-background-z-index
+* created css variable --px-cb-spinner-z-index
+
 v1.6.3
 ==================
 * put in cloudflare cache cleaner
