@@ -741,8 +741,8 @@ Custom property | Description | Default
        * @private
        */
       getNewChildren: function(item) {
-        this.spinner('show');
         if (this.handlers.getChildren) {
+          this.spinner('show');
           var _this = this;
           this.handlers.getChildren(item).then(
             function(data) {
