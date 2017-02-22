@@ -8,6 +8,7 @@
 <link rel="import" href="../px-spinner/px-spinner.html"/>
 <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
 <link rel="import" href="px-context-browser-typeahead.html" />
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -129,7 +130,7 @@ Custom property | Description | Default
             </ul>
             <div class="flex flex--col column-browser" id="columnBrowser">
               <px-spinner finished></px-spinner>
-              <div class="flex">
+              <div class$="{{_redrawColumns(resize)}}">
                 <template is="dom-repeat" id="levels" items="{{parentNodes}}">
                   <div class="flex flex--col column push" data-column>
                     <div class="head">{{item.header}}</div>
@@ -348,7 +349,16 @@ Custom property | Description | Default
         disabled: {
           type: Boolean,
           value: false
+        },
+        resize: {
+          value: false,
+          type: Boolean,
+          notify: true
         }
+      },
+      behaviors: [Polymer.IronResizableBehavior],
+      listeners: {
+        'iron-resize': '_calculateColumnClasses'
       },
       ready: function() {
         var _this = this;
@@ -364,46 +374,66 @@ Custom property | Description | Default
             }
           }
         }, 0);
+      },
+      _getNumberOfColumns: function() {
+         var columnBrowser = this.$.columnBrowser,
+            columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
 
-        // Need to watch the width of the column-browser.
+        return $columnBrowserColumns.childNodes.filter(
+          function(n) {
+            return n.tagName === 'DIV';
+          })
+          .length;
+      },
+      /**
+      *
+      * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
+      * to re-calculate the class list for the columns.
+      * @method _resizeEvent
+      */
+      _calculateColumnClasses: function() {
+      this.debounce('cbDraw', function() {
+       this.set('resize', !this.resize);
+      },10);
+      },
+      /**
+      * This method find out how many columns have data in them, and returns a string pf CSS classes
+      *
+      * @method _columnIndexClasses
+      * @return {String} the CSS classes for the first div in each column
+      */
+      _redrawColumns: function() {
         var columnBrowser = this.$.columnBrowser,
             columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
             columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-            columnBrowserColumnsBaseCss = columnBrowserColumns.className, // Polymer does weird stuff.
             $columnBrowserColumns = Polymer.dom(columnBrowserColumns),
-            contextBrowserWidth, contextBrowserChildrenCount;
+            contextBrowserWidth, contextBrowserChildrenCount,
+            width = columnBrowser.offsetWidth,
+            cCount = columnBrowserColumns.childNodes.length,
+            baseCss = "flex",
+            count,
+            columns;
 
-        // Watch the container size change.
-        var getColumns = function() {
-          return $columnBrowserColumns.childNodes.filter(
-            function(n) {
-              return n.tagName === 'DIV';
-            });
-        };
-
-        this.listen(document, 'force-re-render', 'reRenderDom'); //attaching listener for force rendering of template
-        setInterval(
-          function() {
-            var width = columnBrowser.offsetWidth,
-                removedCount = $columnBrowserColumns.querySelectorAll('.removed').length,
-                cCount = columnBrowserColumns.childNodes.length - removedCount;
-
-            if (width !== contextBrowserWidth || cCount !== contextBrowserChildrenCount) {
-              contextBrowserWidth = width;
-              contextBrowserChildrenCount = cCount;
-              var count = getColumns().length - removedCount,
-                  columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth),
-                  desiredClass = columnBrowserColumnsBaseCss + ' columns-' + columns;
-
-              if (count > columns) {
-                desiredClass += " column-index-" + (count - columns);
-              }
-
-              if (columnBrowserColumns.className !== desiredClass) {
-                columnBrowserColumns.className = desiredClass;
-              }
+          if (width !== contextBrowserWidth || cCount !== contextBrowserChildrenCount) {
+            contextBrowserWidth = width;
+            contextBrowserChildrenCount = cCount;
+            count = this._getNumberOfColumns();
+            if (width && columnBrowserColumnRuler.offsetWidth) {
+              columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth);
+            } else {
+              columns = 0;
             }
-          }, 1000 / 20); // ms/fps
+          }
+
+          baseCss = baseCss + ' columns-' + columns;
+
+          if  (count > columns){
+            baseCss += " column-index-" + (count - columns);
+          }
+          debugger;
+          return baseCss;
       },
       detached: function () {
         this.unlisten(document, 'force-re-render', 'reRenderDom'); //remove the listener for re rendering
@@ -440,7 +470,7 @@ Custom property | Description | Default
       scrollEndHandler: function(evt) {
         this.debounce(
           'scroll-panel', function() {
-            // executes when it hasn't been called for 500ms
+            // executes when it hasn't been called for 200ms
             var _this = this,
                 levelIdx = this.$.levels.indexForElement(evt.target),
                 scrollableHeight = evt.target.scrollHeight,
@@ -637,6 +667,7 @@ Custom property | Description | Default
           parent = parent.parent;
         }
         for (var i = array.length - 1; i >= 0; i--) {
+          debugger;
           this.push('parentNodes',array[i]);
         }
       },
@@ -881,6 +912,8 @@ Custom property | Description | Default
         } else {
           this.showColumnBrowser = !this.showColumnBrowser;
         }
+        this._calculateColumnClasses();
+        //this.showColumnBrowser = !this.showColumnBrowser;
 
         //fire an opening or closing event
         this.fire((this.showColumnBrowser) ? 'contextBrowserOpening' : 'contextBrowserClosing');
