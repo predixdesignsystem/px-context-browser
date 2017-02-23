@@ -382,7 +382,7 @@ Custom property | Description | Default
       */
       _getNumberOfColumns: function() {
          var columnBrowser = this.$.columnBrowser,
-            columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+            columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
             columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
             $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
 
@@ -405,7 +405,11 @@ Custom property | Description | Default
       },
       /**
       * This method find out how many columns have data in them, and returns a string pf CSS classes
-      *
+      * that have two classes in them:
+      * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
+      * not the actual number of columns.
+      * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
+      * anything column number BELOW the number that is passed will be hidden. 
       * @method _columnIndexClasses
       * @return {String} the CSS classes for the first div in each column
       */
@@ -422,16 +426,19 @@ Custom property | Description | Default
             
             //we wanna make sure there's an actual size on the column browser
             if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
-              debugger;
               // this calculates the number of possible columns available in the column browser based on its width.
               numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
             } else {
               //our width is zero, so no room for columns
               numOfPossibleColumns = 0;
             }
-
+          
+          //set the number of possible columns
           baseCss += ' columns-' + numOfPossibleColumns;
 
+          //if there are more columns then the available space, we want to hide the ones all the way to the left.
+          // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
+          // index number is hidden.
           if  (numOfColumns > numOfPossibleColumns){
             baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
           }
@@ -607,39 +614,48 @@ Custom property | Description | Default
       contextChanged: function() {
         var _this= this,
             browserContext = this.browserContext,
-            root;
+            root= {};
+        
+        //initialize/empty out the parentNodes array
+        this.set('parentNodes',[]);
 
-        root = {hideBreadcrumb: true};
-        this.parentNodes = [];
-        this.openedBreadcrumbs = [];
+        //initialize/empty out the openedBreadcrumbs array
+        this.set('openedBreadcrumbs',[]);
 
         this.push('parentNodes', root);
-        this.addChildren(root, browserContext);
 
+        //add the passed in browser context into root - which was just added into parentNodes
+        this.addChildren(root, browserContext);
+        
+        // we want to recursively keep adding children, until we find the selectedAsset
         //dig into the tree, and keep going while we have children
         function recursiveAddChildren(childList) {
           var currentChild;
           var selectedAssetFound = false;
           for (var i=0;i< childList.length;i++) {
             currentChild = childList[i];
-
+            //first, we check if the item we're on is the selectedAsset
             if (currentChild.selectedAsset) {
+              //if it is, find the parents and add them into parentNodes
               _this.addParents(currentChild);
+              //and set the selectableItem
               _this.set('selectedItem',currentChild);
+              // we make sure to set this to true, so when we loop around again, we know that we've found 
+              //the selectedAsset
               selectedAssetFound = true;
               continue;
             }
-
+            //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
             if(Object.keys(currentChild).indexOf('children') > -1 ) {
               var obj = {"data" : currentChild.children};
               _this.addChildren(currentChild, obj);
-              if (!selectedAssetFound) {
+              if (!selectedAssetFound) { //only call ourselves again if we haven't found the selectedAsset
                 recursiveAddChildren(currentChild.children);
               }
             }
           }
         }
-
+        //initial call to recuresive function. children were added to root in the addChildren function call above.
         recursiveAddChildren(root.children);
         
         // Send an event to typeahead when data is updated through browser context
@@ -656,23 +672,33 @@ Custom property | Description | Default
       },
      /**
       * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
+      * and the columns can be drawn correctly.
+      * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
+      * until the current item has no parent - which means we are at the top of the path.
+      * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
+      * to the parentArray is the top most one.
       *
       * @param {Object} item The selected item (with selectedAsset to true)
       */
       addParents: function(item) {
-        var array = [];
-        var parent = item;
+        var parentArray = [],
+            parent = item;
 
 
         while (parent) {
+          //we set this property and later check for it to display the gray lines, showing the item is in the path.
           parent.inSelectedPath = true;
-          if (parent.parent) {
-            array.push(parent);
+          if (parent.parent) { //does our item have a parent?
+            parentArray.push(parent); //if it does, we add it to the parentArray
           }
+          // if the item has a parent, it'll be passed back into the while loop. If it doesn't, 
+          // it'll be undefined, which will break out of the while loop.
           parent = parent.parent;
         }
-        for (var i = array.length - 1; i >= 0; i--) {
-          this.push('parentNodes', array[i]);
+
+        //we've found the full path, now let's add it to parentNodes
+        for (var i = parentArray.length - 1; i >= 0; i--) {
+          this.push('parentNodes', parentArray[i]);
         }
       },
       /**
@@ -711,14 +737,26 @@ Custom property | Description | Default
         if (results === undefined || results === null) {
           return;
         }
-        var children = results.data || [];
-        // set up the parent pointers
-        for (var i = 0; i < children.length; i++) {
+        var children = results.data || [],
+            modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
+        
+        //assign the modified children as a children property on the parentNode
+        parentNode.children = modifiedChildren;
+        //and assign the meta property as well.
+        parentNode.meta = results.meta;
+      },
+      /**
+      * this method adds the parent property to each child, creating a circular json
+      * object in the process. This is used later on find the parent of the item.
+      * @method _assignParentNodeToChildren
+      */
+      _assignParentNodeToChildren: function(parentNode, children) {
+        // set up the parent pointers - this creates a circular json object. 
+        // this is used later on find the parent of the item.
+        for (var i = 0, len = children.length; i < len; i++) {
           children[i].parent = parentNode;
         }
-
-        parentNode.children = children;
-        parentNode.meta = results.meta;
+        return children;
       },
       /**
        * Drops all children of a given item;
@@ -754,7 +792,7 @@ Custom property | Description | Default
       /**
        * turns the spinner on or off when promises are requested.
        *
-       * @param {String} state
+       * @param {String} state of the spinner -  'show' | 'hide'
        * @private
        */
       spinner: function(state) {
@@ -770,17 +808,20 @@ Custom property | Description | Default
         }
       },
       /**
-       * Fetches all children of a given item
+       * Fetches all children of a given item/parentNode
        *
        * @param {Object} item
        * @private
        */
-      getNewChildren: function(item) {
+      getNewChildren: function(parentNode) {
         this.spinner('show');
+        //first, let's make we have a getChildren function
         if (this.handlers.getChildren) {
           var _this = this;
-          this.handlers.getChildren(item).then(
+          //call the getChildren function, which expects a promise in return.
+          this.handlers.getChildren(parentNode).then(
             function(data) {
+              //we got the data, let's hide the spinner
               _this.spinner('hide');
               var children = data.data,
                   parentId = data.meta.parentId,
@@ -791,8 +832,11 @@ Custom property | Description | Default
               }
               //check response is for the current selected node
               else if (parentId === selectedNode[_this.idField]) {
-                _this.addChildren(item, data);
-                _this.addToParentNodes(item);
+                // first we add the children into the parentNode
+                _this.addChildren(parentNode, data);
+                // next, we add the parentNode itself to the parentNodes array.
+                _this.addToParentNodes(parentNode);
+                // and we wanna wait to make sure this calculation includes the new item we just added.
                 _this.async(_this._calculateColumnClasses, 1);
               } else {
                 // disregard response, it's from an old getChildren call

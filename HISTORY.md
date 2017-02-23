@@ -1,3 +1,9 @@
+v1.6.5
+==================
+* fixed memory leak, causing using setinterval. 
+* re-wrote some functions for readability
+* added lots of documentation.
+
 v1.6.4
 ==================
 * increased context browser from 2 to 5
