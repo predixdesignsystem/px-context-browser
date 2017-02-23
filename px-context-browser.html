@@ -375,6 +375,11 @@ Custom property | Description | Default
           }
         }, 0);
       },
+      /**
+      * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
+      *
+      * @method _getNumberOfColumns
+      */
       _getNumberOfColumns: function() {
          var columnBrowser = this.$.columnBrowser,
             columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
@@ -396,7 +401,7 @@ Custom property | Description | Default
       _calculateColumnClasses: function() {
       this.debounce('cbDraw', function() {
        this.set('resize', !this.resize);
-      },10);
+      },20);
       },
       /**
       * This method find out how many columns have data in them, and returns a string pf CSS classes
@@ -406,33 +411,30 @@ Custom property | Description | Default
       */
       _redrawColumns: function() {
         var columnBrowser = this.$.columnBrowser,
-            columnBrowserColumnRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
-            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-            $columnBrowserColumns = Polymer.dom(columnBrowserColumns),
-            contextBrowserWidth, contextBrowserChildrenCount,
-            width = columnBrowser.offsetWidth,
-            cCount = columnBrowserColumns.childNodes.length,
+            minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+            columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            columnBrowserWidth = columnBrowser.offsetWidth,
             baseCss = "flex",
-            count,
-            columns;
+            numOfPossibleColumns,
+            //get the number of columns, counting the number of divs, skipping everything else.
+            numOfColumns = this._getNumberOfColumns();
 
-          if (width !== contextBrowserWidth || cCount !== contextBrowserChildrenCount) {
-            contextBrowserWidth = width;
-            contextBrowserChildrenCount = cCount;
-            count = this._getNumberOfColumns();
-            if (width && columnBrowserColumnRuler.offsetWidth) {
-              columns = Math.floor(width / columnBrowserColumnRuler.offsetWidth);
+            
+            //we wanna make sure there's an actual size on the column browser
+            if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
+              debugger;
+              // this calculates the number of possible columns available in the column browser based on its width.
+              numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
             } else {
-              columns = 0;
+              //our width is zero, so no room for columns
+              numOfPossibleColumns = 0;
             }
-          }
 
-          baseCss = baseCss + ' columns-' + columns;
+          baseCss += ' columns-' + numOfPossibleColumns;
 
-          if  (count > columns){
-            baseCss += " column-index-" + (count - columns);
+          if  (numOfColumns > numOfPossibleColumns){
+            baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
           }
-          debugger;
           return baseCss;
       },
       detached: function () {
@@ -458,6 +460,7 @@ Custom property | Description | Default
       itemClickHandler: function(evt) {
         this.debounce('itemClick', function() {
           this.selectItem(evt.model.item, evt.currentTarget);
+
         }, 1);
       },
 
@@ -614,30 +617,31 @@ Custom property | Description | Default
         this.addChildren(root, browserContext);
 
         //dig into the tree, and keep going while we have children
-        function recursiveAddChildren(currentRoot) {
-          var current_elem;
-          for (var i in currentRoot) {
-            if (currentRoot.hasOwnProperty(i)) {
-              current_elem = currentRoot[i];
-              if(Object.keys(current_elem).indexOf('children') > -1 ) {
-                if (current_elem.inSelectedPath) {
-                  _this.push('parentNodes',current_elem);
-                }
-                if (current_elem.selectedAsset) {
-                    _this.addParents(current_elem);
-                    _this.set('selectedItem',current_elem);
-                }
-                var obj = {"data" : current_elem.children};
-                _this.addChildren(current_elem, obj);
-                recursiveAddChildren(current_elem.children);
-              } else if (current_elem.selectedAsset) {
-                _this.addParents(current_elem);
-                _this.set('selectedItem',current_elem);
+        function recursiveAddChildren(childList) {
+          var currentChild;
+          var selectedAssetFound = false;
+          for (var i=0;i< childList.length;i++) {
+            currentChild = childList[i];
+
+            if (currentChild.selectedAsset) {
+              _this.addParents(currentChild);
+              _this.set('selectedItem',currentChild);
+              selectedAssetFound = true;
+              continue;
+            }
+
+            if(Object.keys(currentChild).indexOf('children') > -1 ) {
+              var obj = {"data" : currentChild.children};
+              _this.addChildren(currentChild, obj);
+              if (!selectedAssetFound) {
+                recursiveAddChildren(currentChild.children);
               }
             }
           }
         }
+
         recursiveAddChildren(root.children);
+        
         // Send an event to typeahead when data is updated through browser context
         if (_this.parentNodes && _this.parentNodes.length > 0) {
             this.fire('px-browser-context-updated', {
@@ -659,6 +663,7 @@ Custom property | Description | Default
         var array = [];
         var parent = item;
 
+
         while (parent) {
           parent.inSelectedPath = true;
           if (parent.parent) {
@@ -667,8 +672,7 @@ Custom property | Description | Default
           parent = parent.parent;
         }
         for (var i = array.length - 1; i >= 0; i--) {
-          debugger;
-          this.push('parentNodes',array[i]);
+          this.push('parentNodes', array[i]);
         }
       },
       /**
@@ -789,6 +793,7 @@ Custom property | Description | Default
               else if (parentId === selectedNode[_this.idField]) {
                 _this.addChildren(item, data);
                 _this.addToParentNodes(item);
+                _this.async(_this._calculateColumnClasses, 1);
               } else {
                 // disregard response, it's from an old getChildren call
               }
@@ -816,7 +821,7 @@ Custom property | Description | Default
 
           _this.changeSelected(item);
           _this.dropCurrentChildren(item);
-          _this.getNewChildren(item);
+          _this.getNewChildren(item);          
         }, 0);
       },
       /**
