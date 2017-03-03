@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "main": [
     "px-context-browser.html"
   ],
@@ -30,7 +30,7 @@
     "px-theme": "^2.0.1",
     "px-polymer-font-awesome": "^1.1.0",
     "iron-input": "polymerelements/iron-input#^1.0.10",
-    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.5"    
+    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^1.0.5"
   },
   "devDependencies": {
     "q": "~1.2.0",

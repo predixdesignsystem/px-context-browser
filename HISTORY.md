@@ -1,6 +1,10 @@
+v1.6.6
+==================
+* changed 'search' to 'filter' in typeahead
+
 v1.6.5
 ==================
-* fixed memory leak, causing using setinterval. 
+* fixed memory leak, causing using setinterval.
 * re-wrote some functions for readability
 * added lots of documentation.
 
