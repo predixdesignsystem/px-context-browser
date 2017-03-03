@@ -13,7 +13,7 @@ function runCustomTests() {
           var pxContextTypeaheadComp = Polymer.dom(columnsContainer).querySelector('.px-context-browser-typeahead-0');
           var searchTextbox = Polymer.dom(pxContextTypeaheadComp.root).querySelector('.px-context-browser-typeahead-searchbox');
           var textVal = searchTextbox.getAttribute('placeholder');
-          assert.isTrue(textVal === "Search..");
+          assert.isTrue(textVal === "Filter");
           done();
         });
       });

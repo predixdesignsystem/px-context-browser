@@ -1,3 +1,7 @@
+v1.6.7
+==================
+* fix unit tests for typeahead
+
 v1.6.6
 ==================
 * changed 'search' to 'filter' in typeahead
