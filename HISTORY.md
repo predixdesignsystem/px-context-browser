@@ -1,3 +1,7 @@
+v1.6.8
+==================
+* merge PR #35
+
 v1.6.7
 ==================
 * fix unit tests for typeahead
