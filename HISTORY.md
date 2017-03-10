@@ -1,3 +1,7 @@
+v1.6.9
+==================
+* merge PR #36 - allow selectedAsset to have children.
+
 v1.6.8
 ==================
 * merge PR #35
