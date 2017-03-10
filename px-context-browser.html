@@ -643,7 +643,9 @@ Custom property | Description | Default
               // we make sure to set this to true, so when we loop around again, we know that we've found 
               //the selectedAsset
               selectedAssetFound = true;
-              continue;
+              // this continue prevents children of the selected asset to be added properly. Clicking on a child
+				// results in a javascript error.
+              // continue;
             }
             //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
             if(Object.keys(currentChild).indexOf('children') > -1 ) {
