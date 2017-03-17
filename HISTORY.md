@@ -1,3 +1,7 @@
+v1.6.10
+==================
+* fix #37 regarding labels in breadcrumb
+
 v1.6.9
 ==================
 * merge PR #36 - allow selectedAsset to have children.

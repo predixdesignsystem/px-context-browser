@@ -124,7 +124,7 @@ Custom property | Description | Default
             <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
               <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
                 <li class$="u-pv--">
-                  <span class="breadcrumb" on-click="handleBreadcrumbClick">{{item.name}}</span>
+                  <span class="breadcrumb" on-click="handleBreadcrumbClick">{{_getItemLabel(item)}}</span>
                 </li>
               </template>
             </ul>
@@ -409,7 +409,7 @@ Custom property | Description | Default
       * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
       * not the actual number of columns.
       * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
-      * anything column number BELOW the number that is passed will be hidden. 
+      * anything column number BELOW the number that is passed will be hidden.
       * @method _columnIndexClasses
       * @return {String} the CSS classes for the first div in each column
       */
@@ -423,7 +423,7 @@ Custom property | Description | Default
             //get the number of columns, counting the number of divs, skipping everything else.
             numOfColumns = this._getNumberOfColumns();
 
-            
+
             //we wanna make sure there's an actual size on the column browser
             if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
               // this calculates the number of possible columns available in the column browser based on its width.
@@ -432,7 +432,7 @@ Custom property | Description | Default
               //our width is zero, so no room for columns
               numOfPossibleColumns = 0;
             }
-          
+
           //set the number of possible columns
           baseCss += ' columns-' + numOfPossibleColumns;
 
@@ -615,7 +615,7 @@ Custom property | Description | Default
         var _this= this,
             browserContext = this.browserContext,
             root= {};
-        
+
         //initialize/empty out the parentNodes array
         this.set('parentNodes',[]);
 
@@ -626,7 +626,7 @@ Custom property | Description | Default
 
         //add the passed in browser context into root - which was just added into parentNodes
         this.addChildren(root, browserContext);
-        
+
         // we want to recursively keep adding children, until we find the selectedAsset
         //dig into the tree, and keep going while we have children
         function recursiveAddChildren(childList) {
@@ -640,7 +640,7 @@ Custom property | Description | Default
               _this.addParents(currentChild);
               //and set the selectableItem
               _this.set('selectedItem',currentChild);
-              // we make sure to set this to true, so when we loop around again, we know that we've found 
+              // we make sure to set this to true, so when we loop around again, we know that we've found
               //the selectedAsset
               selectedAssetFound = true;
               // this continue prevents children of the selected asset to be added properly. Clicking on a child
@@ -659,7 +659,7 @@ Custom property | Description | Default
         }
         //initial call to recuresive function. children were added to root in the addChildren function call above.
         recursiveAddChildren(root.children);
-        
+
         // Send an event to typeahead when data is updated through browser context
         if (_this.parentNodes && _this.parentNodes.length > 0) {
             this.fire('px-browser-context-updated', {
@@ -693,7 +693,7 @@ Custom property | Description | Default
           if (parent.parent) { //does our item have a parent?
             parentArray.push(parent); //if it does, we add it to the parentArray
           }
-          // if the item has a parent, it'll be passed back into the while loop. If it doesn't, 
+          // if the item has a parent, it'll be passed back into the while loop. If it doesn't,
           // it'll be undefined, which will break out of the while loop.
           parent = parent.parent;
         }
@@ -741,7 +741,7 @@ Custom property | Description | Default
         }
         var children = results.data || [],
             modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
-        
+
         //assign the modified children as a children property on the parentNode
         parentNode.children = modifiedChildren;
         //and assign the meta property as well.
@@ -753,7 +753,7 @@ Custom property | Description | Default
       * @method _assignParentNodeToChildren
       */
       _assignParentNodeToChildren: function(parentNode, children) {
-        // set up the parent pointers - this creates a circular json object. 
+        // set up the parent pointers - this creates a circular json object.
         // this is used later on find the parent of the item.
         for (var i = 0, len = children.length; i < len; i++) {
           children[i].parent = parentNode;
@@ -867,7 +867,7 @@ Custom property | Description | Default
 
           _this.changeSelected(item);
           _this.dropCurrentChildren(item);
-          _this.getNewChildren(item);          
+          _this.getNewChildren(item);
         }, 0);
       },
       /**
