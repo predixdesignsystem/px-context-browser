@@ -1,3 +1,7 @@
+v1.6.11
+==================
+* merge PR #39 - Add an onRejected promise handler for to getChildren
+
 v1.6.10
 ==================
 * fix #37 regarding labels in breadcrumb
