@@ -843,7 +843,12 @@ Custom property | Description | Default
               } else {
                 // disregard response, it's from an old getChildren call
               }
-          });
+            },
+            function(error) {
+              _this.spinner('hide');
+              console.warn('Context tree getChildren failed');
+            }
+          );
         }
       },
 
