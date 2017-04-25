@@ -5,6 +5,7 @@
     "px-context-browser.html"
   ],
   "ignore": [
+    "*.enc",
     ".*",
     "npm-debug.log",
     "gulpfile.js",
@@ -15,7 +16,6 @@
     "OSS_Notice.pdf",
     "px-context-browser.png",
     "scripts",
-    "id_rsa.enc",
     "wct.conf.*",
     ".github",
     "HISTORY.md",
