@@ -1,3 +1,7 @@
+v1.7.0
+==================
+* added a disableInfiniteScroll property to... disable infinite scrolling, which happens automatically on scroll.
+
 v1.6.11
 ==================
 * merge PR #39 - Add an onRejected promise handler for to getChildren

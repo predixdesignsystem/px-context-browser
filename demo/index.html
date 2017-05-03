@@ -55,6 +55,7 @@
             show-column-typeahead="[[props.showColumnTypeahead.value]]"
             opened-item-name="[[props.openedItemName.value]]"
             disabled="[[props.disabled.value]]"
+            disable-infinite-scroll="[[props.disableInfiniteScroll.value]]"
             ></px-context-browser>
         </div>
       </px-demo-component>
@@ -306,6 +307,11 @@
     showColumnTypeahead: {
       type: Boolean,
       defaultValue: false
+    },
+    disableInfiniteScroll: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
     },
     browserContext: {
       type: Object,

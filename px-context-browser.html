@@ -354,6 +354,10 @@ Custom property | Description | Default
           value: false,
           type: Boolean,
           notify: true
+        },
+        disableInfiniteScroll: {
+          type: Boolean,
+          value: false
         }
       },
       behaviors: [Polymer.IronResizableBehavior],
@@ -470,7 +474,6 @@ Custom property | Description | Default
 
         }, 1);
       },
-
       /**
        * Event listener on scroll of item panels/columns, listener is registered from the template
        *
@@ -478,6 +481,10 @@ Custom property | Description | Default
        * @private
        */
       scrollEndHandler: function(evt) {
+        
+        //first check if the option is true - if it's not, get out of here.
+        if (this.disableInfiniteScroll) return;
+        //if it is true, debounce it.
         this.debounce(
           'scroll-panel', function() {
             // executes when it hasn't been called for 200ms
