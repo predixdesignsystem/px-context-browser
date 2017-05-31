@@ -481,7 +481,7 @@ Custom property | Description | Default
        * @private
        */
       scrollEndHandler: function(evt) {
-        
+
         //first check if the option is true - if it's not, get out of here.
         if (this.disableInfiniteScroll) return;
         //if it is true, debounce it.
@@ -651,7 +651,7 @@ Custom property | Description | Default
               //the selectedAsset
               selectedAssetFound = true;
               // this continue prevents children of the selected asset to be added properly. Clicking on a child
-				// results in a javascript error.
+              // results in a javascript error.
               // continue;
             }
             //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
@@ -825,38 +825,37 @@ Custom property | Description | Default
       getNewChildren: function(parentNode) {
         this.spinner('show');
         //first, let's make we have a getChildren function
-        if (this.handlers.getChildren) {
-          var _this = this;
-          //call the getChildren function, which expects a promise in return.
-          this.handlers.getChildren(parentNode).then(
-            function(data) {
-              //we got the data, let's hide the spinner
-              _this.spinner('hide');
-              var children = data.data,
-                  parentId = data.meta.parentId,
-                  selectedNode = _this.selectedItem;
-
-              if (parentId === undefined || parentId === null) {
-                console.warn('Context tree getChildren response must have meta.parentId defined.');
-              }
-              //check response is for the current selected node
-              else if (parentId === selectedNode[_this.idField]) {
-                // first we add the children into the parentNode
-                _this.addChildren(parentNode, data);
-                // next, we add the parentNode itself to the parentNodes array.
-                _this.addToParentNodes(parentNode);
-                // and we wanna wait to make sure this calculation includes the new item we just added.
-                _this.async(_this._calculateColumnClasses, 1);
-              } else {
-                // disregard response, it's from an old getChildren call
-              }
-            },
-            function(error) {
-              _this.spinner('hide');
-              console.warn('Context tree getChildren failed');
-            }
-          );
+        if (!this.handlers.getChildren) {
+          return
         }
+        var _this = this;
+        //call the getChildren function, which expects a promise in return.
+        this.handlers.getChildren(parentNode).then(function(data) {
+            //we got the data, let's hide the spinner
+            _this.spinner('hide');
+            var children = data.data,
+                parentId = data.meta.parentId,
+                selectedNode = _this.selectedItem;
+
+            if (parentId === undefined || parentId === null) {
+              console.warn('Context tree getChildren response must have meta.parentId defined.');
+            }
+            //check response is for the current selected node
+            else if (parentId !== selectedNode[_this.idField]) {
+              // disregard response, it's from an old getChildren call
+            }
+            // first we add the children into the parentNode
+            _this.addChildren(parentNode, data);
+            // next, we add the parentNode itself to the parentNodes array.
+            _this.addToParentNodes(parentNode);
+            // and we wanna wait to make sure this calculation includes the new item we just added.
+            _this.async(_this._calculateColumnClasses, 1);
+          },
+          function(error) {
+            _this.spinner('hide');
+            console.warn('Context tree getChildren failed');
+          }
+        );
       },
 
       /**
