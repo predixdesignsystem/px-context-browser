@@ -611,7 +611,7 @@ Custom property | Description | Default
        * @private
        */
       _hasChildren: function(item) {
-        return (this.showChevron) ? (item.hasChildren || item.children) : false;
+        return (this.showChevron) ? (item.hasChildren || (item.children && item.children.length)) : false;
       },
       /**
        * Observer on context attribute. loads up the initial Context of the browser.
