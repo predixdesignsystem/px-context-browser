@@ -9,6 +9,7 @@
 <link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
 <link rel="import" href="px-context-browser-typeahead.html" />
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
 <style>
   [dir=rtl] .fa.px-context-browser {
     -webkit-transform: scale(-1, 1);
@@ -150,7 +151,7 @@ Custom property | Description | Default
                                 <span class="flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
                               </template>
                             </template>
-                            <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">Open
+                            <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
                             </button>
                             <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
                               <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
@@ -180,6 +181,9 @@ Custom property | Description | Default
   Polymer(
     {
       is: 'px-context-browser',
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        Polymer.IronResizableBehavior],
       properties: {
         /**
          * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
@@ -358,9 +362,37 @@ Custom property | Description | Default
         disableInfiniteScroll: {
           type: Boolean,
           value: false
+        },
+        /**
+        * A valid IETF language tag as a string that `px-localize-behavior` will
+        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+        *
+        * See https://github.com/PolymerElements/app-localize-behavior for API
+        * documentation and more information.
+        */
+        language: {
+          type: String,
+          value: 'en'
+        },
+        /**
+        * Use the key for localization if value for  language is missing. Should
+        * always be true for  our components
+        */
+        useKeyIfMissing: {
+          type: Boolean,
+          value: true
+        },
+        resources: {
+          type: Object,
+          value: function() {
+            return {
+              'en': {
+                "Open": "Open"
+              }
+            }
+          }
         }
       },
-      behaviors: [Polymer.IronResizableBehavior],
       listeners: {
         'iron-resize': '_calculateColumnClasses'
       },
@@ -481,7 +513,7 @@ Custom property | Description | Default
        * @private
        */
       scrollEndHandler: function(evt) {
-        
+
         //first check if the option is true - if it's not, get out of here.
         if (this.disableInfiniteScroll) return;
         //if it is true, debounce it.

@@ -1,3 +1,7 @@
+v1.8.0
+==================
+* added localization for 'Open'
+
 v1.7.0
 ==================
 * added a disableInfiniteScroll property to... disable infinite scrolling, which happens automatically on scroll.
