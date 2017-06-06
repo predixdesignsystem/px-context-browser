@@ -128,6 +128,12 @@ Custom property | Description | Default
                   <span class="breadcrumb" on-click="handleBreadcrumbClick">{{_getItemLabel(item)}}</span>
                 </li>
               </template>
+              <li hidden$="[[!multiSelectAllowed]]" class="float--right" style="padding-right:10px">
+                <span hidden$="{{_computeHidden(limit)}}"><i> Selection is limited to [[limit]] items</i></span>
+                <button type="button" class="btn btn--primary" on-click="openClickHandler" key$="[[getItemId(item)]]">Add
+                </button>
+              </li>
+              </li>
             </ul>
             <div class="flex flex--col column-browser" id="columnBrowser">
               <px-spinner finished></px-spinner>
@@ -136,28 +142,50 @@ Custom property | Description | Default
                   <div class="flex flex--col column push" data-column>
                     <div class="head">{{item.header}}</div>
                     <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
-                    <template is="dom-if" if="[[showColumnTypeahead]]">
-                      <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
-                    </template>
+                      <template is="dom-if" if="[[showColumnTypeahead]]">
+                      <span class$="[[selectAllClass(showColumnTypeahead)]]" hidden$="{{_isSelectAllHidden(multiSelectAllowed, selectAll)}}">
+                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
+                              on-click="_selectAllItems" id$="[[getItemId(item)]]">
+                      </span>
+                        <div class$="[[isMultiSelect(multiSelectAllowed, selectAll)]]">
+                          <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="[[!showColumnTypeahead]]">
+                      <span hidden$="{{_isSelectAllHidden(multiSelectAllowed, selectAll)}}" class$="[[selectAllClass(showColumnTypeahead)]]">
+                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
+                              on-click="_selectAllItems" id$="[[getItemId(item)]]">
+                      </span>
+                      </template>
                       <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
-                        <template is="dom-repeat" id="level" items="{{item.children}}">
-                          <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
-                            <template is="dom-if" if="[[!showColumnTypeahead]]"><span class="flex__item item-label">{{_getItemLabel(item)}}</span></template>
-                            <template is="dom-if" if="[[showColumnTypeahead]]">
-                              <template is="dom-if" if="[[!item.searchTerm]]">
-                                <span class="flex__item item-label">{{_getItemLabel(item)}}</span>
+						            <span class$="level-{{index}}">
+                          <template is="dom-repeat" id="level" items="{{item.children}}">
+                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
+                              <template is="dom-if" if="[[!showColumnTypeahead]]">
+                                <input hidden$="[[ !multiSelectAllowed ]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                       on-click="_itemsSelected" name="{{item.name}}">
+                                <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
                               </template>
-                              <template is="dom-if" if="{{item.searchTerm}}">
-                                <span class="flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                              <template is="dom-if" if="[[showColumnTypeahead]]">
+                                <template is="dom-if" if="[[!item.searchTerm]]">
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                         on-click="_itemsSelected" name="{{item.name}}">
+                                  <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
+                                </template>
+                                <template is="dom-if" if="{{item.searchTerm}}">
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                         on-click="_itemsSelected" name="{{item.name}}">
+                                  <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                                </template>
                               </template>
-                            </template>
-                            <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
-                            </button>
-                            <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
-                              <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
-                            </template>
-                          </li>
-                        </template>
+                              <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
+                              </button>
+                              <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
+                                <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
+                              </template>
+                            </li>
+                          </template>
+                        </span>
                       </ul>
                     </div>
                   </div>
@@ -232,9 +260,9 @@ Custom property | Description | Default
          * ```
          */
         browserContext : {
-            value: function() {return {};},
-            type: Object,
-            observer: 'contextChanged'
+          value: function() {return {};},
+          type: Object,
+          observer: 'contextChanged'
         },
         /**
          * If we have a selected Item, it's stored here.
@@ -245,6 +273,16 @@ Custom property | Description | Default
         selectedItem: {
           type: Object,
           value: function() {return {};}
+        },
+        /**
+         * If we have a selected multiple Items, it's stored here.
+         * must be initially empty for polymer to determine the correct classes for ULs and LIs if there's not selected Asset
+         * @type {Array}
+         * @default ''
+         */
+        selectedItems: {
+          type: Array,
+          value: []
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -299,6 +337,37 @@ Custom property | Description | Default
           type: Boolean,
           value: false
         },
+        /**
+         * flag to multi select allowed
+         *
+         * @type {Boolean Optional}
+         * @default false
+         */
+        multiSelectAllowed: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * flag to multi select allowed
+         *
+         * @type {Boolean Optional}
+         * @default false
+         */
+        selectAll: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * flag to multi select allowed
+         *
+         * @type {Number Optional}
+         * @default 0 means no limit
+         */
+        limit: {
+          type: Number,
+          value: 0
+        },
+
         /**
          * opened item breadcrumb
          * @type {Array}
@@ -364,20 +433,20 @@ Custom property | Description | Default
           value: false
         },
         /**
-        * A valid IETF language tag as a string that `px-localize-behavior` will
-        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
-        *
-        * See https://github.com/PolymerElements/app-localize-behavior for API
-        * documentation and more information.
-        */
+         * A valid IETF language tag as a string that `px-localize-behavior` will
+         * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+         *
+         * See https://github.com/PolymerElements/app-localize-behavior for API
+         * documentation and more information.
+         */
         language: {
           type: String,
           value: 'en'
         },
         /**
-        * Use the key for localization if value for  language is missing. Should
-        * always be true for  our components
-        */
+         * Use the key for localization if value for  language is missing. Should
+         * always be true for  our components
+         */
         useKeyIfMissing: {
           type: Boolean,
           value: true
@@ -393,6 +462,7 @@ Custom property | Description | Default
           }
         }
       },
+      behaviors: [Polymer.IronResizableBehavior],
       listeners: {
         'iron-resize': '_calculateColumnClasses'
       },
@@ -412,15 +482,15 @@ Custom property | Description | Default
         }, 0);
       },
       /**
-      * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
-      *
-      * @method _getNumberOfColumns
-      */
+       * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
+       *
+       * @method _getNumberOfColumns
+       */
       _getNumberOfColumns: function() {
-         var columnBrowser = this.$.columnBrowser,
-            columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
-            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-            $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
+        var columnBrowser = this.$.columnBrowser,
+          columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
+          columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+          $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
 
         return $columnBrowserColumns.childNodes.filter(
           function(n) {
@@ -429,56 +499,56 @@ Custom property | Description | Default
           .length;
       },
       /**
-      *
-      * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
-      * to re-calculate the class list for the columns.
-      * @method _resizeEvent
-      */
+       *
+       * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
+       * to re-calculate the class list for the columns.
+       * @method _resizeEvent
+       */
       _calculateColumnClasses: function() {
-      this.debounce('cbDraw', function() {
-       this.set('resize', !this.resize);
-      },20);
+        this.debounce('cbDraw', function() {
+          this.set('resize', !this.resize);
+        },20);
       },
       /**
-      * This method find out how many columns have data in them, and returns a string pf CSS classes
-      * that have two classes in them:
-      * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
-      * not the actual number of columns.
-      * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
-      * anything column number BELOW the number that is passed will be hidden.
-      * @method _columnIndexClasses
-      * @return {String} the CSS classes for the first div in each column
-      */
+       * This method find out how many columns have data in them, and returns a string pf CSS classes
+       * that have two classes in them:
+       * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
+       * not the actual number of columns.
+       * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
+       * anything column number BELOW the number that is passed will be hidden.
+       * @method _columnIndexClasses
+       * @return {String} the CSS classes for the first div in each column
+       */
       _redrawColumns: function() {
         var columnBrowser = this.$.columnBrowser,
-            minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
-            columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-            columnBrowserWidth = columnBrowser.offsetWidth,
-            baseCss = "flex",
-            numOfPossibleColumns,
-            //get the number of columns, counting the number of divs, skipping everything else.
-            numOfColumns = this._getNumberOfColumns();
+          minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+          columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+          columnBrowserWidth = columnBrowser.offsetWidth,
+          baseCss = "flex",
+          numOfPossibleColumns,
+        //get the number of columns, counting the number of divs, skipping everything else.
+          numOfColumns = this._getNumberOfColumns();
 
 
-            //we wanna make sure there's an actual size on the column browser
-            if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
-              // this calculates the number of possible columns available in the column browser based on its width.
-              numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
-            } else {
-              //our width is zero, so no room for columns
-              numOfPossibleColumns = 0;
-            }
+        //we wanna make sure there's an actual size on the column browser
+        if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
+          // this calculates the number of possible columns available in the column browser based on its width.
+          numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
+        } else {
+          //our width is zero, so no room for columns
+          numOfPossibleColumns = 0;
+        }
 
-          //set the number of possible columns
-          baseCss += ' columns-' + numOfPossibleColumns;
+        //set the number of possible columns
+        baseCss += ' columns-' + numOfPossibleColumns;
 
-          //if there are more columns then the available space, we want to hide the ones all the way to the left.
-          // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
-          // index number is hidden.
-          if  (numOfColumns > numOfPossibleColumns){
-            baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
-          }
-          return baseCss;
+        //if there are more columns then the available space, we want to hide the ones all the way to the left.
+        // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
+        // index number is hidden.
+        if  (numOfColumns > numOfPossibleColumns){
+          baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
+        }
+        return baseCss;
       },
       detached: function () {
         this.unlisten(document, 'force-re-render', 'reRenderDom'); //remove the listener for re rendering
@@ -503,6 +573,7 @@ Custom property | Description | Default
       itemClickHandler: function(evt) {
         this.debounce('itemClick', function() {
           this.selectItem(evt.model.item, evt.currentTarget);
+          //this.splice("selectedItems", 0, this.selectedItems.length)
 
         }, 1);
       },
@@ -521,18 +592,19 @@ Custom property | Description | Default
           'scroll-panel', function() {
             // executes when it hasn't been called for 200ms
             var _this = this,
-                levelIdx = this.$.levels.indexForElement(evt.target),
-                scrollableHeight = evt.target.scrollHeight,
-                visibleHeight = evt.target.offsetHeight,
-                threshold = 10,
-                hiddenContentHeight = scrollableHeight - visibleHeight;
+              levelIdx = this.$.levels.indexForElement(evt.target),
+              scrollableHeight = evt.target.scrollHeight,
+              visibleHeight = evt.target.offsetHeight,
+              threshold = 10,
+              hiddenContentHeight = scrollableHeight - visibleHeight;
 
             if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
               if (this.handlers.getChildren) {
-                _this.spinner('show');
+                // _this.spinner('show');
                 var item = this.parentNodes[levelIdx],
-                    options = {};
+                  options = {};
                 if (item && item.meta) {
+                  _this.spinner('show');
                   if (item.meta.total) {
                     if (item.children.length >= item.meta.total) {
                       _this.spinner('hide');
@@ -567,8 +639,12 @@ Custom property | Description | Default
         if (this.selectedItem && this.handlers.itemOpenHandler) {
           this.configureBreadcrumbs(evt);
           this.openedItemName = this.selectedItem.name;
-          this.toggleColumnBrowser();
-          this.handlers.itemOpenHandler(this.selectedItem, this.openedBreadcrumbs);
+          this.toggleColumnBrowser('single');
+          // Make it an array if it has only one element
+          if (this.selectedItems.length === 0) {
+            this.selectedItems.push(this.selectedItem);
+          }
+          this.handlers.itemOpenHandler(this.selectedItems, this.openedBreadcrumbs);
         }
       },
       /**
@@ -579,7 +655,7 @@ Custom property | Description | Default
        */
       configureBreadcrumbs: function(evt) {
         var i,
-            len=this.parentNodes.length;
+          len=this.parentNodes.length;
         this.openedBreadcrumbs = [];
         for (i=0; i<len;i++) {
           if (this._getItemLabel(this.parentNodes[i])) {
@@ -622,6 +698,23 @@ Custom property | Description | Default
         return (item.inSelectedPath) ? "selected" : '';
       },
       /**
+       *
+       * @return {String} selected class for multi select
+       * @private
+       */
+      isMultiSelect: function(multiSelectAllowed, selectAll){
+        return (multiSelectAllowed && selectAll) ? "multi-select" : '';
+      },
+
+      selectAllClass: function(showColumnTypeahead){
+        return (showColumnTypeahead) ? 'select-all' : 'select-all-no-border';
+      },
+
+      getClassMultiSelect: function(multiSelectAllowed) {
+        return (multiSelectAllowed) ? 'pad-left' : '';
+      },
+
+      /**
        * Observer on LI, and whether they should show up. replaces polymer hidden, which seems to be shaky with IE.
        * if base_classes is passed in, it is returned with the appropriate response.
        *
@@ -630,11 +723,11 @@ Custom property | Description | Default
        * @private
        */
       isItemHidden: function(item) {
-          if (this.disabled) {
-              return  'visuallyhidden';
-          } else {
-            return (!item) ? "visuallyhidden" : '';
-          }
+        if (this.disabled) {
+          return  'visuallyhidden';
+        } else {
+          return (!item) ? "visuallyhidden" : '';
+        }
       },
       /**
        * this method checks whether the attribute hasChildren has been set to true, and if it has,
@@ -652,8 +745,8 @@ Custom property | Description | Default
        */
       contextChanged: function() {
         var _this= this,
-            browserContext = this.browserContext,
-            root= {};
+          browserContext = this.browserContext,
+          root= {};
 
         //initialize/empty out the parentNodes array
         this.set('parentNodes',[]);
@@ -683,7 +776,7 @@ Custom property | Description | Default
               //the selectedAsset
               selectedAssetFound = true;
               // this continue prevents children of the selected asset to be added properly. Clicking on a child
-				// results in a javascript error.
+              // results in a javascript error.
               // continue;
             }
             //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
@@ -701,9 +794,9 @@ Custom property | Description | Default
 
         // Send an event to typeahead when data is updated through browser context
         if (_this.parentNodes && _this.parentNodes.length > 0) {
-            this.fire('px-browser-context-updated', {
-                items: _this.parentNodes[0].children
-            });
+          this.fire('px-browser-context-updated', {
+            items: _this.parentNodes[0].children
+          });
         }
         // Repopulate the openedItemName and Breadcrumbs if we have a directContext
         if (this.selectedItem && this.selectedItem.name) {
@@ -711,19 +804,19 @@ Custom property | Description | Default
           this.openedItemName = this.selectedItem.name;
         }
       },
-     /**
-      * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
-      * and the columns can be drawn correctly.
-      * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
-      * until the current item has no parent - which means we are at the top of the path.
-      * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
-      * to the parentArray is the top most one.
-      *
-      * @param {Object} item The selected item (with selectedAsset to true)
-      */
+      /**
+       * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
+       * and the columns can be drawn correctly.
+       * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
+       * until the current item has no parent - which means we are at the top of the path.
+       * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
+       * to the parentArray is the top most one.
+       *
+       * @param {Object} item The selected item (with selectedAsset to true)
+       */
       addParents: function(item) {
         var parentArray = [],
-            parent = item;
+          parent = item;
 
 
         while (parent) {
@@ -779,7 +872,7 @@ Custom property | Description | Default
           return;
         }
         var children = results.data || [],
-            modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
+          modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
 
         //assign the modified children as a children property on the parentNode
         parentNode.children = modifiedChildren;
@@ -787,10 +880,10 @@ Custom property | Description | Default
         parentNode.meta = results.meta;
       },
       /**
-      * this method adds the parent property to each child, creating a circular json
-      * object in the process. This is used later on find the parent of the item.
-      * @method _assignParentNodeToChildren
-      */
+       * this method adds the parent property to each child, creating a circular json
+       * object in the process. This is used later on find the parent of the item.
+       * @method _assignParentNodeToChildren
+       */
       _assignParentNodeToChildren: function(parentNode, children) {
         // set up the parent pointers - this creates a circular json object.
         // this is used later on find the parent of the item.
@@ -819,7 +912,7 @@ Custom property | Description | Default
        */
       addToParentNodes: function(item) {
         var found = false,
-            i = 0;
+          i = 0;
 
         while (i < this.parentNodes.length && !found) {
           if (this.parentNodes[i][this.idField] && this.parentNodes[i][this.idField] === item[this.idField]) {
@@ -838,8 +931,8 @@ Custom property | Description | Default
        */
       spinner: function(state) {
         var columnBrowser = this.$.columnBrowser,
-            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
-            overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
+          spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
+          overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
         if (state === 'show') {
           spinner.set('finished', false);
           overlay.style.display = 'block';
@@ -865,8 +958,8 @@ Custom property | Description | Default
               //we got the data, let's hide the spinner
               _this.spinner('hide');
               var children = data.data,
-                  parentId = data.meta.parentId,
-                  selectedNode = _this.selectedItem;
+                parentId = data.meta.parentId,
+                selectedNode = _this.selectedItem;
 
               if (parentId === undefined || parentId === null) {
                 console.warn('Context tree getChildren response must have meta.parentId defined.');
@@ -923,7 +1016,7 @@ Custom property | Description | Default
        */
       UlSelected: function(item, selectedItem) {
         var id = this.idField,
-            itemId = selectedItem[id];
+          itemId = selectedItem[id];
         if (item.children) {
           for (var i = 0, len = item.children.length; i < len; i++) {
             if (item.children[i][id] === itemId) {
@@ -940,8 +1033,8 @@ Custom property | Description | Default
        */
       changeSelected: function(item) {
         var children = item.parent.children,
-            sib,
-            id = this.idField;
+          sib,
+          id = this.idField;
 
         for (var i = 0, len = children.length; i < len; i++) {
           sib = children[i];
@@ -951,7 +1044,7 @@ Custom property | Description | Default
               sib.inSelectedPath = false;
               sib.selectedAsset = false;
             }
-          // only turn those on if you're the selected Item.
+            // only turn those on if you're the selected Item.
           } else {
             sib.inSelectedPath = true;
             sib.selectedAsset = true;
@@ -990,22 +1083,33 @@ Custom property | Description | Default
       },
 
       /**
-      * Fires whenever the Context Browser is opened
-      * @event contextBrowserOpening
-      */
+       * Fires whenever the Context Browser is opened
+       * @event contextBrowserOpening
+       */
       /**
-      * Fires whenever the Context Browser is closed
-      * @event contextBrowserClosing
-      */
+       * Fires whenever the Context Browser is closed
+       * @event contextBrowserClosing
+       */
       /**
-      * toggle visbility of the column browser
-      * @method toggleColumnBrowser
-      */
-       toggleColumnBrowser: function() {
+       * toggle visbility of the column browser
+       * @method toggleColumnBrowser
+       */
+      toggleColumnBrowser: function(evt) {
         if (this.disabled) {
           this.showColumnBrowser = false;
         } else {
           this.showColumnBrowser = !this.showColumnBrowser;
+        }
+        if (evt && evt.type === 'click') {
+          this.multiSelectAllowed = false;
+        }
+        // clear checkboxes when opening
+        if (this.showColumnBrowser) {
+          this.splice("selectedItems", 0, this.selectedItems.length);
+          let checkedBoxes = document.querySelectorAll('.multi-select-chk');
+          for (let i=0; i < checkedBoxes.length; i++) {
+            checkedBoxes[i].checked = false;
+          }
         }
         this._calculateColumnClasses();
         //this.showColumnBrowser = !this.showColumnBrowser;
@@ -1024,6 +1128,71 @@ Custom property | Description | Default
         var root = Polymer.dom(this.root).querySelector(e.detail.templateId);
         if (root && root.render) {
           root.render();
+        }
+      },
+
+      /**
+       * Called when the checkboxes are clicked
+       * @private
+       *
+       */
+      _itemsSelected: function(evt) {
+        evt.stopPropagation();
+        if (evt.target.checked && this.limit !== 0 && this.limit === this.selectedItems.length) {
+          evt.preventDefault();
+          return false;
+        }
+
+        if (evt.target.checked) {
+          this.selectedItems.push(evt.model.item);
+        } else {
+          _.pull(this.selectedItems, evt.model.item);
+        }
+      },
+
+      /**
+       * Called when 'select all' checkbox is clicked
+       * @private
+       *
+       */
+      _selectAllItems: function(evt) {
+        const cls = evt.target.className;
+        const re = /level-[0-9]*/i;
+        const clsFound = cls.match(re);
+        let all = document.querySelector('span.'+clsFound);
+        const chkBoxes = all.querySelectorAll('.multi-select-chk:not([style*="display:none;"]):not([style*="display: none;"])');
+        let i = 0;
+        for (let i = 0; i < chkBoxes.length; i++) {
+          if (evt.target.checked && !chkBoxes[i].checked || !evt.target.checked && chkBoxes[i].checked) {
+            chkBoxes[i].click();
+          }
+        }
+      },
+
+      /**
+       *
+       * To show the message 'Selection limited to $limit'
+       * @returns {boolean}
+       * @private
+       */
+      _computeHidden: function(limit) {
+        if (!limit || limit === 0){
+          return true;
+        }
+        return false;
+      },
+
+      /**
+       *
+       * To show/hide 'select all' checkbox
+       * @returns {boolean}
+       * @private
+       */
+      _isSelectAllHidden: function(multiSelectAllowed, selectAll){
+        if (!multiSelectAllowed || !selectAll) {
+          return true;
+        } else {
+          return false;
         }
       }
     });
