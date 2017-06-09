@@ -303,6 +303,11 @@
         defaultValue: true,
         inputType: 'toggle'
       },
+      showColumnBrowser: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
       multiSelectAllowed: {
         type: Boolean,
         defaultValue: false,
@@ -365,7 +370,6 @@
     },
 
     ready: function () {
-      this.multiSelectAllowed = false;
 
       // this.counter = 0;
       // this.counterRange = 0;
