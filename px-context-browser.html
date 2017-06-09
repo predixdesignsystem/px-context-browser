@@ -94,8 +94,8 @@ Custom property | Description | Default
 
 <dom-module id="px-context-browser">
   <!--
-      <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
-      -->
+  <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
+  -->
   <template>
     <!-- style mixin using @apply -->
     <style include="px-context-browser-styles">
@@ -438,20 +438,20 @@ Custom property | Description | Default
           value: false
         },
         /**
-         * A valid IETF language tag as a string that `px-localize-behavior` will
-         * use to localize this component. Refer to px-localize-behavior for currently supported languages.
-         *
-         * See https://github.com/PolymerElements/app-localize-behavior for API
-         * documentation and more information.
-         */
+        * A valid IETF language tag as a string that `px-localize-behavior` will
+        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+        *
+        * See https://github.com/PolymerElements/app-localize-behavior for API
+        * documentation and more information.
+        */
         language: {
           type: String,
           value: 'en'
         },
         /**
-         * Use the key for localization if value for  language is missing. Should
-         * always be true for  our components
-         */
+        * Use the key for localization if value for  language is missing. Should
+        * always be true for  our components
+        */
         useKeyIfMissing: {
           type: Boolean,
           value: true
@@ -486,15 +486,15 @@ Custom property | Description | Default
         }, 0);
       },
       /**
-       * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
-       *
-       * @method _getNumberOfColumns
-       */
+      * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
+      *
+      * @method _getNumberOfColumns
+      */
       _getNumberOfColumns: function() {
-        var columnBrowser = this.$.columnBrowser,
-          columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
-          columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-          $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
+         var columnBrowser = this.$.columnBrowser,
+            columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
+            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
 
         return $columnBrowserColumns.childNodes.filter(
           function(n) {
@@ -503,56 +503,56 @@ Custom property | Description | Default
           .length;
       },
       /**
-       *
-       * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
-       * to re-calculate the class list for the columns.
-       * @method _resizeEvent
-       */
+      *
+      * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
+      * to re-calculate the class list for the columns.
+      * @method _resizeEvent
+      */
       _calculateColumnClasses: function() {
-        this.debounce('cbDraw', function() {
-          this.set('resize', !this.resize);
-        },20);
+      this.debounce('cbDraw', function() {
+       this.set('resize', !this.resize);
+      },20);
       },
       /**
-       * This method find out how many columns have data in them, and returns a string pf CSS classes
-       * that have two classes in them:
-       * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
-       * not the actual number of columns.
-       * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
-       * anything column number BELOW the number that is passed will be hidden.
-       * @method _columnIndexClasses
-       * @return {String} the CSS classes for the first div in each column
-       */
+      * This method find out how many columns have data in them, and returns a string pf CSS classes
+      * that have two classes in them:
+      * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
+      * not the actual number of columns.
+      * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
+      * anything column number BELOW the number that is passed will be hidden.
+      * @method _columnIndexClasses
+      * @return {String} the CSS classes for the first div in each column
+      */
       _redrawColumns: function() {
         var columnBrowser = this.$.columnBrowser,
-          minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
-          columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
-          columnBrowserWidth = columnBrowser.offsetWidth,
-          baseCss = "flex",
-          numOfPossibleColumns,
-        //get the number of columns, counting the number of divs, skipping everything else.
-          numOfColumns = this._getNumberOfColumns();
+            minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+            columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            columnBrowserWidth = columnBrowser.offsetWidth,
+            baseCss = "flex",
+            numOfPossibleColumns,
+            //get the number of columns, counting the number of divs, skipping everything else.
+            numOfColumns = this._getNumberOfColumns();
 
 
-        //we wanna make sure there's an actual size on the column browser
-        if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
-          // this calculates the number of possible columns available in the column browser based on its width.
-          numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
-        } else {
-          //our width is zero, so no room for columns
-          numOfPossibleColumns = 0;
-        }
+            //we wanna make sure there's an actual size on the column browser
+            if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
+              // this calculates the number of possible columns available in the column browser based on its width.
+              numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
+            } else {
+              //our width is zero, so no room for columns
+              numOfPossibleColumns = 0;
+            }
 
-        //set the number of possible columns
-        baseCss += ' columns-' + numOfPossibleColumns;
+          //set the number of possible columns
+          baseCss += ' columns-' + numOfPossibleColumns;
 
-        //if there are more columns then the available space, we want to hide the ones all the way to the left.
-        // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
-        // index number is hidden.
-        if  (numOfColumns > numOfPossibleColumns){
-          baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
-        }
-        return baseCss;
+          //if there are more columns then the available space, we want to hide the ones all the way to the left.
+          // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
+          // index number is hidden.
+          if  (numOfColumns > numOfPossibleColumns){
+            baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
+          }
+          return baseCss;
       },
       detached: function () {
         this.unlisten(document, 'force-re-render', 'reRenderDom'); //remove the listener for re rendering
@@ -577,6 +577,7 @@ Custom property | Description | Default
       itemClickHandler: function(evt) {
         this.debounce('itemClick', function() {
           this.selectItem(evt.model.item, evt.currentTarget);
+
         }, 1);
       },
       /**
@@ -594,17 +595,17 @@ Custom property | Description | Default
           'scroll-panel', function() {
             // executes when it hasn't been called for 200ms
             var _this = this,
-              levelIdx = this.$.levels.indexForElement(evt.target),
-              scrollableHeight = evt.target.scrollHeight,
-              visibleHeight = evt.target.offsetHeight,
-              threshold = 10,
-              hiddenContentHeight = scrollableHeight - visibleHeight;
+                levelIdx = this.$.levels.indexForElement(evt.target),
+                scrollableHeight = evt.target.scrollHeight,
+                visibleHeight = evt.target.offsetHeight,
+                threshold = 10,
+                hiddenContentHeight = scrollableHeight - visibleHeight;
 
             if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
               if (this.handlers.getChildren) {
                 _this.spinner('show');
                 var item = this.parentNodes[levelIdx],
-                  options = {};
+                    options = {};
                 if (item && item.meta) {
                   if (item.meta.total) {
                     if (item.children.length >= item.meta.total) {
@@ -666,7 +667,7 @@ Custom property | Description | Default
        */
       configureBreadcrumbs: function(evt) {
         var i,
-          len=this.parentNodes.length;
+            len=this.parentNodes.length;
         this.openedBreadcrumbs = [];
         for (i=0; i<len;i++) {
           if (this._getItemLabel(this.parentNodes[i])) {
@@ -744,11 +745,11 @@ Custom property | Description | Default
        * @private
        */
       isItemHidden: function(item) {
-        if (this.disabled) {
-          return  'visuallyhidden';
-        } else {
-          return (!item) ? "visuallyhidden" : '';
-        }
+          if (this.disabled) {
+              return  'visuallyhidden';
+          } else {
+            return (!item) ? "visuallyhidden" : '';
+          }
       },
       /**
        * this method checks whether the attribute hasChildren has been set to true, and if it has,
@@ -766,8 +767,8 @@ Custom property | Description | Default
        */
       contextChanged: function() {
         var _this= this,
-          browserContext = this.browserContext,
-          root= {};
+            browserContext = this.browserContext,
+            root= {};
 
         //initialize/empty out the parentNodes array
         this.set('parentNodes',[]);
@@ -797,7 +798,7 @@ Custom property | Description | Default
               //the selectedAsset
               selectedAssetFound = true;
               // this continue prevents children of the selected asset to be added properly. Clicking on a child
-              // results in a javascript error.
+				// results in a javascript error.
               // continue;
             }
             //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
@@ -815,9 +816,9 @@ Custom property | Description | Default
 
         // Send an event to typeahead when data is updated through browser context
         if (_this.parentNodes && _this.parentNodes.length > 0) {
-          this.fire('px-browser-context-updated', {
-            items: _this.parentNodes[0].children
-          });
+            this.fire('px-browser-context-updated', {
+                items: _this.parentNodes[0].children
+            });
         }
         // Repopulate the openedItemName and Breadcrumbs if we have a directContext
         if (this.selectedItem && this.selectedItem.name) {
@@ -825,19 +826,19 @@ Custom property | Description | Default
           this.openedItemName = this.selectedItem.name;
         }
       },
-      /**
-       * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
-       * and the columns can be drawn correctly.
-       * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
-       * until the current item has no parent - which means we are at the top of the path.
-       * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
-       * to the parentArray is the top most one.
-       *
-       * @param {Object} item The selected item (with selectedAsset to true)
-       */
+     /**
+      * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
+      * and the columns can be drawn correctly.
+      * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
+      * until the current item has no parent - which means we are at the top of the path.
+      * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
+      * to the parentArray is the top most one.
+      *
+      * @param {Object} item The selected item (with selectedAsset to true)
+      */
       addParents: function(item) {
         var parentArray = [],
-          parent = item;
+            parent = item;
 
 
         while (parent) {
@@ -893,7 +894,7 @@ Custom property | Description | Default
           return;
         }
         var children = results.data || [],
-          modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
+            modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
 
         //assign the modified children as a children property on the parentNode
         parentNode.children = modifiedChildren;
@@ -901,10 +902,10 @@ Custom property | Description | Default
         parentNode.meta = results.meta;
       },
       /**
-       * this method adds the parent property to each child, creating a circular json
-       * object in the process. This is used later on find the parent of the item.
-       * @method _assignParentNodeToChildren
-       */
+      * this method adds the parent property to each child, creating a circular json
+      * object in the process. This is used later on find the parent of the item.
+      * @method _assignParentNodeToChildren
+      */
       _assignParentNodeToChildren: function(parentNode, children) {
         // set up the parent pointers - this creates a circular json object.
         // this is used later on find the parent of the item.
@@ -952,8 +953,8 @@ Custom property | Description | Default
        */
       spinner: function(state) {
         var columnBrowser = this.$.columnBrowser,
-          spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
-          overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
+            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
+            overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
         if (state === 'show') {
           spinner.set('finished', false);
           overlay.style.display = 'block';
@@ -979,8 +980,8 @@ Custom property | Description | Default
               //we got the data, let's hide the spinner
               _this.spinner('hide');
               var children = data.data,
-                parentId = data.meta.parentId,
-                selectedNode = _this.selectedItem;
+                  parentId = data.meta.parentId,
+                  selectedNode = _this.selectedItem;
 
               if (parentId === undefined || parentId === null) {
                 console.warn('Context tree getChildren response must have meta.parentId defined.');
@@ -1037,7 +1038,7 @@ Custom property | Description | Default
        */
       UlSelected: function(item, selectedItem) {
         var id = this.idField,
-          itemId = selectedItem[id];
+            itemId = selectedItem[id];
         if (item.children) {
           for (var i = 0, len = item.children.length; i < len; i++) {
             if (item.children[i][id] === itemId) {
@@ -1054,8 +1055,8 @@ Custom property | Description | Default
        */
       changeSelected: function(item) {
         var children = item.parent.children,
-          sib,
-          id = this.idField;
+            sib,
+            id = this.idField;
 
         for (var i = 0, len = children.length; i < len; i++) {
           sib = children[i];
@@ -1065,7 +1066,7 @@ Custom property | Description | Default
               sib.inSelectedPath = false;
               sib.selectedAsset = false;
             }
-            // only turn those on if you're the selected Item.
+          // only turn those on if you're the selected Item.
           } else {
             sib.inSelectedPath = true;
             sib.selectedAsset = true;
@@ -1104,24 +1105,23 @@ Custom property | Description | Default
       },
 
       /**
-       * Fires whenever the Context Browser is opened
-       * @event contextBrowserOpening
-       */
+      * Fires whenever the Context Browser is opened
+      * @event contextBrowserOpening
+      */
       /**
-       * Fires whenever the Context Browser is closed
-       * @event contextBrowserClosing
-       */
+      * Fires whenever the Context Browser is closed
+      * @event contextBrowserClosing
+      */
       /**
-       * toggle visbility of the column browser
-       * @method toggleColumnBrowser
-       */
-      toggleColumnBrowser: function(evt) {
+      * toggle visbility of the column browser
+      * @method toggleColumnBrowser
+      */
+       toggleColumnBrowser: function() {
         if (this.disabled) {
           this.showColumnBrowser = false;
         } else {
           this.showColumnBrowser = !this.showColumnBrowser;
         }
-
         this._calculateColumnClasses();
         //this.showColumnBrowser = !this.showColumnBrowser;
 

@@ -31,8 +31,8 @@
 
     <!-- Header -->
     <px-demo-header
-      module-name="px-context-browser"
-      description="The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view. Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function. When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.">
+        module-name="px-context-browser"
+        description="The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view. Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function. When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.">
     </px-demo-header>
 
     <!-- Interactive -->
@@ -65,8 +65,8 @@
       <!-- END Component ------------------------------------------------------>
 
       <px-demo-component-snippet
-        element-properties="{{props}}"
-        element-name="px-context-browser">
+          element-properties="{{props}}"
+          element-name="px-context-browser">
       </px-demo-component-snippet>
     </px-demo-interactive>
 
@@ -115,164 +115,164 @@
               showColumnTypeahead: false,
               browserContext: {
                 "data": [
-                  {
-                    "identifier": "001-1",
-                    "name": "Lots of Children",
-                    "isOpenable" : true,
-                    "hasChildren": true
-                  },
-                  {
-                    "identifier": "001-2",
-                    "name": "Deep_Nested_And_A_Very_Long_Name_That_Should_Wrap_Around_in_The_Row",
-                    "isOpenable" : true,
-                    "children": [
-                      {
-                        "identifier": "001-2a",
-                        "name": "Nested Child 1",
+                    {
+                        "identifier": "001-1",
+                        "name": "Lots of Children",
                         "isOpenable" : true,
-                        "children": [
-                          {
-                            "identifier": "001-2aa",
-                            "name": "Nested Grandchild 1",
-                            "isOpenable" : true,
-                            "children" : [{
-                              "identifier": "001-2aba",
-                              "name": "Nested Great Grandchild 1",
+                        "hasChildren": true
+                    },
+                    {
+                      "identifier": "001-2",
+                      "name": "Deep_Nested_And_A_Very_Long_Name_That_Should_Wrap_Around_in_The_Row",
+                      "isOpenable" : true,
+                      "children": [
+                            {
+                                "identifier": "001-2a",
+                                "name": "Nested Child 1",
+                                "isOpenable" : true,
+                                "children": [
+                                  {
+                                    "identifier": "001-2aa",
+                                    "name": "Nested Grandchild 1",
+                                    "isOpenable" : true,
+                                    "children" : [{
+                                      "identifier": "001-2aba",
+                                      "name": "Nested Great Grandchild 1",
+                                      "isOpenable" : true
+                                    },
+                                    {
+                                      "identifier": "001-2abb",
+                                      "name": "Nested Great Grandchild 2",
+                                      "isOpenable" : true
+                                    },
+                                    {
+                                      "identifier": "001-2abc",
+                                      "name": "Nested Great Grandchild 3",
+                                      "isOpenable" : true,
+                                      "selectedAsset": true
+                                    }],
+                                    "meta": { "parentId": "001-2ab" }
+                                  },
+                                  {
+                                    "identifier": "001-2ab",
+                                    "name": "Nested Grandchild 2",
+                                    "isOpenable" : true
+                                  },
+                                  {
+                                    "identifier": "001-2ac",
+                                    "name": "Nested Grandchild 3",
+                                    "isOpenable" : true
+                                  }
+                                ],
+                                "meta": { "parentId": "001-2a" }
+                            },
+                            {
+                              "identifier": "001-2b",
+                              "name": "Nested Child 2",
                               "isOpenable" : true
                             },
-                              {
-                                "identifier": "001-2abb",
-                                "name": "Nested Great Grandchild 2",
-                                "isOpenable" : true
-                              },
-                              {
-                                "identifier": "001-2abc",
-                                "name": "Nested Great Grandchild 3",
-                                "isOpenable" : true,
-                                "selectedAsset": true
-                              }],
-                            "meta": { "parentId": "001-2ab" }
-                          },
-                          {
-                            "identifier": "001-2ab",
-                            "name": "Nested Grandchild 2",
-                            "isOpenable" : true
-                          },
-                          {
-                            "identifier": "001-2ac",
-                            "name": "Nested Grandchild 3",
-                            "isOpenable" : true
-                          }
+                            {
+                              "identifier": "001-2c",
+                              "name": "Nested Child 3",
+                              "isOpenable" : true
+                            }
                         ],
-                        "meta": { "parentId": "001-2a" }
-                      },
-                      {
-                        "identifier": "001-2b",
-                        "name": "Nested Child 2",
-                        "isOpenable" : true
-                      },
-                      {
-                        "identifier": "001-2c",
-                        "name": "Nested Child 3",
-                        "isOpenable" : true
-                      }
-                    ],
-                    "meta": { "parentId": "001-2" }
-                  },
-                  {
+                        "meta": { "parentId": "001-2" }
+                    },
+                    {
                     "identifier": "001-3",
                     "name": "Nothing Below Me",
                     "isOpenable" : true
-                  },
-                  {
+                    },
+                    {
                     "identifier": "001-4",
                     "name": "Nothing Below, Not openable"
-                  }
+                   }
                 ],
                 "meta": { "parentId": null }
-              }
-            },
+                }
+              },
             { configName: "Typeahead",
               showColumnTypeahead: true,
               configReset: true,
               browserContext: {
                 "data": [
-                  {
-                    "identifier": "001-1",
-                    "name": "Lots of Children",
-                    "isOpenable" : true,
-                    "hasChildren": true
-                  },
-                  {
-                    "identifier": "001-2",
-                    "name": "Deep nested",
-                    "isOpenable" : true,
-                    "children": [
-                      {
-                        "identifier": "001-2a",
-                        "name": "Nested Child 1",
+                    {
+                        "identifier": "001-1",
+                        "name": "Lots of Children",
                         "isOpenable" : true,
-                        "children": [
-                          {
-                            "identifier": "001-2aa",
-                            "name": "Nested Grandchild 1",
-                            "isOpenable" : true,
-                            "children" : [{
-                              "identifier": "001-2aba",
-                              "name": "Nested Great Grandchild 1",
+                        "hasChildren": true
+                    },
+                    {
+                      "identifier": "001-2",
+                      "name": "Deep nested",
+                      "isOpenable" : true,
+                      "children": [
+                            {
+                                "identifier": "001-2a",
+                                "name": "Nested Child 1",
+                                "isOpenable" : true,
+                                "children": [
+                                  {
+                                    "identifier": "001-2aa",
+                                    "name": "Nested Grandchild 1",
+                                    "isOpenable" : true,
+                                    "children" : [{
+                                      "identifier": "001-2aba",
+                                      "name": "Nested Great Grandchild 1",
+                                      "isOpenable" : true
+                                    },
+                                    {
+                                      "identifier": "001-2abb",
+                                      "name": "Nested Great Grandchild 2",
+                                      "isOpenable" : true
+                                    },
+                                    {
+                                      "identifier": "001-2abc",
+                                      "name": "Nested Great Grandchild 3",
+                                      "isOpenable" : true,
+                                      "selectedAsset": true
+                                    }],
+                                    "meta": { "parentId": "001-2ab" }
+                                  },
+                                  {
+                                    "identifier": "001-2ab",
+                                    "name": "Nested Grandchild 2",
+                                    "isOpenable" : true
+                                  },
+                                  {
+                                    "identifier": "001-2ac",
+                                    "name": "Nested Grandchild 3",
+                                    "isOpenable" : true
+                                  }
+                                ],
+                                "meta": { "parentId": "001-2a" }
+                            },
+                            {
+                              "identifier": "001-2b",
+                              "name": "Nested Child 2",
                               "isOpenable" : true
                             },
-                              {
-                                "identifier": "001-2abb",
-                                "name": "Nested Great Grandchild 2",
-                                "isOpenable" : true
-                              },
-                              {
-                                "identifier": "001-2abc",
-                                "name": "Nested Great Grandchild 3",
-                                "isOpenable" : true,
-                                "selectedAsset": true
-                              }],
-                            "meta": { "parentId": "001-2ab" }
-                          },
-                          {
-                            "identifier": "001-2ab",
-                            "name": "Nested Grandchild 2",
-                            "isOpenable" : true
-                          },
-                          {
-                            "identifier": "001-2ac",
-                            "name": "Nested Grandchild 3",
-                            "isOpenable" : true
-                          }
+                            {
+                              "identifier": "001-2c",
+                              "name": "Nested Child 3",
+                              "isOpenable" : true
+                            }
                         ],
-                        "meta": { "parentId": "001-2a" }
-                      },
-                      {
-                        "identifier": "001-2b",
-                        "name": "Nested Child 2",
-                        "isOpenable" : true
-                      },
-                      {
-                        "identifier": "001-2c",
-                        "name": "Nested Child 3",
-                        "isOpenable" : true
-                      }
-                    ],
-                    "meta": { "parentId": "001-2" }
-                  },
-                  {
+                        "meta": { "parentId": "001-2" }
+                    },
+                    {
                     "identifier": "001-3",
                     "name": "Nothing Below Me",
                     "isOpenable" : true
-                  },
-                  {
+                    },
+                    {
                     "identifier": "001-4",
                     "name": "Nothing Below, Not openable"
-                  }
+                   }
                 ],
                 "meta": { "parentId": null }
-              }
+                }
             }
           ];
         }
@@ -287,27 +287,27 @@
         type: String,
         defaultValue: 'name',
         inputType: 'text'
-      },
-      idField: {
-        type: String,
-        defaultValue: 'identifier',
+    },
+    idField: {
+      type: String,
+      defaultValue: 'identifier',
         inputType: 'text'
-      },
-      openedItemName: {
-        type: String,
-        defaultValue: 'Select Context',
+    },
+    openedItemName: {
+      type: String,
+      defaultValue: 'Select Context',
         inputType: 'text'
-      },
-      showChevron: {
-        type: Boolean,
-        defaultValue: true,
-        inputType: 'toggle'
-      },
-      showColumnBrowser: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
+    },
+    showChevron: {
+      type: Boolean,
+      defaultValue: true,
+      inputType: 'toggle'
+    },
+    showColumnBrowser: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
       multiSelectAllowed: {
         type: Boolean,
         defaultValue: false,
@@ -323,56 +323,56 @@
         defaultValue: 10,
         inputType: 'number'
       },
-      disabled: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-      showColumnTypeahead: {
-        type: Boolean,
-        defaultValue: false
-      },
-      disableInfiniteScroll: {
-        type: Boolean,
-        defaultValue: false,
-        inputType: 'toggle'
-      },
-      browserContext: {
-        type: Object,
-        defaultValue: {
-          "data": [
-            {
-              "name": "Lots of children",
-              "identifier": "001-1",
-              "isOpenable": true,
-              "hasChildren": true
-            }, {
-              "name": "Deep nested",
-              "identifier": "001-2",
-              "isOpenable": true,
-              "hasChildren": true
-            }, {
-              "name": "Nothing Below Me",
-              "identifier": "001-3",
-              "isOpenable": true
-            }, {
-              "name": "Nothing Below, Not openable",
-              "identifier": "001-4",
-              "isOpenable": false
-            }
-          ],
-          "meta": {
-            "parentId": null
+    disabled: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
+    showColumnTypeahead: {
+      type: Boolean,
+      defaultValue: false
+    },
+    disableInfiniteScroll: {
+      type: Boolean,
+      defaultValue: false,
+      inputType: 'toggle'
+    },
+    browserContext: {
+      type: Object,
+      defaultValue: {
+        "data": [
+          {
+            "name": "Lots of children",
+            "identifier": "001-1",
+            "isOpenable": true,
+            "hasChildren": true
+          }, {
+            "name": "Deep nested",
+            "identifier": "001-2",
+            "isOpenable": true,
+            "hasChildren": true
+          }, {
+            "name": "Nothing Below Me",
+            "identifier": "001-3",
+            "isOpenable": true
+          }, {
+            "name": "Nothing Below, Not openable",
+            "identifier": "001-4",
+            "isOpenable": false
           }
-        },
-        inputDisabled: true
+        ],
+        "meta": {
+          "parentId": null
+        }
+      },
+      inputDisabled: true
       }
     },
 
     ready: function () {
 
-      // this.counter = 0;
-      // this.counterRange = 0;
+        // this.counter = 0;
+        // this.counterRange = 0;
 
       // year = year.getFullYear();
 
@@ -428,31 +428,31 @@
    */
   function demoGetChildren(node) {
     var nodeId = node.identifier,
-      deferred = Q.defer(),
-      children,
-      response,
-      ironAjaxEl = document.createElement('iron-ajax'),
-      nodeIds = {
-        "001-1": "lotsOfChildren.json",
-        "001-2": "deepNestedChildren.json",
-        "001-2a":"deepNestedGrandchildren.json",
-        "001-2aa": "deepNestedGreatGrandchild.json"
-      };
+        deferred = Q.defer(),
+        children,
+        response,
+        ironAjaxEl = document.createElement('iron-ajax'),
+        nodeIds = {
+          "001-1": "lotsOfChildren.json",
+          "001-2": "deepNestedChildren.json",
+          "001-2a":"deepNestedGrandchildren.json",
+          "001-2aa": "deepNestedGreatGrandchild.json"
+        };
 
     ironAjaxEl.handleAs = "json";
     ironAjaxEl.addEventListener('response', function(evt) {
       if(evt.detail.response) {
-        children  = evt.detail.response;
-        deferred.resolve(children);
+       children  = evt.detail.response;
+       deferred.resolve(children);
       } else {
-        return;
+       return;
       }
     });
     //get our url - if there's no valid nodeId, resolve an empty promise.
     if (nodeIds[nodeId]) {
-      ironAjaxEl.url = nodeIds[nodeId];
-      //and generate the promise.
-      ironAjaxEl.generateRequest();
+        ironAjaxEl.url = nodeIds[nodeId];
+        //and generate the promise.
+        ironAjaxEl.generateRequest();
     } else {
       deferred.resolve({ data: [], meta: { parentId: nodeId } });
     }
@@ -467,9 +467,9 @@
    */
   var lightDomLoaded = function() {
     var localElementDemo = Polymer.dom(document).querySelector('local-element-demo'),
-      interactive = Polymer.dom(localElementDemo.root).querySelector('px-demo-interactive'),
-      component = Polymer.dom(interactive).querySelector('px-demo-component'),
-      colBrowser = Polymer.dom(component).querySelector('px-context-browser');
+        interactive = Polymer.dom(localElementDemo.root).querySelector('px-demo-interactive'),
+        component = Polymer.dom(interactive).querySelector('px-demo-component'),
+        colBrowser = Polymer.dom(component).querySelector('px-context-browser');
 
     //context browser requires us to configure this object under handlers.
     colBrowser.handlers = {
