@@ -45,8 +45,6 @@
 
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
-        <input id="multiSelect" class="btn btn--primary" type="button" value="Open Multi Select"
-               on-click="_openContextBrowser" hidden$="{{ !props.multiSelectAllowed.value }}">
         <div style="width: 600px;">
           <px-context-browser
             label-field="[[props.labelField.value]]"
@@ -58,6 +56,8 @@
             opened-item-name="[[props.openedItemName.value]]"
             disabled="[[props.disabled.value]]"
             multi-select-allowed="[[props.multiSelectAllowed.value]]"
+            select-all="[[props.selectAll.value]]"
+            limit="[[props.limit.value]]"
             disable-infinite-scroll="[[props.disableInfiniteScroll.value]]"
             ></px-context-browser>
         </div>
@@ -321,7 +321,7 @@
       limit: {
         type: Boolean,
         defaultValue: 10,
-        inputType: 'text'
+        inputType: 'number'
       },
       disabled: {
         type: Boolean,

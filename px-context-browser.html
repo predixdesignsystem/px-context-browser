@@ -129,7 +129,7 @@ Custom property | Description | Default
                 </li>
               </template>
               <li hidden$="[[!multiSelectAllowed]]" class="float--right" style="padding-right:10px">
-                <span hidden$="{{_computeHidden(limit)}}"><i> Selection is limited to [[limit]] items</i></span>
+                <span hidden$="[[_showLimit(limit)]]"><i> Selection is limited to [[limit]] items</i></span>
                 <button type="button" class="btn btn--primary" on-click="addClickHandler" key$="[[getItemId(item)]]">Add
                 </button>
               </li>
@@ -143,7 +143,7 @@ Custom property | Description | Default
                     <div class="head">{{item.header}}</div>
                     <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
                       <template is="dom-if" if="[[showColumnTypeahead]]">
-                      <span class$="[[getClassSelectAll(showColumnTypeahead)]]" hidden$="{{_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)}}">
+                      <span class$="[[getClassSelectAll(showColumnTypeahead)]]" hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]">
                        <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
                               on-click="_selectAllItems" id$="[[getItemId(item)]]">
                       </span>
@@ -152,7 +152,7 @@ Custom property | Description | Default
                         </div>
                       </template>
                       <template is="dom-if" if="[[!showColumnTypeahead]]">
-                      <span hidden$="{{_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)}}" class$="[[getClassSelectAll(showColumnTypeahead)]]">
+                      <span hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]" class$="[[getClassSelectAll(showColumnTypeahead)]]">
                        <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
                               on-click="_selectAllItems" id$="[[getItemId(item)]]">
                       </span>
@@ -178,7 +178,7 @@ Custom property | Description | Default
                                   <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
                                 </template>
                               </template>
-                              <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
+                              <button hidden$="[[multiSelectAllowed]]" class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
                               </button>
                               <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
                                 <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
@@ -282,7 +282,7 @@ Custom property | Description | Default
          */
         selectedItems: {
           type: Array,
-          value: function() {return [];}
+          value: function() {return {};}
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -362,7 +362,7 @@ Custom property | Description | Default
           value: false
         },
         /**
-         * This is related to selectAll
+         * This is an option to selectAll,
          * limit the 'select all' to select number of items
          *
          * @type {Number Optional}
@@ -652,9 +652,10 @@ Custom property | Description | Default
        */
       addClickHandler: function(evt) {
         evt.stopPropagation();
-        if (this.selectedItems && this.handlers.itemAddHandler) {
+        const items = Object.values(this.selectedItems);
+        if (items && this.handlers.itemAddHandler) {
           this.toggleColumnBrowser();
-          this.handlers.itemAddHandler(this.selectedItems);
+          this.handlers.itemAddHandler(items);
         }
       },
       /**
@@ -1148,18 +1149,15 @@ Custom property | Description | Default
        */
       _itemsSelected: function(evt) {
         evt.stopPropagation();
-        if (evt.target.checked && this.limit !== 0 && this.limit === this.selectedItems.length) {
+        if (evt.target.checked && this.limit !== 0 && this.limit === Object.values(this.selectedItems).length) {
           evt.preventDefault();
           return false;
         }
 
         if (evt.target.checked) {
-          this.selectedItems.push(evt.model.item);
+          this.selectedItems[evt.target.id] = evt.model.item;
         } else {
-          for (let i = 0; i < this.selectedItems.length; i++) {
-            //if (this.selectedItems[i].)
-          }
-          this.splice(this.selectedItems, evt.model.item);
+          delete this.selectedItems[evt.target.id];
         }
       },
 
@@ -1188,7 +1186,7 @@ Custom property | Description | Default
        * @returns {boolean}
        * @private
        */
-      _computeHidden: function(limit) {
+      _showLimit: function(limit) {
         if (!limit || limit === 0){
           return true;
         }
@@ -1210,7 +1208,8 @@ Custom property | Description | Default
       },
       _clearSelected : function() {
         if (this.showColumnBrowser) {
-          this.splice("selectedItems", 0, this.selectedItems.length);
+          //this.splice("selectedItems", 0, this.selectedItems.length);
+          this.selectedItems = {};
           let checkedBoxes = document.querySelectorAll('.multi-select-chk');
           for (let i = 0; i < checkedBoxes.length; i++) {
             checkedBoxes[i].checked = false;
