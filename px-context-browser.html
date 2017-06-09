@@ -282,7 +282,8 @@ Custom property | Description | Default
          */
         selectedItems: {
           type: Array,
-          value: function() {return {};}
+          value: function() {return {};},
+          notify: true
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -1148,16 +1149,18 @@ Custom property | Description | Default
        *
        */
       _itemsSelected: function(evt) {
+        var normalizedEvt = Polymer.dom(evt).event;
         evt.stopPropagation();
-        if (evt.target.checked && this.limit !== 0 && this.limit === Object.values(this.selectedItems).length) {
+        //evt.target is now normalizedEvt.rootTarget
+        if (normalizedEvt.target.checked && this.limit !== 0 && this.limit === Object.values(this.selectedItems).length) {
           evt.preventDefault();
           return false;
         }
 
-        if (evt.target.checked) {
-          this.selectedItems[evt.target.id] = evt.model.item;
+        if (normalizedEvt.target.checked) {
+          this.selectedItems[normalizedEvt.target.id] = evt.model.item;
         } else {
-          delete this.selectedItems[evt.target.id];
+          delete this.selectedItems[normalizedEvt.target.id];
         }
       },
 
@@ -1167,7 +1170,9 @@ Custom property | Description | Default
        *
        */
       _selectAllItems: function(evt) {
-        const cls = evt.target.className;
+        var normalizedEvt = Polymer.dom(evt).event;
+        //evt.target is now normalizedEvt.rootTarget
+        const cls = normalizedEvt.target.className;
         const re = /level-[0-9]*/i;
         const clsFound = cls.match(re);
         let all = document.querySelector('span.'+clsFound);

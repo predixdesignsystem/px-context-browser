@@ -38,6 +38,7 @@
   },
   "suites": [
     "test/px-context-browser-test-fixture.html",
-    "test/px-context-browser-typeahead-test-fixture.html"
+    "test/px-context-browser-typeahead-test-fixture.html",
+    "test/px-context-browser-multiselect-test.html"
   ]
 }
