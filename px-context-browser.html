@@ -144,7 +144,7 @@ Custom property | Description | Default
                     <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
                       <template is="dom-if" if="[[showColumnTypeahead]]">
                       <span class$="[[getClassSelectAll(showColumnTypeahead)]]" hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]">
-                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
+                       <input class$="level-{{index}}" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}"
                               on-click="_selectAllItems" id$="[[getItemId(item)]]">
                       </span>
                         <div class$="[[getClassMultiSelectAll(multiSelectAllowed, selectAll)]]">
@@ -153,7 +153,7 @@ Custom property | Description | Default
                       </template>
                       <template is="dom-if" if="[[!showColumnTypeahead]]">
                       <span hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]" class$="[[getClassSelectAll(showColumnTypeahead)]]">
-                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}"
+                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}" checked$="[[_isChecked(item)]]"
                               on-click="_selectAllItems" id$="[[getItemId(item)]]">
                       </span>
                       </template>
@@ -162,18 +162,18 @@ Custom property | Description | Default
                           <template is="dom-repeat" id="level" items="{{item.children}}">
                             <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
                               <template is="dom-if" if="[[!showColumnTypeahead]]">
-                                <input hidden$="[[ !multiSelectAllowed ]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                <input hidden$="[[ !multiSelectAllowed ]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
                                        on-click="_itemsSelected" name="{{item.name}}">
                                 <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
                               </template>
                               <template is="dom-if" if="[[showColumnTypeahead]]">
                                 <template is="dom-if" if="[[!item.searchTerm]]">
-                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
                                          on-click="_itemsSelected" name="{{item.name}}">
                                   <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
                                 </template>
                                 <template is="dom-if" if="{{item.searchTerm}}">
-                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
                                          on-click="_itemsSelected" name="{{item.name}}">
                                   <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
                                 </template>
@@ -277,11 +277,21 @@ Custom property | Description | Default
         /**
          * This is used when multiSelectAllowed is true. This stores the selected items into an array.
          * must be initially empty for polymer to determine the correct classes for ULs and LIs if there's not selected Asset
-         * @type {Array}
-         * @default empty array
+         * @type {Object}
+         * @default empty Object
          */
         selectedItems: {
-          type: Array,
+          type: Object,
+          value: function() {return {};},
+          notify: true
+        },
+        /**
+         * This is used when multiSelectAllowed & selectAll is true. This is to keep tract of the 'select all' click
+         * @type {Object}
+         * @default empty Object
+         */
+        selectAllChkbox: {
+          type: Object,
           value: function() {return {};},
           notify: true
         },
@@ -1183,6 +1193,12 @@ Custom property | Description | Default
             chkBoxes[i].click();
           }
         }
+
+        if (normalizedEvt.target.checked) {
+          this.selectAllChkbox[normalizedEvt.target.id] = evt.model.item;
+        } else {
+          delete this.selectAllChkbox[normalizedEvt.target.id];
+        }
       },
 
       /**
@@ -1220,6 +1236,11 @@ Custom property | Description | Default
             checkedBoxes[i].checked = false;
           }
         }
+      },
+
+      _isChecked: function(item) {
+        const id = this.getItemId(item);
+        return (this.selectedItems[id] || this.selectAllChkbox[id]) ? true: false;
       }
     });
 </script>
