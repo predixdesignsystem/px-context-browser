@@ -26,11 +26,11 @@
       </template>
       <!-- List -->
       <px-context-browser-list slot="body">
-        <div slot="items">
+        <div slot="items" id="items">
           <template is="dom-repeat" items="[[_columns]]" as="column">
-            <div class$="column {{column.classNames}}">
-              <template is="dom-repeat" items="[[column.items]]" as="item">
-                <px-context-browser-item label="[[item.label]]" can-favorite can-select can-open></px-context-browser-item>
+            <div class$="column [[column.classNames]]">
+              <template is="dom-repeat" items="[[column.items]]" as="item" column$="[[index]]">
+                <px-context-browser-item label="[[item.label]]" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
               </template>
             </div>
           </template>
@@ -59,15 +59,17 @@
 
       _activeColumn: {
         type: Number,
-        value: 0
+        value: 0,
+        observer: '_activeColumnChanged'
       }
     },
 
     listeners: {
-      'px-app-asset-graph-created' : '_activeRootColumn'
+      'px-app-asset-graph-created' : '_addRootColumn',
+      'px-app-asset-activated' : '_updateActiveColumn'
     },
 
-    _activeRootColumn() {
+    _addRootColumn() {
       this.splice('_columns', 0, 1, {
         index: 0,
         classNames: 'column--active',
@@ -87,6 +89,60 @@
       //   type: 'splice'
       // }]);
       // this.notifyPath('_columns.#0.name');
+    },
+
+    _updateActiveColumn(evt) {
+      let {item, path} = evt.detail;
+      let splices = [];
+
+      for (let i=0; i<path.length; i++) {
+        let column = this._columns[i+1];
+        if (typeof column !== 'object' || typeof column.items !== 'object' || column.items !== path[i].children) {
+          splices.push({
+            index: i+1,
+            addedCount: 1,
+            removed: column ? column : {},
+            object: this._columns,
+            type: 'splice'
+          });
+
+          this._columns[i+1] = {
+            index: i+1,
+            classNames: '',
+            items: path[i].children
+          };
+        }
+      }
+
+      if (splices.length > 0) {
+        this.notifySplices('_columns', splices);
+      }
+
+      this._activeColumn = path.length;
+    },
+
+    _activeColumnChanged(newColumnIndex) {
+      if (typeof this._columns !== 'object') return;
+
+      for (let column of this._columns) {
+        if (column.index !== newColumnIndex && column.classNames.indexOf('column--active') > -1) {
+          column.classNames = column.classNames.replace('column--active', '').replace(/\s\s/, '');
+          this.notifyPath(`_columns.#${column.index}.classNames`);
+        }
+        if (column.index === newColumnIndex && column.classNames.indexOf('column--active') === -1) {
+          column.classNames = `${column.classNames} column--active`;
+          this.notifyPath(`_columns.#${column.index}.classNames`);
+        }
+      }
+    },
+
+    _handleItemTapped(evt) {
+      const $root = Polymer.dom(evt).path[0];
+      const action = $root.getAttribute('asset-action');
+      const item = evt.model.item;
+      if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
+        this.fire('px-app-asset-should-be-activated', {item:item}, {cancelable:true});
+      }
     }
   })
 </script>
