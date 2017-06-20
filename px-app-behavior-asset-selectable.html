@@ -1,0 +1,230 @@
+<script>
+  (function() {
+    'use strict';
+
+    /* Ensures the behavior namespace is created */
+    window.PxAppBehavior = (window.PxAppBehavior || {});
+
+    /**
+     *
+     *
+     * @polymerBehavior PxAppBehavior.AssetSelectable
+     */
+    PxAppBehavior.AssetSelectable = {
+      properties: {
+        /**
+         * A reference to the currently selected item. Use this property to set the
+         * selected item directly. The object passed to this property must be a
+         * direct reference to one of the `items` objects. Changing this property
+         * will automatically update the `selectedRoute`.
+         *
+         * See `selectedRoute` for an alternative way to select items.
+         */
+        selected: {
+          type: Object,
+          notify: true,
+          value: null,
+          observer: '_assetSelectedByReference'
+        },
+
+        /**
+         * The route to the selected item as an array of strings. Use this property
+         * to set the selected item by route, or to bind to updates when the
+         * selected item is changed. Changing this property will automatically
+         * update the `selected` item.
+         *
+         * The route array starts at the top of the graph and ends with the selected
+         * item. Each route entry is a string that corresponds to the unique ID
+         * of an item. The item property this unique ID will be taken from can be
+         * configured with the `key` property. By default, it will be `item.id`.
+         *
+         *
+         * For example, given the following graph:
+         *
+         *     [
+         *       {
+         *         "label" : "Dashboards",
+         *         "id" : "dash",
+         *         "children" : [
+         *           { "label" : "Truck Statuses", "id" : "trucks" },
+         *           { "label" : "Generator Alerts", "id" : "generators" }
+         *         ]
+         *       },
+         *     ]
+         *
+         * To select the "Truck Statuses" page, set the route array to:
+         *
+         *     ["dash", "trucks"]
+         *
+         * If the user then selects the "Generator Alerts" item, the route array
+         * would be replaced with a new array with the following entries:
+         *
+         *     ["dash", "generators"]
+         *
+         */
+        selectedRoute: {
+          type: Array,
+          notify: true,
+          observer: '_assetSelectedByRoute'
+        },
+
+        /**
+         * [Read-only] The path to the selected item as an array. Begins with
+         * the top-most item in the graph and ends with the selected item. It
+         * the selected item is at the top of the graph, the array will include
+         * only the selected item.
+         *
+         * If no item is selected, set to null.
+         */
+        selectedPath: {
+          type: Array,
+          notify: true,
+          readOnly: true,
+          value: null
+        },
+
+        /**
+         * [Read-only] A reference to the currently selected item's parent. `null`
+         * if the selected item has no parent or no item is selected.
+         */
+        selectedParent: {
+          type: Object,
+          notify: true,
+          readOnly: true,
+          value: null
+        },
+
+        /**
+         * [Read-only] A reference to the currenty selected item's siblings - the
+         * children of its parent. Array with only the selected item if the selected
+         * item has no siblings. `null` if no item is selected.
+         */
+        selectedSiblings: {
+          type: Array,
+          notify: true,
+          readOnly: true,
+          value: null
+        },
+
+        /**
+         * [Read-only] A reference to the currently selected item's children.
+         * Empty array (`[]`) if the selected item has no children. `null` if no
+         * item is selected.
+         */
+        selectedChildren: {
+          type: Array,
+          notify: true,
+          readOnly: true,
+          value: null
+        }
+      },
+
+      created() {
+        this._lastSelection = {
+          source: null,
+          reason: null,
+          item: null
+        };
+      },
+
+      listeners: {
+        'px-app-asset-should-be-selected' : '_assetSelectedByEvent'
+      },
+
+      /**
+       * Handles selection from events fired by children. The event `detail.item`
+       * should be a reference an item in the asset graph.
+       */
+      _assetSelectedByEvent(evt) {
+        evt.stopPropagation();
+        if (evt.detail.item) {
+          this._selectAsset(evt.detail.item, 'DOM_EVENT');
+        }
+      },
+
+      /**
+       * Updates the selected item when the `selectedRoute` changes.
+       */
+      _assetSelectedByRoute(route) {
+        if (!route || this._lastSelection.route === route) return;
+
+        const item = this._assetGraph.getNodeAtRoute(route);
+        if (item) {
+          this._selectAsset(item, 'ROUTE_CHANGED');
+        } else {
+          throw new Error(`The route ${JSON.stringify(route)} could not be found in the items graph.`)
+        }
+      },
+
+      /**
+       * Updates other selected item properties when `selected` changes.
+       */
+      _assetSelectedByReference(item) {
+        if (!item || this._lastSelection.item === item) return;
+
+        if (this._assetGraph.hasNode(item)) {
+          this._selectAsset(item, 'ITEM_CHANGED');
+        } else {
+          throw new Error(`The following item could not be found in the items graph:
+          ${JSON.stringify(item)}`)
+        }
+      },
+
+      /**
+       * Gets item metadata from the AssetGraph and updates internaly APIs
+       */
+      _selectAsset(item, source) {
+        const {path, route, parent, children, siblings} = this._assetGraph.getNodeInfo(item);
+        this._lastSelection = {
+          item: item,
+          source: source,
+          route: route
+        }
+        if (this.selected !== item) {
+          this.set('selected', item);
+        }
+        this.set('selectedRoute', route);
+        this._setSelectedPath(path);
+        this._setSelectedParent(parent);
+        this._setSelectedChildren(children);
+        this._setSelectedSiblings(siblings);
+
+        this.fire('px-app-asset-selected', {
+          source: source,
+          item: item,
+          route: route,
+          path: path,
+          parent: parent,
+          children: children,
+          siblings: siblings
+        });
+      }
+      /**
+       * Fired when a new item is selected. Includes details about how the item
+       * was selected, and information about the new selected item.
+       *
+       * The `source` property is a string describing what triggered
+       * the selection:
+       *
+       *   * 'DOM_EVENT' - the user interacted with an item and selected it
+       *   * 'ROUTE_CHANGED' - the array bound to `selectedRoute` changed
+       *   * 'ITEM_CHANGED' - the object bound to `selected` changed
+       *   * 'METHOD' - the `select()` method was called
+       *   * 'ROUTE_METHOD' - the `selectRoute()` method was called
+       *
+       * The event will have the following properties:
+       *
+       *   * {Object} detail - Contains the event details
+       *   * {String} detail.source - Info about the change trigger, see above
+       *   * {Object} detail.item - Reference to the selected item
+       *   * {Array} detail.route - Route from the top of the graph to the selected item
+       *   * {Array} detail.path - Path from the top of the graph to the selected item
+       *   * {Object|null} detail.parent - Reference to the selected item's parent, or null if no parent defined
+       *   * {Array} detail.children - Reference to the the selected item's children, or an empty array if no children defined
+       *   * {Array} detail.siblings - Reference to the the selected item's siblings, or an array with only the selected item if no siblings defined
+       *
+       * @event px-app-asset-selected
+       */
+    };
+  })();
+</script>

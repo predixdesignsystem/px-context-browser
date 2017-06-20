@@ -1,6 +1,8 @@
 <link rel="import" href="../polymer/polymer.html"/>
 
-<link rel="import" href="px-app-behavior-context-graph.html"/>
+<link rel="import" href="px-app-behavior-asset-graph.html"/>
+<link rel="import" href="px-app-behavior-asset-browsable.html"/>
+<link rel="import" href="px-app-behavior-asset-selectable.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
 <link rel="import" href="px-context-browser-header.html"/>
 <link rel="import" href="px-context-browser-list.html"/>
@@ -8,12 +10,29 @@
 
 <dom-module id="px-context-browser">
   <template>
+    <style>
+      .column {
+        display: none;
+      }
+      .column--active {
+        display: block;
+      }
+    </style>
+
     <px-context-browser-panel>
-      <px-context-browser-header slot="header" label="Foo"></px-context-browser-header>
+      <!-- Header -->
+      <template is="dom-if" if="[[active]]">
+        <px-context-browser-header slot="header" label="[[active.label]]"></px-context-browser-header>
+      </template>
+      <!-- List -->
       <px-context-browser-list slot="body">
         <div slot="items">
-          <template is="dom-repeat" items="[[items.0.children]]">
-            <px-context-browser-item label="[[item.label]]" can-favorite can-select can-open></px-context-browser-item>
+          <template is="dom-repeat" items="[[_columns]]" as="column">
+            <div class$="column {{column.classNames}}">
+              <template is="dom-repeat" items="[[column.items]]" as="item">
+                <px-context-browser-item label="[[item.label]]" can-favorite can-select can-open></px-context-browser-item>
+              </template>
+            </div>
           </template>
         </div>
       </px-context-browser-list>
@@ -23,228 +42,51 @@
 <script>
   Polymer({
     is: 'px-context-browser',
-    behaviors: [PxAppBehavior.ContextGraph],
+
+    behaviors: [
+      PxAppBehavior.AssetGraph,
+      PxAppBehavior.AssetSelectable,
+      PxAppBehavior.AssetBrowsable
+    ],
+
     properties: {
-      /**
-       * An array of objects that will be used to build the nav. Top-level items
-       * can optionally have one level of children beneath them, turning the
-       * top-level item into a dropdown group.
-       *
-       * Selecting an item automatically selects its parent if it has one.
-       * For the navigation, top-level items with children cannot be selected
-       * directly - instead, users can select a child item and its parent will
-       * also be marked as selected (and set as the `selectedItemParent`).
-       *
-       * All items should have at least the following properties:
-       *
-       * - {String} id - A unique string that identifies the item. Should only
-       * contain valid ASCII characters. Its recommended to only use URI-safe
-       * characters to allow for easy binding to the URL. Examples: 'home' or 'alerts'
-       * - {String} label - A short, human-readable text label for the item.
-       *
-       * The following optional properties can be used:
-       *
-       * - {Array} children - An array of subitem objects that are children of
-       * the item. Each child item should also have an `id` and `label`, and
-       * may have its own child items.
-       *
-       * The following is an example of a list of valid nav items:
-       *
-       *     [
-       *       { "label" : "Home",   "id" : "home" },
-       *       { "label" : "Alerts", "id" : "alerts" },
-       *       { "label" : "Assets", "id" : "assets", "children": [
-       *         { "label" : "Asset #1", "id" : "a1" },
-       *         { "label" : "Asset #2", "id" : "a2" }
-       *       ] }
-       *     ]
-       *
-       * The item property names can be changed, e.g. to choose a different item
-       * property to serve as a unique ID. See the `keys` property for details.
-       */
-      items: {
-        type: Array
-      },
-
-      /**
-       * A reference to the currently selected item. Use this property to set the
-       * selected item directly. The object passed to this property must be a
-       * direct reference to one of the `items` objects. Changing this property
-       * will automatically update the `selectedRoute`.
-       *
-       * See `selectedRoute` for an alternative way to select items.
-       */
-      selected: {
-        type: Object,
-        notify: true,
-        value: null,
-        observer: '_itemSelectedByReference'
-      },
-
-      /**
-       * The route to the selected item as an array of strings. Use this property
-       * to set the selected item by route, or to bind to updates when the
-       * selected item is changed. Changing this property will automatically
-       * update the `selected` item.
-       *
-       * The route array starts at the top of the graph and ends with the selected
-       * item. Each route entry is a string that corresponds to the unique ID
-       * of an item. The item property this unique ID will be taken from can be
-       * configured with the `key` property. By default, it will be `item.id`.
-       *
-       *
-       * For example, given the following graph:
-       *
-       *     [
-       *       {
-       *         "label" : "Dashboards",
-       *         "id" : "dash",
-       *         "children" : [
-       *           { "label" : "Truck Statuses", "id" : "trucks" },
-       *           { "label" : "Generator Alerts", "id" : "generators" }
-       *         ]
-       *       },
-       *     ]
-       *
-       * To select the "Truck Statuses" page, set the route array to:
-       *
-       *     ["dash", "trucks"]
-       *
-       * If the user then selects the "Generator Alerts" item, the route array
-       * would be replaced with a new array with the following entries:
-       *
-       *     ["dash", "generators"]
-       *
-       */
-      selectedRoute: {
+      _columns: {
         type: Array,
-        notify: true,
-        observer: '_itemSelectedByRoute'
-      },
-
-      /**
-       * [Read-only] The path to the selected item as an array. Begins with
-       * the top-most item in the graph and ends with the selected item. It
-       * the selected item is at the top of the graph, the array will include
-       * only the selected item.
-       *
-       * If no item is selected, set to null.
-       */
-      selectedPath: {
-        type: Array,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-
-      /**
-       * [Read-only] A reference to the currently selected item's parent. `null`
-       * if the selected item has no parent or no item is selected.
-       */
-      selectedParent: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-
-      /**
-       * [Read-only] A reference to the currenty selected item's siblings - the
-       * children of its parent. Array with only the selected item if the selected
-       * item has no siblings. `null` if no item is selected.
-       */
-      selectedSiblings: {
-        type: Array,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-
-      /**
-       * [Read-only] A reference to the currently selected item's children.
-       * Empty array (`[]`) if the selected item has no children. `null` if no
-       * item is selected.
-       */
-      selectedChildren: {
-        type: Array,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-
-      active: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-      activeRoute: {
-        type: Array,
-        notify: true,
-        readOnly: true
-      },
-      activePath: {
-        type: Array,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-      activeParent: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-      activeSiblings: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-      activeChildren: {
-        type: Object,
-        notify: true,
-        readOnly: true,
-        value: null
-      },
-
-      /**
-       * Changes the item properties (keys) that will be used internally to find
-       * each item's unique ID, label, and child list.
-       *
-       * Use this property if you already have a predefined data schema for your
-       * application and want to customize this component to match your schema.
-       * Otherwise, its recommended to leave the defaults.
-       *
-       * The following properties can be set:
-       *
-       * - id: [default='id'] a unique ID for the item
-       * - label: [default='label'] a human-readable label
-       * - children: [default='children'] an array of child items
-       *
-       * If you want to configure any keys, you must set all the keys. If any
-       * of the keys are not defined, the navigation will fail.
-       *
-       * For example, the schema could be changed to the following:
-       *
-       *     {
-       *       "id" : "assetId",
-       *       "label" : "assetName",
-       *       "children" : "subAssets"
-       *     }
-       *
-       */
-      keys: {
-        type: Object,
         value: function() {
-          return {
-            'id' : 'id',
-            'icon' : 'icon',
-            'children' : 'children',
-            'route' : 'route'
-          }
+          return [];
         }
+      },
+
+      _activeColumn: {
+        type: Number,
+        value: 0
       }
+    },
+
+    listeners: {
+      'px-app-asset-graph-created' : '_activeRootColumn'
+    },
+
+    _activeRootColumn() {
+      this.splice('_columns', 0, 1, {
+        index: 0,
+        classNames: 'column--active',
+        items: this.items
+      });
+      // var prevCol = this._columns[0];
+      // this._columns[0] = {
+      //   index: 0,
+      //   name: 'foo',
+      //   items: this.items
+      // };
+      // this.notifySplices('_columns', [{
+      //   index: 0,
+      //   removed: prevCol,
+      //   addedCount: 1,
+      //   object: this._columns,
+      //   type: 'splice'
+      // }]);
+      // this.notifyPath('_columns.#0.name');
     }
   })
 </script>
