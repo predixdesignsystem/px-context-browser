@@ -1,0 +1,74 @@
+<!-- Action: Select -->
+<dom-module id="px-context-browser-action-select">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      svg {
+        fill: none;
+      }
+      :host(:hover) svg,
+      :host([active]) svg {
+        fill: var(--px-context-browser-action-select-fill, yellowgreen);
+      }
+    </style>
+
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;">
+      <g id="open" transform="translate(1 1)">
+        <circle style="stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" cx="14.8" cy="14.8" r="14.2"/>
+        <polyline style="stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" points="13.3,8.6 20.9,8.6 20.9,16.2"/>
+        <line style="stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" x1="9.3" y1="20.2" x2="20.4" y2="9.1"/>
+      </g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-select'
+  });
+</script>
+
+<!-- Action: Favorite -->
+<dom-module id="px-context-browser-action-favorite">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      svg {
+        fill: none;
+      }
+      :host(:hover) svg,
+      :host([active]) svg {
+        fill: var(--px-context-browser-action-favorite-fill, yellow);
+      }
+    </style>
+
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;">
+      <g id="favorite"><polygon style="stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" points="15.2,1.6 18.4,11.5 28.8,11.5 20.4,17.6 23.6,27.5 15.2,21.4 6.7,27.5 10,17.6 1.5,11.5 12,11.5 "/></g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-favorite'
+  });
+</script>
+
+<!-- Action: Open -->
+<dom-module id="px-context-browser-action-open">
+  <template>
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" style="pointer-events: none; display: block; width: 100%; height: 100%;">
+      <g id="arrow-right" transform="translate(1 8)"><polyline class="stroke" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" points="21.2,15.9 29,8.1 21.2,0.4 "/><line class="stroke" style="fill:none;stroke:currentColor;stroke-linejoin:round;stroke-width:2px;" x1="28.3" y1="8.1" x2="0" y2="8.1"/></g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-open'
+  });
+</script>

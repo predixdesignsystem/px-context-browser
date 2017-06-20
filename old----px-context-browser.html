@@ -1,0 +1,1030 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. ui tests, examples), we assume the server is started with
+    'grunt depserve' (or similar server setup) to enable correct finding of bower dependencies for local runs
+-->
+<!--suppress HtmlUnknownTarget -->
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-spinner/px-spinner.html"/>
+<link rel="import" href="../px-polymer-font-awesome/polymer-font-awesome.html" />
+<link rel="import" href="px-context-browser-typeahead.html" />
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html">
+<style>
+  [dir=rtl] .fa.px-context-browser {
+    -webkit-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+  }
+
+  [dir=rtl] .fa.px-context-browser {
+    -webkit-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+  }
+</style>
+
+<!--
+Context browser element.  See the demo page (demo.html) for a working example.
+
+## Usage
+Minimum:
+
+    <px-context-browser browser-context={{browserContext}}></px-context-browser>
+
+Advanced:
+
+    <px-context-browser label-field="description"
+                        id-field="identifier"
+                        browser-context={{browserContext}}
+                        show-chevron="true">
+    </px-context-browser>
+
+### Code on Your Page
+
+Define how your data will come in using these methods:
+
+    window.addEventListener('WebComponentsReady', function() {
+        var colBrowser = document.querySelector('px-context-browser');
+        colBrowser.handlers = {
+          getChildren: function(parent) {
+            return demoGetChildren(parent);
+          },
+          itemOpenHandler: function(context) {
+            console.log('Opened: ', context);
+          }
+        };
+    });
+## Passing Context
+
+There are two ways of passing data into the context browser:
+1. Initial Context (initialContext.json file)
+2. Direct Context (directContext.json file)
+
+### Initial Context
+With Initial context you only pass the first level (i.e. the left column). No children are expected - the (customizable) handlers.getChildren callback is relied upon to retrieve further children. Please see the initialContext.json file for an example.
+
+### Direct Context
+This method expects 2 things to be true:
+1. One of the objects in the json file has a "selectedAsset" property set to true.
+2. The objects passed in are ONLY IN THE DIRECT PATH OF THE SELECTED ASSET. This is done to ensure the context browser loads only what's needed, as opposed to (possible) 1000s of items. Siblings along the path are accepted, but children of siblings are neither expected nor accepted. Please see the directContext.json file for an example.
+
+## Styling
+The following custom properties are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-cb-background-z-index` | The z-index for the context browser | `5`
+`--px-cb-background-color` | Background color for the header and panel | `$white`
+`--px-cb-modal-color` | Color to be used (with transparency) for the modal overlay | `$black`
+`--px-cb-scrollbar-track-color` | Color of the scrollbar track (background) | `$gray2`
+`--px-cb-scrollbar-thumb-color` | Color of the scrollbar thumb control | `$gray7`
+`--px-cb-border-color` | Color for borders above and below breadcrumb area | `$gray7`
+`--px-cb-background-color--selected` | Background color of the primary selected node | `$select-blue-default`
+`--px-cb-text-color--selected` | Text color of the primary selected node and OPEN button text/border | `$white`
+`--px-cb-background-color---secondary` | Background color of the primary selected node's parents and grandparents | `$gray2`
+`--px-cb-spinner-z-index` | The z-index for the spinner embedded in the context browser | `10`
+
+
+@element px-context-browser
+@blurb Context browser element
+@homepage index.html
+@demo index.html
+-->
+
+<link rel="import" href="css/px-context-browser-styles.html">
+
+<dom-module id="px-context-browser">
+  <!--
+  <link rel="import" type="css" href="css/px-context-browser.css" polyfill-next-selector/>
+  -->
+  <template>
+    <!-- style mixin using @apply -->
+    <style include="px-context-browser-styles">
+      :host {@apply(--px-context-browser)}
+    </style>
+
+
+    <div id="modal" on-click="toggleColumnBrowser" class$="{{isItemHidden(showColumnBrowser)}}"></div>
+    <div id="back">
+      <div class="column-browser-container flex flex--col">
+        <header class="flex u-pl" id="selectContext">
+          <div class="content-wrapper">
+            <div>
+              <content></content>
+            </div>
+          </div>
+          <div class="flex__item--middle">
+            <h1 class="epsilon caps weight--normal u-m0" on-click="toggleColumnBrowser">
+              <span class$="context-browser-disabled-{{disabled}}">{{openedItemName}}</span>
+              <iron-icon icon="fa:fa-caret-down" hidden$="{{disabled}}"></iron-icon>
+            </h1>
+            <span class$="context-browser-disabled-{{disabled}}">{{selectedItemParent}}</span>
+          </div>
+        </header>
+        <div id="ruler" class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
+          <div class$="{{isItemHidden(showColumnBrowser)}} flex flex--col">
+            <ul class="breadcrumbs list-inline list-inline--delimited u-pv-">
+              <template is="dom-repeat" id="breadcrumbs" items="{{parentNodes}}">
+                <li class$="u-pv--">
+                  <span class="breadcrumb" on-click="handleBreadcrumbClick">{{_getItemLabel(item)}}</span>
+                </li>
+              </template>
+            </ul>
+            <div class="flex flex--col column-browser" id="columnBrowser">
+              <px-spinner finished></px-spinner>
+              <div class$="{{_redrawColumns(resize)}}">
+                <template is="dom-repeat" id="levels" items="{{parentNodes}}">
+                  <div class="flex flex--col column push" data-column>
+                    <div class="head">{{item.header}}</div>
+                    <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
+                    <template is="dom-if" if="[[showColumnTypeahead]]">
+                      <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
+                    </template>
+                      <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
+                        <template is="dom-repeat" id="level" items="{{item.children}}">
+                          <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
+                            <template is="dom-if" if="[[!showColumnTypeahead]]"><span class="flex__item item-label">{{_getItemLabel(item)}}</span></template>
+                            <template is="dom-if" if="[[showColumnTypeahead]]">
+                              <template is="dom-if" if="[[!item.searchTerm]]">
+                                <span class="flex__item item-label">{{_getItemLabel(item)}}</span>
+                              </template>
+                              <template is="dom-if" if="{{item.searchTerm}}">
+                                <span class="flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                              </template>
+                            </template>
+                            <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
+                            </button>
+                            <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
+                              <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
+                            </template>
+                          </li>
+                        </template>
+                      </ul>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <!-- Avoid ruler being part of the structure but being within a container that can enforce its relative size -->
+              <div class="ruler">
+                <!-- Use this as a ruler/measuring-stick to measure the true minimum width. -->
+              </div>
+              <!-- this overlay is for the spinner -->
+              <div class="overlay"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer(
+    {
+      is: 'px-context-browser',
+      behaviors: [
+        Polymer.AppLocalizeBehavior,
+        Polymer.IronResizableBehavior],
+      properties: {
+        /**
+         * Mapping for the field name in the context data that represents the display label for an item. This property allows data of any form/keys to be used as
+         * long as it has the notion of a 'display label' in it.
+         *
+         * @type {String Optional}
+         * @default "name"
+         */
+        labelField: {
+          type: String,
+          value: "name"
+        },
+        /**
+         * Contains the selected item data
+         *
+         * @type {Object}
+         * @default null
+         */
+        selectItem: {
+          type: Object,
+          value: null
+        },
+        /**
+         * Mapping for the field name in the context data that represents a unique id for an item. This property allows data of any form/keys to be used as
+         * long as it has the notion of a 'unique id' in it.
+         * @type {String Optional}
+         *
+         * @default "id"
+         */
+        idField: {
+          type: String,
+          value: "id"
+        },
+        /**
+         * An attribute which expects an Object literal in order to load the context into the browser.
+         * The object can have 1 or more levels of assets, each group should be grouped under a *children* array.
+         * See the explanation above for the two accepted types of context.
+         *
+         * @type {Object Required}
+         * @default Empty Object
+         * ```html
+         *   <px-context-browser
+         *      ...
+         *      browser-context={{browserContext}}>
+         *    </px-context-browser>
+         * ```
+         */
+        browserContext : {
+            value: function() {return {};},
+            type: Object,
+            observer: 'contextChanged'
+        },
+        /**
+         * If we have a selected Item, it's stored here.
+         * must be initially empty for polymer to determine the correct classes for ULs and LIs if there's not selected Asset
+         * @type {Object}
+         * @default ''
+         */
+        selectedItem: {
+          type: Object,
+          value: function() {return {};}
+        },
+        /**
+         * Object defining some or all of the following functions as members:
+         *
+         * ```js
+         * itemOpenHandler: function(item) {}
+         *  // returns special callback behavior when
+         *  // a given context item is opened
+         * itemClickHandler: function(item) {}
+         *   // returns special callback behavior when
+         *   // a given context is selected
+         * getChildren: function (parent, startIndex) {}
+         *   // returns a JavaScript promise that will
+         *   // resolve to children of the item and
+         *   // starting with the given index (to support lazy loading)
+         *```
+         *
+         * @type {Object}
+         */
+        handlers: {
+          value: function(){return {};},
+          type: Object
+        },
+        /**
+         * Hierarchy of items down to currently selected item. used as a property to expose it to the template, but managed internally. Do not set this.
+         *
+         * @type {Array}
+         * @default []
+         * @private
+         */
+        parentNodes: {
+          type: Array,
+          value: function() {return [];} //this is Polmer's way of defining an empty array in properties
+        },
+        /**
+         * Initial context name to be shown on page in the upper left corner.
+         *
+         * @type {String Optional}
+         * @default 'Select Context'
+         */
+        openedItemName: {
+          type: String,
+          value: 'Select Context'
+        },
+        /**
+         * flag to show column browser
+         *
+         * @type {Boolean Optional}
+         * @default false
+         */
+        showColumnBrowser: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * opened item breadcrumb
+         * @type {Array}
+         * @default []
+         * @private
+         */
+        openedBreadcrumbs: {
+          type: Array,
+          value: function() {return [];}
+        },
+        /**
+         * The parent of the selected Item. Is also shown right under the selected item when the context browser is minimized.
+         * @type {String}
+         * @default ''
+         * @private  {true}
+         */
+        selectedItemParent: {
+          type: String,
+          value: ''
+        },
+        /**
+         * This attributes allows you to use the "hasChildren" or "children" properties inside your json, to show the chevron which indicates this item has children. When this attribute is true, it checks for the "hasChildren" or "children" properties inside your object, and if they exist, the chevron - which indicates this item has children - is shown.
+         * @type {Boolean Optional}
+         *
+         * @default false
+         *
+         */
+        showChevron: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        /**
+         * This attributes allows you to enable the search box When this attribute is true
+         * @type {Boolean Optional}
+         *
+         * @default "false"
+         *
+         */
+        showColumnTypeahead: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+        /**
+         * This attributes allows you to disable the context browser
+         * @type {Boolean Optional}
+         *
+         * @default "false"
+         *
+         */
+        disabled: {
+          type: Boolean,
+          value: false
+        },
+        resize: {
+          value: false,
+          type: Boolean,
+          notify: true
+        },
+        disableInfiniteScroll: {
+          type: Boolean,
+          value: false
+        },
+        /**
+        * A valid IETF language tag as a string that `px-localize-behavior` will
+        * use to localize this component. Refer to px-localize-behavior for currently supported languages.
+        *
+        * See https://github.com/PolymerElements/app-localize-behavior for API
+        * documentation and more information.
+        */
+        language: {
+          type: String,
+          value: 'en'
+        },
+        /**
+        * Use the key for localization if value for  language is missing. Should
+        * always be true for  our components
+        */
+        useKeyIfMissing: {
+          type: Boolean,
+          value: true
+        },
+        resources: {
+          type: Object,
+          value: function() {
+            return {
+              'en': {
+                "Open": "Open"
+              }
+            }
+          }
+        }
+      },
+      listeners: {
+        'iron-resize': '_calculateColumnClasses'
+      },
+      ready: function() {
+        var _this = this;
+
+        //use setTimeout to yield for angular databind to populate the handlers
+        setTimeout(function() {
+          //TBD whether we need _this.
+          if (window['angular'] && _this.hasAttributes()) {
+            //if angular exists and was passed 'ngScope:a.b.c' for any attribute, fish object value from current angular scope.
+            var ngScope = angular.element(_this.root).scope();
+            for (var i = 0; i < _this.attributes.length; i++) {
+              _this.resolveNgScopeAttr(ngScope, _this.attributes[i].name, _this.attributes[i].value);
+            }
+          }
+        }, 0);
+      },
+      /**
+      * counts the number of generated divs inside the column browser by filtering out anything that's not a div tag.
+      *
+      * @method _getNumberOfColumns
+      */
+      _getNumberOfColumns: function() {
+         var columnBrowser = this.$.columnBrowser,
+            columnBrowserColumnRuler = Polymer.dom(this).querySelector('.ruler'),
+            columnBrowserColumns = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            $columnBrowserColumns = Polymer.dom(columnBrowserColumns);
+
+        return $columnBrowserColumns.childNodes.filter(
+          function(n) {
+            return n.tagName === 'DIV';
+          })
+          .length;
+      },
+      /**
+      *
+      * this method debounces the iron-resize event, caused by a window resize, flips the value of the resize property, causing Polymer to
+      * to re-calculate the class list for the columns.
+      * @method _resizeEvent
+      */
+      _calculateColumnClasses: function() {
+      this.debounce('cbDraw', function() {
+       this.set('resize', !this.resize);
+      },20);
+      },
+      /**
+      * This method find out how many columns have data in them, and returns a string pf CSS classes
+      * that have two classes in them:
+      * 1. columns-# this represents the number of possible columns in the space allocated to the CB. this is
+      * not the actual number of columns.
+      * 2. column-index-# - this is the index on the columns css "array" which shows the column that should be highlighted
+      * anything column number BELOW the number that is passed will be hidden.
+      * @method _columnIndexClasses
+      * @return {String} the CSS classes for the first div in each column
+      */
+      _redrawColumns: function() {
+        var columnBrowser = this.$.columnBrowser,
+            minimumColumnSizeRuler = Polymer.dom(columnBrowser).querySelector('.ruler'),
+            columnListContainer = Polymer.dom(columnBrowser).querySelector('div:first-of-type'),
+            columnBrowserWidth = columnBrowser.offsetWidth,
+            baseCss = "flex",
+            numOfPossibleColumns,
+            //get the number of columns, counting the number of divs, skipping everything else.
+            numOfColumns = this._getNumberOfColumns();
+
+
+            //we wanna make sure there's an actual size on the column browser
+            if (columnBrowserWidth && minimumColumnSizeRuler.offsetWidth) {
+              // this calculates the number of possible columns available in the column browser based on its width.
+              numOfPossibleColumns = Math.floor(columnBrowserWidth / minimumColumnSizeRuler.offsetWidth);
+            } else {
+              //our width is zero, so no room for columns
+              numOfPossibleColumns = 0;
+            }
+
+          //set the number of possible columns
+          baseCss += ' columns-' + numOfPossibleColumns;
+
+          //if there are more columns then the available space, we want to hide the ones all the way to the left.
+          // this is achieved by specifying the index - the column that has the selected item - any number that is smaller than the
+          // index number is hidden.
+          if  (numOfColumns > numOfPossibleColumns){
+            baseCss += " column-index-" + (numOfColumns - numOfPossibleColumns);
+          }
+          return baseCss;
+      },
+      detached: function () {
+        this.unlisten(document, 'force-re-render', 'reRenderDom'); //remove the listener for re rendering
+      },
+      /**
+       * Event listener on breadcrumb clicks, listener is registered from the template
+       *
+       * @param {Event} evt
+       * @private
+       */
+      handleBreadcrumbClick: function(evt) {
+        var level = this.$.breadcrumbs.indexForElement(evt.target); //"$.breadcrumbs" is id of the template element with a dom-repeat
+        this.selectItem(this.parentNodes[level]);
+      },
+
+      /**
+       * Event listener on item clicks, listener is registered from the template
+       *
+       * @param {Event} evt
+       * @private
+       */
+      itemClickHandler: function(evt) {
+        this.debounce('itemClick', function() {
+          this.selectItem(evt.model.item, evt.currentTarget);
+
+        }, 1);
+      },
+      /**
+       * Event listener on scroll of item panels/columns, listener is registered from the template
+       *
+       * @param {Event} evt
+       * @private
+       */
+      scrollEndHandler: function(evt) {
+
+        //first check if the option is true - if it's not, get out of here.
+        if (this.disableInfiniteScroll) return;
+        //if it is true, debounce it.
+        this.debounce(
+          'scroll-panel', function() {
+            // executes when it hasn't been called for 200ms
+            var _this = this,
+                levelIdx = this.$.levels.indexForElement(evt.target),
+                scrollableHeight = evt.target.scrollHeight,
+                visibleHeight = evt.target.offsetHeight,
+                threshold = 10,
+                hiddenContentHeight = scrollableHeight - visibleHeight;
+
+            if (hiddenContentHeight - evt.target.scrollTop <= threshold) {
+              if (this.handlers.getChildren) {
+                _this.spinner('show');
+                var item = this.parentNodes[levelIdx],
+                    options = {};
+                if (item && item.meta) {
+                  if (item.meta.total) {
+                    if (item.children.length >= item.meta.total) {
+                      _this.spinner('hide');
+                      return;
+                    }
+                    else {
+                      options.rangeStart = item.children.length;
+                    }
+                  }
+                  else {
+                    options = item.meta;
+                  }
+
+                  this.handlers.getChildren(item).then(
+                    function(children) {
+                      _this.spinner('hide');
+                      _this.appendChildren(item, children);
+                    });
+                }
+              }
+            }
+          }, 200);
+      },
+      /**
+       * Event listener on 'open' button of open-able items, listener is registered from the template
+       *
+       * @param {Event} evt
+       * @private
+       */
+      openClickHandler: function(evt) {
+        evt.stopPropagation();
+        if (this.selectedItem && this.handlers.itemOpenHandler) {
+          this.configureBreadcrumbs(evt);
+          this.openedItemName = this.selectedItem.name;
+          this.toggleColumnBrowser();
+          this.handlers.itemOpenHandler(this.selectedItem, this.openedBreadcrumbs);
+        }
+      },
+      /**
+       * Configure the breadcrumb trail from both the parentNode and/or the selected name.
+       *
+       * @param {Event} evt
+       * @private
+       */
+      configureBreadcrumbs: function(evt) {
+        var i,
+            len=this.parentNodes.length;
+        this.openedBreadcrumbs = [];
+        for (i=0; i<len;i++) {
+          if (this._getItemLabel(this.parentNodes[i])) {
+            this.push('openedBreadcrumbs', this._getItemLabel(this.parentNodes[i]));
+          }
+        }
+        //set the selected item's parent for the sudo breadcrumb right below the selected item.
+        this.selectedItemParent = this.openedBreadcrumbs[this.openedBreadcrumbs.length-2];
+      },
+      /**
+       * @param {Object} item
+       * @return {String} Display label for given item
+       * @private
+       */
+      _getItemLabel: function(item) {
+        return item ? item[this.labelField] || '' : '';
+      },
+      /**
+       * @param {Object} item
+       * @return {String} Id for given item
+       * @private
+       */
+      getItemId: function(item) {
+        return item ? item[this.idField] : null;
+      },
+      /**
+       * @param {Object} item
+       * @return {String} openable CSS class for item opener as needed
+       * @private
+       */
+      getItemOpenerClass: function(item) {
+        return (item.isOpenable) ? "openable" : "unopenable";
+      },
+      /**
+       *
+       * @return {String} selected class for item as needed
+       * @private
+       */
+      isItemSelected: function(item, selectedItem) {
+        return (item.inSelectedPath) ? "selected" : '';
+      },
+      /**
+       * Observer on LI, and whether they should show up. replaces polymer hidden, which seems to be shaky with IE.
+       * if base_classes is passed in, it is returned with the appropriate response.
+       *
+       * @param {string} item
+       * param {string} base_classes
+       * @private
+       */
+      isItemHidden: function(item) {
+          if (this.disabled) {
+              return  'visuallyhidden';
+          } else {
+            return (!item) ? "visuallyhidden" : '';
+          }
+      },
+      /**
+       * this method checks whether the attribute hasChildren has been set to true, and if it has,
+       * whether the item has a property by the name of children or hasChildren
+       * @param {object} item
+       * @private
+       */
+      _hasChildren: function(item) {
+        return (this.showChevron) ? (item.hasChildren || item.children) : false;
+      },
+      /**
+       * Observer on context attribute. loads up the initial Context of the browser.
+       *
+       * @private
+       */
+      contextChanged: function() {
+        var _this= this,
+            browserContext = this.browserContext,
+            root= {};
+
+        //initialize/empty out the parentNodes array
+        this.set('parentNodes',[]);
+
+        //initialize/empty out the openedBreadcrumbs array
+        this.set('openedBreadcrumbs',[]);
+
+        this.push('parentNodes', root);
+
+        //add the passed in browser context into root - which was just added into parentNodes
+        this.addChildren(root, browserContext);
+
+        // we want to recursively keep adding children, until we find the selectedAsset
+        //dig into the tree, and keep going while we have children
+        function recursiveAddChildren(childList) {
+          var currentChild;
+          var selectedAssetFound = false;
+          for (var i=0;i< childList.length;i++) {
+            currentChild = childList[i];
+            //first, we check if the item we're on is the selectedAsset
+            if (currentChild.selectedAsset) {
+              //if it is, find the parents and add them into parentNodes
+              _this.addParents(currentChild);
+              //and set the selectableItem
+              _this.set('selectedItem',currentChild);
+              // we make sure to set this to true, so when we loop around again, we know that we've found
+              //the selectedAsset
+              selectedAssetFound = true;
+              // this continue prevents children of the selected asset to be added properly. Clicking on a child
+				// results in a javascript error.
+              // continue;
+            }
+            //in case the currentChild we're on has children, as add them, and recuresively call ourselves.
+            if(Object.keys(currentChild).indexOf('children') > -1 ) {
+              var obj = {"data" : currentChild.children};
+              _this.addChildren(currentChild, obj);
+              if (!selectedAssetFound) { //only call ourselves again if we haven't found the selectedAsset
+                recursiveAddChildren(currentChild.children);
+              }
+            }
+          }
+        }
+        //initial call to recuresive function. children were added to root in the addChildren function call above.
+        recursiveAddChildren(root.children);
+
+        // Send an event to typeahead when data is updated through browser context
+        if (_this.parentNodes && _this.parentNodes.length > 0) {
+            this.fire('px-browser-context-updated', {
+                items: _this.parentNodes[0].children
+            });
+        }
+        // Repopulate the openedItemName and Breadcrumbs if we have a directContext
+        if (this.selectedItem && this.selectedItem.name) {
+          this.configureBreadcrumbs();
+          this.openedItemName = this.selectedItem.name;
+        }
+      },
+     /**
+      * Add parents to the parentNodes array so that the breadcrumbs will have the correct path
+      * and the columns can be drawn correctly.
+      * We keep looping through our while going UP the path, adding items and adding a inSelectedPath property to the item,
+      * until the current item has no parent - which means we are at the top of the path.
+      * At that point, we push all the items from parentArray into the gloval parentNodes - we recurse backwards - since the last item added
+      * to the parentArray is the top most one.
+      *
+      * @param {Object} item The selected item (with selectedAsset to true)
+      */
+      addParents: function(item) {
+        var parentArray = [],
+            parent = item;
+
+
+        while (parent) {
+          //we set this property and later check for it to display the gray lines, showing the item is in the path.
+          parent.inSelectedPath = true;
+          if (parent.parent) { //does our item have a parent?
+            parentArray.push(parent); //if it does, we add it to the parentArray
+          }
+          // if the item has a parent, it'll be passed back into the while loop. If it doesn't,
+          // it'll be undefined, which will break out of the while loop.
+          parent = parent.parent;
+        }
+
+        //we've found the full path, now let's add it to parentNodes
+        for (var i = parentArray.length - 1; i >= 0; i--) {
+          this.push('parentNodes', parentArray[i]);
+        }
+      },
+      /**
+       * Appends children to those already at a level.
+       *
+       * @param {Object} item The parent
+       * @param {Object} results Describes the children
+       *  @config {Array} data List of children objects
+       *  @config {Object} meta Keys describe the data.
+       *  @private
+       */
+      appendChildren: function(item, results) {
+        if (results === undefined || results === null) {
+          return;
+        }
+        var children = results.data || [];
+
+        // set up the parent pointers
+        for (var i = 0; i < children.length; i++) {
+          children[i].parent = item;
+        }
+        item.meta = results.meta;
+        // adding all the new children onto the node's children
+        Array.prototype.push.apply(item.children, children);
+      },
+      /**
+       * Add children to a level, overwriting any existing.
+       *
+       * @param {Object} parentNode The parent
+       * @param {Object} results Describes the children
+       * @config {Array} data List of children objects
+       * @config {Object} meta Keys describe the data.
+       * @private
+       */
+      addChildren: function(parentNode, results) {
+        if (results === undefined || results === null) {
+          return;
+        }
+        var children = results.data || [],
+            modifiedChildren = this._assignParentNodeToChildren(parentNode, children);
+
+        //assign the modified children as a children property on the parentNode
+        parentNode.children = modifiedChildren;
+        //and assign the meta property as well.
+        parentNode.meta = results.meta;
+      },
+      /**
+      * this method adds the parent property to each child, creating a circular json
+      * object in the process. This is used later on find the parent of the item.
+      * @method _assignParentNodeToChildren
+      */
+      _assignParentNodeToChildren: function(parentNode, children) {
+        // set up the parent pointers - this creates a circular json object.
+        // this is used later on find the parent of the item.
+        for (var i = 0, len = children.length; i < len; i++) {
+          children[i].parent = parentNode;
+        }
+        return children;
+      },
+      /**
+       * Drops all children of a given item;
+       *
+       * @param {Object} item
+       * @private
+       */
+      dropCurrentChildren: function(item) {
+        // drop the children from the master list of nodes (and update the level)
+        for (var i = 0; i < this.parentNodes.length - 1; i++) {
+          if (this.parentNodes[i] === item.parent) {
+            this.parentNodes = this.parentNodes.slice(0, i + 1);
+          }
+        }
+      },
+
+      /**
+       * @private
+       */
+      addToParentNodes: function(item) {
+        var found = false,
+            i = 0;
+
+        while (i < this.parentNodes.length && !found) {
+          if (this.parentNodes[i][this.idField] && this.parentNodes[i][this.idField] === item[this.idField]) {
+            // if it is already in the parent nodes, then don't add it
+            return;
+          }
+          i++;
+        }
+        this.push('parentNodes', item);
+      },
+      /**
+       * turns the spinner on or off when promises are requested.
+       *
+       * @param {String} state of the spinner -  'show' | 'hide'
+       * @private
+       */
+      spinner: function(state) {
+        var columnBrowser = this.$.columnBrowser,
+            spinner = Polymer.dom(columnBrowser).querySelector('px-spinner'),
+            overlay = Polymer.dom(columnBrowser).querySelector('.overlay');
+        if (state === 'show') {
+          spinner.set('finished', false);
+          overlay.style.display = 'block';
+        } else if (state === 'hide'){
+          spinner.set('finished', true);
+          overlay.style.display = 'none';
+        }
+      },
+      /**
+       * Fetches all children of a given item/parentNode
+       *
+       * @param {Object} item
+       * @private
+       */
+      getNewChildren: function(parentNode) {
+        this.spinner('show');
+        //first, let's make we have a getChildren function
+        if (this.handlers.getChildren) {
+          var _this = this;
+          //call the getChildren function, which expects a promise in return.
+          this.handlers.getChildren(parentNode).then(
+            function(data) {
+              //we got the data, let's hide the spinner
+              _this.spinner('hide');
+              var children = data.data,
+                  parentId = data.meta.parentId,
+                  selectedNode = _this.selectedItem;
+
+              if (parentId === undefined || parentId === null) {
+                console.warn('Context tree getChildren response must have meta.parentId defined.');
+              }
+              //check response is for the current selected node
+              else if (parentId === selectedNode[_this.idField]) {
+                // first we add the children into the parentNode
+                _this.addChildren(parentNode, data);
+                // next, we add the parentNode itself to the parentNodes array.
+                _this.addToParentNodes(parentNode);
+                // and we wanna wait to make sure this calculation includes the new item we just added.
+                _this.async(_this._calculateColumnClasses, 1);
+              } else {
+                // disregard response, it's from an old getChildren call
+              }
+            },
+            function(error) {
+              _this.spinner('hide');
+              console.warn('Context tree getChildren failed');
+            }
+          );
+        }
+      },
+
+      /**
+       * Marks an item as selected and fetches its children
+       *
+       * @param {Object} item
+       * @param {Element} itemElement The element in the local DOM representing the given item. If not passed, will try to find it in the DOM based on item[this.idField]
+       * @private
+       */
+      selectItem: function(item, itemElement) {
+        var _this = this;
+
+        // Defer this execution since event handlers may be listening to dom targets that will end up getting removed and can cause unexpected problems.
+        // By doing so, we allow an event to complete before changing the DOM.
+        setTimeout(function() {
+          //execute callback
+          if (_this.handlers.itemClickHandler) {
+            _this.handlers.itemClickHandler(item);
+          }
+
+          _this.changeSelected(item);
+          _this.dropCurrentChildren(item);
+          _this.getNewChildren(item);
+        }, 0);
+      },
+      /**
+       * Finds out if the passed UL has a child that's selected, and if so, add selected to the return path
+       *
+       * @param {Object} item
+       * @param {selectedItem} the selected item.
+       * @private
+       */
+      UlSelected: function(item, selectedItem) {
+        var id = this.idField,
+            itemId = selectedItem[id];
+        if (item.children) {
+          for (var i = 0, len = item.children.length; i < len; i++) {
+            if (item.children[i][id] === itemId) {
+              return  "selected";
+            }
+          }
+        }
+      },
+      /**
+       * resets all the selected siblings items, and sets the selected item.
+       *
+       * @param {Object} item
+       * @private
+       */
+      changeSelected: function(item) {
+        var children = item.parent.children,
+            sib,
+            id = this.idField;
+
+        for (var i = 0, len = children.length; i < len; i++) {
+          sib = children[i];
+
+          if (sib[id] !== item[id]) {
+            if (sib.inSelectedPath || sib.selectedAsset) {
+              sib.inSelectedPath = false;
+              sib.selectedAsset = false;
+            }
+          // only turn those on if you're the selected Item.
+          } else {
+            sib.inSelectedPath = true;
+            sib.selectedAsset = true;
+          }
+        }
+
+        item.parent.selectedColumn = true;
+        //change the itemId, and notify polymer to re-run the templates
+        this.set('selectedItem', item);
+      },
+      /**
+       * TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
+       *
+       * @private
+       */
+      ngScopeToken: "ngScope:",
+
+      /**
+       * TBD whether we need this...only way to get 'handlers' correctly parsed in Polymer 0.5. May be able to dump now.  TBD.
+       *
+       * @private
+       */
+      resolveNgScopeAttr: function(ngScope, attrName, attrValue) {
+        var scopePath, scopeTokens, i, resolvedValue;
+        if (attrValue.indexOf(this.ngScopeToken) === 0) {
+          scopePath = attrValue.substring(this.ngScopeToken.length);
+
+          scopeTokens = scopePath.split('.');
+          resolvedValue = ngScope;
+          for (i = 0; i < scopeTokens.length; i++) {
+            //iterate over the dots values in 'a.b.c' to find the final resolved value
+            resolvedValue = resolvedValue[scopeTokens[i]];
+          }
+          this[attrName] = resolvedValue;
+        }
+      },
+
+      /**
+      * Fires whenever the Context Browser is opened
+      * @event contextBrowserOpening
+      */
+      /**
+      * Fires whenever the Context Browser is closed
+      * @event contextBrowserClosing
+      */
+      /**
+      * toggle visbility of the column browser
+      * @method toggleColumnBrowser
+      */
+       toggleColumnBrowser: function() {
+        if (this.disabled) {
+          this.showColumnBrowser = false;
+        } else {
+          this.showColumnBrowser = !this.showColumnBrowser;
+        }
+        this._calculateColumnClasses();
+        //this.showColumnBrowser = !this.showColumnBrowser;
+
+        //fire an opening or closing event
+        this.fire((this.showColumnBrowser) ? 'contextBrowserOpening' : 'contextBrowserClosing');
+        this.spinner('hide');
+      },
+      /**
+       * Called whenever the data is changed for context browser from typeahead
+       * @private
+       * @event force-re-render
+       * @param {event} e
+       */
+      reRenderDom: function (e) {
+        var root = Polymer.dom(this.root).querySelector(e.detail.templateId);
+        if (root && root.render) {
+          root.render();
+        }
+      }
+    });
+</script>

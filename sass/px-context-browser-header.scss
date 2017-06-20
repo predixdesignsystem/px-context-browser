@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+@import "px-colors-design/_settings.colors.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+
+// Component
+$px-context-browser-header-height: var(--px-context-browser-header-height, calculateRem(40px));
+$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, $gray1);
+$px-context-browser-header-text-color: var(--px-context-browser-header-text-color, $select-default);
+$px-context-browser-header-box-shadow: var(--px-context-browser-header-box-shadow, 0 1px 1px 0 rgba(0,0,0,0.2));
+
+:host {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: $px-context-browser-header-height;
+  background-color: $px-context-browser-header-background-color;
+  box-shadow: $px-context-browser-header-box-shadow;
+  padding-left: calculateRem(15px);
+  padding-right: calculateRem(15px);
+}
+
+.pointer {
+  background-color: $px-context-browser-header-background-color;
+  border: var(--px-context-browser-panel-border, 1px solid $gray3);
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  position: absolute;
+  width: calculateRem(20px);
+  height: calculateRem(20px);
+  margin-top: calculateRem(-10px);
+  margin-left: calculateRem(10px);
+  transform-origin: 50% 50%;
+  transform: rotate(-45deg);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  color: $px-context-browser-header-text-color;
+  cursor: pointer;
+}
+
+.label__arrow {
+  margin-right: calculateRem(5px);
+}
+
+.label__link {
+  font-weight: 700;
+}

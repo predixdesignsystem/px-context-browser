@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+@import "px-colors-design/_settings.colors.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+
+// Component
+/* Item State: Default */
+$px-context-browser-item-height: var(--px-context-browser-item-height, calculateRem(30px));
+$px-context-browser-item-text-color: var(--px-context-browser-item-text-color, black);
+$px-context-browser-item-background-color--hover: var(--px-context-browser-item-background-color--hover, whitesmoke);
+$px-context-browser-item-text-color--hover: var(--px-context-browser-item-background-color--hover, black);
+$px-context-browser-item-icon-stroke: var(--px-context-browser-item-icon-stroke, dimgray);
+/* Item State: Selected */
+$px-context-browser-item-background-color--selected: var(--px-context-browser-item-background-color--selected, steelblue);
+$px-context-browser-item-text-color--selected: var(--px-context-browser-item-background-color--selected, white);
+$px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-icon-stroke, white);
+
+:host {
+  display: flex;
+  align-items: center;
+  height: $px-context-browser-item-height;
+  color: $px-context-browser-item-text-color;
+  transition: background-color .2s ease-in-out;
+}
+
+:host(:hover) {
+  background-color: $px-context-browser-item-background-color--hover;
+}
+
+:host([selected]) {
+  background-color: $px-context-browser-item-background-color--selected;
+  color: $px-context-browser-item-text-color--selected;
+}
+
+.label {
+  flex: 1 1 auto;
+  padding-left: calculateRem(15px);
+  padding-right: calculateRem(15px);
+  height: $px-context-browser-item-height;
+  line-height: $px-context-browser-item-height;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+:host(:hover) .actions {
+  opacity: 1;
+}
+:host([selected]) .actions {
+  opacity: 1;
+}
+.action {
+  flex: 0 0 auto;
+  padding: calculateRem(1px);
+  width: calculateRem(20px);
+  height: calculateRem(20px);
+  margin-left: calculateRem(5px);
+  margin-right: calculateRem(5px);
+  cursor: pointer;
+  color: $px-context-browser-item-icon-stroke;
+}
+:host([selected]) .action {
+  color: $px-context-browser-item-icon-stroke--selected;
+}
+// The last .action isn't the last-child because of dom-ifs, it's 3rd-to-last
+.action:nth-last-child(3) {
+  margin-right: calculateRem(15px);
+}
+// When selected, the open icon fades in right on hover
+:host([selected]) .action--open {
+  opacity: 0;
+  transform: translateX(100%);
+  max-width: 0;
+  transition: transform .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1), max-width .2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+:host([selected]:hover) .action--open {
+  opacity: 1;
+  transform: translateX(0);
+  max-width: $px-context-browser-item-height;
+}

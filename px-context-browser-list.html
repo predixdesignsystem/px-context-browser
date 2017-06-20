@@ -1,0 +1,15 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html"/>
+<link rel="import" href="css/px-context-browser-list-styles.html"/>
+
+<dom-module id="px-context-browser-list">
+  <template>
+    <style include="px-context-browser-list-styles"></style>
+    <slot name="items"></slot>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-list'
+  })
+</script>

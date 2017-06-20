@@ -1,0 +1,31 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html"/>
+<link rel="import" href="css/px-context-browser-header-styles.html"/>
+
+<dom-module id="px-context-browser-header">
+  <template>
+    <style include="px-context-browser-header-styles"></style>
+
+    <div class="pointer"></div>
+    <div class="label">
+      <div class="label__arrow">
+        <iron-icon icon="px:arrow-left"></iron-icon>
+      </div>
+      <div class="label__link">
+        [[label]]
+      </div>
+    </div>
+    <div class="actions">
+      <slot name="actions"></slot>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-header',
+
+    properties: {
+      label: String
+    }
+  })
+</script>
