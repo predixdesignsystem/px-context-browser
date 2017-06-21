@@ -132,6 +132,27 @@
       },
 
       /**
+       * Selects an item. Call with an object that is a direct reference to one
+       * of the `items` objects. To clear the selected item, call with `null`.
+       *
+       * An optional source of the change can be provided as a string.
+       */
+      select(item, source='METHOD') {
+        if (item === null && this._lastSelection.item !== null) {
+          this._clearSelectedAsset(source);
+          return {source:source, cleared:true};
+        }
+        if (!item || this._lastSelection.item === item) return;
+
+        if (this._assetGraph.hasNode(item)) {
+          return this._selectAsset(item, source);
+        } else {
+          throw new Error(`The following item could not be found in the items graph:
+          ${JSON.stringify(item)}`);
+        }
+      },
+
+      /**
        * Handles selection from events fired by children. The event `detail.item`
        * should be a reference an item in the asset graph.
        */
@@ -146,6 +167,10 @@
        * Updates the selected item when the `selectedRoute` changes.
        */
       _assetSelectedByRoute(route) {
+        if ((route === null && this._lastSelection.route !== null) || (Array.isArray(route) && !route.length && Array.isArray(this._lastSelection.route) && this._lastSelection.route.length > 0)) {
+          this._clearSelectedAsset('ROUTE_CHANGED');
+          return;
+        }
         if (!route || this._lastSelection.route === route) return;
 
         const item = this._assetGraph.getNodeAtRoute(route);
@@ -160,6 +185,10 @@
        * Updates other selected item properties when `selected` changes.
        */
       _assetSelectedByReference(item) {
+        if (item === null && this._lastSelection.item !== null) {
+          this._clearSelectedAsset('ITEM_CHANGED');
+          return;
+        }
         if (!item || this._lastSelection.item === item) return;
 
         if (this._assetGraph.hasNode(item)) {
@@ -179,7 +208,7 @@
           item: item,
           source: source,
           route: route
-        }
+        };
         if (this.selected !== item) {
           this.set('selected', item);
         }
@@ -189,16 +218,19 @@
         this._setSelectedChildren(children);
         this._setSelectedSiblings(siblings);
 
-        this.fire('px-app-asset-selected', {
-          source: source,
-          item: item,
-          route: route,
-          path: path,
-          parent: parent,
-          children: children,
-          siblings: siblings
-        });
-      }
+        let details = {
+          source,
+          item,
+          route,
+          path,
+          parent,
+          children,
+          siblings
+        };
+
+        this.fire('px-app-asset-selected', details);
+        return details;
+      },
       /**
        * Fired when a new item is selected. Includes details about how the item
        * was selected, and information about the new selected item.
@@ -224,6 +256,36 @@
        *   * {Array} detail.siblings - Reference to the the selected item's siblings, or an array with only the selected item if no siblings defined
        *
        * @event px-app-asset-selected
+       */
+
+      _clearSelectedAsset(source) {
+        this._lastSelection = {
+          item: null,
+          source: null,
+          route: null
+        };
+        this.set('selected', null);
+        this.set('selectedRoute', null);
+        this._setSelectedPath(null);
+        this._setSelectedParent(null);
+        this._setSelectedChildren(null);
+        this._setSelectedSiblings(null);
+
+        this.fire('px-app-asset-selected-cleared');
+      }
+      /**
+       * Fired when the selected item is cleared and no new item is selected.
+       *
+       * The `source` property is a string describing what triggered
+       * the clearing:
+       *
+       *   * 'DOM_EVENT' - user interaction cleared the selection
+       *   * 'ROUTE_CHANGED' - the array bound to `selectedRoute` changed
+       *   * 'ITEM_CHANGED' - the object bound to `selected` changed
+       *   * 'METHOD' - the `select()` method was called with `null`
+       *   * 'ROUTE_METHOD' - the `selectRoute()` method was called with `null` or an empty array
+       *
+       * @event px-app-asset-selected-cleared
        */
     };
   })();

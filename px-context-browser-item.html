@@ -6,18 +6,18 @@
   <template>
     <style include="px-context-browser-item-styles"></style>
 
-    <div class="label" asset-action="activated">
+    <div class="label" asset-action="activate">
       [[label]]
     </div>
     <div class="actions">
       <template is="dom-if" if="[[canSelect]]">
-        <px-context-browser-action-select class="action" asset-action="selected"></px-context-browser-action-select>
+        <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
       </template>
       <template is="dom-if" if="[[canFavorite]]">
-        <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorited"></px-context-browser-action-favorite>
+        <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
       </template>
       <template is="dom-if" if="[[canOpen]]">
-        <px-context-browser-action-open class="action action--open" asset-action="activated"></px-context-browser-action-favorite>
+        <px-context-browser-action-open class="action action--open" asset-action="activate"></px-context-browser-action-favorite>
       </template>
     </div>
   </template>

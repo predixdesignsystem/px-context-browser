@@ -7,7 +7,7 @@
     <style include="px-context-browser-header-styles"></style>
 
     <div class="pointer"></div>
-    <div class="label">
+    <div class="label" asset-action="back">
       <div class="label__arrow">
         <iron-icon icon="px:arrow-left"></iron-icon>
       </div>
@@ -16,7 +16,12 @@
       </div>
     </div>
     <div class="actions">
-      <slot name="actions"></slot>
+      <template is="dom-if" if="[[canSelect]]">
+        <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
+      </template>
+      <template is="dom-if" if="[[canFavorite]]">
+        <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+      </template>
     </div>
   </template>
 </dom-module>
@@ -25,7 +30,21 @@
     is: 'px-context-browser-header',
 
     properties: {
-      label: String
+      label: {
+        type: String
+      },
+      favorited: {
+        type: Boolean,
+        value: false
+      },
+      canSelect: {
+        type: Boolean,
+        value: false
+      },
+      canFavorite: {
+        type: Boolean,
+        value: false
+      }
     }
   })
 </script>

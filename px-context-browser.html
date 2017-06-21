@@ -22,7 +22,7 @@
     <px-context-browser-panel>
       <!-- Header -->
       <template is="dom-if" if="[[active]]">
-        <px-context-browser-header slot="header" label="[[active.label]]"></px-context-browser-header>
+        <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped"></px-context-browser-header>
       </template>
       <!-- List -->
       <px-context-browser-list slot="body">
@@ -30,7 +30,7 @@
           <template is="dom-repeat" items="[[_columns]]" as="column">
             <div class$="column [[column.classNames]]">
               <template is="dom-repeat" items="[[column.items]]" as="item" column$="[[index]]">
-                <px-context-browser-item label="[[item.label]]" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+                <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
               </template>
             </div>
           </template>
@@ -66,7 +66,7 @@
 
     listeners: {
       'px-app-asset-graph-created' : '_addRootColumn',
-      'px-app-asset-activated' : '_updateActiveColumn'
+      'px-app-asset-activated' : '_updateColumns'
     },
 
     _addRootColumn() {
@@ -91,7 +91,7 @@
       // this.notifyPath('_columns.#0.name');
     },
 
-    _updateActiveColumn(evt) {
+    _updateColumns(evt) {
       let {item, path} = evt.detail;
       let splices = [];
 
@@ -141,8 +141,46 @@
       const action = $root.getAttribute('asset-action');
       const item = evt.model.item;
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
-        this.fire('px-app-asset-should-be-activated', {item:item}, {cancelable:true});
+        switch(action) {
+          case 'activate':
+            this.activate(item, 'DOM_EVENT');
+            break;
+          case 'select':
+            this.select(item, 'DOM_EVENT');
+            break;
+          case 'favorite':
+            // @TODO: Implement favorite storage/notification behavior
+            break;
+        }
       }
+    },
+
+    _handleHeaderTapped(evt) {
+      const path = Polymer.dom(evt).path;
+      let action;
+
+      for (let i=path.length-1; i>-1; i--) {
+        if (path[i] instanceof Node && path[i].hasAttribute && path[i].hasAttribute('asset-action')) {
+          action = path[i].getAttribute('asset-action');
+          break;
+        }
+      }
+
+      if (typeof action !== 'string' || action.length === 0)  return;
+
+      if (action === 'back' && this._activeColumn === 1) {
+        this.activate(null, 'DOM_EVENT');
+        this._activeColumn = 0;
+        return;
+      }
+
+      if (action === 'back' && this._activeColumn > 1 && this.activeParent) {
+        this.activate(this.activeParent, 'DOM_EVENT');
+      }
+    },
+
+    _isItemSelected(item, selected) {
+      return typeof selected === 'object' && selected === item;
     }
   })
 </script>
