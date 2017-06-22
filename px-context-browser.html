@@ -7,6 +7,7 @@
 <link rel="import" href="px-context-browser-header.html"/>
 <link rel="import" href="px-context-browser-list.html"/>
 <link rel="import" href="px-context-browser-item.html"/>
+<link rel="import" href="px-context-browser-behavior-animate.html"/>
 
 <dom-module id="px-context-browser">
   <template>
@@ -32,6 +33,9 @@
         display: block;
         position: absolute;
         width: 100%;
+      }
+      .column--animating {
+        /*transition: opacity 650ms ease, transform 650ms ease;*/
       }
 
       @keyframes fadeInRight {
@@ -106,13 +110,21 @@
       <!-- List -->
       <px-context-browser-list slot="body">
         <div slot="items" id="items">
-          <template is="dom-repeat" items="[[_columns]]" as="column">
-            <div class$="column [[column.classNames]]" column$=[[column.index]]>
-              <template is="dom-repeat" items="[[column.items]]" as="item" column$="[[index]]">
-                <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
-              </template>
-            </div>
-          </template>
+          <div class="column" column="0" on-animationend="_handleColumnAnimateEnd">
+            <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0">
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+            </template>
+          </div>
+          <div class="column" column="1" on-animationend="_handleColumnAnimateEnd">
+            <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1">
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+            </template>
+          </div>
+          <div class="column" column="2" on-animationend="_handleColumnAnimateEnd">
+            <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2">
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+            </template>
+          </div>
         </div>
       </px-context-browser-list>
     </px-context-browser-panel>
@@ -131,28 +143,38 @@
 
     properties: {
       _columns: {
-        type: Array,
+        type: Object,
         value: function() {
-          return [
-            {index:0},
-            {index:1},
-            {index:2},
-            {index:3},
-            {index:4},
-            {index:5},
-            {index:6},
-            {index:7},
-            {index:8}
-          ];
+          return {
+            0: {
+              index: 0,
+              el: null,
+              items: [],
+              path: []
+            },
+            1: {
+              index: 1,
+              el: null,
+              items: [],
+              path: []
+            },
+            2: {
+              index: 2,
+              el: null,
+              items: [],
+              path: []
+            }
+          };
         }
       },
 
       _activeColumn: {
         type: Number,
+        value: 0,
         observer: '_activeColumnChanged'
       },
 
-      _animationQueue: {
+      _animateColumnsQueue: {
         type: Array,
         value: function() {
           return [];
@@ -165,167 +187,131 @@
       this._animatingColumns = false;
     },
 
+    attached() {
+      this._columns[0].el = Polymer.dom(this.root).querySelector('[column="0"]');
+      this._columns[1].el = Polymer.dom(this.root).querySelector('[column="1"]');
+      this._columns[2].el = Polymer.dom(this.root).querySelector('[column="2"]');
+      this._activeColumnChanged(this._activeColumn);
+    },
+
+    detached() {
+      this._columns[0].el = this._columns[1].el = this._columns[2].el = null;
+    },
+
     observers: [
       '_runAnimations(_animationQueue.*)'
     ],
 
     listeners: {
-      'px-app-asset-graph-created' : '_updateRootColumn',
-      'px-app-asset-activated' : '_updateColumns'
+      'px-app-asset-graph-created' : '_resetColumns',
+      'px-app-asset-activated' : '_handleActiveChanged',
+      'px-app-asset-active-cleared' : '_handleActiveCleared'
     },
 
-    _updateRootColumn() {
-      this.splice('_columns', 0, 1, {
-        index: 0,
-        classNames: '',
-        items: this.items
-      });
-      this._activeColumn = 0;
+    _handleActiveChanged(evt) {
+      const {item, path} = evt.detail;
+      const lastColumnIndex = this._activeColumn;
+      const nextColumnIndex = this._getNextColumnIndex(lastColumnIndex);
+      this._setActiveColumn(item.children || [], path, nextColumnIndex);
     },
 
-    _updateColumns(evt) {
-      let {item, path} = evt.detail;
-      let splices = [];
+    _handleActiveCleared(evt) {
+      const lastColumnIndex = this._activeColumn;
+      const nextColumnIndex = this._getNextColumnIndex(lastColumnIndex);
+      this._setActiveColumn(this.items, [], nextColumnIndex);
+    },
 
-      for (let i=0; i<path.length; i++) {
-        let column = this._columns[i+1];
-        if (typeof column !== 'object' || typeof column.items !== 'object' || column.items !== path[i].children) {
-          splices.push({
-            index: i+1,
-            addedCount: 1,
-            removed: column ? column : {},
-            object: this._columns,
-            type: 'splice'
-          });
+    _resetColumns() {
+      this._setActiveColumn(this.items, [], 0);
+    },
 
-          this._columns[i+1] = {
-            index: i+1,
-            classNames: '',
-            items: path[i].children
-          };
-        }
+    _getNextColumnIndex(lastIndex) {
+      return lastIndex === 2 ? 0 : lastIndex+1;
+    },
+
+    _setActiveColumn(children, path, nextColumnIndex) {
+      if (this._columns[nextColumnIndex].items !== children) {
+        this.set(`_columns.${nextColumnIndex}.items`, children);
+      }
+      if (this._columns[nextColumnIndex].path !== path) {
+        this.set(`_columns.${nextColumnIndex}.path`, path);
       }
 
-      if (splices.length > 0) {
-        this.notifySplices('_columns', splices);
-      }
-
-      this._activeColumn = path.length;
+      this._activeColumn = nextColumnIndex;
     },
 
     _activeColumnChanged(nextColumnIndex, lastColumnIndex) {
-      if (typeof this._columns !== 'object' || !Array.isArray(this._columns) || this._columns.length === 0) return;
+      if (typeof this._columns !== 'object' || !this.isAttached) return;
 
-      const nextColumnClassPath = `_columns.${nextColumnIndex}.classNames`;
-      const lastColumnClassPath = `_columns.${lastColumnIndex}.classNames`;
+      const nextColumn = this._columns[nextColumnIndex];
+      const lastColumn = this._columns[lastColumnIndex];
 
       // There is no last column, just set the next to active
       if (typeof lastColumnIndex === 'undefined') {
-        let classNames = addClassName('column--active', this.get(nextColumnClassPath));
-        this.set(nextColumnClassPath, classNames);
+        const firstPanelHeight = this._calculatePanelHeight(nextColumn.items.length, (nextColumn.path.length===0), 0);
+        this.$.panel.style.minHeight = firstPanelHeight;
+        if (!this._columns[nextColumnIndex].el.classList.contains('column--active')) {
+          this._columns[nextColumnIndex].el.classList.add('column--active');
+        }
         return;
       }
-      //
-      // this.push('_animationQueue', {
-      //   outgoing: {
-      //     type: 'fade-out-right',
-      //     willBecomeActive: false,
-      //     classNamesPath: lastColumnClassPath,
-      //     columnIndex: lastColumnIndex
-      //   },
-      //   incoming: {
-      //     type: 'fade-in-right',
-      //     willBecomeActive: true,
-      //     classNamesPath: nextColumnClassPath,
-      //     columnIndex: nextColumnIndex
-      //   }
-      // });
-      this.push('_animationQueue', {
-        type: 'fade-out-right',
-        willBecomeActive: false,
-        classNamesPath: lastColumnClassPath,
-        columnIndex: lastColumnIndex
-      });
-      this.$.panel.style.minHeight = this._getPanelHeight(nextColumnIndex);
-      this.push('_animationQueue', {
-        type: 'fade-in-right',
-        willBecomeActive: true,
-        classNamesPath: nextColumnClassPath,
-        columnIndex: nextColumnIndex
-      });
 
-      // const lastClassNames = this._columns[lastColumnIndex].classNames;
-      // const nextClassNames = this._columns[nextColumnIndex] ? this._columns[nextColumnIndex].classNames : undefined;
-      //
-      // for (let column of this._columns) {
-      //   if (column.index !== newColumnIndex && column.classNames.indexOf('column--active') > -1) {
-      //     column.classNames = column.classNames.replace('column--active', ' ').replace(/\s\s/, '');
-      //     this.notifyPath(`_columns.${column.index}.classNames`);
-      //   }
-      //   if (column.index === newColumnIndex && column.classNames.indexOf('column--active') === -1) {
-      //     column.classNames = `${column.classNames} column--active`;
-      //     this.notifyPath(`_columns.${column.index}.classNames`);
-      //   }
-      // }
+      // 0. Determine if we're moving down or up
+      // 1. Measure the necessary height for the next items column. If no items yet, height should be the same.
+      // 2. Apply exit classes
+      // 3. Change panel height
+      // 4. Apply entry classes
+      const nextColumnIsRoot = (nextColumn.path.length === 0);
+      const currentPanelHeight = this.$.panel.style.minHeight;
+      const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
+      const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
+
+      lastColumn.el.classList.remove('column--active');
+      lastColumn.el.classList.add('column--animating');
+      lastColumn.el.classList.add(movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left');
+
+      this.$.panel.style.minHeight = nextPanelHeight;
+
+      nextColumn.el.classList.add('column--active');
+      nextColumn.el.classList.add(movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left');
+      nextColumn.el.classList.add('column--animating');
     },
 
-    _getPanelHeight(columnIndex) {
-      const itemHeight = this.getComputedStyleValue('--px-context-browser-item-height') || '30px';
-      const itemCount = this._columns[columnIndex].items.length;
-      const itemMultiplier = (itemCount > 10) ? 10 : itemCount;
-      const itemTotalHeight = parseInt(itemHeight) * itemMultiplier;
+    _calculatePanelHeight(columnItemCount, columnIsRoot, currentPanelHeight) {
+      const borderStrokeSize = 2;
+      const itemHeight = parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px');
+      const headerHeight = columnIsRoot ? 0 : parseInt(this.getComputedStyleValue('--px-context-browser-header-height') || '40px');
+      const minimumHeight = itemHeight + headerHeight + borderStrokeSize;
 
-      const headerHeight = this.getComputedStyleValue('--px-context-browser-header-height') || '40px';
-      const headerTotalHeight = columnIndex > 0 ? parseInt(headerHeight) : 0;
-
-      return `${itemTotalHeight + headerTotalHeight + 2}px`;
+      // If there are no columns, we should just return the current height or the
+      // minimum height (header+1 item), whichever is larger.
+      if (columnItemCount === 0) {
+        return parseInt(currentPanelHeight) > minimumHeight ? `${currentPanelHeight}px` : `${minimumHeight}px`;
+      }
+      else {
+        const itemMultiplier = (columnItemCount > 10) ? 10 : columnItemCount;
+        const itemTotalHeight = parseInt(itemHeight) * itemMultiplier;
+        return `${itemTotalHeight + headerHeight + borderStrokeSize}px`;
+      }
     },
 
-    _runAnimations() {
-      if (this._animationQueue.length === 0) return;
-      let nextAnimation = this._animationQueue[0];
-      let nextAnimationEl = this._getColumnElForIndex(nextAnimation.columnIndex);
-      if (!nextAnimationEl) {
-        console.log('Retry');
-        window.requestAnimationFrame(this._runAnimations.bind(this));
-        return;
-      };
-      this._animateColumn(nextAnimation.type, nextAnimation.willBecomeActive, nextAnimation.classNamesPath, nextAnimationEl);
-      this.shift('_animationQueue');
-      // this._animateColumn('fade-out-right', false, lastColumnClassPath, this._getColumnElForIndex(lastColumnIndex));
-      // this._animateColumn('fade-in-right', true, nextColumnClassPath, this._getColumnElForIndex(nextColumnIndex));
+    _handleColumnAnimateEnd(evt) {
+      const column = Polymer.dom(evt).rootTarget;
+      column.classList.remove('column--animating');
+      const animateClassName = this._findAnimateClassName(column.classList.toString());
+      column.classList.remove(animateClassName);
     },
 
-    _getColumnElForIndex(i) {
-      return Polymer.dom(this.root).querySelector(`#items > [column="${i}"]`);
-    },
-
-    _animateColumn(type, willBecomeActive, classNamesPath, el) {
-      const currentClassNames = this.get(classNamesPath);
-      const animateClassNames = updateClassNames(currentClassNames, {
-        add: ['column--animating', `column--${type}`],
-        remove: willBecomeActive ? undefined : ['column--active']
-      });
-      const afterAnimateClassNames = updateClassNames(animateClassNames, {
-        add: willBecomeActive ? ['column--active'] : undefined,
-        remove: ['column--animating', `column--${type}`]
-      });
-
-      const handleEnd = this._handleAnimateEnd.bind(this, classNamesPath, afterAnimateClassNames, el);
-      this._animateListeners.set(el, handleEnd);
-      el.addEventListener('animationend', handleEnd);
-      this.set(classNamesPath, animateClassNames);
-    },
-
-    _handleAnimateEnd(classNamesPath, newClassNames, el) {
-      this.set(classNamesPath, newClassNames);
-      el.removeEventListener('animationend', this._animateListeners.get(el));
+    _findAnimateClassName(classList) {
+      const match = classList.match(/(\s|^)(column--fade-[a-zA-Z-]+)(\s|$)/);
+      return match ? match[2] : null;
     },
 
     _handleItemTapped(evt) {
       const $root = Polymer.dom(evt).path[0];
       const action = $root.getAttribute('asset-action');
       const item = evt.model.item;
+
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
         switch(action) {
           case 'activate':
@@ -343,28 +329,23 @@
 
     _handleHeaderTapped(evt) {
       const path = Polymer.dom(evt).path;
-      let action;
+      const action = this._findActionInPath(path);
 
-      // @TODO: This is likely a bug. We should not go from end to beginning but
-      // do the opposite (otherwise we start at window).
-      for (let i=path.length-1; i>-1; i--) {
+      if (typeof action !== 'string' || action.length > 0) {
+        // if activeParent is `null`, the root will be activated
+        this.activate(this.activeParent, 'DOM_EVENT');
+      }
+    },
+
+    _findActionInPath(path) {
+      let action;
+      for (let i=0; i<path.length; i++) {
         if (path[i] instanceof Node && path[i].hasAttribute && path[i].hasAttribute('asset-action')) {
           action = path[i].getAttribute('asset-action');
           break;
         }
       }
-
-      if (typeof action !== 'string' || action.length === 0)  return;
-
-      if (action === 'back' && this._activeColumn === 1) {
-        this.activate(null, 'DOM_EVENT');
-        this._activeColumn = 0;
-        return;
-      }
-
-      if (action === 'back' && this._activeColumn > 1 && this.activeParent) {
-        this.activate(this.activeParent, 'DOM_EVENT');
-      }
+      return action;
     },
 
     _isItemSelected(item, selected) {
