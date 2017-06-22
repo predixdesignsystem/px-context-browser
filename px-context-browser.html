@@ -11,15 +11,94 @@
 <dom-module id="px-context-browser">
   <template>
     <style>
+      px-context-browser-panel {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(var(--px-context-browser-item-height, 30px) + 2px);
+        max-height: calc(calc(var(--px-context-browser-item-height, 30px) * 10) + var(--px-context-browser-header-height, 40px));
+        transition: max-height 300ms ease-in, min-height 300ms ease-in;
+      }
+      px-context-browser-list {
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        position: relative;
+      }
+
       .column {
         display: none;
       }
-      .column--active {
+      .column--active, .column--animating {
         display: block;
+        position: absolute;
+        width: 100%;
+      }
+
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes fadeOutRight {
+        from {
+          opacity: 1;
+          transform: none;
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      @keyframes fadeOutLeft {
+        from {
+          opacity: 1;
+          transform: none;
+        }
+        to {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+      }
+
+      .column--fade-in-right {
+        animation-name: fadeInRight;
+        animation-duration: 650ms;
+      }
+      .column--fade-in-left {
+        animation-name: fadeInLeft;
+        animation-duration: 650ms;
+      }
+      .column--fade-out-right {
+        animation-name: fadeOutRight;
+        animation-duration: 650ms;
+      }
+      .column--fade-out-left {
+        animation-name: fadeOutLeft;
+        animation-duration: 650ms;
       }
     </style>
 
-    <px-context-browser-panel>
+    <px-context-browser-panel id="panel">
       <!-- Header -->
       <template is="dom-if" if="[[active]]">
         <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped"></px-context-browser-header>
@@ -28,7 +107,7 @@
       <px-context-browser-list slot="body">
         <div slot="items" id="items">
           <template is="dom-repeat" items="[[_columns]]" as="column">
-            <div class$="column [[column.classNames]]">
+            <div class$="column [[column.classNames]]" column$=[[column.index]]>
               <template is="dom-repeat" items="[[column.items]]" as="item" column$="[[index]]">
                 <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
               </template>
@@ -40,6 +119,7 @@
   </template>
 </dom-module>
 <script>
+(function(){
   Polymer({
     is: 'px-context-browser',
 
@@ -53,42 +133,54 @@
       _columns: {
         type: Array,
         value: function() {
-          return [];
+          return [
+            {index:0},
+            {index:1},
+            {index:2},
+            {index:3},
+            {index:4},
+            {index:5},
+            {index:6},
+            {index:7},
+            {index:8}
+          ];
         }
       },
 
       _activeColumn: {
         type: Number,
-        value: 0,
         observer: '_activeColumnChanged'
+      },
+
+      _animationQueue: {
+        type: Array,
+        value: function() {
+          return [];
+        }
       }
     },
 
+    created() {
+      this._animateListeners = new WeakMap();
+      this._animatingColumns = false;
+    },
+
+    observers: [
+      '_runAnimations(_animationQueue.*)'
+    ],
+
     listeners: {
-      'px-app-asset-graph-created' : '_addRootColumn',
+      'px-app-asset-graph-created' : '_updateRootColumn',
       'px-app-asset-activated' : '_updateColumns'
     },
 
-    _addRootColumn() {
+    _updateRootColumn() {
       this.splice('_columns', 0, 1, {
         index: 0,
-        classNames: 'column--active',
+        classNames: '',
         items: this.items
       });
-      // var prevCol = this._columns[0];
-      // this._columns[0] = {
-      //   index: 0,
-      //   name: 'foo',
-      //   items: this.items
-      // };
-      // this.notifySplices('_columns', [{
-      //   index: 0,
-      //   removed: prevCol,
-      //   addedCount: 1,
-      //   object: this._columns,
-      //   type: 'splice'
-      // }]);
-      // this.notifyPath('_columns.#0.name');
+      this._activeColumn = 0;
     },
 
     _updateColumns(evt) {
@@ -121,19 +213,113 @@
       this._activeColumn = path.length;
     },
 
-    _activeColumnChanged(newColumnIndex) {
-      if (typeof this._columns !== 'object') return;
+    _activeColumnChanged(nextColumnIndex, lastColumnIndex) {
+      if (typeof this._columns !== 'object' || !Array.isArray(this._columns) || this._columns.length === 0) return;
 
-      for (let column of this._columns) {
-        if (column.index !== newColumnIndex && column.classNames.indexOf('column--active') > -1) {
-          column.classNames = column.classNames.replace('column--active', '').replace(/\s\s/, '');
-          this.notifyPath(`_columns.#${column.index}.classNames`);
-        }
-        if (column.index === newColumnIndex && column.classNames.indexOf('column--active') === -1) {
-          column.classNames = `${column.classNames} column--active`;
-          this.notifyPath(`_columns.#${column.index}.classNames`);
-        }
+      const nextColumnClassPath = `_columns.${nextColumnIndex}.classNames`;
+      const lastColumnClassPath = `_columns.${lastColumnIndex}.classNames`;
+
+      // There is no last column, just set the next to active
+      if (typeof lastColumnIndex === 'undefined') {
+        let classNames = addClassName('column--active', this.get(nextColumnClassPath));
+        this.set(nextColumnClassPath, classNames);
+        return;
       }
+      //
+      // this.push('_animationQueue', {
+      //   outgoing: {
+      //     type: 'fade-out-right',
+      //     willBecomeActive: false,
+      //     classNamesPath: lastColumnClassPath,
+      //     columnIndex: lastColumnIndex
+      //   },
+      //   incoming: {
+      //     type: 'fade-in-right',
+      //     willBecomeActive: true,
+      //     classNamesPath: nextColumnClassPath,
+      //     columnIndex: nextColumnIndex
+      //   }
+      // });
+      this.push('_animationQueue', {
+        type: 'fade-out-right',
+        willBecomeActive: false,
+        classNamesPath: lastColumnClassPath,
+        columnIndex: lastColumnIndex
+      });
+      this.$.panel.style.minHeight = this._getPanelHeight(nextColumnIndex);
+      this.push('_animationQueue', {
+        type: 'fade-in-right',
+        willBecomeActive: true,
+        classNamesPath: nextColumnClassPath,
+        columnIndex: nextColumnIndex
+      });
+
+      // const lastClassNames = this._columns[lastColumnIndex].classNames;
+      // const nextClassNames = this._columns[nextColumnIndex] ? this._columns[nextColumnIndex].classNames : undefined;
+      //
+      // for (let column of this._columns) {
+      //   if (column.index !== newColumnIndex && column.classNames.indexOf('column--active') > -1) {
+      //     column.classNames = column.classNames.replace('column--active', ' ').replace(/\s\s/, '');
+      //     this.notifyPath(`_columns.${column.index}.classNames`);
+      //   }
+      //   if (column.index === newColumnIndex && column.classNames.indexOf('column--active') === -1) {
+      //     column.classNames = `${column.classNames} column--active`;
+      //     this.notifyPath(`_columns.${column.index}.classNames`);
+      //   }
+      // }
+    },
+
+    _getPanelHeight(columnIndex) {
+      const itemHeight = this.getComputedStyleValue('--px-context-browser-item-height') || '30px';
+      const itemCount = this._columns[columnIndex].items.length;
+      const itemMultiplier = (itemCount > 10) ? 10 : itemCount;
+      const itemTotalHeight = parseInt(itemHeight) * itemMultiplier;
+
+      const headerHeight = this.getComputedStyleValue('--px-context-browser-header-height') || '40px';
+      const headerTotalHeight = columnIndex > 0 ? parseInt(headerHeight) : 0;
+
+      return `${itemTotalHeight + headerTotalHeight + 2}px`;
+    },
+
+    _runAnimations() {
+      if (this._animationQueue.length === 0) return;
+      let nextAnimation = this._animationQueue[0];
+      let nextAnimationEl = this._getColumnElForIndex(nextAnimation.columnIndex);
+      if (!nextAnimationEl) {
+        console.log('Retry');
+        window.requestAnimationFrame(this._runAnimations.bind(this));
+        return;
+      };
+      this._animateColumn(nextAnimation.type, nextAnimation.willBecomeActive, nextAnimation.classNamesPath, nextAnimationEl);
+      this.shift('_animationQueue');
+      // this._animateColumn('fade-out-right', false, lastColumnClassPath, this._getColumnElForIndex(lastColumnIndex));
+      // this._animateColumn('fade-in-right', true, nextColumnClassPath, this._getColumnElForIndex(nextColumnIndex));
+    },
+
+    _getColumnElForIndex(i) {
+      return Polymer.dom(this.root).querySelector(`#items > [column="${i}"]`);
+    },
+
+    _animateColumn(type, willBecomeActive, classNamesPath, el) {
+      const currentClassNames = this.get(classNamesPath);
+      const animateClassNames = updateClassNames(currentClassNames, {
+        add: ['column--animating', `column--${type}`],
+        remove: willBecomeActive ? undefined : ['column--active']
+      });
+      const afterAnimateClassNames = updateClassNames(animateClassNames, {
+        add: willBecomeActive ? ['column--active'] : undefined,
+        remove: ['column--animating', `column--${type}`]
+      });
+
+      const handleEnd = this._handleAnimateEnd.bind(this, classNamesPath, afterAnimateClassNames, el);
+      this._animateListeners.set(el, handleEnd);
+      el.addEventListener('animationend', handleEnd);
+      this.set(classNamesPath, animateClassNames);
+    },
+
+    _handleAnimateEnd(classNamesPath, newClassNames, el) {
+      this.set(classNamesPath, newClassNames);
+      el.removeEventListener('animationend', this._animateListeners.get(el));
     },
 
     _handleItemTapped(evt) {
@@ -159,6 +345,8 @@
       const path = Polymer.dom(evt).path;
       let action;
 
+      // @TODO: This is likely a bug. We should not go from end to beginning but
+      // do the opposite (otherwise we start at window).
       for (let i=path.length-1; i>-1; i--) {
         if (path[i] instanceof Node && path[i].hasAttribute && path[i].hasAttribute('asset-action')) {
           action = path[i].getAttribute('asset-action');
@@ -182,5 +370,42 @@
     _isItemSelected(item, selected) {
       return typeof selected === 'object' && selected === item;
     }
-  })
+  });
+
+  function toRegex(str) {
+    return new RegExp(str);
+  };
+
+  function updateClassNames(list, updates) {
+    let items = list.split(' ');
+    let {add=[], remove=[]} = updates;
+
+    let classNames = items.reduce((acc, item) => {
+      let addIndex = add.indexOf(item);
+      if (addIndex > -1) {
+        add.splice(addIndex-1, addIndex);
+        return acc;
+      }
+      if (remove.indexOf(item) > -1) {
+        return acc;
+      }
+      return acc.concat([item]);
+    }, []);
+
+    return [...classNames, ...add].join(' ');
+  };
+
+  function addClassName(className, list) {
+    if (hasClassName(className, list)) return list;
+    return `${list} ${className}`.trim().replace('  ', ' ');
+  };
+
+  function removeClassName(className, list) {
+    return list.replace(className, '').replace('  ', ' ');
+  };
+
+  function hasClassName(className, list) {
+    return toRegex(`(\\s|^)${className}(\\s|$)`).test(list) === true;
+  };
+})();
 </script>
