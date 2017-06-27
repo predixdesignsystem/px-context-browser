@@ -174,7 +174,7 @@
         observer: '_activeColumnChanged'
       },
 
-      _animateColumnsQueue: {
+      _animationQueue: {
         type: Array,
         value: function() {
           return [];
@@ -183,8 +183,7 @@
     },
 
     created() {
-      this._animateListeners = new WeakMap();
-      this._animatingColumns = false;
+      this.__animating = [];
     },
 
     attached() {
@@ -236,7 +235,6 @@
       if (this._columns[nextColumnIndex].path !== path) {
         this.set(`_columns.${nextColumnIndex}.path`, path);
       }
-
       this._activeColumn = nextColumnIndex;
     },
 
@@ -261,20 +259,57 @@
       // 2. Apply exit classes
       // 3. Change panel height
       // 4. Apply entry classes
-      const nextColumnIsRoot = (nextColumn.path.length === 0);
-      const currentPanelHeight = this.$.panel.style.minHeight;
-      const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
-      const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
+      // const nextColumnIsRoot = (nextColumn.path.length === 0);
+      // const currentPanelHeight = this.$.panel.style.minHeight;
+      // const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
+      // const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
 
-      lastColumn.el.classList.remove('column--active');
-      lastColumn.el.classList.add('column--animating');
-      lastColumn.el.classList.add(movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left');
+      this.push('_animationQueue', {lastColumn, nextColumn});
 
-      this.$.panel.style.minHeight = nextPanelHeight;
+      // lastColumn.el.classList.remove('column--active');
+      // lastColumn.el.classList.add('column--animating');
+      // lastColumn.el.classList.add(movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left');
+      //
+      // this.$.panel.style.minHeight = nextPanelHeight;
+      //
+      // nextColumn.el.classList.add('column--active');
+      // nextColumn.el.classList.add(movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left');
+      // nextColumn.el.classList.add('column--animating');
+    },
 
-      nextColumn.el.classList.add('column--active');
-      nextColumn.el.classList.add(movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left');
-      nextColumn.el.classList.add('column--animating');
+    _runAnimations(retries=1) {
+      if (this._animationQueue.length === 0) return;
+
+      this.debounce('run-animations', function() {
+        if (this.__animating.length > 0) {
+          console.log('Wait');
+          window.requestAnimationFrame(this._runAnimations.bind(this));
+          return;
+        }
+
+        console.log('---- Running');
+
+        const {nextColumn, lastColumn} = this.shift('_animationQueue');
+
+        const nextColumnIsRoot = (nextColumn.path.length === 0);
+        const currentPanelHeight = this.$.panel.style.minHeight;
+        const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
+        const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
+
+        console.log(`out: ${lastColumn.el.getAttribute('column')}`);
+        lastColumn.el.classList.remove('column--active');
+        lastColumn.el.classList.add('column--animating');
+        lastColumn.el.classList.add(movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left');
+        this.__animating.push(lastColumn.el);
+
+        this.$.panel.style.minHeight = nextPanelHeight;
+
+        console.log(`in: ${nextColumn.el.getAttribute('column')}`);
+        nextColumn.el.classList.add('column--active');
+        nextColumn.el.classList.add(movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left');
+        nextColumn.el.classList.add('column--animating');
+        this.__animating.push(nextColumn.el);
+      }, 10);
     },
 
     _calculatePanelHeight(columnItemCount, columnIsRoot, currentPanelHeight) {
@@ -297,9 +332,15 @@
 
     _handleColumnAnimateEnd(evt) {
       const column = Polymer.dom(evt).rootTarget;
+      console.log(`done: ${column.getAttribute('column')}`);
       column.classList.remove('column--animating');
-      const animateClassName = this._findAnimateClassName(column.classList.toString());
-      column.classList.remove(animateClassName);
+      if (column.classList.contains('column--fade-in-right')) column.classList.remove('column--fade-in-right');
+      if (column.classList.contains('column--fade-out-right')) column.classList.remove('column--fade-out-right');
+      if (column.classList.contains('column--fade-in-left')) column.classList.remove('column--fade-in-left');
+      if (column.classList.contains('column--fade-out-left')) column.classList.remove('column--fade-out-left');
+      // const animateClassName = this._findAnimateClassName(column.classList.toString());
+      // column.classList.remove(animateClassName);
+      this.__animating.splice(this.__animating.indexOf(column), 1);
     },
 
     _findAnimateClassName(classList) {
