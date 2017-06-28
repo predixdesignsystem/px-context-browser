@@ -4,8 +4,12 @@
 <dom-module id="px-context-browser-panel">
   <template>
     <style include="px-context-browser-panel-styles"></style>
-    <slot name="header"></slot>
-    <slot name="body"></slot>
+    <div class="pointer"></div>
+
+    <div class="panel-body">
+      <slot name="header"></slot>
+      <slot name="body"></slot>
+    </div>
   </template>
 </dom-module>
 <script>

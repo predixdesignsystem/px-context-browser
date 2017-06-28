@@ -31,20 +31,7 @@ $px-context-browser-header-box-shadow: var(--px-context-browser-header-box-shado
   box-shadow: $px-context-browser-header-box-shadow;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
-}
-
-.pointer {
-  background-color: $px-context-browser-header-background-color;
-  border: var(--px-context-browser-panel-border, 1px solid $gray3);
-  border-bottom-color: transparent;
-  border-left-color: transparent;
-  position: absolute;
-  width: calculateRem(20px);
-  height: calculateRem(20px);
-  margin-top: calculateRem(-10px);
-  margin-left: calculateRem(10px);
-  transform-origin: 50% 50%;
-  transform: rotate(-45deg);
+  z-index: 2;
 }
 
 .label {
