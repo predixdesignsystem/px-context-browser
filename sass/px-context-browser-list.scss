@@ -25,4 +25,8 @@ $px-context-browser-list-max-height: var(--px-context-browser-list-max-height, c
   background-color: $px-context-browser-list-background-color;
   max-height: $px-context-browser-list-max-height;
   z-index: 3;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  position: relative;
 }

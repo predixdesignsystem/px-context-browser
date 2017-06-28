@@ -14,109 +14,9 @@
 <dom-module id="px-context-browser">
   <template>
     <style include="px-context-browser-styles"></style>
-    <style>
-      px-context-browser-panel {
-        display: flex;
-        flex-direction: column;
-        min-height: calc(var(--px-context-browser-item-height, 30px) + 2px);
-        max-height: calc(calc(var(--px-context-browser-item-height, 30px) * 10) + var(--px-context-browser-header-height, 40px));
-        /*transition: max-height 300ms ease-in, min-height 300ms ease-in;*/
-      }
-      px-context-browser-list {
-        flex: 1 1 auto;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        position: relative;
-      }
-      px-context-browser-header {
-        display: none;
-      }
-      px-context-browser-header[active] {
-        display: flex;
-      }
-
-      .column {
-        display: none;
-      }
-      .column--active, .column--animating {
-        display: block;
-        position: absolute;
-        width: 100%;
-      }
-      .column--animating {
-        /*transition: opacity 650ms ease, transform 650ms ease;*/
-      }
-
-      @keyframes fadeInRight {
-        from {
-          opacity: 0;
-          transform: translateX(-100%);
-        }
-
-        to {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      @keyframes fadeOutRight {
-        from {
-          opacity: 1;
-          transform: none;
-        }
-        to {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-      }
-
-      @keyframes fadeInLeft {
-        from {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-
-        to {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      @keyframes fadeOutLeft {
-        from {
-          opacity: 1;
-          transform: none;
-        }
-        to {
-          opacity: 0;
-          transform: translateX(-100%);
-        }
-      }
-
-      .column--fade-in-right {
-        animation-name: fadeInRight;
-        animation-duration: 200ms;
-      }
-      .column--fade-in-left {
-        animation-name: fadeInLeft;
-        animation-duration: 200ms;
-      }
-      .column--fade-out-right {
-        animation-name: fadeOutRight;
-        animation-duration: 200ms;
-      }
-      .column--fade-out-left {
-        animation-name: fadeOutLeft;
-        animation-duration: 200ms;
-      }
-    </style>
 
     <px-context-browser-panel id="panel">
-      <!-- Header -->
-      <!-- <template is="dom-if" if="[[active]]"> -->
-      <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" id="header"></px-context-browser-header>
-      <!-- </template> -->
-      <!-- List -->
+      <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select id="header"></px-context-browser-header>
       <px-context-browser-list slot="body">
         <div slot="items" id="items">
           <div class="column" column="0">
@@ -296,8 +196,18 @@
       const action = this._findActionInPath(path);
 
       if (typeof action !== 'string' || action.length > 0) {
-        // if activeParent is `null`, the root will be activated
-        this.activate(this.activeParent, 'DOM_EVENT');
+        switch(action) {
+          case 'back':
+            // if activeParent is `null`, the root will be activated
+            this.activate(this.activeParent, 'DOM_EVENT');
+            break;
+          case 'select':
+            this.select(this.active, 'DOM_EVENT');
+            break;
+          case 'favorite':
+            // @TODO: Implement favorite storage/notification behavior
+            break;
+        }
       }
     },
 
@@ -320,206 +230,206 @@
   function toRegex(str) {
     return new RegExp(str);
   };
-})();
 
-class ColumnAnimator {
-  constructor({itemHeight, headerHeight, borderSize}) {
-    this.itemHeight = itemHeight;
-    this.headerHeight = headerHeight;
-    this.borderSize = borderSize;
+  class ColumnAnimator {
+    constructor({itemHeight, headerHeight, borderSize}) {
+      this.itemHeight = itemHeight;
+      this.headerHeight = headerHeight;
+      this.borderSize = borderSize;
 
-    this._animationQueue = [];
-    this._currentAnimation = null;
-  }
-
-  add(options) {
-    const animation = this._createAnimation(options);
-    this.addToQueue(animation);
-    return animation;
-  }
-
-  addToQueue(animation) {
-    this._animationQueue.push(animation);
-    this._runAnimations();
-  }
-
-  _runAnimations() {
-    if (this._currentAnimation) return;
-    this._currentAnimation = this._animationQueue.shift();
-    this._currentAnimation().then(() => {
+      this._animationQueue = [];
       this._currentAnimation = null;
-      if (this._animationQueue.length !== 0) this._runAnimations(this._animationQueue);
-    });
-  }
+    }
 
-  _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outHasHeader, inHasHeader, isMovingDown}) {
-    const animations = {};
+    add(options) {
+      const animation = this._createAnimation(options);
+      this.addToQueue(animation);
+      return animation;
+    }
 
-    // Animate header in/out
-    const headerSlidingIn = (!outHasHeader && inHasHeader);
-    const headerSlidingOut = (outHasHeader && !inHasHeader);
-    if (headerSlidingIn) {
-      animations.header = this._generateAnimation(headerEl, {
-        animate: ColumnAnimator.fadeIn,
+    addToQueue(animation) {
+      this._animationQueue.push(animation);
+      this._runAnimations();
+    }
+
+    _runAnimations() {
+      if (this._currentAnimation) return;
+      this._currentAnimation = this._animationQueue.shift();
+      this._currentAnimation().then(() => {
+        this._currentAnimation = null;
+        if (this._animationQueue.length !== 0) this._runAnimations(this._animationQueue);
+      });
+    }
+
+    _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outHasHeader, inHasHeader, isMovingDown}) {
+      const animations = {};
+
+      // Animate header in/out
+      const headerSlidingIn = (!outHasHeader && inHasHeader);
+      const headerSlidingOut = (outHasHeader && !inHasHeader);
+      if (headerSlidingIn) {
+        animations.header = this._generateAnimation(headerEl, {
+          animate: ColumnAnimator.fadeIn,
+          before: (el) => {
+            el.setAttribute('active', '')
+          }
+        });
+      }
+      if (headerSlidingOut) {
+        animations.header = this._generateAnimation(headerEl, {
+          animate: (el, duration) => ColumnAnimator.popOut(el, '0px', `-${this.headerHeight}px`, duration),
+          after: (el) => {
+            el.removeAttribute('active')
+          }
+        });
+      }
+
+      // Animate columns in/out
+      animations.out = this._generateAnimation(outEl, {
+        animate: isMovingDown ? ColumnAnimator.fadeOutLeft : ColumnAnimator.fadeOutRight,
+        after: (el) => el.classList.remove('column--active')
+      });
+      animations.in = this._generateAnimation(inEl, {
+        animate: (el, duration) => {
+          if (headerSlidingOut) {
+            return ColumnAnimator.fadeInLeftFromTop(el, duration, `-${this.headerHeight}px`);
+          }
+          if (isMovingDown) {
+            return ColumnAnimator.fadeInRight(el, duration);
+          }
+          return ColumnAnimator.fadeInLeft(el, duration);
+        },
         before: (el) => {
-          el.setAttribute('active', '')
+          el.classList.add('column--active')
         }
       });
-    }
-    if (headerSlidingOut) {
-      animations.header = this._generateAnimation(headerEl, {
-        animate: (el, duration) => ColumnAnimator.popOut(el, '0px', `-${this.headerHeight}px`, duration),
-        after: (el) => {
-          el.removeAttribute('active')
-        }
+
+      // Animate panel height
+      let lastPanelHeight = this._calculatePanelHeight(outItemCount, outHasHeader);
+      if (headerSlidingIn && lastPanelHeight < this.headerHeight) lastPanelHeight = this.headerHeight;
+      let nextPanelHeight = (inItemCount > 0) ? this._calculatePanelHeight(inItemCount, inHasHeader) : lastPanelHeight;
+      animations.panel = this._generateAnimation(panelEl, {
+        animate: (el, defaultDuration) => ColumnAnimator.scaleHeight(el, `${lastPanelHeight}px`, `${nextPanelHeight}px`, defaultDuration),
+        before: (el) => {
+          el.style.minHeight = `${lastPanelHeight}px`;
+          if (inHasHeader) el.setAttribute('has-header', '');
+          if (!inHasHeader) el.removeAttribute('has-header');
+        },
+        after: (el) => el.style.minHeight = `${nextPanelHeight}px`
       });
+
+      return () => Promise.all([animations.in(), animations.out(), animations.panel(), animations.header ? animations.header() : Promise.resolve()]);
     }
 
-    // Animate columns in/out
-    animations.out = this._generateAnimation(outEl, {
-      animate: isMovingDown ? ColumnAnimator.fadeOutLeft : ColumnAnimator.fadeOutRight,
-      after: (el) => el.classList.remove('column--active')
-    });
-    animations.in = this._generateAnimation(inEl, {
-      animate: (el, duration) => {
-        if (headerSlidingOut) {
-          return ColumnAnimator.fadeInLeftFromTop(el, duration, `-${this.headerHeight}px`);
+    _generateAnimation(el, {animate, before, after}) {
+      return () => {
+        if (typeof before === 'function') {
+          before.call(this, el);
         }
-        if (isMovingDown) {
-          return ColumnAnimator.fadeInRight(el, duration);
-        }
-        return ColumnAnimator.fadeInLeft(el, duration);
-      },
-      before: (el) => {
-        el.classList.add('column--active')
+        return animate.call(this, el, 250).finished.then((a) => {
+          if (typeof after === 'function') {
+            after.call(this, el);
+          }
+          return Promise.resolve(a);
+        });
+      };
+    }
+
+    _calculatePanelHeight(itemCount, hasHeader) {
+      let addForHeader = hasHeader ? this.headerHeight : 0;
+      let addForItem;
+      if (itemCount === 0) {
+        addForItem = this.itemHeight;
       }
-    });
-
-    // Animate panel height
-    let lastPanelHeight = this._calculatePanelHeight(outItemCount, outHasHeader);
-    if (headerSlidingIn && lastPanelHeight < this.headerHeight) lastPanelHeight = this.headerHeight;
-    let nextPanelHeight = (inItemCount > 0) ? this._calculatePanelHeight(inItemCount, inHasHeader) : lastPanelHeight;
-    animations.panel = this._generateAnimation(panelEl, {
-      animate: (el, defaultDuration) => ColumnAnimator.scaleHeight(el, `${lastPanelHeight}px`, `${nextPanelHeight}px`, defaultDuration),
-      before: (el) => {
-        el.style.minHeight = `${lastPanelHeight}px`;
-        if (inHasHeader) el.setAttribute('has-header', '');
-        if (!inHasHeader) el.removeAttribute('has-header');
-      },
-      after: (el) => el.style.minHeight = `${nextPanelHeight}px`
-    });
-
-    return () => Promise.all([animations.in(), animations.out(), animations.panel(), animations.header ? animations.header() : Promise.resolve()]);
-  }
-
-  _generateAnimation(el, {animate, before, after}) {
-    return () => {
-      if (typeof before === 'function') {
-        before.call(this, el);
+      if (itemCount > 0 && itemCount < 10) {
+        addForItem = this.itemHeight * itemCount;
       }
-      return animate.call(this, el, 250).finished.then((a) => {
-        if (typeof after === 'function') {
-          after.call(this, el);
-        }
-        return Promise.resolve(a);
-      });
-    };
-  }
-
-  _calculatePanelHeight(itemCount, hasHeader) {
-    let addForHeader = hasHeader ? this.headerHeight : 0;
-    let addForItem;
-    if (itemCount === 0) {
-      addForItem = this.itemHeight;
+      if (itemCount >= 10) {
+        addForItem = this.itemHeight * 10;
+      }
+      let addForBorder = this.borderSize;
+      return addForHeader + addForItem + addForBorder;
     }
-    if (itemCount > 0 && itemCount < 10) {
-      addForItem = this.itemHeight * itemCount;
+
+    static fadeInRight(el, duration) {
+      const keyframes = [
+        { transform: 'translateX(-100%)', opacity: '0' },
+        { transform: 'none', opacity: '1' }
+      ];
+      return el.animate(keyframes, { duration: duration });
     }
-    if (itemCount >= 10) {
-      addForItem = this.itemHeight * 10;
+
+    static fadeOutRight(el, duration) {
+      const keyframes = [
+        { transform: 'none', opacity: '1' },
+        { transform: 'translateX(-100%)', opacity: '0' }
+      ];
+      return el.animate(keyframes, { duration: duration });
     }
-    let addForBorder = this.borderSize;
-    return addForHeader + addForItem + addForBorder;
-  }
 
-  static fadeInRight(el, duration) {
-    const keyframes = [
-      { transform: 'translateX(-100%)', opacity: '0' },
-      { transform: 'none', opacity: '1' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static fadeInLeft(el, duration) {
+      const keyframes = [
+        { transform: 'translateX(100%)', opacity: '0' },
+        { transform: 'none', opacity: '1' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static fadeOutRight(el, duration) {
-    const keyframes = [
-      { transform: 'none', opacity: '1' },
-      { transform: 'translateX(-100%)', opacity: '0' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static fadeInLeftFromTop(el, duration, topPosition) {
+      const keyframes = [
+        { transform: `translate(100%, ${topPosition})`, opacity: '0' },
+        { transform: 'none', opacity: '1' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static fadeInLeft(el, duration) {
-    const keyframes = [
-      { transform: 'translateX(100%)', opacity: '0' },
-      { transform: 'none', opacity: '1' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static fadeOutLeft(el, duration) {
+      const keyframes = [
+        { transform: 'none', opacity: '1' },
+        { transform: 'translateX(100%)', opacity: '0' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static fadeInLeftFromTop(el, duration, topPosition) {
-    const keyframes = [
-      { transform: `translate(100%, ${topPosition})`, opacity: '0' },
-      { transform: 'none', opacity: '1' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static scaleHeight(el, startHeight, endHeight, duration) {
+      const keyframes = [
+        { minHeight: startHeight },
+        { minHeight: endHeight }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static fadeOutLeft(el, duration) {
-    const keyframes = [
-      { transform: 'none', opacity: '1' },
-      { transform: 'translateX(100%)', opacity: '0' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static slideInDown(el, duration) {
+      const keyframes = [
+        { transform: 'translateY(-100%)' },
+        { transform: 'none' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static scaleHeight(el, startHeight, endHeight, duration) {
-    const keyframes = [
-      { minHeight: startHeight },
-      { minHeight: endHeight }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static slideOutUp(el, duration) {
+      const keyframes = [
+        { transform: 'none' },
+        { transform: 'translateY(-100%)' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static slideInDown(el, duration) {
-    const keyframes = [
-      { transform: 'translateY(-100%)' },
-      { transform: 'none' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
+    static fadeIn(el, duration) {
+      const keyframes = [
+        { opacity: '0' },
+        { opacity: '1' }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
 
-  static slideOutUp(el, duration) {
-    const keyframes = [
-      { transform: 'none' },
-      { transform: 'translateY(-100%)' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
-
-  static fadeIn(el, duration) {
-    const keyframes = [
-      { opacity: '0' },
-      { opacity: '1' }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
-
-  static popOut(el, startMarginBottom, endMarginBottom, duration) {
-    const keyframes = [
-      { opacity: '1', marginBottom: startMarginBottom },
-      { opacity: '0', marginBottom: endMarginBottom }
-    ];
-    return el.animate(keyframes, { duration: duration });
-  }
-};
+    static popOut(el, startMarginBottom, endMarginBottom, duration) {
+      const keyframes = [
+        { opacity: '1', marginBottom: startMarginBottom },
+        { opacity: '0', marginBottom: endMarginBottom }
+      ];
+      return el.animate(keyframes, { duration: duration });
+    }
+  };
+})();
 </script>

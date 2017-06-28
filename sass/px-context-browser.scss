@@ -17,3 +17,11 @@
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Component
+.column {
+  display: none;
+}
+.column--active {
+  display: block;
+  position: absolute;
+  width: 100%;
+}

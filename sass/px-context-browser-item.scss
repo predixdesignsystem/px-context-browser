@@ -53,6 +53,7 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
   line-height: $px-context-browser-item-height;
   min-width: 0;
   cursor: pointer;
+  user-select: none;
 }
 
 .actions {
