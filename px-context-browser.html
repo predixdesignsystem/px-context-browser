@@ -181,18 +181,7 @@
         type: Number,
         value: 0,
         observer: '_activeColumnChanged'
-      },
-
-      _animationQueue: {
-        type: Array,
-        value: function() {
-          return [];
-        }
       }
-    },
-
-    created() {
-      // this.__animating = [];
     },
 
     attached() {
@@ -210,10 +199,6 @@
     detached() {
       this._columns[0].el = this._columns[1].el = this._columns[2].el = null;
     },
-
-    observers: [
-      '_runAnimations(_animationQueue.*)'
-    ],
 
     listeners: {
       'px-app-asset-graph-created' : '_resetColumns',
@@ -344,10 +329,27 @@ class ColumnAnimator {
     this.borderSize = borderSize;
 
     this._animationQueue = [];
+    this._currentAnimation = null;
   }
 
   add(options) {
-    return this._createAnimation(options);
+    const animation = this._createAnimation(options);
+    this.addToQueue(animation);
+    return animation;
+  }
+
+  addToQueue(animation) {
+    this._animationQueue.push(animation);
+    this._runAnimations();
+  }
+
+  _runAnimations() {
+    if (this._currentAnimation) return;
+    this._currentAnimation = this._animationQueue.shift();
+    this._currentAnimation().then(() => {
+      this._currentAnimation = null;
+      if (this._animationQueue.length !== 0) this._runAnimations(this._animationQueue);
+    });
   }
 
   _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outHasHeader, inHasHeader, isMovingDown}) {
@@ -407,7 +409,7 @@ class ColumnAnimator {
       after: (el) => el.style.minHeight = `${nextPanelHeight}px`
     });
 
-    return Promise.all([animations.in(), animations.out(), animations.panel(), animations.header ? animations.header() : Promise.resolve()]);
+    return () => Promise.all([animations.in(), animations.out(), animations.panel(), animations.header ? animations.header() : Promise.resolve()]);
   }
 
   _generateAnimation(el, {animate, before, after}) {
