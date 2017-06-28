@@ -16,22 +16,22 @@
     <style include="px-context-browser-styles"></style>
 
     <px-context-browser-panel id="panel">
-      <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select id="header"></px-context-browser-header>
+      <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
       <px-context-browser-list slot="body">
         <div slot="items" id="items">
           <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0">
-              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="1">
             <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1">
-              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="2">
             <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2">
-              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
           </div>
         </div>
@@ -51,6 +51,14 @@
     ],
 
     properties: {
+      openArrow: {
+        type: Boolean,
+        value: false
+      },
+      hasFavorites: {
+        type: Boolean,
+        value: false
+      },
       _columns: {
         type: Object,
         value: function() {
