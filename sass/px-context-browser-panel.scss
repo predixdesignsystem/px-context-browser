@@ -56,7 +56,7 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
   border-right: 21px solid transparent;
   border-bottom: 21px solid var(--px-context-browser-panel-border-color, $gray3);
   z-index: 1;
-  transition: border-bottom-color 250ms;
+  transition: border-bottom-color 100ms;
 }
 
 :host([has-header]) .pointer:after {

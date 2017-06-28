@@ -119,17 +119,17 @@
       <!-- List -->
       <px-context-browser-list slot="body">
         <div slot="items" id="items">
-          <div class="column" column="0" on-animationend="_handleColumnAnimateEnd">
+          <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0">
               <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
           </div>
-          <div class="column" column="1" on-animationend="_handleColumnAnimateEnd">
+          <div class="column" column="1">
             <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1">
               <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
           </div>
-          <div class="column" column="2" on-animationend="_handleColumnAnimateEnd">
+          <div class="column" column="2">
             <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2">
               <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite can-select can-open on-tap="_handleItemTapped"></px-context-browser-item>
             </template>
@@ -256,12 +256,12 @@
       if (typeof this._columns !== 'object' || !this.isAttached) return;
 
       const nextColumn = this._columns[nextColumnIndex];
-      const lastColumn = this._columns[lastColumnIndex];
+      const nextColumnIsRoot = (nextColumn.path.length === 0);
+      const nextColumnHasHeader = !nextColumnIsRoot;
 
       // There is no last column, just set the next to active
       if (typeof lastColumnIndex === 'undefined') {
-        // const firstPanelHeight = this._calculatePanelHeight(nextColumn.items.length, (nextColumn.path.length===0), 0);
-        const firstPanelHeight = this.animator._calculatePanelHeight(nextColumn.items.length, true);
+        const firstPanelHeight = this.animator._calculatePanelHeight(nextColumn.items.length, nextColumnHasHeader);
         this.$.panel.style.minHeight = `${firstPanelHeight}px`;
         if (!this._columns[nextColumnIndex].el.classList.contains('column--active')) {
           this._columns[nextColumnIndex].el.classList.add('column--active');
@@ -269,152 +269,21 @@
         return;
       }
 
-      // this.push('_animationQueue', {lastColumn, nextColumn});
-
-      const nextColumnIsRoot = (nextColumn.path.length === 0);
-      const currentPanelHeight = this.$.panel.style.minHeight;
-      const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
-      const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
-
+      const lastColumn = this._columns[lastColumnIndex];
+      const lastColumnIsRoot = (lastColumn.path.length === 0);
+      const lastColumnHasHeader = !lastColumnIsRoot;
+      const isMovingDown = (nextColumn.path.length > lastColumn.path.length);
       this.animator.add({
         outEl: lastColumn.el,
         outItemCount: lastColumn.items.length,
-        outIsRoot: lastColumn.path.length === 0,
+        outHasHeader: lastColumnHasHeader,
         inEl: nextColumn.el,
         inItemCount: nextColumn.items.length,
-        inIsRoot: nextColumn.path.length === 0,
+        inHasHeader: nextColumnHasHeader,
         panelEl: this.$.panel,
         headerEl: this.$.header,
-        isMovingDown: movingIntoGraph
+        isMovingDown: isMovingDown
       });
-
-      // 0. Determine if we're moving down or up
-      // 1. Measure the necessary height for the next items column. If no items yet, height should be the same.
-      // 2. Apply exit classes
-      // 3. Change panel height
-      // 4. Apply entry classes
-      // const nextColumnIsRoot = (nextColumn.path.length === 0);
-      // const currentPanelHeight = this.$.panel.style.minHeight;
-      // const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
-      // const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
-
-      // lastColumn.el.classList.remove('column--active');
-      // lastColumn.el.classList.add('column--animating');
-      // lastColumn.el.classList.add(movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left');
-      //
-      // this.$.panel.style.minHeight = nextPanelHeight;
-      //
-      // nextColumn.el.classList.add('column--active');
-      // nextColumn.el.classList.add(movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left');
-      // nextColumn.el.classList.add('column--animating');
-    },
-
-    _runAnimations(retries=1) {
-      if (this._animationQueue.length === 0) return;
-
-      this.debounce('run-animations', function() {
-        if (this._animationQueue.length > 5) {
-          this._animationQueue = this._animationQueue.slice(-1);
-          return;
-        }
-
-        if (this.__animating) {
-          console.log('____ Wait');
-          window.requestAnimationFrame(this._runAnimations.bind(this));
-          return;
-        }
-
-        console.log('---- Running');
-
-        const {nextColumn, lastColumn} = this.shift('_animationQueue');
-        this.__animating = true;
-        this._wrapAnimation(nextColumn, lastColumn, (this._animationQueue.length > 1)).then(() => {
-          console.log('---- Done');
-          this.__animating = false;
-        })
-      }, 10);
-    },
-
-    _wrapAnimation(nextColumn, lastColumn, doFast) {
-      return new Promise((resolve, reject) => {
-        let animating = 2;
-
-        const nextColumnIsRoot = (nextColumn.path.length === 0);
-        const currentPanelHeight = this.$.panel.style.minHeight;
-        const nextPanelHeight = this._calculatePanelHeight(nextColumn.items.length, nextColumnIsRoot, currentPanelHeight);
-        const movingIntoGraph = (nextColumn.path.length > lastColumn.path.length);
-
-        console.log(`out: ${lastColumn.el.getAttribute('column')}`);
-        lastColumn.el.classList.remove('column--active');
-        lastColumn.el.classList.add('column--animating');
-        let fadeOutClass = movingIntoGraph ? 'column--fade-out-right' : 'column--fade-out-left';
-        if (doFast) fadeOutClass = fadeOutClass + '--fast';
-        lastColumn.el.classList.add(fadeOutClass);
-        this._boundHandleAnimateOutEnd = () => {
-          animating--;
-          console.log('Out Done...' + animating);
-          lastColumn.el.classList.remove('column--animating');
-          lastColumn.el.classList.remove(fadeOutClass);
-          lastColumn.el.removeEventListener('animationend', this._boundHandleAnimateOutEnd);
-          if (animating === 0) resolve();
-        };
-        lastColumn.el.addEventListener('animationend', this._boundHandleAnimateOutEnd);
-
-        this.$.panel.style.minHeight = nextPanelHeight;
-
-        console.log(`in: ${nextColumn.el.getAttribute('column')}`);
-        nextColumn.el.classList.add('column--active');
-        let fadeInClass = movingIntoGraph ? 'column--fade-in-right' : 'column--fade-in-left';
-        if (doFast) fadeInClass + '--fast';
-        nextColumn.el.classList.add(fadeInClass);
-        nextColumn.el.classList.add('column--animating');
-        this._boundHandleAnimateInEnd = () => {
-          animating--;
-          console.log('In Done...' + animating);
-          console.log(animating.length === 0);
-          nextColumn.el.classList.remove('column--animating');
-          nextColumn.el.classList.remove(fadeInClass);
-          nextColumn.el.removeEventListener('animationend', this._boundHandleAnimateInEnd);
-          if (animating === 0) resolve();
-        };
-        nextColumn.el.addEventListener('animationend', this._boundHandleAnimateInEnd);
-      });
-    },
-
-    _calculatePanelHeight(columnItemCount, columnIsRoot, currentPanelHeight) {
-      const borderStrokeSize = 2;
-      const itemHeight = parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px');
-      const headerHeight = columnIsRoot ? 0 : parseInt(this.getComputedStyleValue('--px-context-browser-header-height') || '40px');
-      const minimumHeight = itemHeight + headerHeight + borderStrokeSize;
-
-      // If there are no columns, we should just return the current height or the
-      // minimum height (header+1 item), whichever is larger.
-      if (columnItemCount === 0) {
-        return parseInt(currentPanelHeight) > minimumHeight ? `${currentPanelHeight}px` : `${minimumHeight}px`;
-      }
-      else {
-        const itemMultiplier = (columnItemCount > 10) ? 10 : columnItemCount;
-        const itemTotalHeight = parseInt(itemHeight) * itemMultiplier;
-        return `${itemTotalHeight + headerHeight + borderStrokeSize}px`;
-      }
-    },
-
-    _handleColumnAnimateEnd(evt) {
-      // const column = Polymer.dom(evt).rootTarget;
-      // console.log(`done: ${column.getAttribute('column')}`);
-      // column.classList.remove('column--animating');
-      // if (column.classList.contains('column--fade-in-right')) column.classList.remove('column--fade-in-right');
-      // if (column.classList.contains('column--fade-out-right')) column.classList.remove('column--fade-out-right');
-      // if (column.classList.contains('column--fade-in-left')) column.classList.remove('column--fade-in-left');
-      // if (column.classList.contains('column--fade-out-left')) column.classList.remove('column--fade-out-left');
-      // // const animateClassName = this._findAnimateClassName(column.classList.toString());
-      // // column.classList.remove(animateClassName);
-      // this.__animating.splice(this.__animating.indexOf(column), 1);
-    },
-
-    _findAnimateClassName(classList) {
-      const match = classList.match(/(\s|^)(column--fade-[a-zA-Z-]+)(\s|$)/);
-      return match ? match[2] : null;
     },
 
     _handleItemTapped(evt) {
@@ -466,38 +335,6 @@
   function toRegex(str) {
     return new RegExp(str);
   };
-
-  function updateClassNames(list, updates) {
-    let items = list.split(' ');
-    let {add=[], remove=[]} = updates;
-
-    let classNames = items.reduce((acc, item) => {
-      let addIndex = add.indexOf(item);
-      if (addIndex > -1) {
-        add.splice(addIndex-1, addIndex);
-        return acc;
-      }
-      if (remove.indexOf(item) > -1) {
-        return acc;
-      }
-      return acc.concat([item]);
-    }, []);
-
-    return [...classNames, ...add].join(' ');
-  };
-
-  function addClassName(className, list) {
-    if (hasClassName(className, list)) return list;
-    return `${list} ${className}`.trim().replace('  ', ' ');
-  };
-
-  function removeClassName(className, list) {
-    return list.replace(className, '').replace('  ', ' ');
-  };
-
-  function hasClassName(className, list) {
-    return toRegex(`(\\s|^)${className}(\\s|$)`).test(list) === true;
-  };
 })();
 
 class ColumnAnimator {
@@ -513,35 +350,15 @@ class ColumnAnimator {
     return this._createAnimation(options);
   }
 
-  _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outIsRoot, inIsRoot, isMovingDown}) {
+  _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outHasHeader, inHasHeader, isMovingDown}) {
     const animations = {};
 
     // Animate header in/out
-    const willHaveHeader = !inIsRoot;
-    const headerSlidingIn = (outIsRoot && !inIsRoot);
-    const headerSlidingOut = (!outIsRoot && inIsRoot);
-    // if (headerSlidingIn) {
-    //   animations.header = this._generateAnimation(headerEl, {
-    //     animate: ColumnAnimator.slideInDown,
-    //     before: (el) => {
-    //       el.style.height = 'auto';
-    //       el.setAttribute('active', '')
-    //     }
-    //   });
-    // }
-    // if (headerSlidingOut) {
-    //   animations.header = this._generateAnimation(headerEl, {
-    //     animate: ColumnAnimator.slideOutUp,
-    //     after: (el) => {
-    //       el.style.height = '0px';
-    //       el.removeAttribute('active')
-    //     }
-    //   });
-    // }
-
+    const headerSlidingIn = (!outHasHeader && inHasHeader);
+    const headerSlidingOut = (outHasHeader && !inHasHeader);
     if (headerSlidingIn) {
       animations.header = this._generateAnimation(headerEl, {
-        animate: ColumnAnimator.popIn,
+        animate: ColumnAnimator.fadeIn,
         before: (el) => {
           el.setAttribute('active', '')
         }
@@ -549,7 +366,7 @@ class ColumnAnimator {
     }
     if (headerSlidingOut) {
       animations.header = this._generateAnimation(headerEl, {
-        animate: (el, duration) => ColumnAnimator.popOut(el, '0px', '-40px', duration),
+        animate: (el, duration) => ColumnAnimator.popOut(el, '0px', `-${this.headerHeight}px`, duration),
         after: (el) => {
           el.removeAttribute('active')
         }
@@ -564,7 +381,7 @@ class ColumnAnimator {
     animations.in = this._generateAnimation(inEl, {
       animate: (el, duration) => {
         if (headerSlidingOut) {
-          return ColumnAnimator.fadeInLeftFromTop(el, duration, '-40px');
+          return ColumnAnimator.fadeInLeftFromTop(el, duration, `-${this.headerHeight}px`);
         }
         if (isMovingDown) {
           return ColumnAnimator.fadeInRight(el, duration);
@@ -577,26 +394,15 @@ class ColumnAnimator {
     });
 
     // Animate panel height
-    let lastPanelHeight = this._calculatePanelHeight(outItemCount, !outIsRoot);
+    let lastPanelHeight = this._calculatePanelHeight(outItemCount, outHasHeader);
     if (headerSlidingIn && lastPanelHeight < this.headerHeight) lastPanelHeight = this.headerHeight;
-    let nextPanelHeight = (inItemCount > 0) ? this._calculatePanelHeight(inItemCount, !inIsRoot) : lastPanelHeight;
-    // animations.panel = panelEl.animate({
-    //   minHeight: [`${lastPanelHeight}px`, `${nextPanelHeight}px`]
-    // }, {
-    //   duration: 250
-    // });
-    // animations.panelPromise = new Promise(resolve =>
-    //   animations.panel.onfinish = () => {
-    //     panelEl.style.minHeight = `${nextPanelHeight}px`;
-    //     resolve();
-    //   }
-    // );
+    let nextPanelHeight = (inItemCount > 0) ? this._calculatePanelHeight(inItemCount, inHasHeader) : lastPanelHeight;
     animations.panel = this._generateAnimation(panelEl, {
       animate: (el, defaultDuration) => ColumnAnimator.scaleHeight(el, `${lastPanelHeight}px`, `${nextPanelHeight}px`, defaultDuration),
       before: (el) => {
         el.style.minHeight = `${lastPanelHeight}px`;
-        if (willHaveHeader) el.setAttribute('has-header', '');
-        if (!willHaveHeader) el.removeAttribute('has-header');
+        if (inHasHeader) el.setAttribute('has-header', '');
+        if (!inHasHeader) el.removeAttribute('has-header');
       },
       after: (el) => el.style.minHeight = `${nextPanelHeight}px`
     });
@@ -698,7 +504,7 @@ class ColumnAnimator {
     return el.animate(keyframes, { duration: duration });
   }
 
-  static popIn(el, duration) {
+  static fadeIn(el, duration) {
     const keyframes = [
       { opacity: '0' },
       { opacity: '1' }
