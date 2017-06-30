@@ -17,10 +17,10 @@
     </div>
     <div class="actions">
       <template is="dom-if" if="[[canSelect]]">
-        <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
+        <px-context-browser-action-select class$="action [[_isLastAction('select', canSelect, canFavorite)]]" asset-action="select"></px-context-browser-action-select>
       </template>
       <template is="dom-if" if="[[canFavorite]]">
-        <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+        <px-context-browser-action-favorite class$="action [[_isLastAction('favorite', canSelect, canFavorite)]]" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
       </template>
     </div>
   </template>
@@ -45,6 +45,14 @@
         type: Boolean,
         value: false
       }
+    },
+
+    _isLastAction(action, canSelect, canFavorite) {
+      if ((canSelect && canFavorite && action === 'favorite') ||
+          (canSelect && !canFavorite && action === 'select')) {
+        return 'action--last';
+      }
+      return '';
     }
   })
 </script>

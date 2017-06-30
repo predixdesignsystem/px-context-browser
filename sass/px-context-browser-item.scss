@@ -54,18 +54,23 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
   min-width: 0;
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .actions {
   margin-left: auto;
-  display: flex;
   opacity: 0;
   transition: opacity .2s ease-in-out;
+  display: none;
 }
 :host(:hover) .actions {
+  display: flex;
   opacity: 1;
 }
 :host([selected]) .actions {
+  display: flex;
   opacity: 1;
 }
 .action {

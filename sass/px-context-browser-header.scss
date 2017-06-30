@@ -45,6 +45,8 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
   color: $px-context-browser-header-text-color;
   cursor: pointer;
   user-select: none;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .label__arrow {
@@ -53,9 +55,12 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
 
 .label__link {
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .actions {
-  margin-left: auto;
+  margin-left: calculateRem(10px);
   display: flex;
   align-items: center;
 }
@@ -68,4 +73,7 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
   margin-right: calculateRem(5px);
   cursor: pointer;
   color: $px-context-browser-header-icon-stroke;
+}
+.action--last {
+  margin-right: 0;
 }
