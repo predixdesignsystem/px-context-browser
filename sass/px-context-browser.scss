@@ -17,6 +17,10 @@
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Component
+.items {
+  display: flex;
+  flex: 1 1 auto;
+}
 .column {
   display: none;
 }
@@ -24,4 +28,10 @@
   display: block;
   position: absolute;
   width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
 }

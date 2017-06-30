@@ -19,7 +19,7 @@
     <px-context-browser-panel id="panel">
       <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
       <px-context-browser-list slot="body">
-        <div slot="items" id="items">
+        <div slot="items" id="items" class="items">
           <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0">
               <px-context-browser-item label="[[item.label]]" selected$="{{_isItemSelected(item, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
@@ -89,7 +89,6 @@
 
       _activeColumn: {
         type: Number,
-        value: 0,
         observer: '_activeColumnChanged'
       }
     },
@@ -103,7 +102,9 @@
       this._columns[0].el = Polymer.dom(this.root).querySelector('[column="0"]');
       this._columns[1].el = Polymer.dom(this.root).querySelector('[column="1"]');
       this._columns[2].el = Polymer.dom(this.root).querySelector('[column="2"]');
-      this._activeColumnChanged(this._activeColumn);
+      if (this.items) {
+        this._activeColumnChanged(this._activeColumn);
+      }
     },
 
     detached() {
