@@ -34,6 +34,7 @@
     "px-colors-design": "^1.0.0",
     "px-defaults-design": "^2.0.0",
     "px-demo": "^2.0.0",
+    "px-forms-design": "^2.0.0",
     "px-normalize-design": "^1.0.0",
     "px-theme": "^3.0.0"
   }

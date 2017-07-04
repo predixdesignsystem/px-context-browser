@@ -4,11 +4,34 @@
 <dom-module id="px-context-browser-list">
   <template>
     <style include="px-context-browser-list-styles"></style>
-    <slot name="items"></slot>
+    <template is="dom-if" if="[[canFilter]]">
+      <div class="search">
+          <input
+              id="search"
+              class="text-input input--search search__box"
+              placeholder="Filter"
+              value="{{filter::input}}"
+              autocomplete="off">
+          </input>
+      </div>
+    </template>
+    <div class="items">
+      <slot name="items"></slot>
+    </div>
   </template>
 </dom-module>
 <script>
   Polymer({
-    is: 'px-context-browser-list'
+    is: 'px-context-browser-list',
+    properties: {
+      canFilter: {
+        type: Boolean,
+        value: false
+      },
+      filter: {
+        type: String,
+        notify: true
+      }
+    }
   })
 </script>

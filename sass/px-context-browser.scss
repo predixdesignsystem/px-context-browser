@@ -20,6 +20,8 @@
 .items {
   display: flex;
   flex: 1 1 auto;
+  transition: min-height 250ms;
+  max-height: calc(var(--px-context-browser-item-height, 30px) * 10);
 }
 .column {
   display: none;
