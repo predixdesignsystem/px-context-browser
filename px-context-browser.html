@@ -149,6 +149,9 @@
     },
 
     _setActiveColumn(children, path, nextColumnIndex) {
+      if (this.hasFilter) {
+        this.filter = '';
+      }
       this.set(`_columns.${nextColumnIndex}.items`, children.map(c => ({source:c, visible:true})));
       this.set(`_columns.${nextColumnIndex}.path`, path);
       this._activeColumn = nextColumnIndex;

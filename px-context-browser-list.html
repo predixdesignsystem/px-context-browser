@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-polymer-font-awesome/px-icon-set.html"/>
 <link rel="import" href="css/px-context-browser-list-styles.html"/>
 
 <dom-module id="px-context-browser-list">
@@ -6,9 +7,15 @@
     <style include="px-context-browser-list-styles"></style>
     <template is="dom-if" if="[[canFilter]]">
       <div class="search">
+          <template is="dom-if" if="[[_showFilterIcon(filter)]]">
+            <iron-icon class="search__icon" icon="px:filter"></iron-icon>
+          </template>
+          <template is="dom-if" if="[[_showClearIcon(filter)]]">
+            <iron-icon class="search__icon search__icon--tappable" icon="px:close" on-tap="_clearFilter"></iron-icon>
+          </template>
           <input
               id="search"
-              class="text-input input--search search__box"
+              class="text-input search__box"
               placeholder="Filter"
               value="{{filter::input}}"
               autocomplete="off">
@@ -26,11 +33,36 @@
     properties: {
       canFilter: {
         type: Boolean,
-        value: false
+        value: false,
+        observer: '_canFilterChanged'
       },
+      
       filter: {
         type: String,
-        notify: true
+        notify: true,
+        value: function() {
+          if (this.canFilter) {
+            return '';
+          }
+        }
+      }
+    },
+
+    _showFilterIcon(filter) {
+      return typeof filter === 'string' && filter.length === 0;
+    },
+
+    _showClearIcon(filter) {
+      return typeof filter === 'string' && filter.length > 0;
+    },
+
+    _clearFilter() {
+      this.filter = '';
+    },
+
+    _canFilterChanged(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.filter = '';
       }
     }
   })
