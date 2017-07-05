@@ -2,6 +2,7 @@
 
 <link rel="import" href="../web-animations-js/web-animations-next-lite.min.html"/>
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"/>
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-graph.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-browsable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
@@ -15,24 +16,28 @@
 <dom-module id="px-context-browser">
   <template>
     <style include="px-context-browser-styles"></style>
+    <iron-a11y-keys target="[[_panelEl]]" keys="up" on-keys-pressed="_focusLast" stop-keyboard-event-propagation></iron-a11y-keys>
+    <iron-a11y-keys target="[[_panelEl]]" keys="down" on-keys-pressed="_focusNext" stop-keyboard-event-propagation></iron-a11y-keys>
+    <iron-a11y-keys target="[[_panelEl]]" keys="enter" on-keys-pressed="_handleEnterKey" stop-keyboard-event-propagation></iron-a11y-keys>
+    <iron-a11y-keys target="[[_panelEl]]" keys="left" on-keys-pressed="_handleArrowLeftKey" stop-keyboard-event-propagation></iron-a11y-keys>
 
     <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]">
       <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
-      <px-context-browser-list slot="body" can-filter="[[hasFilter]]" filter="{{filter}}">
+      <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}">
         <div slot="items" id="items" class="items">
           <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="1">
             <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="2">
             <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
         </div>
@@ -104,10 +109,92 @@
       _visibleItemCount: {
         type: Number,
         observer: '_animateColumnHeight'
+      },
+
+      _panelEl: {
+        type: HTMLElement
+      }
+    },
+
+    _focusLast(evt) {
+      evt.detail.keyboardEvent.preventDefault();
+      const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+      const lastItem = srcItem.previousElementSibling;
+      if (lastItem && lastItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+        lastItem.focus();
+      }
+      else if (this.hasFilter) {
+        const listEl = Polymer.dom(this.root).querySelector('#list');
+        if (listEl) {
+          listEl.focusInput();
+        }
+      }
+    },
+
+    _focusNext(evt) {
+      evt.detail.keyboardEvent.preventDefault();
+      const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+      const nextItem = srcItem.nextElementSibling;
+      if (nextItem && nextItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+        // If the next element is another context browser item, focus it
+        nextItem.focus();
+      }
+      else if (srcItem.parentElement.childElementCount > 1) {
+        // If the next element isn't an item, focus the first item in the list
+        const firstSibling = this._getFirstSibling(srcItem, srcItem.parentElement.children, 'PX-CONTEXT-BROWSER-ITEM');
+        if (firstSibling) {
+          firstSibling.focus();
+        }
+      }
+    },
+
+    _focusFirstVisibleItem(evt) {
+      if (typeof this._columns === 'object' && typeof this._activeColumn === 'number' && this._columns[this._activeColumn]) {
+        const firstItem = this._getFirstSibling(null, this._columns[this._activeColumn].el.children, 'PX-CONTEXT-BROWSER-ITEM');
+        if (firstItem) {
+          firstItem.focus();
+        }
+      }
+    },
+
+    _handleEnterKey(evt) {
+      const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+      if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+        const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
+        const model = repeatEl.modelForElement(target);
+        this.select(model.item.source, 'DOM_EVENT');
+      }
+    },
+
+    _handleArrowLeftKey(evt) {
+      // @TODO: Starting to be a lot of repeat code here. What's a better
+      // way to do this that's succinct?
+
+      // DESIRED BEHAVIOR: If there's a parent, go up to it. If not, go up to root.
+
+      const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+      if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+        const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
+        const item = repeatEl.modelForElement(target).item.source;
+        const parent = this._assetGraph.getNodeInfo(item).parent;
+        if (parent) {
+          this.activate(parent, 'DOM_EVENT');
+        } else {
+          this.activate(null, 'DOM_EVENT');
+        }
+      }
+    },
+
+    _getFirstSibling(source, siblings, targetNodeName) {
+      for (let i=0; i<siblings.length; i++) {
+        if (siblings[i].nodeName === targetNodeName && siblings[i] !== source) {
+          return siblings[i];
+        }
       }
     },
 
     attached() {
+      this._panelElement = Polymer.dom(this.root).querySelector('#panel');
       this.animator = new ColumnAnimator({
         itemHeight: parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px'),
         headerHeight: parseInt(this.getComputedStyleValue('--px-context-browser-header-height') || '40px'),
@@ -128,7 +215,8 @@
     listeners: {
       'px-app-asset-graph-created' : '_resetColumns',
       'px-app-asset-activated' : '_handleActiveChanged',
-      'px-app-asset-active-cleared' : '_resetColumns'
+      'px-app-asset-active-cleared' : '_resetColumns',
+      'focus-first-visible-item' : '_focusFirstVisibleItem'
     },
 
     _handleActiveChanged(evt) {
@@ -289,7 +377,7 @@
         multiplier = nextItemCount;
       }
       const itemsEl = Polymer.dom(this.root).querySelector('#items');
-      items.style.minHeight = (multiplier*itemHeight) + 'px';
+      itemsEl.style.minHeight = (multiplier*itemHeight) + 'px';
     },
 
     _isHeaderActive(columns, activeColumn) {

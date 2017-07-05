@@ -27,6 +27,7 @@
   "dependencies": {
     "polymer": "^1.8.0",
     "px-polymer-font-awesome": "^2.0.0",
+    "iron-a11y-keys": "^1.0.0",
     "iron-resizable-behavior": "^1.0.0"
   },
   "devDependencies": {

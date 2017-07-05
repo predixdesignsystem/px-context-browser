@@ -33,7 +33,9 @@ $px-context-browser-list-background-color: var(--px-context-browser-list-backgro
   overflow-y: hidden;
 }
 
-.search {
+.search {}
+
+.search__form {
   position: relative;
   display: block;
   padding: calculateRem(10px) calculateRem(15px);
