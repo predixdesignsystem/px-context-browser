@@ -4,8 +4,8 @@
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"/>
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-graph.html"/>
-<link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-browsable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
+<link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
 <link rel="import" href="css/px-context-browser-styles.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
 <link rel="import" href="px-context-browser-header.html"/>
@@ -53,7 +53,7 @@
     behaviors: [
       PxAppBehavior.AssetGraph,
       PxAppBehavior.AssetSelectable,
-      PxAppBehavior.AssetBrowsable,
+      PxAppBehavior.AssetActivatable,
       Polymer.IronResizableBehavior
     ],
 
@@ -215,7 +215,7 @@
     listeners: {
       'px-app-asset-graph-created' : '_resetColumns',
       'px-app-asset-activated' : '_handleActiveChanged',
-      'px-app-asset-active-cleared' : '_resetColumns',
+      'px-app-asset-deactivated' : '_resetColumns',
       'focus-first-visible-item' : '_focusFirstVisibleItem'
     },
 
@@ -304,7 +304,7 @@
         switch(action) {
           case 'back':
             // if activeParent is `null`, the root will be activated
-            this.activate(this.activeParent, 'DOM_EVENT');
+            this.activate(this.activeMeta.parent, 'DOM_EVENT');
             break;
           case 'select':
             this.select(this.active, 'DOM_EVENT');
