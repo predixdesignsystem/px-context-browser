@@ -36,8 +36,13 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
   transition: background-color .2s ease-in-out;
 }
 
-:host(:hover) {
+:host(:hover),
+:host(:focus) {
   background-color: $px-context-browser-item-background-color--hover;
+}
+
+:host(:focus) {
+  outline: none;
 }
 
 :host([selected]) {
@@ -65,10 +70,8 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
   transition: opacity .2s ease-in-out;
   display: none;
 }
-:host(:hover) .actions {
-  display: flex;
-  opacity: 1;
-}
+:host(:hover) .actions,
+:host(:focus) .actions,
 :host([selected]) .actions {
   display: flex;
   opacity: 1;
