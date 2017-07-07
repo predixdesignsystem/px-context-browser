@@ -1,10 +1,8 @@
-# Px-Context-Browser [![Build Status](https://travis-ci.org/PredixDev/px-context-browser.svg?branch=master)](https://travis-ci.org/PredixDev/px-context-browser)
-
-[![px-context-browser demo](px-context-browser.png?raw=true)](https://PredixDev.github.io/px-context-browser/)
+# px-context-browser [![Build Status](https://travis-ci.org/PredixDev/px-context-browser.svg?branch=master)](https://travis-ci.org/PredixDev/px-context-browser)
 
 ## Overview
 
-px-context-browser is a hierarchical tree navigation component that uses horizontally cascading lists in columns to allow multiple levels of the hierarchy to be open at once, and provide a visual representation of the current location. Menu items that are `openable` are given an Open button that upon selection chooses the item and closes the navigation, returning it to it's initial state: A drop-down and breadcrumb that display the menu's last-selected state.
+Px-context-browser is a hierarchical tree navigation component that uses horizontally cascading lists in columns to allow multiple levels of the hierarchy to be open at once, and provide a visual representation of the current location. Menu items that are `openable` are given an Open button that upon selection chooses the item and closes the navigation, returning it to it's initial state: A drop-down and breadcrumb that display the menu's last-selected state.
 
 ## Usage
 
@@ -40,7 +38,7 @@ Finally, use the component in your application:
 <br />
 <hr />
 
-## documentation
+## Documentation
 
 Read the full API and view the demo [here](https://predixdev.github.io/px-context-browser).
 
