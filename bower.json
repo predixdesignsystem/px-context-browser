@@ -40,5 +40,8 @@
     "px-typography-design": "^1.2.2",
     "px-defaults-design": "^1.0.2",
     "px-demo": "^1.2.3"
+  },
+  "resolutions": {
+    "webcomponentsjs": "^0.7.24"
   }
 }
