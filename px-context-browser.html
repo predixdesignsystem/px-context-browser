@@ -128,6 +128,12 @@ Custom property | Description | Default
                   <span class="breadcrumb" on-click="handleBreadcrumbClick">{{_getItemLabel(item)}}</span>
                 </li>
               </template>
+              <li hidden$="[[!multiSelectAllowed]]" class="float--right" style="padding-right:10px">
+                <span hidden$="[[_showLimit(limit)]]"><i> Selection is limited to [[limit]] items</i></span>
+                <button type="button" class="btn btn--primary" on-click="addClickHandler" key$="[[getItemId(item)]]">Add
+                </button>
+              </li>
+              </li>
             </ul>
             <div class="flex flex--col column-browser" id="columnBrowser">
               <px-spinner finished></px-spinner>
@@ -136,28 +142,50 @@ Custom property | Description | Default
                   <div class="flex flex--col column push" data-column>
                     <div class="head">{{item.header}}</div>
                     <div class$="{{isItemHidden(showColumnBrowser)}} flex__item scroll-y" on-scroll="scrollEndHandler">
-                    <template is="dom-if" if="[[showColumnTypeahead]]">
-                      <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
-                    </template>
+                      <template is="dom-if" if="[[showColumnTypeahead]]">
+                      <span class$="[[getClassSelectAll(showColumnTypeahead)]]" hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]">
+                       <input class$="level-{{index}}" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}"
+                              on-click="_selectAllItems" id$="[[getItemId(item)]]">
+                      </span>
+                        <div class$="[[getClassMultiSelectAll(multiSelectAllowed, selectAll)]]">
+                          <px-context-browser-typeahead class="search-box-component" items="{{item.children}}"></px-context-browser-typeahead>
+                        </div>
+                      </template>
+                      <template is="dom-if" if="[[!showColumnTypeahead]]">
+                      <span hidden$="[[_isSelectAllHidden(multiSelectAllowed, selectAll, item.children)]]" class$="[[getClassSelectAll(showColumnTypeahead)]]">
+                       <input class$="level-{{index}}" type="checkbox" value="{{item.id}}" checked$="[[_isChecked(item)]]"
+                              on-click="_selectAllItems" id$="[[getItemId(item)]]">
+                      </span>
+                      </template>
                       <ul class$="{{UlSelected(item, selectedItem)}} list-bare level">
-                        <template is="dom-repeat" id="level" items="{{item.children}}">
-                          <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
-                            <template is="dom-if" if="[[!showColumnTypeahead]]"><span class="flex__item item-label">{{_getItemLabel(item)}}</span></template>
-                            <template is="dom-if" if="[[showColumnTypeahead]]">
-                              <template is="dom-if" if="[[!item.searchTerm]]">
-                                <span class="flex__item item-label">{{_getItemLabel(item)}}</span>
+						            <span class$="level-{{index}}">
+                          <template is="dom-repeat" id="level" items="{{item.children}}">
+                            <li on-click="itemClickHandler" id$="[[getItemId(item)]]" class$="{{isItemSelected(item, selectedItem)}} flex flex--middle selectable-item" >
+                              <template is="dom-if" if="[[!showColumnTypeahead]]">
+                                <input hidden$="[[ !multiSelectAllowed ]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                       on-click="_itemsSelected" name="{{item.name}}">
+                                <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
                               </template>
-                              <template is="dom-if" if="{{item.searchTerm}}">
-                                <span class="flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                              <template is="dom-if" if="[[showColumnTypeahead]]">
+                                <template is="dom-if" if="[[!item.searchTerm]]">
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                         on-click="_itemsSelected" name="{{item.name}}">
+                                  <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{_getItemLabel(item)}}</span>
+                                </template>
+                                <template is="dom-if" if="{{item.searchTerm}}">
+                                  <input hidden$="[[!multiSelectAllowed]]" type="checkbox" checked$="[[_isChecked(item)]]" value="{{item.id}}" id$="[[getItemId(item)]]" class="multi-select-chk"
+                                         on-click="_itemsSelected" name="{{item.name}}">
+                                  <span class$="[[ getClassMultiSelect(multiSelectAllowed) ]] flex__item item-label">{{item.currentSearchLabel.prefix}}<span class="bold">{{item.currentSearchLabel.highlight}}</span>{{item.currentSearchLabel.suffix}}</span>
+                                </template>
                               </template>
-                            </template>
-                            <button class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
-                            </button>
-                            <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
-                              <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
-                            </template>
-                          </li>
-                        </template>
+                              <button hidden$="[[multiSelectAllowed]]" class$="[[getItemOpenerClass(item)]] opener btn btn--small btn--tertiary" on-click="openClickHandler" key$="[[getItemId(item)]]">[[localize("Open")]]
+                              </button>
+                              <template is="dom-if" if="{{_hasChildren(item, showChevron)}}">
+                                <span class="chevron"><iron-icon icon="fa:fa-angle-right"></iron-icon></span>
+                              </template>
+                            </li>
+                          </template>
+                        </span>
                       </ul>
                     </div>
                   </div>
@@ -232,9 +260,9 @@ Custom property | Description | Default
          * ```
          */
         browserContext : {
-            value: function() {return {};},
-            type: Object,
-            observer: 'contextChanged'
+          value: function() {return {};},
+          type: Object,
+          observer: 'contextChanged'
         },
         /**
          * If we have a selected Item, it's stored here.
@@ -245,6 +273,27 @@ Custom property | Description | Default
         selectedItem: {
           type: Object,
           value: function() {return {};}
+        },
+        /**
+         * This is used when multiSelectAllowed is true. This stores the selected items into an array.
+         * must be initially empty for polymer to determine the correct classes for ULs and LIs if there's not selected Asset
+         * @type {Object}
+         * @default empty Object
+         */
+        selectedItems: {
+          type: Object,
+          value: function() {return {};},
+          notify: true
+        },
+        /**
+         * This is used when multiSelectAllowed & selectAll is true. This is to keep tract of the 'select all' click
+         * @type {Object}
+         * @default empty Object
+         */
+        selectAllChkbox: {
+          type: Object,
+          value: function() {return {};},
+          notify: true
         },
         /**
          * Object defining some or all of the following functions as members:
@@ -297,8 +346,44 @@ Custom property | Description | Default
          */
         showColumnBrowser: {
           type: Boolean,
+          value: false,
+          observer: '_clearSelected'
+        },
+        /**
+         * flag to multi select allowed
+         * which allows the user to select multiple items when the flag is true
+         *
+         * @type {Boolean Optional}
+         * @default false
+         */
+        multiSelectAllowed: {
+          type: Boolean,
           value: false
         },
+        /**
+         * flag to show select all checkbox
+         * This allows the user to select all
+         * the checkboxes in that column
+         *
+         * @type {Boolean Optional}
+         * @default false
+         */
+        selectAll: {
+          type: Boolean,
+          value: false
+        },
+        /**
+         * This is an option to selectAll,
+         * limit the 'select all' to select number of items
+         *
+         * @type {Number Optional}
+         * @default 0 means no limit
+         */
+        limit: {
+          type: Number,
+          value: 0
+        },
+
         /**
          * opened item breadcrumb
          * @type {Array}
@@ -572,6 +657,20 @@ Custom property | Description | Default
         }
       },
       /**
+       * Event listener on 'open' button of open-able items, listener is registered from the template
+       *
+       * @param {Event} evt
+       * @private
+       */
+      addClickHandler: function(evt) {
+        evt.stopPropagation();
+        const items = Object.values(this.selectedItems);
+        if (items && this.handlers.itemAddHandler) {
+          this.toggleColumnBrowser();
+          this.handlers.itemAddHandler(items);
+        }
+      },
+      /**
        * Configure the breadcrumb trail from both the parentNode and/or the selected name.
        *
        * @param {Event} evt
@@ -621,6 +720,33 @@ Custom property | Description | Default
       isItemSelected: function(item, selectedItem) {
         return (item.inSelectedPath) ? "selected" : '';
       },
+      /**
+       *
+       * @return {String} class for multiSelectAllowed & selectAll
+       * @private
+       */
+      getClassMultiSelectAll: function(multiSelectAllowed, selectAll){
+        return (multiSelectAllowed && selectAll) ? "multi-select" : '';
+      },
+
+      /**
+       *
+       * @return {String}  class for selectAll
+       * @private
+       */
+      getClassSelectAll: function(showColumnTypeahead){
+        return (showColumnTypeahead) ? 'select-all' : 'select-all-no-border';
+      },
+
+      /**
+       *
+       * @return {String}  class for multiSelectAllowed
+       * @private
+       */
+      getClassMultiSelect: function(multiSelectAllowed) {
+        return (multiSelectAllowed) ? 'pad-left' : '';
+      },
+
       /**
        * Observer on LI, and whether they should show up. replaces polymer hidden, which seems to be shaky with IE.
        * if base_classes is passed in, it is returned with the appropriate response.
@@ -819,7 +945,7 @@ Custom property | Description | Default
        */
       addToParentNodes: function(item) {
         var found = false,
-            i = 0;
+          i = 0;
 
         while (i < this.parentNodes.length && !found) {
           if (this.parentNodes[i][this.idField] && this.parentNodes[i][this.idField] === item[this.idField]) {
@@ -1025,6 +1151,96 @@ Custom property | Description | Default
         if (root && root.render) {
           root.render();
         }
+      },
+
+      /**
+       * Called when the checkboxes are clicked
+       * @private
+       *
+       */
+      _itemsSelected: function(evt) {
+        var normalizedEvt = Polymer.dom(evt).event;
+        evt.stopPropagation();
+        //evt.target is now normalizedEvt.rootTarget
+        if (normalizedEvt.target.checked && this.limit !== 0 && this.limit === Object.values(this.selectedItems).length) {
+          evt.preventDefault();
+          return false;
+        }
+
+        if (normalizedEvt.target.checked) {
+          this.selectedItems[normalizedEvt.target.id] = evt.model.item;
+        } else {
+          delete this.selectedItems[normalizedEvt.target.id];
+        }
+      },
+
+      /**
+       * Called when 'select all' checkbox is clicked
+       * @private
+       *
+       */
+      _selectAllItems: function(evt) {
+        var normalizedEvt = Polymer.dom(evt).event;
+        //evt.target is now normalizedEvt.rootTarget
+        const cls = normalizedEvt.target.className;
+        const re = /level-[0-9]*/i;
+        const clsFound = cls.match(re);
+        let all = document.querySelector('span.'+clsFound);
+        const chkBoxes = all.querySelectorAll('.multi-select-chk:not([style*="display:none;"]):not([style*="display: none;"])');
+        let i = 0;
+        for (let i = 0; i < chkBoxes.length; i++) {
+          if (evt.target.checked && !chkBoxes[i].checked || !evt.target.checked && chkBoxes[i].checked) {
+            chkBoxes[i].click();
+          }
+        }
+
+        if (normalizedEvt.target.checked) {
+          this.selectAllChkbox[normalizedEvt.target.id] = evt.model.item;
+        } else {
+          delete this.selectAllChkbox[normalizedEvt.target.id];
+        }
+      },
+
+      /**
+       *
+       * To show the message 'Selection limited to $limit'
+       * @returns {boolean}
+       * @private
+       */
+      _showLimit: function(limit) {
+        if (!limit || limit === 0){
+          return true;
+        }
+        return false;
+      },
+
+      /**
+       *
+       * To show/hide 'select all' checkbox
+       * @returns {boolean}
+       * @private
+       */
+      _isSelectAllHidden: function(multiSelectAllowed, selectAll, children){
+        if (!multiSelectAllowed || !selectAll || children.length === 0) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      _clearSelected : function() {
+        if (this.showColumnBrowser) {
+          //this.splice("selectedItems", 0, this.selectedItems.length);
+          this.selectedItems = {};
+          let checkedBoxes = document.querySelectorAll('.multi-select-chk');
+          for (let i = 0; i < checkedBoxes.length; i++) {
+            checkedBoxes[i].checked = false;
+          }
+        }
+      },
+
+      _isChecked: function(item) {
+        const id = this.getItemId(item);
+        return (this.selectedItems[id] || this.selectAllChkbox[id]) ? true: false;
       }
     });
 </script>

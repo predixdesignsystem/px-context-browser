@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>px-context-browser-typeahead Demo</title>
+  <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+  <!-- for demo only...never do this. Rely on Angular $q if using angular or load this via amd or other loader -->
+  <script src="../bower_components/q/q.js"></script>
+  <!-- web-component-tester automatically provides local copy of brower.js below
+       for any URL ending with "/web-component-tester/browser.js"
+       when wct is run from the command line -->
+  <script src="../web-component-tester/browser.js"></script>
+  <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+  <link rel="import" href="../bower_components/px-theme/px-theme.html"/>
+  <!-- <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html" /> -->
+  <link rel="import" href="../px-context-browser.html"/>
+
+  <script src="px-context-multiselect-tests.js"></script>
+
+  <style is="x-style">
+    html {
+      height: 100%;
+      font-size: 0.9375em;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      background-color: #DDD;
+    }
+    .demo {
+      padding: 1rem;
+    }
+  </style>
+  <script>
+
+  </script>
+</head>
+
+<body>
+<input id="multiSelect" class="btn btn--primary" type="button" value="Open Multi Select">
+<px-context-browser
+  label-field="name"
+  id-field="identifier"
+  id="px_context_browser_multiselect"
+  opened-item-name="Select Context"
+  show-chevron="true"
+  multi-select-allowed="true">
+
+</px-context-browser>
+<px-context-browser
+  label-field="name"
+  id-field="identifier"
+  id="px_context_browser_selectall"
+  opened-item-name="Select Context"
+  select-all="true"
+  show-chevron="true"
+  multi-select-allowed="true">
+
+</px-context-browser>
+<px-context-browser
+  label-field="name"
+  id-field="identifier"
+  id="px_context_browser_limit"
+  opened-item-name="Select Context"
+  show-chevron="true"
+  select-all="true"
+  limit="10"
+  multi-select-allowed="true">
+
+</px-context-browser>
+<px-context-browser
+  label-field="name"
+  id-field="identifier"
+  id="px_context_browser_noselectall"
+  opened-item-name="Select Context"
+  show-chevron="true"
+  select-all="false"
+  limit="10"
+  multi-select-allowed="true">
+
+</px-context-browser>
+
+</body>
+</html>

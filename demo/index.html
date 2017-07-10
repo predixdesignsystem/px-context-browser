@@ -55,6 +55,9 @@
             show-column-typeahead="[[props.showColumnTypeahead.value]]"
             opened-item-name="[[props.openedItemName.value]]"
             disabled="[[props.disabled.value]]"
+            multi-select-allowed="[[props.multiSelectAllowed.value]]"
+            select-all="[[props.selectAll.value]]"
+            limit="[[props.limit.value]]"
             disable-infinite-scroll="[[props.disableInfiniteScroll.value]]"
             ></px-context-browser>
         </div>
@@ -101,6 +104,12 @@
           return [
             { configName: "Initial Context",
               configReset: true
+            },
+            { configName: "Multi Select",
+              multiSelectAllowed: true,
+              configReset: true,
+              selectAll: true,
+              limit: 10
             },
             { configName: "Direct Context",
               showColumnTypeahead: false,
@@ -299,6 +308,21 @@
       defaultValue: false,
       inputType: 'toggle'
     },
+      multiSelectAllowed: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      selectAll: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      limit: {
+        type: Boolean,
+        defaultValue: 10,
+        inputType: 'number'
+      },
     disabled: {
       type: Boolean,
       defaultValue: false,
@@ -387,6 +411,13 @@
       // });
 
       // template.linksIncludes = ['px-datetime-common/px-polygit-imports-datetime.html', 'px-polymer-font-awesome/polymer-font-awesome.html'];
+    },
+    _openContextBrowser: function() {
+      var contextBrowser = document.querySelector('px-context-browser');
+      contextBrowser.multiSelectAllowed = this.props.multiSelectAllowed.value;
+      contextBrowser.selectAll = this.props.selectAll.value;
+      contextBrowser.limit = this.props.limit.value;
+      contextBrowser.toggleColumnBrowser();
     }
   });
 
