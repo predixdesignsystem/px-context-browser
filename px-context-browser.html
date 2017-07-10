@@ -26,17 +26,17 @@
         <div slot="items" id="items" class="items">
           <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="1">
             <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
           <div class="column" column="2">
             <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[openArrow]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
             </template>
           </div>
         </div>
@@ -281,16 +281,15 @@
       const item = evt.model.item.source;
 
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
-        switch(action) {
-          case 'activate':
-            this.activate(item, 'DOM_EVENT');
-            break;
-          case 'select':
-            this.select(item, 'DOM_EVENT');
-            break;
-          case 'favorite':
-            // @TODO: Implement favorite storage/notification behavior
-            break;
+        const isTerminal = this._assetGraph.isTerminal(item);
+        if (action === 'activate' && !isTerminal) {
+          this.activate(item, 'DOM_EVENT');
+        }
+        else if (action === 'activate' && isTerminal) {
+          this.select(item, 'DOM_EVENT');
+        }
+        else if (action === 'favorite') {
+          // @TODO: Implement favorite storage/notification behavior
         }
       }
     },
@@ -332,6 +331,10 @@
 
     _isItemVisible(item) {
       return item.visible === true;
+    },
+
+    _isItemOpenable(canOpen, item) {
+      return canOpen && !this._assetGraph.isTerminal(item.source);
     },
 
     _filterChanged(nextFilter, lastFilter) {
