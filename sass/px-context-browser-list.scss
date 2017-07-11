@@ -78,7 +78,7 @@ $px-context-browser-list-background-color: var(--px-context-browser-list-backgro
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
+  height: 2px;
   overflow-x: hidden;
   background-color: var(--px-context-browser-loading-background-color, powderblue);
 }
@@ -92,7 +92,7 @@ $px-context-browser-list-background-color: var(--px-context-browser-list-backgro
   bottom: 0;
   width: 102%;
   background-color: var(--px-context-browser-loading-foreground-color, steelblue);
-  animation: LoadingBar 1.4s ease infinite;
+  animation: LoadingBar 1.5s ease infinite;
 }
 
 .loading-lines {
