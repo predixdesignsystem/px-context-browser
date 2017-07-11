@@ -93,15 +93,3 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
 .action:nth-last-child(3) {
   margin-right: calculateRem(15px);
 }
-// When selected, the open icon fades in right on hover
-:host([selected]) .action--open {
-  opacity: 0;
-  transform: translateX(100%);
-  max-width: 0;
-  transition: transform .2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity .2s cubic-bezier(0.645, 0.045, 0.355, 1), max-width .2s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-:host([selected]:hover) .action--open {
-  opacity: 1;
-  transform: translateX(0);
-  max-width: $px-context-browser-item-height;
-}

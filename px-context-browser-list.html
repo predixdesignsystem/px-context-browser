@@ -7,6 +7,9 @@
   <template>
     <style include="px-context-browser-list-styles"></style>
 
+    <template is="dom-if" if="[[loading]]">
+      <div class="loading-bar"></div>
+    </template>
     <div class="search">
       <template is="dom-if" if="[[canFilter]]">
         <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="tab" on-keys-pressed="_handleTabKey"></iron-a11y-keys>
@@ -31,6 +34,16 @@
       </template>
     </div>
     <div class="items">
+      <template is="dom-if" if="[[loading]]">
+        <div class="loading-lines">
+          <div class="loading-line loading-line--lg"></div>
+          <div class="loading-line loading-line--sm"></div>
+          <div class="loading-line loading-line--md"></div>
+          <div class="loading-line loading-line--xlg"></div>
+          <div class="loading-line loading-line--lg"></div>
+          <div class="loading-line loading-line--sm"></div>
+        </div>
+      </template>
       <slot name="items"></slot>
     </div>
   </template>
@@ -39,6 +52,11 @@
   Polymer({
     is: 'px-context-browser-list',
     properties: {
+      loading: {
+        type: Boolean,
+        value: false
+      },
+
       canFilter: {
         type: Boolean,
         value: false,

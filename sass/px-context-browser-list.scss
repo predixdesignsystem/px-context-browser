@@ -63,3 +63,61 @@ $px-context-browser-list-background-color: var(--px-context-browser-list-backgro
   position: relative;
   flex: 1 1 auto;
 }
+
+@keyframes LoadingBar {
+  0%  { transform: translateX(-102%) }
+  45% { transform: translateX(0) }
+  55% { transform: translateX(0) }
+  90% { transform: translateX(102%) }
+  100% { transform: translateX(102%) }
+}
+
+.loading-bar {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  overflow-x: hidden;
+  background-color: var(--px-context-browser-loading-background-color, powderblue);
+}
+.loading-bar:before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 102%;
+  background-color: var(--px-context-browser-loading-foreground-color, steelblue);
+  animation: LoadingBar 1.4s ease infinite;
+}
+
+.loading-lines {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.loading-line {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 3px;
+  margin: calculateRem(25px) calculateRem(15px);
+  overflow-x: hidden;
+  background-color: var(--px-context-browser-loading-line-color, whitesmoke);
+}
+.loading-line:first-of-type {
+  margin-top: calculateRem(15px);
+}
+.loading-line:last-of-type {
+  margin-bottom: calculateRem(15px);
+}
+.loading-line--xlg { width: 80% }
+.loading-line--lg { width: 70% }
+.loading-line--md { width: 60% }
+.loading-line--sm { width: 50% }

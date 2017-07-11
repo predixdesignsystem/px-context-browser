@@ -22,7 +22,7 @@
 
     <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]">
       <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
-      <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}">
+      <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}" loading="[[_activeColumnLoading]]">
         <div slot="items" id="items" class="items">
           <div class="column" column="0">
             <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
@@ -74,6 +74,32 @@
         notify: true,
         observer: '_filterChanged'
       },
+      /**
+       * The number of milliseconds to wait for an active item with no children
+       * to have children provided. Defaults to 5 seconds. Set to `0` to wait
+       * forever.
+       */
+      loadingTimeout: {
+        type: Number,
+        value: 5000,
+        observer: 'cancelLoading'
+      },
+      /**
+       * Updated when the context browser attempts to load additional children.
+       */
+      loading: {
+        type: Boolean,
+        value: false,
+        readOnly: true
+      },
+      /**
+       * Enable to mark items whose children cannot be loaded before the
+       * `loadingTimeout` as terminal — prevents the item from being activated.
+       */
+      loadingFailureTerminal: {
+        type: Boolean,
+        value: false
+      },
       _columns: {
         type: Object,
         value: function() {
@@ -81,20 +107,26 @@
             0: {
               index: 0,
               el: null,
+              parent: null,
               items: [],
-              path: []
+              path: [],
+              loading: false
             },
             1: {
               index: 1,
               el: null,
+              parent: null,
               items: [],
-              path: []
+              path: [],
+              loading: false
             },
             2: {
               index: 2,
               el: null,
+              parent: null,
               items: [],
-              path: []
+              path: [],
+              loading: false
             }
           };
         }
@@ -105,6 +137,18 @@
         observer: '_activeColumnChanged'
       },
 
+      _activeColumnRef: {
+        type: Object,
+        computed: '_getActiveColumnRef(_activeColumn)'
+      },
+
+      _activeColumnLoading: {
+        type: Boolean,
+        value: false,
+        computed: '_isActiveColumnLoading(_activeColumnRef.loading)',
+        observer: '_activeColumnLoadingChanged'
+      },
+
       _visibleItemCount: {
         type: Number,
         observer: '_animateColumnHeight'
@@ -112,6 +156,43 @@
 
       _panelEl: {
         type: HTMLElement
+      }
+    },
+
+    _getActiveColumnRef(index) {
+      return this._columns[index];
+    },
+
+    _isActiveColumnLoading(isLoading) {
+      return isLoading || false;
+    },
+
+    _activeColumnLoadingChanged(isLoading, wasLoading) {
+      this.__loadingHandler = this.__loadingHandler || null;
+      if (isLoading && !wasLoading) {
+        if (this.__loadingHandler) {
+          this.cancelLoading();
+        }
+        this._setLoading(true);
+        this.__loadingHandler = this.async(function(){
+          if (this.loadingFailureTerminal) {
+            this._assetGraph.setTerminal(this.active, true);
+          }
+          this.activate(this.activeMeta.parent, 'LOADING_FAILED');
+          this.__loadingHandler = null;
+        }, this.loadingTimeout);
+      }
+      else if (!isLoading && wasLoading && this.__loadingHandler) {
+        this._setLoading(false);
+        this.cancelLoading();
+      }
+    },
+
+    cancelLoading() {
+      if (this.__loadingHandler) {
+        this._setLoading(false);
+        this.cancelAsync(this.__loadingHandler);
+        this.__loadingHandler = null;
       }
     },
 
@@ -215,32 +296,63 @@
       'px-app-asset-graph-created' : '_resetColumns',
       'px-app-asset-activated' : '_handleActiveChanged',
       'px-app-asset-deactivated' : '_resetColumns',
-      'focus-first-visible-item' : '_focusFirstVisibleItem'
+      'focus-first-visible-item' : '_focusFirstVisibleItem',
+      'px-app-asset-children-updated' : '_handleChildrenChanged'
     },
+
+    _handleChildrenChanged(evt) {
+      const {item, path, children, isTerminal, hasChildren} = evt.detail;
+      if (this._columns[this._activeColumn].parent !== item) return;
+      this.cancelLoading();
+
+      if (isTerminal || !hasChildren) {
+        this.activate(this.activeMeta.parent, 'LOADING_FAILED');
+        return;
+      }
+
+      let slicedChildren = children.map(c => ({ source: c, visible: true }));
+      if (this.hasFilter && typeof this.filter === 'string' && this.filter.length) {
+        this._filterAndMutateItems(slicedChildren, true, this.filter);
+      }
+      this.set(`_columns.${this._activeColumn}.loading`, false);
+      this.set(`_columns.${this._activeColumn}.items`, slicedChildren);
+      this.notifyPath(`_activeColumnRef.loading`);
+    },
+
 
     _handleActiveChanged(evt) {
       const {item, path} = evt.detail;
       const lastColumnIndex = this._activeColumn;
       const nextColumnIndex = this._getNextColumnIndex(lastColumnIndex);
-      this._setActiveColumn(item.children || [], path, nextColumnIndex);
+      this._setActiveColumn(item, this._assetGraph.getChildren(item), path, nextColumnIndex);
+
+      if (this._assetGraph.hasNode(item) && !this._assetGraph.isTerminal(item) && !this._assetGraph.isExhausted(item) && !this._assetGraph.hasChildren(item)) {
+        this.fire('px-app-asset-children-requested', {
+          item: item,
+          path: path
+        });
+      }
     },
 
     _resetColumns() {
       const lastColumnIndex = this._activeColumn;
       const nextColumnIndex = typeof lastColumnIndex === 'number' ? this._getNextColumnIndex(lastColumnIndex) : 0;
-      this._setActiveColumn(this.items, [], nextColumnIndex);
+      this._setActiveColumn(null, this.items, [], nextColumnIndex);
     },
 
     _getNextColumnIndex(lastIndex) {
       return lastIndex === 2 ? 0 : lastIndex+1;
     },
 
-    _setActiveColumn(children, path, nextColumnIndex) {
+    _setActiveColumn(parent, children, path, nextColumnIndex) {
       if (this.hasFilter) {
         this.filter = '';
       }
+      const loading = (!this._assetGraph.isTerminal(parent) && !this._assetGraph.hasChildren(parent));
+      this.set(`_columns.${nextColumnIndex}.loading`, loading);
       this.set(`_columns.${nextColumnIndex}.items`, children.map(c => ({source:c, visible:true})));
       this.set(`_columns.${nextColumnIndex}.path`, path);
+      this.set(`_columns.${nextColumnIndex}.parent`, parent);
       this._activeColumn = nextColumnIndex;
     },
 
@@ -282,10 +394,10 @@
 
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
         const isTerminal = this._assetGraph.isTerminal(item);
-        if (action === 'activate' && !isTerminal) {
+        if (!isTerminal && action === 'activate') {
           this.activate(item, 'DOM_EVENT');
         }
-        else if (action === 'activate' && isTerminal) {
+        else if (action === 'select' || (isTerminal && action === 'activate')) {
           this.select(item, 'DOM_EVENT');
         }
         else if (action === 'favorite') {
@@ -341,14 +453,22 @@
       if (typeof this._activeColumn !== 'number' || typeof nextFilter !== 'string' || (nextFilter.length === 0 && typeof lastFilter !== 'string')) {
         return;
       }
-      const filter = nextFilter.toLowerCase();
-      for (let i=0; i<this._columns[this._activeColumn].items.length; i++) {
-        if (this._columns[this._activeColumn].items[i].source.label.toLowerCase().indexOf(filter) > -1) {
-          this._columns[this._activeColumn].items[i].visible = true;
-        } else {
-          this._columns[this._activeColumn].items[i].visible = false;
+      this._filterAndMutateItems(this._columns[this._activeColumn].items, nextFilter.length > 0, nextFilter);
+    },
+
+    _filterAndMutateItems(items, filterIsActive, filterString) {
+      if (items && !filterIsActive) {
+        for (let i=0; i<items.length; i++) {
+          items[i].visible = true;
+          this.notifyPath(`_columns.${this._activeColumn}.items.${i}.visible`);
         }
-        this.notifyPath(`_columns.${this._activeColumn}.items.${i}.visible`);
+      }
+      else if (items && filterIsActive) {
+        const filter = filterString.toLowerCase();
+        for (let i=0; i<items.length; i++) {
+          items[i].visible = (items[i].source.label.toLowerCase().indexOf(filter) > -1);
+          this.notifyPath(`_columns.${this._activeColumn}.items.${i}.visible`);
+        }
       }
     },
 
@@ -365,21 +485,19 @@
 
     _animateColumnHeight(nextItemCount, lastItemCount) {
       const itemHeight = parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px');
-      if (nextItemCount === 0 && typeof lastItemCount === 'number') {
-        return;
-      }
-      let multiplier;
-      if (nextItemCount === 0) {
-        multiplier = 1;
-      }
-      else if (nextItemCount > 10) {
-        multiplier = 10;
-      }
-      else {
-        multiplier = nextItemCount;
-      }
+      const nextHeight = this._getNextColumnHeight(nextItemCount, itemHeight);
       const itemsEl = Polymer.dom(this.root).querySelector('#items');
-      itemsEl.style.minHeight = (multiplier*itemHeight) + 'px';
+      itemsEl.style.minHeight = nextHeight + 'px';
+    },
+
+    _getNextColumnHeight(nextItemCount, itemHeight) {
+      if (nextItemCount === 0) {
+        return 173; // MAGIC NUMBER: Height of the animation lines
+      }
+      if (nextItemCount > 10) {
+        return itemHeight*10;
+      }
+      return itemHeight*nextItemCount;
     },
 
     _isHeaderActive(columns, activeColumn) {
