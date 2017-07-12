@@ -50,6 +50,8 @@ $px-context-browser-list-background-color: var(--px-context-browser-list-backgro
   display: block;
   padding: 4px;
   color: gray;
+  --iron-icon-fill-color: none;
+  --iron-icon-stroke-color: currentcolor;
 }
 .search__icon--tappable {
   cursor: pointer;
