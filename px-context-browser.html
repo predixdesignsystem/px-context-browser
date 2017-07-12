@@ -65,10 +65,18 @@
         type: Boolean,
         value: false
       },
+      /**
+       * Enables filtering the visible assets. Set to `true` to show a filter
+       * input above each asset list.
+       */
       hasFilter: {
         type: Boolean,
         value: false
       },
+      /**
+       * The active filter. Updates when the user types into the filter input.
+       * Set a new value to filter programatically.
+       */
       filter: {
         type: String,
         notify: true,
