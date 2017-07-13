@@ -3,6 +3,7 @@
 <link rel="import" href="../web-animations-js/web-animations-next-lite.min.html"/>
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"/>
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
+<link rel="import" href="../iron-dropdown/iron-dropdown.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-graph.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
@@ -20,28 +21,38 @@
     <iron-a11y-keys target="[[_panelEl]]" keys="enter" on-keys-pressed="_handleEnterKey" stop-keyboard-event-propagation></iron-a11y-keys>
     <iron-a11y-keys target="[[_panelEl]]" keys="left" on-keys-pressed="_handleArrowLeftKey" stop-keyboard-event-propagation></iron-a11y-keys>
 
-    <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]">
-      <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
-      <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}" loading="[[_activeColumnLoading]]">
-        <div slot="items" id="items" class="items">
-          <div class="column" column="0">
-            <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
-            </template>
+    <iron-dropdown
+      id="dropdown"
+      no-overlap
+      vertical-align="top"
+      horizontal-align="left"
+      horizontal-offset="-15"
+      opened="{{opened}}"
+      position-target="[[_positionTarget]]"
+      on-iron-overlay-canceled="_handleDropdownCanceled">
+      <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]" slot="dropdown-content">
+        <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
+        <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}" loading="[[_activeColumnLoading]]">
+          <div slot="items" id="items" class="items">
+            <div class="column" column="0">
+              <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
+                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              </template>
+            </div>
+            <div class="column" column="1">
+              <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
+                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              </template>
+            </div>
+            <div class="column" column="2">
+              <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
+                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+              </template>
+            </div>
           </div>
-          <div class="column" column="1">
-            <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
-            </template>
-          </div>
-          <div class="column" column="2">
-            <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-              <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
-            </template>
-          </div>
-        </div>
-      </px-context-browser-list>
-    </px-context-browser-panel>
+        </px-context-browser-list>
+      </px-context-browser-panel>
+    </iron-dropdown>
   </template>
 </dom-module>
 <script>
@@ -108,6 +119,24 @@
         type: Boolean,
         value: false
       },
+      openTrigger: {
+        type: HTMLElement,
+        observer: '_openTriggerChanged'
+      },
+      favoritesTrigger: {
+        type: HTMLElement,
+        observer: '_favoritesTriggerChanged'
+      },
+      _positionTarget: {
+        type: HTMLElement
+      },
+      /**
+       * If `true` the context browser is opened.
+       */
+      opened: {
+        type: Boolean,
+        value: false
+      },
       _columns: {
         type: Object,
         value: function() {
@@ -164,6 +193,54 @@
 
       _panelEl: {
         type: HTMLElement
+      }
+    },
+
+    created() {
+      this._openTriggerHandler = null;
+      this._favoritesTriggerChanged = null;
+    },
+
+    _openTriggerChanged(newTrigger, oldTrigger) {
+      if (oldTrigger && oldTrigger instanceof HTMLElement && this._openTriggerHandler !== null) {
+        oldTrigger.removeEventListener('trigger-tapped', this._openTriggerHandler);
+        this._openTriggerHandler = null;
+      }
+      if (newTrigger && newTrigger instanceof HTMLElement) {
+        this._openTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleOpenTriggerTapped.bind(this));
+      }
+    },
+
+    _favoritesTriggerChanged(newTrigger, oldTrigger) {
+      if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
+        oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
+        this._favoritesTriggerHandler = null;
+      }
+      if (newTrigger && newTrigger instanceof HTMLElement) {
+        this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
+      }
+    },
+
+    _handleOpenTriggerTapped(evt) {
+      if (!this.opened) {
+        this._positionTarget = Polymer.dom(evt).rootTarget;
+        this.opened = true;
+      }
+      else {
+        this.$.dropdown.close();
+      }
+    },
+
+    _handleFavoritesTriggerTapped(evt) {
+      // @TODO: Implement favorites trigger behavior
+    },
+
+    _handleDropdownCanceled(evt) {
+      if (!this.openTrigger) return;
+
+      const path = Polymer.dom(evt.detail).path;
+      if (path.indexOf(this.openTrigger) > -1) {
+        evt.preventDefault();
       }
     },
 

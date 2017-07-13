@@ -30,7 +30,8 @@
     "iron-a11y-keys": "^2.0.0",
     "iron-resizable-behavior": "^2.0.0",
     "web-animations-js": "^2.2.0",
-    "iron-icon": "^2.0.0"
+    "iron-icon": "^2.0.0",
+    "iron-dropdown": "^2.0.0"
   },
   "devDependencies": {
     "px-box-sizing-design": "^1.0.0",

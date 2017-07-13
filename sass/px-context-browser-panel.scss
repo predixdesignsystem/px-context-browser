@@ -22,42 +22,27 @@ $px-context-browser-panel-border-color: var(--px-context-browser-panel-border-co
 $px-context-browser-panel-border-size: var(--px-context-browser-panel-border-size, 1px);
 $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow, 0 2px 4px 0 rgba(0,0,0,0.2));
 
-:host {
-  display: flex;
-  flex-direction: column;
+.pointer {
+  height: 16px;
+  width: 16px;
+  margin-left: 15px;
   position: relative;
-  width: $px-context-browser-panel-width;
-  border-style: solid;
-  border-width: $px-context-browser-panel-border-size;
-  border-color: $px-context-browser-panel-border-color;
-  box-shadow: $px-context-browser-panel-box-shadow;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 16px solid var(--px-context-browser-panel-border-color, $gray3);
 }
 
 .pointer:after {
   content: "";
   position: absolute;
-  top: -19px;
-  left: 20px;
+  left: -15px;
+  top: 2px;
   width: 0;
   height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 20px solid white;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
   z-index: 1;
-}
-
-.pointer:before {
-  content: "";
-  position: absolute;
-  top: -21px;
-  left: 19px;
-  width: 0;
-  height: 0;
-  border-left: 21px solid transparent;
-  border-right: 21px solid transparent;
-  border-bottom: 21px solid var(--px-context-browser-panel-border-color, $gray3);
-  z-index: 1;
-  transition: border-bottom-color 100ms;
 }
 
 :host([has-header]) .pointer:after {
@@ -69,4 +54,13 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
   flex: 1 1 auto;
   flex-direction: column;
   overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: $px-context-browser-panel-width;
+  border-style: solid;
+  border-width: $px-context-browser-panel-border-size;
+  border-color: $px-context-browser-panel-border-color;
+  box-shadow: $px-context-browser-panel-box-shadow;
 }
