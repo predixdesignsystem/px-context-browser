@@ -520,8 +520,8 @@
 
     _handleItemTapped(evt) {
       evt.stopPropagation();
-      const $root = Polymer.dom(evt).path[0];
-      const action = $root.getAttribute('asset-action');
+      const path = Polymer.dom(evt).path;
+      const action = this._findActionInPath(path);
       const item = evt.model.item.source;
 
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
