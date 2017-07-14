@@ -31,7 +31,8 @@
     "iron-resizable-behavior": "^2.0.0",
     "web-animations-js": "^2.2.0",
     "iron-icon": "^2.0.0",
-    "iron-dropdown": "^2.0.0"
+    "iron-dropdown": "^2.0.0",
+    "promise-polyfill": "polymerlabs/promise-polyfill#^2.0.0"
   },
   "devDependencies": {
     "px-box-sizing-design": "^1.0.0",
@@ -40,7 +41,8 @@
     "px-demo": "^2.0.0",
     "px-forms-design": "^2.0.0",
     "px-normalize-design": "^1.0.0",
-    "px-theme": "^3.0.0"
+    "px-theme": "^3.0.0",
+    "iron-ajax": "^2.0.2"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"
