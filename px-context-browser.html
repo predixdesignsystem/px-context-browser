@@ -29,7 +29,9 @@
       horizontal-offset="-15"
       opened="{{opened}}"
       position-target="[[_positionTarget]]"
-      on-iron-overlay-canceled="_handleDropdownCanceled">
+      on-iron-overlay-canceled="_handleBrowserCanceled"
+      on-iron-overlay-opened="_handleBrowserOpened"
+      on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]" slot="dropdown-content">
         <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
         <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}" loading="[[_activeColumnLoading]]">
@@ -199,6 +201,7 @@
     created() {
       this._openTriggerHandler = null;
       this._favoritesTriggerChanged = null;
+      this._resetActiveTask = null;
     },
 
     _openTriggerChanged(newTrigger, oldTrigger) {
@@ -235,12 +238,47 @@
       // @TODO: Implement favorites trigger behavior
     },
 
-    _handleDropdownCanceled(evt) {
+    /**
+     * If the user clicked on the open trigger, we'll let the open trigger
+     * close the dropdown on its own.
+     */
+    _handleBrowserCanceled(evt) {
       if (!this.openTrigger) return;
 
       const path = Polymer.dom(evt.detail).path;
       if (path.indexOf(this.openTrigger) > -1) {
         evt.preventDefault();
+      }
+    },
+
+    /**
+     * If the browser is opened before the reset active task runs, cancel it.
+     */
+    _handleBrowserOpened(evt) {
+      if (this._resetActiveTask) {
+        this.cancelAsync(this._resetActiveTask);
+        this._resetActiveTask = null;
+      }
+    },
+
+    /**
+     * After 5 seconds, reset the active to the parent of the selected item,
+     * or to the root if no item is selected.
+     */
+    _handleBrowserClosed(evt) {
+      if (this._resetActiveTask) {
+        this.cancelAsync(this._resetActiveTask);
+        this._resetActiveTask = null;
+      }
+      this._resetActiveTask = this.async(this._resetActive.bind(this), 5000);
+    },
+
+    _resetActive() {
+      if (!this.selected && this.active) {
+        this.activate(null, 'DOM_EVENT');
+      }
+      else if (this.selected && this.active !== this.selectedMeta.parent) {
+        this.activate(this.selectedMeta.parent, 'DOM_EVENT');
       }
     },
 
