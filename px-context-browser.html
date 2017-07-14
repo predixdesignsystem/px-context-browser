@@ -260,6 +260,8 @@
       if (this._resetActiveTask) {
         this.cancelAsync(this._resetActiveTask);
         this._resetActiveTask = null;
+      } else {
+        this._resetActive(); // necessary to update active if a new item is selected via. API while the browser was closed
       }
     },
 
