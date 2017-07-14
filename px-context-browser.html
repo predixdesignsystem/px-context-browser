@@ -203,6 +203,7 @@
       this._openTriggerHandler = null;
       this._favoritesTriggerChanged = null;
       this._resetActiveTask = null;
+      this.__loadingHandler = null;
     },
 
     _openTriggerChanged(newTrigger, oldTrigger) {
@@ -291,32 +292,35 @@
       return isLoading || false;
     },
 
-    _activeColumnLoadingChanged(isLoading, wasLoading) {
-      this.__loadingHandler = this.__loadingHandler || null;
-      if (isLoading && !wasLoading) {
-        if (this.__loadingHandler) {
-          this.cancelLoading();
-        }
+    _activeColumnLoadingChanged(isLoading) {
+      this.cancelLoading();
+      if (isLoading) {
         this._setLoading(true);
-        this.__loadingHandler = this.async(function(){
-          if (this.loadingFailureTerminal) {
-            this._assetGraph.setTerminal(this.active, true);
-          }
-          this.activate(this.activeMeta.parent, 'LOADING_FAILED');
-          this.__loadingHandler = null;
-        }, this.loadingTimeout);
-      }
-      else if (!isLoading && wasLoading && this.__loadingHandler) {
-        this._setLoading(false);
-        this.cancelLoading();
+        if (this.loadingTimeout === 0) {
+          this.__loadingHandler = true;
+        }
+        else if (typeof this.loadingTimeout === 'number' && this.loadingTimeout > 0) {
+          this.__loadingHandler = this.async(this.cancelLoading.bind(this), this.loadingTimeout);
+        }
       }
     },
 
+    /**
+     * Cancels the current child loading event, if one is in progress. Changes
+     * the active browser view to the previously loading item's parent.
+     */
     cancelLoading() {
       if (this.__loadingHandler) {
-        this._setLoading(false);
         this.cancelAsync(this.__loadingHandler);
         this.__loadingHandler = null;
+        this._setLoading(false);
+        if (typeof this._activeColumn === 'number' && this._columns[this._activeColumn].loading) {
+          this.set(`_columns.${this._activeColumn}.loading`, false);
+        }
+        if (this.loadingFailureTerminal) {
+          this._assetGraph.setTerminal(this.active, true);
+        }
+        this.activate(this.activeMeta.parent, 'LOADING_FAILED');
       }
     },
 
