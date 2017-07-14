@@ -295,6 +295,10 @@
     _activeColumnLoadingChanged(isLoading) {
       this.cancelLoading();
       if (isLoading) {
+        if (typeof this.loadingTimeout !== 'number' || this.loadingTimeout < 0) {
+          throw new Error(`px-context-browser expects the \`loadingTimeout\` property to be a non-negative number. The following invalid value was given:
+            ${this.loadingTimeout}`);
+        }
         this._setLoading(true);
         if (this.loadingTimeout === 0) {
           this.__loadingHandler = true;
