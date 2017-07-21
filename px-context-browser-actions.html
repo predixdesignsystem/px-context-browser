@@ -1,0 +1,94 @@
+<!-- Action: Select -->
+<dom-module id="px-context-browser-action-select">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      svg {
+        stroke: currentcolor;
+        fill: transparent;
+        stroke-width: 2px;
+      }
+      :host(:hover) svg,
+      :host([active]) svg {
+        stroke: var(--px-context-browser-icon-select-stroke, darkolivegreen);
+        fill: var(--px-context-browser-icon-select-fill, yellowgreen);
+      }
+    </style>
+
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32">
+      <g id="open" transform="translate(1 1)">
+        <circle cx="14.8" cy="14.8" r="14.2" stroke-linejoin="round"/>
+        <path stroke-linejoin="round" d="M9.3 20.2L20.4 9.1m-7.1-.5h7.6v7.6"/>
+      </g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-select'
+  });
+</script>
+
+<!-- Action: Favorite -->
+<dom-module id="px-context-browser-action-favorite">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      svg {
+        stroke: currentcolor;
+        fill: transparent;
+        stroke-width: 2px;
+      }
+      :host(:hover) svg,
+      :host([active]) svg {
+        stroke: var(--px-context-browser-icon-favorite-stroke, darkgoldenrod);
+        fill: var(--px-context-browser-icon-favorite-fill, yellow);
+      }
+    </style>
+
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32">
+      <g id="star">
+        <path stroke-linejoin="round" d="M15.2 1.6l3.2 9.9h10.4l-8.4 6.1 3.2 9.9-8.4-6.1-8.5 6.1 3.3-9.9-8.5-6.1H12z"/>
+      </g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-favorite'
+  });
+</script>
+
+<!-- Action: Open -->
+<dom-module id="px-context-browser-action-open">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      svg {
+        stroke: currentcolor;
+        fill: transparent;
+        stroke-width: 2px;
+      }
+    </style>
+
+    <!-- Source code copied from px-icon-set.html to allow for color styling -->
+    <svg viewBox="0 0 32 32">
+      <g id="arrow-right" transform="translate(1 8)">
+        <path stroke-linejoin="round" d="M21.2 15.9L29 8.1 21.2.4m7.1 7.7H0"/>
+      </g>
+    </svg>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-action-open'
+  });
+</script>

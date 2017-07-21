@@ -1,0 +1,73 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../iron-icon/iron-icon.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="css/px-context-browser-filter-styles.html"/>
+
+<dom-module id="px-context-browser-filter">
+  <template>
+    <style include="px-context-browser-filter-styles"></style>
+    <!-- <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="tab" on-keys-pressed="_handleTabKey"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="enter" on-keys-pressed="_handleEnterKey"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="left right up down" on-keys-pressed="_handleArrowKeys"></iron-a11y-keys> -->
+    <div class="search__form">
+      <input
+          id="search"
+          class="text-input search__box"
+          placeholder="Filter"
+          value="{{filter::input}}"
+          autocomplete="off"
+          tabindex="0">
+      </input>
+      <template is="dom-if" if="[[_showFilterIcon(filter)]]">
+        <iron-icon class="search__icon" icon="px:filter"></iron-icon>
+        <!-- @TODO: Figure out why px-icon won't work here, it is not resizing to respect the width/height the way iron-icon does -->
+        <!-- <px-icon class="search__icon" icon="px:filter"></px-icon> -->
+      </template>
+      <template is="dom-if" if="[[_showClearIcon(filter)]]">
+        <iron-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px:close" on-tap="clearFilter"></iron-icon>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'px-context-browser-filter',
+
+      properties: {
+        filter: {
+          type: String,
+          notify: true,
+          value: ''
+        },
+
+        active: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        filtering: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          computed: '_isFilterActive(filter)'
+        }
+      },
+
+      _isFilterActive(filter) {
+        return (typeof filter === 'string' && filter.length > 0);
+      },
+
+      _showFilterIcon(filter) {
+        return typeof filter === 'string' && filter.length === 0;
+      },
+
+      _showClearIcon(filter) {
+        return typeof filter === 'string' && filter.length > 0;
+      },
+
+      clearFilter() {
+        this.filter = '';
+      }
+    });
+  </script>
+</dom-module>

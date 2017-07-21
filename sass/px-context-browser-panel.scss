@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+@import "px-colors-design/_settings.colors.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+
+// Component
+$px-context-browser-panel-width: var(--px-context-browser-panel-width, calculateRem(320px));
+$px-context-browser-panel-border-color: var(--px-context-browser-panel-border-color, lightgray); //$gray3
+$px-context-browser-panel-border-size: var(--px-context-browser-panel-border-size, 1px);
+$px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow, 0 2px 4px 0 rgba(0,0,0,0.2));
+
+.pointer {
+  height: 16px;
+  width: 16px;
+  margin-left: 15px;
+  position: relative;
+  z-index: 1;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-bottom: 16px solid var(--px-context-browser-panel-border-color, $gray3);
+}
+
+.pointer:after {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 2px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid white;
+  z-index: 1;
+}
+
+:host([collapsed]) {
+  background-color: white;
+}
+
+:host([collapsed]) .pointer {
+  display: none;
+}
+
+:host([has-header]) .pointer:after {
+  border-bottom-color: var(--px-context-browser-header-background-color, $gray1);
+}
+
+.panel-body {
+  // display: flex;
+  // flex: 1 1 auto;
+  // flex-direction: column;
+  // overflow: hidden;
+  //
+  // display: flex;
+  // flex-direction: column;
+
+  display: block;
+  position: relative;
+  width: $px-context-browser-panel-width;
+  border-style: solid;
+  border-width: $px-context-browser-panel-border-size;
+  border-color: $px-context-browser-panel-border-color;
+  box-shadow: $px-context-browser-panel-box-shadow;
+  background-color: var(--px-context-browser-panel-background-color, white);
+}
+
+:host([collapsed]) .panel-body {
+  width: 100vw;
+  height: 90vh;
+}
+
+@keyframes LoadingBar {
+  0%  { transform: translateX(-102%) }
+  45% { transform: translateX(0) }
+  55% { transform: translateX(0) }
+  90% { transform: translateX(102%) }
+  100% { transform: translateX(102%) }
+}
+.loading-bar {
+  display: block;
+  position: relative;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  overflow-x: hidden;
+  background-color: var(--px-context-browser-loading-background-color, powderblue);
+}
+.loading-bar:before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 102%;
+  background-color: var(--px-context-browser-loading-foreground-color, steelblue);
+  animation: LoadingBar 1.5s ease infinite;
+}
