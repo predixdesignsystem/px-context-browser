@@ -8,12 +8,23 @@
 
     <div class="panel-body">
       <slot name="header"></slot>
-      <slot name="body"></slot>
+      <template is="dom-if" if="[[showLoadingBar]]">
+        <div class="loading-bar"></div>
+      </template>
+      <slot name="filter"></slot>
+      <slot name="columns"></slot>
     </div>
   </template>
 </dom-module>
 <script>
   Polymer({
-    is: 'px-context-browser-panel'
+    is: 'px-context-browser-panel',
+
+    properties: {
+      showLoadingBar: {
+        type: Boolean,
+        value: false
+      }
+    }
   })
 </script>

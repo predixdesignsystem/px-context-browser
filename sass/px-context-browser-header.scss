@@ -39,6 +39,11 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
   display: flex;
 }
 
+:host([collapsed]) {
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+}
+
 .label {
   display: flex;
   align-items: center;

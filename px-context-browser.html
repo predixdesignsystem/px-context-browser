@@ -9,51 +9,57 @@
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
 <link rel="import" href="css/px-context-browser-styles.html"/>
+<link rel="import" href="css/px-context-browser-animations-styles.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
 <link rel="import" href="px-context-browser-header.html"/>
-<link rel="import" href="px-context-browser-list.html"/>
 <link rel="import" href="px-context-browser-item.html"/>
+<link rel="import" href="px-context-browser-columns.html"/>
+<link rel="import" href="px-context-browser-filter.html"/>
 
 <dom-module id="px-context-browser">
   <template>
     <style include="px-context-browser-styles"></style>
-    <iron-a11y-keys target="[[_panelEl]]" keys="up" on-keys-pressed="_focusLast" stop-keyboard-event-propagation></iron-a11y-keys>
+    <style include="px-context-browser-animations-styles"></style>
+
+    <!-- <iron-a11y-keys target="[[_panelEl]]" keys="up" on-keys-pressed="_focusLast" stop-keyboard-event-propagation></iron-a11y-keys>
     <iron-a11y-keys target="[[_panelEl]]" keys="down" on-keys-pressed="_focusNext" stop-keyboard-event-propagation></iron-a11y-keys>
     <iron-a11y-keys target="[[_panelEl]]" keys="enter" on-keys-pressed="_handleEnterKey" stop-keyboard-event-propagation></iron-a11y-keys>
-    <iron-a11y-keys target="[[_panelEl]]" keys="left" on-keys-pressed="_handleArrowLeftKey" stop-keyboard-event-propagation></iron-a11y-keys>
+    <iron-a11y-keys target="[[_panelEl]]" keys="left" on-keys-pressed="_handleArrowLeftKey" stop-keyboard-event-propagation></iron-a11y-keys> -->
+
+    <!-- Links the active column to __activeContext so changes to the active column are notifying -->
+    <array-selector id="selector" items="[[__context.columns]]" selected="{{__activeContext}}"></array-selector>
 
     <iron-dropdown
       id="dropdown"
       no-overlap
-      vertical-align="top"
-      horizontal-align="left"
+      vertical-align="[[_getDropdownVerticalAlign(collapsed)]]"
+      horizontal-align="[[_getDropdownHorizontalAlign(collapsed)]]"
       horizontal-offset="-15"
       opened="{{opened}}"
-      position-target="[[_positionTarget]]"
+      position-target="[[_getPositionTarget(_positionTarget, collapsed)]]"
       on-iron-overlay-canceled="_handleBrowserCanceled"
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
-      <px-context-browser-panel id="panel" has-header$="[[_isHeaderActive(_columns, _activeColumn)]]" slot="dropdown-content">
-        <px-context-browser-header slot="header" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[hasFavorites]]" id="header"></px-context-browser-header>
-        <px-context-browser-list id="list" slot="body" can-filter="[[hasFilter]]" filter="{{filter}}" loading="[[_activeColumnLoading]]">
-          <div slot="items" id="items" class="items">
-            <div class="column" column="0">
-              <template is="dom-repeat" items="[[_columns.0.items]]" as="item" for-column="0" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
+      <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
+        <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]">
+          <template is="dom-repeat" items="[[__context.columns]]" as="column">
+            <div column$="[[column.index]]" class="column" slot="columns">
+              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, filtering)}}">
+                <px-context-browser-item
+                    label="[[item.label]]"
+                    selected$="[[_isItemSelected(item, selected)]]"
+                    can-select
+                    can-favorite="[[showFavorites]]"
+                    can-open="[[_isItemOpenable(showArrow, item)]]"
+                    on-tap="_handleItemTapped"
+                    tabindex="0">
+                </px-context-browser-item>
               </template>
             </div>
-            <div class="column" column="1">
-              <template is="dom-repeat" items="[[_columns.1.items]]" as="item" for-column="1" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
-              </template>
-            </div>
-            <div class="column" column="2">
-              <template is="dom-repeat" items="[[_columns.2.items]]" as="item" for-column="2" filter="_isItemVisible" observe="visible" delay="10" on-dom-change="_handleVisibleCountChanged">
-                <px-context-browser-item label="[[item.source.label]]" selected$="{{_isItemSelected(item.source, selected)}}" can-favorite="[[hasFavorites]]" can-select can-open="[[_isItemOpenable(openArrow, item.source)]]" on-tap="_handleItemTapped" tabindex="0"></px-context-browser-item>
-              </template>
-            </div>
-          </div>
-        </px-context-browser-list>
+          </template>
+        </px-context-browser-columns>
       </px-context-browser-panel>
     </iron-dropdown>
   </template>
@@ -71,68 +77,79 @@
     ],
 
     properties: {
-      openArrow: {
-        type: Boolean,
-        value: false
-      },
-      hasFavorites: {
-        type: Boolean,
-        value: false
-      },
+      // @TODO: Implement favorites
+      // showFavorites: {
+      //   type: Boolean,
+      //   value: false
+      // },
+
       /**
-       * Enables filtering the visible assets. Set to `true` to show a filter
-       * input above each asset list.
+       * Enable to show an arrow when the user hovers over an item that has
+       * children and can be activated.
        */
-      hasFilter: {
+      showArrow: {
         type: Boolean,
         value: false
       },
+
       /**
-       * The active filter. Updates when the user types into the filter input.
-       * Set a new value to filter programatically.
+       * Enable to show a filter input that filters the visible column. Changes
+       * to the filter text are notified out through the `filter` property.
+       */
+      showFilter: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * User-supplied filter text. The string will be lowercased and compared
+       * to the label of each item in the visible column.
        */
       filter: {
         type: String,
-        notify: true,
-        observer: '_filterChanged'
+        notify: true
       },
+
       /**
-       * The number of milliseconds to wait for an active item with no children
-       * to have children provided. Defaults to 5 seconds. Set to `0` to wait
-       * forever.
+       * When an item is activated and it has no children, the context browser
+       * shows a loading animation and fires an event to request children to
+       * show (see `px-app-asset-children-requested`). If no new children are
+       * added before this timeout, the browser will show the last active item.
+       *
+       * Set a time in milliseconds. Set to `0` to wait forever. Default to 5
+       * seconds (5000 milliseconds).
        */
       loadingTimeout: {
         type: Number,
         value: 5000,
-        observer: 'cancelLoading'
+        observer: '_handleLoadingTimeoutChanged'
       },
+
       /**
-       * Updated when the context browser attempts to load additional children.
+       * Watch for changes to determine if the context browser is trying to
+       * load new children.
        */
       loading: {
         type: Boolean,
         value: false,
         readOnly: true
       },
+
       /**
-       * Enable to mark items whose children cannot be loaded before the
-       * `loadingTimeout` as terminal — prevents the item from being activated.
+       * Bind to a `<px-context-browser-trigger>` element. A tap on the trigger
+       * will open the context browser.
        */
-      loadingFailureTerminal: {
-        type: Boolean,
-        value: false
-      },
       openTrigger: {
         type: HTMLElement,
         observer: '_openTriggerChanged'
       },
-      favoritesTrigger: {
-        type: HTMLElement,
-        observer: '_favoritesTriggerChanged'
-      },
-      _positionTarget: {
-        type: HTMLElement
-      },
+
+      // @TODO: Implement favorites
+      // favoritesTrigger: {
+      //   type: HTMLElement,
+      //   observer: '_favoritesTriggerChanged'
+      // },
+
       /**
        * If `true` the context browser is opened.
        */
@@ -140,71 +157,253 @@
         type: Boolean,
         value: false
       },
-      _columns: {
-        type: Object,
-        value: function() {
-          return {
-            0: {
-              index: 0,
-              el: null,
-              parent: null,
-              items: [],
-              path: [],
-              loading: false
-            },
-            1: {
-              index: 1,
-              el: null,
-              parent: null,
-              items: [],
-              path: [],
-              loading: false
-            },
-            2: {
-              index: 2,
-              el: null,
-              parent: null,
-              items: [],
-              path: [],
-              loading: false
-            }
-          };
-        }
-      },
 
-      _activeColumn: {
+      /**
+       * The width below which the context browser will collapse into a mobile
+       * friendly menu that slides up from the bottom of the page. Use a number
+       * (e.g. `450`) which will be converted to a pixel value (e.g. '450px').
+       */
+      collapseAt: {
         type: Number,
-        observer: '_activeColumnChanged'
+        value: 320
       },
 
-      _activeColumnRef: {
-        type: Object,
-        computed: '_getActiveColumnRef(_activeColumn)'
-      },
-
-      _activeColumnLoading: {
+      /**
+       * Watch for changes to determine if the context browser is collapsed.
+       */
+      collapsed: {
         type: Boolean,
         value: false,
-        computed: '_isActiveColumnLoading(_activeColumnRef.loading)',
-        observer: '_activeColumnLoadingChanged'
+        reflectToAttribute: true
       },
 
-      _visibleItemCount: {
-        type: Number,
-        observer: '_animateColumnHeight'
+      _positionTarget: {
+        type: HTMLElement
       },
 
       _panelEl: {
         type: HTMLElement
+      },
+
+      __rootColumn: {
+        type: Object,
+        computed: '_getRootColumn(items)'
+      },
+
+      __context: {
+        type: Array,
+        value: function() {
+          return {
+            columns: null,
+            activeIndex: null
+          };
+        },
+        computed: '_getColumns(activeMeta, __rootColumn)'
+      },
+
+      __activeContext: {
+        type: Object
       }
+    },
+
+    observers: [
+      'clearFilter(__context.activeIndex)',
+      'clearFilter(showFilter)',
+      '_linkActiveContext(__context.activeIndex)',
+      '_updateActiveLoading(activeMeta.item)'
+    ],
+
+    listeners: {
+      // 'px-app-asset-graph-created' : '_resetColumns',
+      // 'px-app-asset-deactivated' : '_resetColumns',
+      // 'focus-first-visible-item' : '_focusFirstVisibleItem',
+      'px-app-asset-children-updated' : '_handleChildrenChanged'
     },
 
     created() {
       this._openTriggerHandler = null;
-      this._favoritesTriggerChanged = null;
+      // @TODO: Implement favorites
+      // this._favoritesTriggerHandler = null;
       this._resetActiveTask = null;
-      this.__loadingHandler = null;
+      this._childLoadingHandler = null;
     },
+
+    attached() {
+      this._panelElement = Polymer.dom(this.root).querySelector('#panel');
+    },
+
+    detached() {
+      this._panelElement = null;
+    },
+
+    // ********************************************************************** //
+    // Set/update loading status
+    // ********************************************************************** //
+
+    _setLoadingStatus(index, isLoading) {
+      this.set(`__context.columns.${index}.loading`, isLoading);
+    },
+
+    _updateActiveLoading(newActive) {
+      if (this.loading) {
+        this.cancelLoading(false);
+      }
+      if (newActive) {
+        const shouldLoadChildren = (!this._assetGraph.isTerminal(newActive) && !this._assetGraph.hasChildren(newActive));
+        if (shouldLoadChildren) {
+          this._startLoading(newActive, this._assetGraph.getPath(newActive))
+        }
+      }
+    },
+
+    _handleLoadingTimeout(item) {
+      this.cancelLoading(true);
+    },
+
+    _handleChildrenChanged(evt) {
+      const {item, path, children, isTerminal, hasChildren} = evt.detail;
+
+      if (this.activeMeta && this.activeMeta.item && this.activeMeta.item === item) {
+        let path = `__context.columns.${this.__context.activeIndex}.items`;
+        this.set(path, []);
+        this.set(path, children);
+        this.cancelLoading(true);
+      } else if (this.activeMeta.path && this.activeMeta.path.indexOf(item) > -1) {
+        let path = `__context.columns.${this.activeMeta.path.indexOf(item)+1}.items`;
+        this.set(path, []);
+        this.set(path, children);
+      }
+    },
+
+    _startLoading(item, path) {
+      if (typeof this.loadingTimeout !== 'number' || this.loadingTimeout < 0) {
+        throw new Error(`px-context-browser expects the \`loadingTimeout\` property to be a non-negative number. The following invalid value was given:
+          ${this.loadingTimeout}`);
+      }
+      this._setLoading(true);
+      this.fire('px-app-asset-children-requested', { item, path });
+      if (typeof this.loadingTimeout === 'number' && this.loadingTimeout > 0) {
+        this._childLoadingHandler = this.async(this._handleLoadingTimeout.bind(this, item), this.loadingTimeout);
+      }
+    },
+
+    /**
+     * Cancels the current child loading event, if one is in progress. Changes
+     * the active browser view to the previously loading item's parent.
+     */
+    cancelLoading(allowBounceback) {
+      if (this._childLoadingHandler) {
+        this.cancelAsync(this._childLoadingHandler);
+        this._childLoadingHandler = null;
+      }
+      if (this.loading) {
+        this._setLoading(false);
+      }
+      if (allowBounceback) {
+        if (this.activeMeta && this.activeMeta.item && !this._assetGraph.hasChildren(this.activeMeta.item)) {
+          this.activate(this.activeMeta.parent, 'LOADING_CANCELLED');
+        }
+      }
+    },
+
+    _handleLoadingTimeoutChanged(newVal) {
+      if (this.loading) {
+        this.cancelLoading();
+      }
+    },
+
+    // ********************************************************************** //
+    // Filter/unfilter visible column
+    // ********************************************************************** //
+
+    /**
+     * Clears the active filter text.
+     */
+    clearFilter() {
+      this.filter = '';
+    },
+
+    _getColumnFilter(index, filter, filterIsActive) {
+      if (!filterIsActive || this.__context.activeIndex !== index) {
+        return null;
+      }
+
+      let filterStr = filter.toLowerCase();
+      return this._doesItemMatchFilter.bind(this, filterStr);
+    },
+
+    _doesItemMatchFilter(filter, item) {
+      if (!item.label) return false;
+      return (item.label.toLowerCase().indexOf(filter) > -1);
+    },
+
+    // ********************************************************************** //
+    // Update column list
+    // Link changes to columns to active column
+    // ********************************************************************** //
+
+    _linkActiveContext(index) {
+      if (this.__context.columns && typeof index === 'number') {
+        this.$.selector.select(this.__context.columns[index]);
+      }
+    },
+
+    _updateVisibleCount(evt) {
+      if (!this.__context || typeof this.__context.activeIndex !== 'number') return;
+      const target = Polymer.dom(evt).rootTarget;
+      const index = target.getAttribute('for-column');
+      const count = target.renderedItemCount;
+      if (typeof count !== 'number') return;
+      this.set(`__context.columns.${index}.visibleCount`, count);
+    },
+
+    _getColumns(active, rootColumn) {
+      const {item, path} = active;
+      if (!Array.isArray(this.__context.columns)) {
+        this.__context.columns = [rootColumn];
+      }
+
+      if (!Array.isArray(path)) {
+        return Object.assign({}, this.__context, {
+          activeIndex: 0
+        });
+      }
+
+      const columns = this.__context.columns.slice(0);
+      let activeIndex;
+
+      for (let i=0; i<path.length; i++) {
+        if (columns[i+1] && columns[i+1].parent === item) {
+          activeIndex = i+1;
+          break;
+        }
+
+        columns[i+1] = Object.assign({}, columns[i+1] ? columns[i+1] : {}, {
+          index: i+1,
+          parent: path[i],
+          items: this._assetGraph.hasChildren(path[i]) ? this._assetGraph.getChildren(path[i]) : [],
+          visibleCount: null
+        });
+      }
+
+      return Object.assign({}, this.__context, {
+        columns: columns,
+        activeIndex: (typeof activeIndex === 'number') ? activeIndex : path.length
+      });
+    },
+
+    _getRootColumn(items) {
+      return {
+        index: 0,
+        parent: null,
+        items: items,
+        visibleCount: null
+      };
+    },
+
+    // ********************************************************************** //
+    // Bind to open/favorites trigger, open/close on trigger tap
+    // ********************************************************************** //
 
     _openTriggerChanged(newTrigger, oldTrigger) {
       if (oldTrigger && oldTrigger instanceof HTMLElement && this._openTriggerHandler !== null) {
@@ -216,19 +415,21 @@
       }
     },
 
-    _favoritesTriggerChanged(newTrigger, oldTrigger) {
-      if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
-        oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
-        this._favoritesTriggerHandler = null;
-      }
-      if (newTrigger && newTrigger instanceof HTMLElement) {
-        this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
-      }
-    },
+    // @TODO: Implement favorites
+    // _favoritesTriggerChanged(newTrigger, oldTrigger) {
+    //   if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
+    //     oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
+    //     this._favoritesTriggerHandler = null;
+    //   }
+    //   if (newTrigger && newTrigger instanceof HTMLElement) {
+    //     this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
+    //   }
+    // },
 
     _handleOpenTriggerTapped(evt) {
       if (!this.opened) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
+        // this._positionTarget = window;
         this.opened = true;
       }
       else {
@@ -236,9 +437,12 @@
       }
     },
 
-    _handleFavoritesTriggerTapped(evt) {
-      // @TODO: Implement favorites trigger behavior
-    },
+    // @TODO: Implement favorites
+    // _handleFavoritesTriggerTapped(evt) {},
+
+    // ********************************************************************** //
+    // Reset active state (if necessary) when browser is closed/opened
+    // ********************************************************************** //
 
     /**
      * If the user clicked on the open trigger, we'll let the open trigger
@@ -286,245 +490,116 @@
       }
     },
 
-    _getActiveColumnRef(index) {
-      return this._columns[index];
+    // ********************************************************************** //
+    // Calculate iron-dropdown properties
+    // ********************************************************************** //
+
+    _getDropdownVerticalAlign(collapsed) {
+      return collapsed ? 'bottom' : 'top';
     },
 
-    _isActiveColumnLoading(isLoading) {
-      return isLoading || false;
+    _getDropdownHorizontalAlign(collapsed) {
+      return collapsed ? 'right' : 'left';
     },
 
-    _activeColumnLoadingChanged(isLoading) {
-      this.cancelLoading();
-      if (isLoading) {
-        if (typeof this.loadingTimeout !== 'number' || this.loadingTimeout < 0) {
-          throw new Error(`px-context-browser expects the \`loadingTimeout\` property to be a non-negative number. The following invalid value was given:
-            ${this.loadingTimeout}`);
-        }
-        this._setLoading(true);
-        if (this.loadingTimeout === 0) {
-          this.__loadingHandler = true;
-        }
-        else if (typeof this.loadingTimeout === 'number' && this.loadingTimeout > 0) {
-          this.__loadingHandler = this.async(this.cancelLoading.bind(this), this.loadingTimeout);
-        }
+    _getPositionTarget(openTarget, collapsed) {
+      if (collapsed || !(openTarget instanceof HTMLElement)) {
+        return window;
       }
+      return openTarget;
     },
 
-    /**
-     * Cancels the current child loading event, if one is in progress. Changes
-     * the active browser view to the previously loading item's parent.
-     */
-    cancelLoading() {
-      if (this.__loadingHandler) {
-        this.cancelAsync(this.__loadingHandler);
-        this.__loadingHandler = null;
-        this._setLoading(false);
-        if (typeof this._activeColumn === 'number' && this._columns[this._activeColumn].loading) {
-          this.set(`_columns.${this._activeColumn}.loading`, false);
-        }
-        if (this.loadingFailureTerminal) {
-          this._assetGraph.setTerminal(this.active, true);
-        }
-        this.activate(this.activeMeta.parent, 'LOADING_FAILED');
-      }
-    },
+    // ********************************************************************** //
+    // Handle keyboard events
+    // ********************************************************************** //
 
-    _focusLast(evt) {
-      evt.detail.keyboardEvent.preventDefault();
-      const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
-      const lastItem = srcItem.previousElementSibling;
-      if (lastItem && lastItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
-        lastItem.focus();
-      }
-      else if (this.hasFilter) {
-        const listEl = Polymer.dom(this.root).querySelector('#list');
-        if (listEl) {
-          listEl.focusInput();
-        }
-      }
-    },
+    // _focusLast(evt) {
+    //   evt.detail.keyboardEvent.preventDefault();
+    //   const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+    //   const lastItem = srcItem.previousElementSibling;
+    //   if (lastItem && lastItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+    //     lastItem.focus();
+    //   }
+    //   else if (this.showFilter) {
+    //     const listEl = Polymer.dom(this.root).querySelector('#list');
+    //     if (listEl) {
+    //       listEl.focusInput();
+    //     }
+    //   }
+    // },
+    //
+    // _focusNext(evt) {
+    //   evt.detail.keyboardEvent.preventDefault();
+    //   const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+    //   const nextItem = srcItem.nextElementSibling;
+    //   if (nextItem && nextItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+    //     // If the next element is another context browser item, focus it
+    //     nextItem.focus();
+    //   }
+    //   else if (srcItem.parentElement.childElementCount > 1) {
+    //     // If the next element isn't an item, focus the first item in the list
+    //     const firstSibling = this._getFirstSibling(srcItem, srcItem.parentElement.children, 'PX-CONTEXT-BROWSER-ITEM');
+    //     if (firstSibling) {
+    //       firstSibling.focus();
+    //     }
+    //   }
+    // },
+    //
+    // _focusFirstVisibleItem(evt) {
+    //   if (typeof this._columns === 'object' && typeof this._activeColumn === 'number' && this._columns[this._activeColumn]) {
+    //     const firstItem = this._getFirstSibling(null, this._columns[this._activeColumn].el.children, 'PX-CONTEXT-BROWSER-ITEM');
+    //     if (firstItem) {
+    //       firstItem.focus();
+    //     }
+    //   }
+    // },
+    //
+    // _handleEnterKey(evt) {
+    //   const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+    //   if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+    //     const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
+    //     const model = repeatEl.modelForElement(target);
+    //     this.select(model.item.source, 'DOM_EVENT');
+    //   }
+    // },
+    //
+    // _handleArrowLeftKey(evt) {
+    //   // @TODO: Starting to be a lot of repeat code here. What's a better
+    //   // way to do this that's succinct?
+    //
+    //   // DESIRED BEHAVIOR: If there's a parent, go up to it. If not, go up to root.
+    //
+    //   const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
+    //   if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
+    //     const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
+    //     const item = repeatEl.modelForElement(target).item.source;
+    //     const parent = this._assetGraph.getNodeInfo(item).parent;
+    //     if (parent) {
+    //       this.activate(parent, 'DOM_EVENT');
+    //     } else {
+    //       this.activate(null, 'DOM_EVENT');
+    //     }
+    //   }
+    // },
+    //
+    // _getFirstSibling(source, siblings, targetNodeName) {
+    //   for (let i=0; i<siblings.length; i++) {
+    //     if (siblings[i].nodeName === targetNodeName && siblings[i] !== source) {
+    //       return siblings[i];
+    //     }
+    //   }
+    // },
 
-    _focusNext(evt) {
-      evt.detail.keyboardEvent.preventDefault();
-      const srcItem = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
-      const nextItem = srcItem.nextElementSibling;
-      if (nextItem && nextItem.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
-        // If the next element is another context browser item, focus it
-        nextItem.focus();
-      }
-      else if (srcItem.parentElement.childElementCount > 1) {
-        // If the next element isn't an item, focus the first item in the list
-        const firstSibling = this._getFirstSibling(srcItem, srcItem.parentElement.children, 'PX-CONTEXT-BROWSER-ITEM');
-        if (firstSibling) {
-          firstSibling.focus();
-        }
-      }
-    },
-
-    _focusFirstVisibleItem(evt) {
-      if (typeof this._columns === 'object' && typeof this._activeColumn === 'number' && this._columns[this._activeColumn]) {
-        const firstItem = this._getFirstSibling(null, this._columns[this._activeColumn].el.children, 'PX-CONTEXT-BROWSER-ITEM');
-        if (firstItem) {
-          firstItem.focus();
-        }
-      }
-    },
-
-    _handleEnterKey(evt) {
-      const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
-      if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
-        const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
-        const model = repeatEl.modelForElement(target);
-        this.select(model.item.source, 'DOM_EVENT');
-      }
-    },
-
-    _handleArrowLeftKey(evt) {
-      // @TODO: Starting to be a lot of repeat code here. What's a better
-      // way to do this that's succinct?
-
-      // DESIRED BEHAVIOR: If there's a parent, go up to it. If not, go up to root.
-
-      const target = Polymer.dom(evt.detail.keyboardEvent).rootTarget;
-      if (target.nodeName === 'PX-CONTEXT-BROWSER-ITEM') {
-        const repeatEl = Polymer.dom(this._columns[this._activeColumn].el).querySelector('template[is="dom-repeat"]');
-        const item = repeatEl.modelForElement(target).item.source;
-        const parent = this._assetGraph.getNodeInfo(item).parent;
-        if (parent) {
-          this.activate(parent, 'DOM_EVENT');
-        } else {
-          this.activate(null, 'DOM_EVENT');
-        }
-      }
-    },
-
-    _getFirstSibling(source, siblings, targetNodeName) {
-      for (let i=0; i<siblings.length; i++) {
-        if (siblings[i].nodeName === targetNodeName && siblings[i] !== source) {
-          return siblings[i];
-        }
-      }
-    },
-
-    attached() {
-      this._panelElement = Polymer.dom(this.root).querySelector('#panel');
-      this.animator = new ColumnAnimator({
-        itemHeight: parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px'),
-        headerHeight: parseInt(this.getComputedStyleValue('--px-context-browser-header-height') || '40px'),
-        borderSize: 2
-      });
-      this._columns[0].el = Polymer.dom(this.root).querySelector('[column="0"]');
-      this._columns[1].el = Polymer.dom(this.root).querySelector('[column="1"]');
-      this._columns[2].el = Polymer.dom(this.root).querySelector('[column="2"]');
-      if (this.items) {
-        this._activeColumnChanged(this._activeColumn);
-      }
-    },
-
-    detached() {
-      this._columns[0].el = this._columns[1].el = this._columns[2].el = null;
-    },
-
-    listeners: {
-      'px-app-asset-graph-created' : '_resetColumns',
-      'px-app-asset-activated' : '_handleActiveChanged',
-      'px-app-asset-deactivated' : '_resetColumns',
-      'focus-first-visible-item' : '_focusFirstVisibleItem',
-      'px-app-asset-children-updated' : '_handleChildrenChanged'
-    },
-
-    _handleChildrenChanged(evt) {
-      const {item, path, children, isTerminal, hasChildren} = evt.detail;
-      if (this._columns[this._activeColumn].parent !== item) return;
-      this.cancelLoading();
-
-      if (isTerminal || !hasChildren) {
-        this.activate(this.activeMeta.parent, 'LOADING_FAILED');
-        return;
-      }
-
-      let slicedChildren = children.map(c => ({ source: c, visible: true }));
-      if (this.hasFilter && typeof this.filter === 'string' && this.filter.length) {
-        this._filterAndMutateItems(slicedChildren, true, this.filter);
-      }
-      this.set(`_columns.${this._activeColumn}.loading`, false);
-      this.set(`_columns.${this._activeColumn}.items`, slicedChildren);
-      this.notifyPath(`_activeColumnRef.loading`);
-    },
-
-
-    _handleActiveChanged(evt) {
-      const {item, path} = evt.detail;
-      const lastColumnIndex = this._activeColumn;
-      const nextColumnIndex = this._getNextColumnIndex(lastColumnIndex);
-      this._setActiveColumn(item, this._assetGraph.getChildren(item), path, nextColumnIndex);
-
-      if (this._assetGraph.hasNode(item) && !this._assetGraph.isTerminal(item) && !this._assetGraph.isExhausted(item) && !this._assetGraph.hasChildren(item)) {
-        this.fire('px-app-asset-children-requested', {
-          item: item,
-          path: path
-        });
-      }
-    },
-
-    _resetColumns() {
-      const lastColumnIndex = this._activeColumn;
-      const nextColumnIndex = typeof lastColumnIndex === 'number' ? this._getNextColumnIndex(lastColumnIndex) : 0;
-      this._setActiveColumn(null, this.items, [], nextColumnIndex);
-    },
-
-    _getNextColumnIndex(lastIndex) {
-      return lastIndex === 2 ? 0 : lastIndex+1;
-    },
-
-    _setActiveColumn(parent, children, path, nextColumnIndex) {
-      if (this.hasFilter) {
-        this.filter = '';
-      }
-      const loading = (!this._assetGraph.isTerminal(parent) && !this._assetGraph.hasChildren(parent));
-      this.set(`_columns.${nextColumnIndex}.loading`, loading);
-      this.set(`_columns.${nextColumnIndex}.items`, children.map(c => ({source:c, visible:true})));
-      this.set(`_columns.${nextColumnIndex}.path`, path);
-      this.set(`_columns.${nextColumnIndex}.parent`, parent);
-      this._activeColumn = nextColumnIndex;
-    },
-
-    _activeColumnChanged(nextColumnIndex, lastColumnIndex) {
-      if (typeof this._columns !== 'object' || !this.isAttached) return;
-
-      const nextColumn = this._columns[nextColumnIndex];
-      const nextColumnIsRoot = (nextColumn.path.length === 0);
-      const nextColumnHasHeader = !nextColumnIsRoot;
-
-      if (typeof lastColumnIndex === 'undefined') {
-        if (!this._columns[nextColumnIndex].el.classList.contains('column--active')) {
-          this._columns[nextColumnIndex].el.classList.add('column--active');
-        }
-        return;
-      }
-
-      const lastColumn = this._columns[lastColumnIndex];
-      const lastColumnIsRoot = (lastColumn.path.length === 0);
-      const lastColumnHasHeader = !lastColumnIsRoot;
-      const isMovingDown = (nextColumn.path.length > lastColumn.path.length);
-      this.animator.add({
-        outEl: lastColumn.el,
-        outItemCount: lastColumn.items.length,
-        outHasHeader: lastColumnHasHeader,
-        inEl: nextColumn.el,
-        inItemCount: nextColumn.items.length,
-        inHasHeader: nextColumnHasHeader,
-        headerEl: this.$.header,
-        isMovingDown: isMovingDown
-      });
-    },
+    // ********************************************************************** //
+    // Select or activate or favorite items when tapped
+    // Select or activate or favorite parent item when header tapped
+    // ********************************************************************** //
 
     _handleItemTapped(evt) {
       evt.stopPropagation();
       const path = Polymer.dom(evt).path;
       const action = this._findActionInPath(path);
-      const item = evt.model.item.source;
+      const item = evt.model.item;
 
       if (typeof action === 'string' && action.length > 0 && typeof item === 'object') {
         const isTerminal = this._assetGraph.isTerminal(item);
@@ -535,7 +610,7 @@
           this.select(item, 'DOM_EVENT');
         }
         else if (action === 'favorite') {
-          // @TODO: Implement favorite storage/notification behavior
+          // @TODO: Implement favorites storage/notification behavior
         }
       }
     },
@@ -554,7 +629,7 @@
             this.select(this.active, 'DOM_EVENT');
             break;
           case 'favorite':
-            // @TODO: Implement favorite storage/notification behavior
+            // @TODO: Implement favorites storage/notification behavior
             break;
         }
       }
@@ -571,6 +646,10 @@
       return action;
     },
 
+    // ********************************************************************** //
+    // Helpers to get values for binding to properties/attributes in template
+    // ********************************************************************** //
+
     _isItemSelected(item, selected) {
       return typeof selected === 'object' && selected === item;
     },
@@ -583,231 +662,63 @@
       return canOpen && !this._assetGraph.isTerminal(item);
     },
 
-    _filterChanged(nextFilter, lastFilter) {
-      if (typeof this._activeColumn !== 'number' || typeof nextFilter !== 'string' || (nextFilter.length === 0 && typeof lastFilter !== 'string')) {
-        return;
-      }
-      this._filterAndMutateItems(this._columns[this._activeColumn].items, nextFilter.length > 0, nextFilter);
-    },
-
-    _filterAndMutateItems(items, filterIsActive, filterString) {
-      if (items && !filterIsActive) {
-        for (let i=0; i<items.length; i++) {
-          items[i].visible = true;
-          this.notifyPath(`_columns.${this._activeColumn}.items.${i}.visible`);
-        }
-      }
-      else if (items && filterIsActive) {
-        const filter = filterString.toLowerCase();
-        for (let i=0; i<items.length; i++) {
-          items[i].visible = (items[i].source.label.toLowerCase().indexOf(filter) > -1);
-          this.notifyPath(`_columns.${this._activeColumn}.items.${i}.visible`);
-        }
-      }
-    },
-
-    _handleVisibleCountChanged(evt) {
-      if (typeof this._activeColumn !== 'number') return;
-
-      const target = Polymer.dom(evt).rootTarget;
-      const columnIndex = target.getAttribute('for-column');
-      console.log(`${parseInt(columnIndex) === this._activeColumn ? '[A]' : ''}${columnIndex}::${target.renderedItemCount} ${(this.active||{label:'NULL'}).label}`)
-      if (parseInt(columnIndex) === this._activeColumn) {
-        this._visibleItemCount = target.renderedItemCount;
-      }
-    },
-
-    _animateColumnHeight(nextItemCount, lastItemCount) {
-      const itemHeight = parseInt(this.getComputedStyleValue('--px-context-browser-item-height') || '30px');
-      const nextHeight = this._getNextColumnHeight(nextItemCount, itemHeight);
-      const itemsEl = Polymer.dom(this.root).querySelector('#items');
-      itemsEl.style.minHeight = nextHeight + 'px';
-    },
-
-    _getNextColumnHeight(nextItemCount, itemHeight) {
-      if (nextItemCount === 0) {
-        return 173; // MAGIC NUMBER: Height of the animation lines
-      }
-      if (nextItemCount > 10) {
-        return itemHeight*10;
-      }
-      return itemHeight*nextItemCount;
-    },
-
-    _isHeaderActive(columns, activeColumn) {
-      return (typeof columns === 'object' && typeof activeColumn === 'number' && columns[activeColumn] && columns[activeColumn].path.length > 0);
+    _isNotNull(val) {
+      return (typeof val !== 'undefined' && val !== null);
     }
   });
 
-  class ColumnAnimator {
-    constructor({itemHeight, headerHeight, borderSize}) {
-      this.itemHeight = itemHeight;
-      this.headerHeight = headerHeight;
-      this.borderSize = borderSize;
-
-      this._animationQueue = [];
-      this._currentAnimation = null;
-    }
-
-    add(options) {
-      const animation = this._createAnimation(options);
-      this.addToQueue(animation);
-      return animation;
-    }
-
-    addToQueue(animation) {
-      this._animationQueue.push(animation);
-      this._runAnimations();
-    }
-
-    _runAnimations() {
-      if (this._currentAnimation) return;
-      this._currentAnimation = this._animationQueue.shift();
-      this._currentAnimation().then(() => {
-        this._currentAnimation = null;
-        if (this._animationQueue.length !== 0) this._runAnimations(this._animationQueue);
-      });
-    }
-
-    _createAnimation({outEl, inEl, headerEl, panelEl, outItemCount, inItemCount, outHasHeader, inHasHeader, isMovingDown}) {
-      const animations = {};
-
-      // Animate header in/out
-      const headerSlidingIn = (!outHasHeader && inHasHeader);
-      const headerSlidingOut = (outHasHeader && !inHasHeader);
-      if (headerSlidingIn) {
-        animations.header = this._generateAnimation(headerEl, {
-          animate: ColumnAnimator.fadeIn,
-          before: (el) => {
-            el.setAttribute('active', '')
-          }
-        });
-      }
-      if (headerSlidingOut) {
-        animations.header = this._generateAnimation(headerEl, {
-          animate: (el, duration) => ColumnAnimator.popOut(el, '0px', `-${this.headerHeight}px`, duration),
-          after: (el) => {
-            el.removeAttribute('active')
-          }
-        });
+  /*
+   * Object.assign polyfill for IE11. Will only be used if `Object.assign` does
+   * not already exist on the window (e.g. won't overwrite globals if it
+   * does not need to).
+   *
+   * Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+   *
+   * The following license applies only to the Object.assign polyfill code below.
+   *
+   * Copyright 2015 sjohnsonaz (MDN contributor)
+   *
+   * Permission is hereby granted, free of charge, to any person obtaining a
+   * copy of this software and associated documentation files (the "Software"),
+   * to deal in the Software without restriction, including without limitation
+   * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   * and/or sell copies of the Software, and to permit persons to whom the
+   * Software is furnished to do so, subject to the following conditions:
+   *
+   * The above copyright notice and this permission notice shall be included in
+   * all copies or substantial portions of the Software.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   * DEALINGS IN THE SOFTWARE.
+   */
+  if (typeof Object.assign != 'function') {
+    Object.assign = function(target, varArgs) { // .length of function is 2
+      'use strict';
+      if (target == null) { // TypeError if undefined or null
+        throw new TypeError('Cannot convert undefined or null to object');
       }
 
-      // Animate columns in/out
-      animations.out = this._generateAnimation(outEl, {
-        animate: isMovingDown ? ColumnAnimator.fadeOutLeft : ColumnAnimator.fadeOutRight,
-        after: (el) => el.classList.remove('column--active')
-      });
-      animations.in = this._generateAnimation(inEl, {
-        animate: (el, duration) => {
-          if (headerSlidingOut) {
-            return ColumnAnimator.fadeInLeftFromTop(el, duration, `-${this.headerHeight}px`);
+      var to = Object(target);
+
+      for (var index = 1; index < arguments.length; index++) {
+        var nextSource = arguments[index];
+
+        if (nextSource != null) { // Skip over if undefined or null
+          for (var nextKey in nextSource) {
+            // Avoid bugs when hasOwnProperty is shadowed
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
           }
-          if (isMovingDown) {
-            return ColumnAnimator.fadeInRight(el, duration);
-          }
-          return ColumnAnimator.fadeInLeft(el, duration);
-        },
-        before: (el) => {
-          el.classList.add('column--active')
         }
-      });
-
-      return () => Promise.all([animations.in(), animations.out(), animations.header ? animations.header() : Promise.resolve()]);
-    }
-
-    _generateAnimation(el, {animate, before, after}) {
-      return () => {
-        if (typeof before === 'function') {
-          before.call(this, el);
-        }
-        return animate.call(this, el, 250).finished.then((a) => {
-          if (typeof after === 'function') {
-            after.call(this, el);
-          }
-          return Promise.resolve(a);
-        });
-      };
-    }
-
-    static fadeInRight(el, duration) {
-      const keyframes = [
-        { transform: 'translateX(-100%)', opacity: '0' },
-        { transform: 'none', opacity: '1' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static fadeOutRight(el, duration) {
-      const keyframes = [
-        { transform: 'none', opacity: '1' },
-        { transform: 'translateX(-100%)', opacity: '0' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static fadeInLeft(el, duration) {
-      const keyframes = [
-        { transform: 'translateX(100%)', opacity: '0' },
-        { transform: 'none', opacity: '1' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static fadeInLeftFromTop(el, duration, topPosition) {
-      const keyframes = [
-        { transform: `translate(100%, ${topPosition})`, opacity: '0' },
-        { transform: 'none', opacity: '1' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static fadeOutLeft(el, duration) {
-      const keyframes = [
-        { transform: 'none', opacity: '1' },
-        { transform: 'translateX(100%)', opacity: '0' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static scaleHeight(el, startHeight, endHeight, duration) {
-      const keyframes = [
-        { minHeight: startHeight },
-        { minHeight: endHeight }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static slideInDown(el, duration) {
-      const keyframes = [
-        { transform: 'translateY(-100%)' },
-        { transform: 'none' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static slideOutUp(el, duration) {
-      const keyframes = [
-        { transform: 'none' },
-        { transform: 'translateY(-100%)' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static fadeIn(el, duration) {
-      const keyframes = [
-        { opacity: '0' },
-        { opacity: '1' }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-
-    static popOut(el, startMarginBottom, endMarginBottom, duration) {
-      const keyframes = [
-        { opacity: '1', marginBottom: startMarginBottom },
-        { opacity: '0', marginBottom: endMarginBottom }
-      ];
-      return el.animate(keyframes, { duration: duration });
-    }
-  };
+      }
+      return to;
+    };
+  }
 })();
 </script>
