@@ -19,12 +19,12 @@
           tabindex="0">
       </input>
       <template is="dom-if" if="[[_showFilterIcon(filter)]]">
-        <iron-icon class="search__icon" icon="px:filter"></iron-icon>
+        <iron-icon class="search__icon" icon="px-utl:filter"></iron-icon>
         <!-- @TODO: Figure out why px-icon won't work here, it is not resizing to respect the width/height the way iron-icon does -->
-        <!-- <px-icon class="search__icon" icon="px:filter"></px-icon> -->
+        <!-- <px-icon class="search__icon" icon="px-utl:filter"></px-icon> -->
       </template>
       <template is="dom-if" if="[[_showClearIcon(filter)]]">
-        <iron-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px:close" on-tap="clearFilter"></iron-icon>
+        <iron-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></iron-icon>
       </template>
     </div>
   </template>

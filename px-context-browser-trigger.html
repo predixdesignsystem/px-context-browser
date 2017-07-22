@@ -5,7 +5,7 @@
   <template>
     <style>
       :host {
-        display: inline-block;
+        display: inline-flex;
         height: var(--px-context-browser-trigger-height, 32px);
         width: var(--px-context-browser-trigger-width, 32px);
         --iron-icon-width: 100%;
@@ -13,6 +13,8 @@
         padding: 2px;
         box-sizing: border-box;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
       }
       :host(:hover) {
         background-color: var(--px-context-browser-trigger-hover-background, lightgray);
@@ -71,9 +73,9 @@
 
       _getIcon(favorites) {
         if (favorites === true) {
-          return 'px:favorite';
+          return 'px-nav:favorite';
         }
-        return 'px:hierarchy'
+        return 'px-nav:hierarchy'
       }
     })
   </script>
