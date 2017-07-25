@@ -220,6 +220,11 @@
       _belowCollapseSize: {
         type: Boolean,
         observer: '_handleBelowCollapseSizeChanged'
+      },
+
+      _cancelFilterFocus: {
+        type: Boolean,
+        value: false
       }
     },
 
@@ -227,7 +232,8 @@
       'clearFilter(__context.activeIndex)',
       'clearFilter(showFilter)',
       '_linkActiveContext(__context.activeIndex)',
-      '_updateActiveLoading(activeMeta.item)'
+      '_updateActiveLoading(activeMeta.item)',
+      '_updateCancelFilterFocus(__context.activeIndex)'
     ],
 
     listeners: {
@@ -235,7 +241,40 @@
       // 'px-app-asset-deactivated' : '_resetColumns',
       // 'focus-first-visible-item' : '_focusFirstVisibleItem',
       'px-app-asset-children-updated' : '_handleChildrenChanged',
-      'iron-resize' : '_handleResize'
+      'iron-resize' : '_handleResize',
+      'px-context-browser-filter-focused' : '_handleFilterFocused'
+    },
+
+    _handleFilterFocused(evt) {
+      if (this._cancelFilterFocus) {
+        const target = Polymer.dom(evt).rootTarget;
+        target.blurFilter();
+      }
+    },
+
+    /**
+     * When the user is navigating the collapsed browser, if they press on the
+     * header a little bit too long and the filter is active, when the filter
+     * slides up it will sometimes be activated and open the keyboard. To
+     * prevent this, we blur the filter if it becomes focused less than 200ms
+     * after we navigate to the root.
+     */
+    _updateCancelFilterFocus(index) {
+      if (!this.showFilter || !this.opened || !this.collapsed || index !== 0) return;
+
+      console.log('start cancel');
+      this._cancelFilterFocus = true;
+      // If the last task is pending, cancel and clear it
+      if (this._cancelFilterFocusTask) {
+        this.cancelAsync(this._cancelFilterFocusTask);
+        this._cancelFilterFocusTask = null;
+      }
+      // Ready the next task
+      this._cancelFilterFocusTask = this.async(function(){
+        console.log('stop cancel');
+        this._cancelFilterFocus = false;
+        this._cancelFilterFocusTask = null;
+      }, 200);
     },
 
     _collapseQueryIsValid(query) {
@@ -282,6 +321,7 @@
       // this._favoritesTriggerHandler = null;
       this._resetActiveTask = null;
       this._childLoadingHandler = null;
+      this._cancelFilterFocusTask = null;
     },
 
     attached() {

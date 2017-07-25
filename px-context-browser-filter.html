@@ -16,7 +16,9 @@
           placeholder="Filter"
           value="{{filter::input}}"
           autocomplete="off"
-          tabindex="0">
+          tabindex="0"
+          on-focus="_handleFocus"
+          on-blur="_handleBlur">
       </input>
       <template is="dom-if" if="[[_showFilterIcon(filter)]]">
         <iron-icon class="search__icon" icon="px-utl:filter"></iron-icon>
@@ -53,6 +55,16 @@
         }
       },
 
+      _handleFocus(evt) {
+        evt.stopPropagation();
+        this.fire('px-context-browser-filter-focused');
+      },
+
+      _handleBlur(evt) {
+        evt.stopPropagation();
+        this.fire('px-context-browser-filter-blured');
+      },
+
       _isFilterActive(filter) {
         return (typeof filter === 'string' && filter.length > 0);
       },
@@ -67,6 +79,14 @@
 
       clearFilter() {
         this.filter = '';
+      },
+
+      focusFilter() {
+        this.$.search.focus();
+      },
+
+      blurFilter() {
+        this.$.search.blur();
       }
     });
   </script>
