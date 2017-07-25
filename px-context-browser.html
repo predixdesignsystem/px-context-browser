@@ -342,10 +342,16 @@
         this.set(path, []);
         this.set(path, children);
         this.cancelLoading(true);
-      } else if (this.activeMeta.path && this.activeMeta.path.indexOf(item) > -1) {
-        let path = `__context.columns.${this.activeMeta.path.indexOf(item)+1}.items`;
-        this.set(path, []);
-        this.set(path, children);
+      } else if (this.__context && Array.isArray(this.__context.columns) && this.__context.columns.length > 1) {
+        // Loop over columns. If this item is in the columns list, go update
+        // its children with this new list.
+        for (let i=1; i<this.__context.columns.length; i++) {
+          if (this.__context.columns[i].parent === item) {
+            let path = `__context.columns.${i}.items`;
+            this.set(path, []);
+            this.set(path, children);
+          }
+        }
       }
     },
 
