@@ -2,7 +2,7 @@
 
 ## Overview
 
-Px-context-browser is a hierarchical tree navigation component that uses horizontally cascading lists in columns to allow multiple levels of the hierarchy to be open at once, and provide a visual representation of the current location. Menu items that are `openable` are given an Open button that upon selection chooses the item and closes the navigation, returning it to it's initial state: A drop-down and breadcrumb that display the menu's last-selected state.
+`Px-context-browser` is a Predix UI component. It is a hierarchical tree navigation component that uses horizontally cascading lists in columns to allow multiple levels of the hierarchy to be open at once, and provide a visual representation of the current location. Menu items that are `openable` are given an Open button that upon selection chooses the item and closes the navigation, returning it to it's initial state: A drop-down and breadcrumb that display the menu's last-selected state.
 
 ## Usage
 
