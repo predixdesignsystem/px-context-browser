@@ -32,7 +32,8 @@
     "web-animations-js": "^2.2.0",
     "iron-icon": "^2.0.0",
     "iron-dropdown": "^2.0.0",
-    "px-app-helpers": "^1.0.0"
+    "px-app-helpers": "^1.0.0",
+    "iron-media-query": "^2.0.0"
   },
   "devDependencies": {
     "promise-polyfill": "polymerlabs/promise-polyfill#^2.0.0",

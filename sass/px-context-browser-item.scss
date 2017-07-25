@@ -40,12 +40,21 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
 :host(:focus) {
   background-color: $px-context-browser-item-background-color--hover;
 }
+:host([collapsed]:hover),
+:host([collapsed]:focus) {
+  background-color: transparent;
+}
+// In collapsed mode, show hover color on active (e.g. on pressed interaction)
+:host([collapsed]:active) {
+  background-color: $px-context-browser-item-background-color--hover;
+}
 
 :host(:focus) {
   outline: none;
 }
 
-:host([selected]) {
+:host([selected]),
+:host([selected][collapsed]) {
   background-color: $px-context-browser-item-background-color--selected;
   color: $px-context-browser-item-text-color--selected;
 }
@@ -75,6 +84,11 @@ $px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-ic
 :host([selected]) .actions {
   display: flex;
   opacity: 1;
+}
+:host([collapsed]:hover) .actions,
+:host([collapsed]:focus) .actions,
+:host([selected][collapsed]) .actions {
+  display: none;
 }
 .action {
   flex: 0 0 auto;

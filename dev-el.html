@@ -1,0 +1,190 @@
+<link rel="import" href="px-context-browser-trigger.html"/>
+
+<dom-module id="demo-context-browser">
+  <template>
+    <style>
+      :host {
+        display: flex;
+      }
+      .browser {
+        padding: 10px 20px 0;
+      }
+      .info {
+        padding: 0 20px;
+      }
+      .info__header {
+        margin: 0;
+      }
+      .row {
+        display: flex;
+        width: 500px;
+        position: relative;
+        margin-top: 10px;
+        padding-top: 5px;
+      }
+      .row:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: rgba(0,0,0,0.2);
+      }
+      .row__key {
+        width: 150px;
+        color: gray;
+      }
+    </style>
+    <iron-ajax auto url="anon-processed.json" last-response="{{data}}"></iron-ajax>
+    <div class="browser">
+      <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+      <px-context-browser
+          items="{{data}}"
+          selected="{{selectedItem}}"
+          open-arrow
+          show-filter
+          open-trigger="[[openTrigger]]"
+          loading-timeout="2500"
+          loading-failure-terminal>
+      </px-context-browser>
+    </div>
+    <div class="info">
+      <h2 class="info__header">Selected Asset Information</h2>
+      <template is="dom-repeat" items="{{selectedInfo.metadata}}">
+        <div class="row">
+          <div class="row__key">{{item.key}}</div>
+          <div class="row__val">{{item.val}}</div>
+        </div>
+      </template>
+      <template is="dom-if" if="{{selectedInfo.properties.length}}">
+        <h3 class="info__subheader">Properties</h3>
+      </template>
+      <template is="dom-repeat" items="{{selectedInfo.properties}}">
+        <div class="row">
+          <div class="row__key">{{item.key}}</div>
+          <div class="row__val">{{item.val}}</div>
+        </div>
+      </template>
+      <template is="dom-if" if="{{selectedInfo.equipment.length}}">
+        <h3 class="info__subheader">Equipment Information</h3>
+      </template>
+      <template is="dom-repeat" items="{{selectedInfo.equipment}}">
+        <div class="row">
+          <div class="row__key">{{item.key}}</div>
+          <div class="row__val">{{item.val}}</div>
+        </div>
+      </template>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta officia, ad eum asperiores, fugiat quas. Inventore quos, deleniti et assumenda culpa! Quaerat exercitationem dolorem, suscipit sed dicta expedita voluptas iste.</p>
+      <!-- <template is="dom-repeat" items=""></template>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit doloribus, iure tempore debitis expedita eaque, consectetur laborum fugiat ex natus autem aperiam iusto, et nisi ipsa, necessitatibus cumque qui itaque.</p> -->
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'demo-context-browser',
+      properties: {
+        context: {
+          type: Array,
+          value: function() {
+            return [
+              {
+                label: 'United States',
+                id: 'united-states',
+                children: [
+                  {
+                    label: 'California',
+                    id: 'calif',
+                    children: [
+                      {
+                        label: 'San Francisco',
+                        id: 'sf'
+                      },
+                      {
+                        label: 'Walnut Creek',
+                        id: 'wc'
+                      },
+                      {
+                        label: 'Sacramento',
+                        id: 'sc'
+                      }
+                    ]
+                  },
+                  {
+                    label: 'Arizona',
+                    id: 'ariz'
+                  },
+                  {
+                    label: 'Oregon',
+                    id: 'oregon'
+                  },
+                  {
+                    label: 'Washington',
+                    id: 'wash'
+                  }
+                ]
+              },
+            ]
+          }
+        },
+        selectedInfo: {
+          type: Object,
+          computed: '_computeSelectedInfo(selectedItem)'
+        }
+      },
+      listeners: {
+        'px-app-asset-children-requested' : '_handleChildrenRequested'
+      },
+      created() {
+        this.DIDONE = false;
+      },
+      _handleChildrenRequested(evt) {
+        // if (this.DIDONE) return;
+        // this.DIDONE = true;
+        // console.log('do')
+        this.async(function(){
+          const target = Polymer.dom(evt).rootTarget;
+          const {item} = evt.detail;
+          target.addChildren(item, [{id:'1234',label:'New Child'}]);
+        }, 2000);
+      },
+      _computeSelectedInfo(selectedItem) {
+        if (!selectedItem) return {};
+        const metadata = [];
+        const properties = [];
+        const equipment = [];
+        metadata.push({key: 'Name', val: selectedItem.label});
+        metadata.push({key: 'Asset ID', val: selectedItem.id});
+        metadata.push({key: 'Classification', val:selectedItem.classification});
+        if (selectedItem.properties && Array.isArray(selectedItem.properties)) {
+          for (let i=0; i<selectedItem.properties.length; i++) {
+            properties.push({key:selectedItem.properties[i].id, val:selectedItem.properties[i].value[0]})
+          }
+        }
+        if (typeof selectedItem.reservedProperties === 'object' && Object.keys(selectedItem.reservedProperties).length) {
+          let k = Object.keys(selectedItem.reservedProperties);
+          for (let i=0; i<k.length; i++) {
+            equipment.push({key:k[0], val:selectedItem.reservedProperties[k[0]]});
+          }
+        }
+        return {metadata,properties,equipment};
+      }
+    });
+  </script>
+</dom-module>

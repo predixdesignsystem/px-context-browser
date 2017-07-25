@@ -59,14 +59,6 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
 }
 
 .panel-body {
-  // display: flex;
-  // flex: 1 1 auto;
-  // flex-direction: column;
-  // overflow: hidden;
-  //
-  // display: flex;
-  // flex-direction: column;
-
   display: block;
   position: relative;
   width: $px-context-browser-panel-width;
@@ -77,9 +69,16 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
   background-color: var(--px-context-browser-panel-background-color, white);
 }
 
+:host([collapsed]) {
+  position: relative;
+}
+
 :host([collapsed]) .panel-body {
+  position: relative;
   width: 100vw;
-  height: 90vh;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @keyframes LoadingBar {

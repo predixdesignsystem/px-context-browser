@@ -24,21 +24,26 @@
   max-height: calc(var(--px-context-browser-item-height, 30px) * 10);
 }
 
+:host([collapsed]) .backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.65);
+  opacity: 0;
+  transition: opacity 200ms ease;
+  z-index: -1;
+}
 
-// .column {
-//   display: none;
-// }
-// .column--active {
-//   display: block;
-//   position: absolute;
-//   width: 100%;
-//   height: 100%;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   overflow-y: auto;
-// }
+:host([collapsed]) .backdrop[visible] {
+  opacity: 1;
+}
+
+:host([collapsed]) px-context-browser-panel {
+  position: relative;
+  z-index: 2;
+}
 
 .column {
   display: block;
@@ -98,4 +103,11 @@ px-context-browser-columns[visible-count="8"] {
 }
 px-context-browser-columns[visible-count="9"] {
   min-height: ($item-height*9) + 1px;
+}
+
+px-context-browser-columns[collapsed],
+px-context-browser-columns[collapsed][visible-count],
+px-context-browser-columns[collapsed][visible-count="*"] {
+  min-height: auto;
+  flex: 1 1 auto;
 }

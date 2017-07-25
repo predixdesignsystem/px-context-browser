@@ -3,6 +3,7 @@
 <link rel="import" href="../web-animations-js/web-animations-next-lite.min.html"/>
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html"/>
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html"/>
+<link rel="import" href="../iron-media-query/iron-media-query.html"/>
 <link rel="import" href="../iron-dropdown/iron-dropdown.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-graph.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
@@ -25,15 +26,23 @@
     <iron-a11y-keys target="[[_panelEl]]" keys="enter" on-keys-pressed="_handleEnterKey" stop-keyboard-event-propagation></iron-a11y-keys>
     <iron-a11y-keys target="[[_panelEl]]" keys="left" on-keys-pressed="_handleArrowLeftKey" stop-keyboard-event-propagation></iron-a11y-keys> -->
 
+    <!-- Media query to determine if context browser should collapse -->
+    <template is="dom-if" if="[[_collapseQueryIsValid(collapseAt)]]">
+      <iron-media-query query$="(max-width: {{_getCollapseQuery(collapseAt)}})" query-matches="{{_belowCollapseSize}}"></iron-media-query>
+    </template>
+
     <!-- Links the active column to __activeContext so changes to the active column are notifying -->
     <array-selector id="selector" items="[[__context.columns]]" selected="{{__activeContext}}"></array-selector>
+
+    <!-- Backdrop to show if collapsed and open -->
+    <div class="backdrop" visible$="[[_isCollapseOpened(collapsed, opened)]]"></div>
 
     <iron-dropdown
       id="dropdown"
       no-overlap
+      horizontal-offset="-15"
       vertical-align="[[_getDropdownVerticalAlign(collapsed)]]"
       horizontal-align="[[_getDropdownHorizontalAlign(collapsed)]]"
-      horizontal-offset="-15"
       opened="{{opened}}"
       position-target="[[_getPositionTarget(_positionTarget, collapsed)]]"
       on-iron-overlay-canceled="_handleBrowserCanceled"
@@ -42,7 +51,7 @@
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
         <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
-        <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]">
+        <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
             <div column$="[[column.index]]" class="column" slot="columns">
               <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, filtering)}}">
@@ -53,7 +62,8 @@
                     can-favorite="[[showFavorites]]"
                     can-open="[[_isItemOpenable(showArrow, item)]]"
                     on-tap="_handleItemTapped"
-                    tabindex="0">
+                    tabindex="0"
+                    collapsed$="[[collapsed]]">
                 </px-context-browser-item>
               </template>
             </div>
@@ -161,10 +171,13 @@
        * The width below which the context browser will collapse into a mobile
        * friendly menu that slides up from the bottom of the page. Use a number
        * (e.g. `450`) which will be converted to a pixel value (e.g. '450px').
+       *
+       * If no value is provided, the context browser will not collapse
+       * automatically. The collapsed attribute can also be used to manually
+       * collapse and un-collapse the context browser.
        */
       collapseAt: {
-        type: Number,
-        value: 320
+        type: Number
       },
 
       /**
@@ -202,6 +215,11 @@
 
       __activeContext: {
         type: Object
+      },
+
+      _belowCollapseSize: {
+        type: Boolean,
+        observer: '_handleBelowCollapseSizeChanged'
       }
     },
 
@@ -216,7 +234,46 @@
       // 'px-app-asset-graph-created' : '_resetColumns',
       // 'px-app-asset-deactivated' : '_resetColumns',
       // 'focus-first-visible-item' : '_focusFirstVisibleItem',
-      'px-app-asset-children-updated' : '_handleChildrenChanged'
+      'px-app-asset-children-updated' : '_handleChildrenChanged',
+      'iron-resize' : '_handleResize'
+    },
+
+    _collapseQueryIsValid(query) {
+      if (typeof query === 'number') {
+        return true;
+      }
+      if (typeof query === 'string' && query.slice(-2) === 'px' && !isNaN(parseInt(query))) {
+        return true;
+      }
+      return false;
+    },
+
+    _isCollapseOpened(collapsed, opened) {
+      return (collapsed && opened);
+    },
+
+    _handleResize(evt) {
+      if (this._positionTarget && evt && Polymer.dom(evt).rootTarget === this) {
+        // Why do we this? I'll tell you why. We have to do some tricky little
+        // things to make the dropdown panel size itself as a percentage of the
+        // height of the document in iOS Safari. (Thanks, iOS Safari, for not
+        // supporting vh units and for collapsing child heights that are defined
+        // as a percentage of parent that does not have a static height set.)
+        //
+        // Combine this with the fact that users can open the collapsed menu and
+        // randomly start tilting their phone from portrait to landscape to
+        // portrait to landscape to portrait to landscape... and somewhere around
+        // the 3rd iteration of this manic loop, the dropdown will size itself
+        // off-screen. So good. So, we listen for resize events. If we have a
+        // position target to size ourselves against, and if we originated the
+        // resize event, we'll request the next animation frame AND use a timeout
+        // to wait until drawing is finished before we force a refit. Yay.
+        window.requestAnimationFrame(function(){
+          setTimeout(function(){
+            this.$.dropdown.refit();
+          }.bind(this));
+        }.bind(this));
+      }
     },
 
     created() {
@@ -233,6 +290,24 @@
 
     detached() {
       this._panelElement = null;
+    },
+
+    _getCollapseQuery(collapseAt) {
+      if (typeof collapseAt === 'number') {
+        return collapseAt + 'px';
+      }
+      if (typeof collapseAt === 'string' && collapseAt.slice(-2) === 'px' || !isNaN(parseInt(collapseAt))) {
+        return collapseAt;
+      }
+    },
+
+    _handleBelowCollapseSizeChanged(newVal, oldVal) {
+      if (newVal && !this.collapsed) {
+        this.collapsed = true;
+      }
+      if (!newVal && this.collapsed) {
+        this.collapsed = false;
+      }
     },
 
     // ********************************************************************** //

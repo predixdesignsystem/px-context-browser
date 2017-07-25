@@ -28,12 +28,18 @@ $inuit-enable-input--search     : true;
   display: block;
 }
 
-.search {}
-
 .search__form {
   position: relative;
   display: block;
   padding: calculateRem(10px) calculateRem(15px);
+}
+
+// iOS Safari requires a minimum input text size of 16px, or it will automatically
+// zoom the page when the input becomes focused even if the developer marks
+// the page as un-zoomable. Manually setting the font size to 16px gets around
+// this issue.
+input.search__box {
+  font-size: 16px;
 }
 
 .search__icon {
