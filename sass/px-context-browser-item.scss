@@ -10,7 +10,6 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize-mini.scss";
@@ -18,15 +17,15 @@
 
 // Component
 /* Item State: Default */
-$px-context-browser-item-height: var(--px-context-browser-item-height, calculateRem(30px));
-$px-context-browser-item-text-color: var(--px-context-browser-item-text-color, black);
-$px-context-browser-item-background-color--hover: var(--px-context-browser-item-background-color--hover, whitesmoke);
-$px-context-browser-item-text-color--hover: var(--px-context-browser-item-background-color--hover, black);
-$px-context-browser-item-icon-stroke: var(--px-context-browser-item-icon-stroke, dimgray);
+$px-context-browser-item-height:                     var(--px-context-browser-item-height, calculateRem(30px));
+$px-context-browser-item-text-color:                 var(--px-context-browser-item-text-color, black);
+$px-context-browser-item-background-color--hover:    var(--px-context-browser-item-background-color--hover, whitesmoke);
+$px-context-browser-item-text-color--hover:          var(--px-context-browser-item-background-color--hover, black);
+$px-context-browser-item-icon-stroke:                var(--px-context-browser-item-icon-stroke, dimgray);
 /* Item State: Selected */
 $px-context-browser-item-background-color--selected: var(--px-context-browser-item-background-color--selected, steelblue);
-$px-context-browser-item-text-color--selected: var(--px-context-browser-item-background-color--selected, white);
-$px-context-browser-item-icon-stroke--selected: var(--px-context-browser-item-icon-stroke, white);
+$px-context-browser-item-text-color--selected:       var(--px-context-browser-item-background-color--selected, white);
+$px-context-browser-item-icon-stroke--selected:      var(--px-context-browser-item-icon-stroke, white);
 
 :host {
   display: flex;

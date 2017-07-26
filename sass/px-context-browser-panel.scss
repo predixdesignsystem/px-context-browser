@@ -10,7 +10,6 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
@@ -20,9 +19,10 @@
 @import "px-shadows-design/_objects.shadows.scss";
 
 // Component
-$px-context-browser-panel-width: var(--px-context-browser-panel-width, calculateRem(320px));
-$px-context-browser-panel-border-color: var(--px-context-browser-panel-border-color, lightgray); //$gray3
-$px-context-browser-panel-border-size: var(--px-context-browser-panel-border-size, 1px);
+$px-context-browser-panel-width:             var(--px-context-browser-panel-width, calculateRem(320px));
+$px-context-browser-panel-border-color:      var(--px-context-browser-panel-border-color, lightgray); //$gray3
+$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, whitesmoke); //$gray1
+$px-context-browser-panel-border-size:       var(--px-context-browser-panel-border-size, 1px);
 
 .pointer {
   height: 16px;
@@ -32,7 +32,7 @@ $px-context-browser-panel-border-size: var(--px-context-browser-panel-border-siz
   z-index: 1;
   border-left: 16px solid transparent;
   border-right: 16px solid transparent;
-  border-bottom: 16px solid var(--px-context-browser-panel-border-color, $gray3);
+  border-bottom: 16px solid $px-context-browser-panel-border-color;
 }
 
 .pointer:after {
@@ -57,7 +57,7 @@ $px-context-browser-panel-border-size: var(--px-context-browser-panel-border-siz
 }
 
 :host([has-header]) .pointer:after {
-  border-bottom-color: var(--px-context-browser-header-background-color, $gray1);
+  border-bottom-color: $px-context-browser-header-background-color;
 }
 
 .panel-body {

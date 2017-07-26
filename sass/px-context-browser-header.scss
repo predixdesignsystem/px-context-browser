@@ -10,7 +10,6 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
@@ -20,10 +19,10 @@
 @import "px-shadows-design/_objects.shadows.scss";
 
 // Component
-$px-context-browser-header-height: var(--px-context-browser-header-height, calculateRem(40px));
-$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, $gray1);
-$px-context-browser-header-text-color: var(--px-context-browser-header-text-color, $select-default);
-$px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-stroke, dimgray);
+$px-context-browser-header-height:           var(--px-context-browser-header-height, calculateRem(40px));
+$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, whiteSmoke);//$gray1
+$px-context-browser-header-text-color:       var(--px-context-browser-header-text-color, teal); //$select-default
+$px-context-browser-header-icon-stroke:      var(--px-context-browser-item-icon-stroke, dimgray);
 
 :host {
   display: none;
