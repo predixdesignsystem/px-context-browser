@@ -2,16 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
   <title>Context Browser</title>
 
   <!-- Load webcomponents polyfill -->
-  <!-- <script src="../webcomponentsjs/webcomponents.min.js"></script> -->
+  <script src="../webcomponentsjs/webcomponents.min.js"></script>
 
   <!-- We need to import Polymer on this page to use `dom-bind` and `dom-repeat` -->
   <link rel="import" href="../polymer/polymer.html" />
+  <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html" />
+  <link rel="import" href="../iron-ajax/iron-ajax.html" />
+
+  <!-- Load theme -->
+  <link rel="import" href="../px-theme/px-theme-styles.html" />
 
   <!-- Load the new context browser -->
+  <link rel="import" href="dev-el.html">
   <link rel="import" href="px-context-browser.html">
 
   <style is="custom-style">
@@ -19,110 +26,13 @@
       margin: 20px;
       font-size: 15px;
     }
+    :root {
+      /* Add style variables */
+      /*--px-context-browser-xxxxx: XXXXX;*/
+    }
   </style>
 </head>
 <body>
-  <!--
-  <style>
-    .panel {
-      width: 350px;
-      height: 500px;
-      border: 1px solid orange;
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,1);
-    }
-    .panel__header {
-      height: 50px;
-      width: 100%;
-      background-color: slateblue;
-      box-shadow: 0 1px 1px 0 rgba(0,0,0,1);
-    }
-    .panel__header__triangle {
-      pointer-events: none;
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      margin-top: -11px;
-      margin-left: 11px;
-      border: 1px solid transparent;
-      transform-origin: 50% 50%;
-      transform: rotate(-45deg);
-      background-color: slateblue;
-      border-color: orange orange transparent transparent;
-    }
-  </style>
-  <div class="panel">
-    <div class="panel__header">
-      <div class="panel__header__triangle"></div>
-      <div class="panel__header__square"></div>
-    </div>
-    <div class="panel__body">
-
-    </div>
-  </div>
-  -->
-
-
-
+  <style is="custom-style" include="px-theme-styles"></style>
   <demo-context-browser></demo-context-browser>
-
-  <dom-module id="demo-context-browser">
-    <template>
-      <px-context-browser
-          items="{{context}}"
-          collapse-all
-          collapse-with-icon>
-      </px-context-browser>
-    </template>
-  </dom-module>
-  <script>
-    Polymer({
-      is: 'demo-context-browser',
-      properties: {
-        context: {
-          type: Array,
-          value: function() {
-            return [
-              {
-                label: 'United States',
-                id: 'united-states',
-                children: [
-                  {
-                    label: 'California',
-                    id: 'calif',
-                    children: [
-                      {
-                        label: 'San Francisco',
-                        id: 'sf'
-                      },
-                      {
-                        label: 'Walnut Creek',
-                        id: 'wc'
-                      },
-                      {
-                        label: 'Sacramento',
-                        id: 'sc'
-                      }
-                    ]
-                  },
-                  {
-                    label: 'Arizona',
-                    id: 'ariz'
-                  },
-                  {
-                    label: 'Oregon',
-                    id: 'oregon'
-                  },
-                  {
-                    label: 'Washington',
-                    id: 'wash'
-                  }
-                ]
-              },
-            ]
-          }
-        }
-      }
-    });
-  </script>
 </body>
-</html>

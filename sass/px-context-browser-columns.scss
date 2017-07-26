@@ -17,30 +17,30 @@
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Component
-#columns > ::slotted(:not(.active):not(.animating)) {
+.column-animation > ::slotted(:not(.active):not(.animating)) {
   display: none;
 }
 
-#columns > ::slotted(.animating) {
+.column-animation > ::slotted(.animating) {
   opacity: 0;
 }
 
-#columns > ::slotted(.fade-in-right) {
+.column-animation > ::slotted(.fade-in-right) {
   animation-name: fadeInRight;
   animation-duration: 350ms;
 }
 
-#columns > ::slotted(.fade-in-left) {
+.column-animation > ::slotted(.fade-in-left) {
   animation-name: fadeInLeft;
   animation-duration: 350ms;
 }
 
-#columns > ::slotted(.fade-out-right) {
+.column-animation > ::slotted(.fade-out-right) {
   animation-name: fadeOutRight;
   animation-duration: 350ms;
 }
 
-#columns > ::slotted(.fade-out-left) {
+.column-animation > ::slotted(.fade-out-left) {
   animation-name: fadeOutLeft;
   animation-duration: 350ms;
 }
