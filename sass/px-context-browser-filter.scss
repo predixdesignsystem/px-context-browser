@@ -17,7 +17,6 @@
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Base
-$inuit-enable-input--search     : true;
 @import "px-forms-design/_base.forms.scss";
 
 :host {
@@ -28,7 +27,7 @@ $inuit-enable-input--search     : true;
   display: block;
 }
 
-.search__form {
+.filter__form {
   position: relative;
   display: block;
   padding: calculateRem(10px) calculateRem(15px);
@@ -38,11 +37,11 @@ $inuit-enable-input--search     : true;
 // zoom the page when the input becomes focused even if the developer marks
 // the page as un-zoomable. Manually setting the font size to 16px gets around
 // this issue.
-input.search__box {
+input.filter__box {
   font-size: 16px;
 }
 
-.search__icon {
+.filter__icon {
   position: absolute;
   top: calculateRem(10px);
   right: calculateRem(15px);
@@ -54,10 +53,10 @@ input.search__box {
   --iron-icon-fill-color: none;
   --iron-icon-stroke-color: currentcolor;
 }
-.search__icon--tappable {
+.filter__icon--tappable {
   cursor: pointer;
 }
 
-.search__box {
+.filter__box {
   padding-right: 1.5rem;
 }
