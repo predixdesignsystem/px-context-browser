@@ -16,11 +16,13 @@
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
+//Ojects
+@import "px-shadows-design/_objects.shadows.scss";
+
 // Component
 $px-context-browser-header-height: var(--px-context-browser-header-height, calculateRem(40px));
 $px-context-browser-header-background-color: var(--px-context-browser-header-background-color, $gray1);
 $px-context-browser-header-text-color: var(--px-context-browser-header-text-color, $select-default);
-$px-context-browser-header-box-shadow: var(--px-context-browser-header-box-shadow, 0 1px 1px 0 rgba(0,0,0,0.2));
 $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-stroke, dimgray);
 
 :host {
@@ -29,7 +31,7 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
   position: relative;
   height: $px-context-browser-header-height;
   background-color: $px-context-browser-header-background-color;
-  box-shadow: $px-context-browser-header-box-shadow;
+  box-shadow: $inuit-shadow-component;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
   z-index: 2;
