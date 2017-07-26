@@ -60,3 +60,10 @@ input.filter__box {
 .filter__box {
   padding-right: 1.5rem;
 }
+
+//removes the 'x' in edge and ie11's text input fields
+.filter__box::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
