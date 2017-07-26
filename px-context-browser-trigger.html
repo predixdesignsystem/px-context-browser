@@ -1,28 +1,10 @@
 <link rel="import" href="../px-icon-set/px-icon-set.html"/>
 <link rel="import" href="../px-icon-set/px-icon.html"/>
+<link rel="import" href="css/px-context-browser-trigger-styles.html"/>
 
 <dom-module id="px-context-browser-trigger">
   <template>
-    <style>
-      :host {
-        display: inline-flex;
-        height: var(--px-context-browser-trigger-height, 32px);
-        width: var(--px-context-browser-trigger-width, 32px);
-        --iron-icon-width: 100%;
-        --iron-icon-height: 100%;
-        padding: 2px;
-        box-sizing: border-box;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-      }
-      :host(:hover) {
-        background-color: var(--px-context-browser-trigger-hover-background, lightgray);
-      }
-      px-icon {
-        stroke: var(--px-context-browser-trigger-icon-color, currentcolor);
-      }
-    </style>
+    <style include="px-context-browser-trigger-styles"></style>
     <px-icon icon="[[_getIcon(favorites)]]"></px-icon>
   </template>
   <script>
