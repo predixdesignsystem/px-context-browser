@@ -19,17 +19,12 @@
 @import "px-shadows-design/_objects.shadows.scss";
 
 // Component
-$px-context-browser-header-height:           var(--px-context-browser-header-height, calculateRem(40px));
-$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, whiteSmoke);//$gray1
-$px-context-browser-header-text-color:       var(--px-context-browser-header-text-color, teal); //$select-default
-$px-context-browser-header-icon-stroke:      var(--px-context-browser-item-icon-stroke, dimgray);
-
 :host {
   display: none;
   flex-direction: row;
   position: relative;
-  height: $px-context-browser-header-height;
-  background-color: $px-context-browser-header-background-color;
+  height: var(--px-context-browser-header-height, calculateRem(40px));
+  background-color: var(--px-context-browser-header-background-color, whiteSmoke);
   box-shadow: $inuit-shadow-component;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
@@ -41,14 +36,14 @@ $px-context-browser-header-icon-stroke:      var(--px-context-browser-item-icon-
 }
 
 :host([collapsed]) {
-  background-color: white;
-  border-bottom: 1px solid lightgray;
+  background-color: var(--px-context-browser-header-background-color--collapsed, white);
+  border-bottom: 1px solid var(--px-context-browser-header-border-color--collapsed, lightgray);
 }
 
 .label {
   display: flex;
   align-items: center;
-  color: $px-context-browser-header-text-color;
+  color: var(--px-context-browser-header-text-color, teal);
   cursor: pointer;
   user-select: none;
   min-width: 0;
@@ -78,7 +73,7 @@ $px-context-browser-header-icon-stroke:      var(--px-context-browser-item-icon-
   margin-left: calculateRem(5px);
   margin-right: calculateRem(5px);
   cursor: pointer;
-  color: $px-context-browser-header-icon-stroke;
+  color: var(--px-context-browser-icon-stroke, dimgray);
 }
 .action--last {
   margin-right: 0;
