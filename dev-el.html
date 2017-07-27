@@ -39,8 +39,6 @@
     </style>
     <iron-ajax auto url="anon-processed.json" last-response="{{data}}"></iron-ajax>
     <div class="browser">
-
-
       <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
       <px-context-browser
           items="{{data}}"
@@ -48,11 +46,9 @@
           open-arrow
           show-filter
           open-trigger="[[openTrigger]]"
-          loading-timeout="1000"
-          collapse-at="900">
+          loading-timeout="2500"
+          loading-failure-terminal>
       </px-context-browser>
-
-
     </div>
     <div class="info">
       <h2 class="info__header">Selected Asset Information</h2>
