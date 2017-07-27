@@ -10,20 +10,12 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Component
-.items {
-  display: flex;
-  flex: 1 1 auto;
-  transition: min-height 250ms;
-  max-height: calc(var(--px-context-browser-item-height, 30px) * 10);
-}
-
 :host([collapsed]) .backdrop {
   position: fixed;
   left: 0;

@@ -10,26 +10,23 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
-// Component
-$px-context-browser-header-height: var(--px-context-browser-header-height, calculateRem(40px));
-$px-context-browser-header-background-color: var(--px-context-browser-header-background-color, $gray1);
-$px-context-browser-header-text-color: var(--px-context-browser-header-text-color, $select-default);
-$px-context-browser-header-box-shadow: var(--px-context-browser-header-box-shadow, 0 1px 1px 0 rgba(0,0,0,0.2));
-$px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-stroke, dimgray);
+//Ojects
+@import "px-shadows-design/_objects.shadows.scss";
 
+// Component
 :host {
   display: none;
   flex-direction: row;
   position: relative;
-  height: $px-context-browser-header-height;
-  background-color: $px-context-browser-header-background-color;
-  box-shadow: $px-context-browser-header-box-shadow;
+  height: calculateRem(40px);
+  background-color: var(--px-context-browser-header-background-color, whiteSmoke);
+  border-bottom: 1px solid var(--px-context-browser-header-border-color, lightgray);
+  box-shadow: $inuit-shadow-component;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
   z-index: 2;
@@ -40,14 +37,14 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
 }
 
 :host([collapsed]) {
-  background-color: white;
-  border-bottom: 1px solid lightgray;
+  background-color: var(--px-context-browser-header-background-color, white);
+  border-bottom: 1px solid var(--px-context-browser-header-border-color, lightgray);
 }
 
 .label {
   display: flex;
   align-items: center;
-  color: $px-context-browser-header-text-color;
+  color: var(--px-context-browser-header-text-color, teal);
   cursor: pointer;
   user-select: none;
   min-width: 0;
@@ -77,7 +74,7 @@ $px-context-browser-header-icon-stroke: var(--px-context-browser-item-icon-strok
   margin-left: calculateRem(5px);
   margin-right: calculateRem(5px);
   cursor: pointer;
-  color: $px-context-browser-header-icon-stroke;
+  color: var(--px-context-browser-icon-stroke, dimgray);
 }
 .action--last {
   margin-right: 0;
