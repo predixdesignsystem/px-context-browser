@@ -19,7 +19,7 @@
 :host {
   display: flex;
   align-items: center;
-  height: var(--px-context-browser-item-height, calculateRem(30px));
+  height: calculateRem(30px);
   color: var(--px-context-browser-item-text-color, black);
   transition: background-color .2s ease-in-out;
 }
@@ -51,8 +51,8 @@
   flex: 1 1 auto;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
-  height: var(--px-context-browser-item-height, calculateRem(30px));
-  line-height: var(--px-context-browser-item-height, calculateRem(30px));
+  height: calculateRem(30px);
+  line-height: calculateRem(30px);
   min-width: 0;
   cursor: pointer;
   user-select: none;
