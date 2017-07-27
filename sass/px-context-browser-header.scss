@@ -25,6 +25,7 @@
   position: relative;
   height: var(--px-context-browser-header-height, calculateRem(40px));
   background-color: var(--px-context-browser-header-background-color, whiteSmoke);
+  border-bottom: 1px solid var(--px-context-browser-header-border-color, lightgray);
   box-shadow: $inuit-shadow-component;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
@@ -36,8 +37,8 @@
 }
 
 :host([collapsed]) {
-  background-color: var(--px-context-browser-header-background-color--collapsed, white);
-  border-bottom: 1px solid var(--px-context-browser-header-border-color--collapsed, lightgray);
+  background-color: var(--px-context-browser-header-background-color, white);
+  border-bottom: 1px solid var(--px-context-browser-header-border-color, lightgray);
 }
 
 .label {

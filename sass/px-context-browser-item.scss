@@ -44,7 +44,7 @@
 :host([selected]),
 :host([selected][collapsed]) {
   background-color: var(--px-context-browser-item-background-color--selected, steelblue);
-  color: var(--px-context-browser-item-background-color--selected, white);
+  color: var(--px-context-browser-item-text-color--selected, white);
 }
 
 .label {
