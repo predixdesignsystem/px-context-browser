@@ -51,8 +51,8 @@ input.search__box {
   display: block;
   padding: 4px;
   color: gray;
-  --iron-icon-fill-color: none;
-  --iron-icon-stroke-color: currentcolor;
+  --iron-icon-width: calc(100%-5px);
+  --iron-icon-height: calc(100%-5px);
 }
 .search__icon--tappable {
   cursor: pointer;

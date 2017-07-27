@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../iron-icon/iron-icon.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
 <link rel="import" href="../px-icon-set/px-icon-set.html"/>
 <link rel="import" href="css/px-context-browser-filter-styles.html"/>
 
@@ -21,12 +21,10 @@
           on-blur="_handleBlur">
       </input>
       <template is="dom-if" if="[[_showFilterIcon(filter)]]">
-        <iron-icon class="search__icon" icon="px-utl:filter"></iron-icon>
-        <!-- @TODO: Figure out why px-icon won't work here, it is not resizing to respect the width/height the way iron-icon does -->
-        <!-- <px-icon class="search__icon" icon="px-utl:filter"></px-icon> -->
+         <px-icon class="search__icon" icon="px-utl:filter"></px-icon>
       </template>
       <template is="dom-if" if="[[_showClearIcon(filter)]]">
-        <iron-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></iron-icon>
+        <px-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></px-icon>
       </template>
     </div>
   </template>
