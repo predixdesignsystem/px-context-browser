@@ -10,18 +10,15 @@
 
 // Settings
 @import "px-defaults-design/_settings.defaults.scss";
-@import "px-colors-design/_settings.colors.scss";
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
-// Component
-$px-context-browser-panel-width: var(--px-context-browser-panel-width, calculateRem(320px));
-$px-context-browser-panel-border-color: var(--px-context-browser-panel-border-color, lightgray); //$gray3
-$px-context-browser-panel-border-size: var(--px-context-browser-panel-border-size, 1px);
-$px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow, 0 2px 4px 0 rgba(0,0,0,0.2));
+//Ojects
+@import "px-shadows-design/_objects.shadows.scss";
 
+// Component
 .pointer {
   height: 16px;
   width: 16px;
@@ -30,7 +27,7 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
   z-index: 1;
   border-left: 16px solid transparent;
   border-right: 16px solid transparent;
-  border-bottom: 16px solid var(--px-context-browser-panel-border-color, $gray3);
+  border-bottom: 16px solid var(--px-context-browser-panel-border-color, lightgray);
 }
 
 .pointer:after {
@@ -42,12 +39,8 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
-  border-bottom: 15px solid white;
+  border-bottom: 15px solid var(--px-context-browser-panel-background-color, white);
   z-index: 1;
-}
-
-:host([collapsed]) {
-  background-color: white;
 }
 
 :host([collapsed]) .pointer {
@@ -55,17 +48,17 @@ $px-context-browser-panel-box-shadow: var(--px-context-browser-panel-box-shadow,
 }
 
 :host([has-header]) .pointer:after {
-  border-bottom-color: var(--px-context-browser-header-background-color, $gray1);
+  border-bottom-color: var(--px-context-browser-header-background-color, whiteSmoke);
 }
 
 .panel-body {
   display: block;
   position: relative;
-  width: $px-context-browser-panel-width;
+  width: var(--px-context-browser-panel-width, calculateRem(320px));
   border-style: solid;
-  border-width: $px-context-browser-panel-border-size;
-  border-color: $px-context-browser-panel-border-color;
-  box-shadow: $px-context-browser-panel-box-shadow;
+  border-width: 1px;
+  border-color: var(--px-context-browser-panel-border-color, lightgray);
+  box-shadow: $inuit-shadow-navigation;
   background-color: var(--px-context-browser-panel-background-color, white);
 }
 

@@ -16,30 +16,20 @@
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Component
-.column-animation > ::slotted(:not(.active):not(.animating)) {
-  display: none;
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--px-context-browser-trigger-height, 32px);
+  width: var(--px-context-browser-trigger-width, 32px);
+  --iron-icon-width: 100%;
+  --iron-icon-height: 100%;
+  padding: 2px;
+  cursor: pointer;
 }
-
-.column-animation > ::slotted(.animating) {
-  opacity: 0;
+:host(:hover) {
+  background-color: var(--px-context-browser-trigger-hover-background, lightgray);
 }
-
-.column-animation > ::slotted(.fade-in-right) {
-  animation-name: fadeInRight;
-  animation-duration: 350ms;
-}
-
-.column-animation > ::slotted(.fade-in-left) {
-  animation-name: fadeInLeft;
-  animation-duration: 350ms;
-}
-
-.column-animation > ::slotted(.fade-out-right) {
-  animation-name: fadeOutRight;
-  animation-duration: 350ms;
-}
-
-.column-animation > ::slotted(.fade-out-left) {
-  animation-name: fadeOutLeft;
-  animation-duration: 350ms;
+px-icon {
+  stroke: var(--px-context-browser-trigger-icon-color, currentcolor);
 }

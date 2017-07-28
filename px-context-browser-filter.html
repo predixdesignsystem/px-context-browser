@@ -9,10 +9,10 @@
     <!-- <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="tab" on-keys-pressed="_handleTabKey"></iron-a11y-keys>
     <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="enter" on-keys-pressed="_handleEnterKey"></iron-a11y-keys>
     <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="left right up down" on-keys-pressed="_handleArrowKeys"></iron-a11y-keys> -->
-    <div class="search__form">
+    <div class="filter__form">
       <input
-          id="search"
-          class="text-input search__box"
+          id="filter"
+          class="text-input filter__box"
           placeholder="Filter"
           value="{{filter::input}}"
           autocomplete="off"
@@ -21,10 +21,10 @@
           on-blur="_handleBlur">
       </input>
       <template is="dom-if" if="[[_showFilterIcon(filter)]]">
-         <px-icon class="search__icon" icon="px-utl:filter"></px-icon>
+         <px-icon class="filter__icon" icon="px-utl:filter"></px-icon>
       </template>
       <template is="dom-if" if="[[_showClearIcon(filter)]]">
-        <px-icon id="close" class="search__icon search__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></px-icon>
+        <px-icon id="close" class="filter__icon filter__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></px-icon>
       </template>
     </div>
   </template>
@@ -80,11 +80,11 @@
       },
 
       focusFilter() {
-        this.$.search.focus();
+        this.$.filter.focus();
       },
 
       blurFilter() {
-        this.$.search.blur();
+        this.$.filter.blur();
       }
     });
   </script>
