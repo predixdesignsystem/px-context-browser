@@ -1,3 +1,13 @@
+v2.0.0
+==================
+* Complete rebuild of the context browser with all new APIs. See the
+  documentation for more information on the new APIs and how to migrate your
+  existing code.
+* New, refreshed design. The browser is now a single column panel that opens
+  when its trigger is tapped.
+* Re-architected to work side-by-side with other Predix Design System components
+  used to navigate assets/context (px-tree, px-breadcrumbs).
+
 v1.8.0
 ==================
 * added localization for 'Open'
