@@ -1,0 +1,193 @@
+<!-- Common imports -->
+<link rel="import" href="../../polymer/polymer.html" />
+<link rel="import" href="../../px-icon-set/px-icon-set.html" />
+
+<!-- Common demo imports -->
+<link rel="import" href="../../px-demo/px-demo-header.html" />
+<link rel="import" href="../../px-demo/px-demo-api-viewer.html" />
+<link rel="import" href="../../px-demo/px-demo-footer.html" />
+<link rel="import" href="../../px-demo/px-demo-configs.html" />
+<link rel="import" href="../../px-demo/px-demo-props.html" />
+<link rel="import" href="../../px-demo/px-demo-interactive.html" />
+<link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+
+<!-- Imports for this component -->
+<link rel="import" href="../../px-demo/css/px-demo-styles.html" />
+<link rel="import" href="../px-context-browser.html" />
+<link rel="import" href="../px-context-browser-trigger.html" />
+
+<!-- Demo DOM module -->
+<dom-module id="px-context-browser-demo">
+  <template>
+    <style include="px-demo-styles" is="custom-style"></style>
+
+    <!-- Header -->
+    <px-demo-header
+        module-name="px-context-browser"
+        description="The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view. Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function. When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.">
+    </px-demo-header>
+
+    <!-- Interactive -->
+    <px-demo-interactive>
+      <!-- Configs -->
+      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+
+      <!-- Props -->
+      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+
+      <!-- Code Editor -->
+      <px-demo-code-editor props="{{props}}"></px-demo-code-editor>
+
+      <!-- Component ---------------------------------------------------------->
+      <px-demo-component>
+        <div style="width: 600px;">
+          <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
+          <px-context-browser
+            open-trigger="[[openTrigger]]"
+            opened="{{props.opened.value}}"
+            items="{{props.items.value}}"
+            selected-route="{{props.selectedRoute.value}}"
+            filter="{{props.filter.value}}"
+            show-filter="[[props.showFilter.value]]"
+            show-arrow="[[props.showArrow.value]]"
+            collapse="[[props.collapse.value]]"
+            collapse-at="[[props.collapseAt.value]]"
+            loading-timeout="[[props.loadingTimeout.value]]"
+            ></px-context-browser>
+        </div>
+      </px-demo-component>
+      <!-- END Component ------------------------------------------------------>
+
+      <px-demo-component-snippet
+          element-properties="{{props}}"
+          element-name="px-context-browser">
+      </px-demo-component-snippet>
+    </px-demo-interactive>
+
+    <!-- API Viewer -->
+    <px-demo-api-viewer source="px-context-browser"></px-demo-api-viewer>
+
+    <!-- Footer -->
+    <px-demo-footer></px-demo-footer>
+
+  </template>
+
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-demo',
+
+    properties: {
+
+      /**
+       * @property demoProps
+       * @type {Object}
+       */
+      props: {
+        type: Object,
+        value: function(){ return this.demoProps; }
+      },
+
+      /**
+       * @property demoProps
+       * @type {Array}
+       */
+      configs: {
+        type: Array,
+        value: function(){
+          return [
+            { configName: "Basic",
+              configReset: true
+            },
+            { configName: "Advanced",
+              configReset: true,
+              opened: false,
+              items: [
+                { "label" : "Home",   "id" : "home" },
+                { "label" : "Alerts", "id" : "alerts", "children": [
+                  { "label" : "Alert #1", "id" : "al1" },
+                  { "label" : "Alert #2", "id" : "al2" },
+                  { "label" : "Alert #3", "id" : "al3" },
+                  { "label" : "Alert #4", "id" : "al4" }
+                ] },
+                { "label" : "Assets", "id" : "assets", "children": [
+                  { "label" : "Asset #1", "id" : "a1" },
+                  { "label" : "Asset #2", "id" : "a2" }
+                ] }
+              ],
+              selectedRoute: ["alerts"],
+              showFilter: true,
+              showArrow: true,
+              collapseAt: 600,
+              loadingTimeout: 7000
+            }
+          ];
+        }
+      }
+    },
+
+    /**
+     * A reference for `this.props`. Read the documentation there.
+     */
+    demoProps: {
+
+      opened: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      items: {
+        type: Array,
+        defaultValue: [
+          { "label" : "Home",   "id" : "home" },
+          { "label" : "Alerts", "id" : "alerts" },
+          { "label" : "Assets", "id" : "assets", "children": [
+            { "label" : "Asset #1", "id" : "a1" },
+            { "label" : "Asset #2", "id" : "a2" }
+          ] }
+        ],
+        inputType: 'code:JSON'
+      },
+      selectedRoute: {
+        type: Array,
+        defaultValue: ["assets", "a1"],
+        inputType: 'code:JSON'
+      },
+      filter: {
+        type: String,
+        inputType: 'text'
+      },
+      showFilter: {
+        type: Boolean,
+        inputType: 'toggle',
+      },
+      showArrow: {
+        type: Boolean,
+        inputType: 'toggle'
+      },
+      collapsed: {
+        type: Boolean,
+        inputType: 'toggle'
+      },
+      collapseAt: {
+        type: Number,
+        defaultValue: 450,
+        inputType: 'number'
+      },
+      loadingTimeout: {
+        type: Number,
+        defaultValue: 5000,
+        inputType: 'number'
+      }
+    },
+
+    ready: function () {
+    },
+
+    attached: function () {
+      var cb = document.querySelector('px-context-browser');
+      var dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
+      dropdown.noCancelOnOutsideClick = true;
+    }
+  });
+  </script>
