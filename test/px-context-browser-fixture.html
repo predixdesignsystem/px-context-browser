@@ -34,5 +34,21 @@
         </div>
       </template>
     </test-fixture>
+
+    <test-fixture id="ContextBrowserBindingFixture">
+      <template>
+        <div>
+          <template is="dom-bind" id="app">
+            <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+            <px-context-browser
+                items="{{items}}"
+                selected-route="{{selectedRoute}}"
+                opened="{{opened}}"
+                open-trigger="{{openTrigger}}">
+            </px-context-browser>
+          </template>
+        </div>
+      </template>
+    </test-fixture>
   </body>
 </html>

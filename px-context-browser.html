@@ -189,7 +189,8 @@ Custom property | Description
        */
       opened: {
         type: Boolean,
-        value: false
+        notify: true,
+        observer: '_handleInitialOpenedValue'
       },
 
       /**
@@ -345,6 +346,7 @@ Custom property | Description
       // @TODO: Implement favorites
       // this._favoritesTriggerHandler = null;
       this._resetActiveTask = null;
+      this._squashNextResetActiveTask = null;
       this._childLoadingHandler = null;
       this._cancelFilterFocusTask = null;
     },
@@ -606,6 +608,9 @@ Custom property | Description
      * If the browser is opened before the reset active task runs, cancel it.
      */
     _handleBrowserOpened(evt) {
+      if (this._squashNextResetActiveTask) {
+        this._squashNextResetActiveTask = null;
+      }
       if (this._resetActiveTask) {
         this.cancelAsync(this._resetActiveTask);
         this._resetActiveTask = null;
@@ -619,6 +624,10 @@ Custom property | Description
      * or to the root if no item is selected.
      */
     _handleBrowserClosed(evt) {
+      if (this._squashNextResetActiveTask) {
+        this._squashNextResetActiveTask = null;
+        return;
+      }
       if (this._resetActiveTask) {
         this.cancelAsync(this._resetActiveTask);
         this._resetActiveTask = null;
@@ -632,6 +641,15 @@ Custom property | Description
       }
       else if (this.selected && this.active !== this.selectedMeta.parent) {
         this.activate(this.selectedMeta.parent, 'DOM_EVENT');
+      }
+    },
+
+    _handleInitialOpenedValue(nextVal, lastVal) {
+      if (typeof nextVal === 'boolean' && typeof lastVal == 'undefined') {
+        // We are in the initial state. We must try to squash the next closed
+        // event from the iron-dropdown or we will fail to handle the initial
+        // item being selected and fail to show the correct active item. Bof.
+        this._squashNextResetActiveTask = true;
       }
     },
 
