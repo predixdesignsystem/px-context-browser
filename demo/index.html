@@ -8,14 +8,14 @@
 <link rel="import" href="../../px-demo/px-demo-footer.html" />
 <link rel="import" href="../../px-demo/px-demo-configs.html" />
 <link rel="import" href="../../px-demo/px-demo-props.html" />
+<link rel="import" href="../../px-demo/px-demo-code-editor.html" />
 <link rel="import" href="../../px-demo/px-demo-interactive.html" />
 <link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
 
-<!-- Imports for this componnent -->
+<!-- Imports for this component -->
 <link rel="import" href="../../px-demo/css/px-demo-styles.html" />
 <link rel="import" href="../px-context-browser.html" />
-<link rel="import" href="../px-context-browser-typeahead.html" />
-<link rel="import" href="../importQ.html"/>
+<link rel="import" href="../px-context-browser-trigger.html" />
 
 <!-- Demo DOM module -->
 <dom-module id="local-element-demo">
@@ -43,19 +43,24 @@
       <!-- Props -->
       <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
+      <!-- Code Editor -->
+      <px-demo-code-editor props="{{props}}"></px-demo-code-editor>
+
       <!-- Component ---------------------------------------------------------->
       <px-demo-component>
         <div style="width: 600px;">
+          <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
           <px-context-browser
-            label-field="[[props.labelField.value]]"
-            id-field="[[props.idField.value]]"
-            browser-context="[[props.browserContext.value]]"
-            show-chevron="[[props.showChevron.value]]"
-            show-column-browser="[[props.showColumnBrowser.value]]"
-            show-column-typeahead="[[props.showColumnTypeahead.value]]"
-            opened-item-name="[[props.openedItemName.value]]"
-            disabled="[[props.disabled.value]]"
-            disable-infinite-scroll="[[props.disableInfiniteScroll.value]]"
+            opened="[[props.opened.value]]"
+            open-trigger="[[openTrigger]]"
+            items="[[props.items.value]]"
+            selected-route="[[props.selectedRoute.value]]"
+            filter="[[props.filter.value]]"
+            show-filter="[[props.showFilter.value]]"
+            show-arrow="[[props.showArrow.value]]"
+            collapse="[[props.collapse.value]]"
+            collapse-at="[[props.collapseAt.value]]"
+            loading-timeout="[[props.loadingTimeout.value]]"
             ></px-context-browser>
         </div>
       </px-demo-component>
@@ -99,172 +104,20 @@
         type: Array,
         value: function(){
           return [
-            { configName: "Initial Context",
+            { configName: "Basic",
               configReset: true
             },
-            { configName: "Direct Context",
-              showColumnTypeahead: false,
-              browserContext: {
-                "data": [
-                    {
-                        "identifier": "001-1",
-                        "name": "Lots of Children",
-                        "isOpenable" : true,
-                        "hasChildren": true
-                    },
-                    {
-                      "identifier": "001-2",
-                      "name": "Deep_Nested_And_A_Very_Long_Name_That_Should_Wrap_Around_in_The_Row",
-                      "isOpenable" : true,
-                      "children": [
-                            {
-                                "identifier": "001-2a",
-                                "name": "Nested Child 1",
-                                "isOpenable" : true,
-                                "children": [
-                                  {
-                                    "identifier": "001-2aa",
-                                    "name": "Nested Grandchild 1",
-                                    "isOpenable" : true,
-                                    "children" : [{
-                                      "identifier": "001-2aba",
-                                      "name": "Nested Great Grandchild 1",
-                                      "isOpenable" : true
-                                    },
-                                    {
-                                      "identifier": "001-2abb",
-                                      "name": "Nested Great Grandchild 2",
-                                      "isOpenable" : true
-                                    },
-                                    {
-                                      "identifier": "001-2abc",
-                                      "name": "Nested Great Grandchild 3",
-                                      "isOpenable" : true,
-                                      "selectedAsset": true
-                                    }],
-                                    "meta": { "parentId": "001-2ab" }
-                                  },
-                                  {
-                                    "identifier": "001-2ab",
-                                    "name": "Nested Grandchild 2",
-                                    "isOpenable" : true
-                                  },
-                                  {
-                                    "identifier": "001-2ac",
-                                    "name": "Nested Grandchild 3",
-                                    "isOpenable" : true
-                                  }
-                                ],
-                                "meta": { "parentId": "001-2a" }
-                            },
-                            {
-                              "identifier": "001-2b",
-                              "name": "Nested Child 2",
-                              "isOpenable" : true
-                            },
-                            {
-                              "identifier": "001-2c",
-                              "name": "Nested Child 3",
-                              "isOpenable" : true
-                            }
-                        ],
-                        "meta": { "parentId": "001-2" }
-                    },
-                    {
-                    "identifier": "001-3",
-                    "name": "Nothing Below Me",
-                    "isOpenable" : true
-                    },
-                    {
-                    "identifier": "001-4",
-                    "name": "Nothing Below, Not openable"
-                   }
-                ],
-                "meta": { "parentId": null }
-                }
-              },
-            { configName: "Typeahead",
-              showColumnTypeahead: true,
+            { configName: "Advanced",
               configReset: true,
-              browserContext: {
-                "data": [
-                    {
-                        "identifier": "001-1",
-                        "name": "Lots of Children",
-                        "isOpenable" : true,
-                        "hasChildren": true
-                    },
-                    {
-                      "identifier": "001-2",
-                      "name": "Deep nested",
-                      "isOpenable" : true,
-                      "children": [
-                            {
-                                "identifier": "001-2a",
-                                "name": "Nested Child 1",
-                                "isOpenable" : true,
-                                "children": [
-                                  {
-                                    "identifier": "001-2aa",
-                                    "name": "Nested Grandchild 1",
-                                    "isOpenable" : true,
-                                    "children" : [{
-                                      "identifier": "001-2aba",
-                                      "name": "Nested Great Grandchild 1",
-                                      "isOpenable" : true
-                                    },
-                                    {
-                                      "identifier": "001-2abb",
-                                      "name": "Nested Great Grandchild 2",
-                                      "isOpenable" : true
-                                    },
-                                    {
-                                      "identifier": "001-2abc",
-                                      "name": "Nested Great Grandchild 3",
-                                      "isOpenable" : true,
-                                      "selectedAsset": true
-                                    }],
-                                    "meta": { "parentId": "001-2ab" }
-                                  },
-                                  {
-                                    "identifier": "001-2ab",
-                                    "name": "Nested Grandchild 2",
-                                    "isOpenable" : true
-                                  },
-                                  {
-                                    "identifier": "001-2ac",
-                                    "name": "Nested Grandchild 3",
-                                    "isOpenable" : true
-                                  }
-                                ],
-                                "meta": { "parentId": "001-2a" }
-                            },
-                            {
-                              "identifier": "001-2b",
-                              "name": "Nested Child 2",
-                              "isOpenable" : true
-                            },
-                            {
-                              "identifier": "001-2c",
-                              "name": "Nested Child 3",
-                              "isOpenable" : true
-                            }
-                        ],
-                        "meta": { "parentId": "001-2" }
-                    },
-                    {
-                    "identifier": "001-3",
-                    "name": "Nothing Below Me",
-                    "isOpenable" : true
-                    },
-                    {
-                    "identifier": "001-4",
-                    "name": "Nothing Below, Not openable"
-                   }
-                ],
-                "meta": { "parentId": null }
-                }
+              opened: false,
+              selectedRoute: ["assets", "a1"],
+              filter: '',
+              showFilter: true,
+              showArrow: true,
+              collapseAt: 600,
+              loadingTimeout: 7000
             }
+
           ];
         }
       }
@@ -274,185 +127,66 @@
      * A reference for `this.props`. Read the documentation there.
      */
     demoProps: {
-      labelField: {
-        type: String,
-        defaultValue: 'name',
-        inputType: 'text'
-    },
-    idField: {
-      type: String,
-      defaultValue: 'identifier',
-        inputType: 'text'
-    },
-    openedItemName: {
-      type: String,
-      defaultValue: 'Select Context',
-        inputType: 'text'
-    },
-    showChevron: {
-      type: Boolean,
-      defaultValue: true,
-      inputType: 'toggle'
-    },
-    showColumnBrowser: {
-      type: Boolean,
-      defaultValue: false,
-      inputType: 'toggle'
-    },
-    disabled: {
-      type: Boolean,
-      defaultValue: false,
-      inputType: 'toggle'
-    },
-    showColumnTypeahead: {
-      type: Boolean,
-      defaultValue: false
-    },
-    disableInfiniteScroll: {
-      type: Boolean,
-      defaultValue: false,
-      inputType: 'toggle'
-    },
-    browserContext: {
-      type: Object,
-      defaultValue: {
-        "data": [
-          {
-            "name": "Lots of children",
-            "identifier": "001-1",
-            "isOpenable": true,
-            "hasChildren": true
-          }, {
-            "name": "Deep nested",
-            "identifier": "001-2",
-            "isOpenable": true,
-            "hasChildren": true
-          }, {
-            "name": "Nothing Below Me",
-            "identifier": "001-3",
-            "isOpenable": true
-          }, {
-            "name": "Nothing Below, Not openable",
-            "identifier": "001-4",
-            "isOpenable": false
-          }
-        ],
-        "meta": {
-          "parentId": null
-        }
+
+      opened: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
       },
-      inputDisabled: true
+      items: {
+        type: Array,
+        defaultValue: [
+          { "label" : "Home",   "id" : "home" },
+          { "label" : "Alerts", "id" : "alerts" },
+          { "label" : "Assets", "id" : "assets", "children": [
+            { "label" : "Asset #1", "id" : "a1" },
+            { "label" : "Asset #2", "id" : "a2" }
+          ] }
+        ],
+        inputType: 'code:JSON'
+      },
+      selectedRoute: {
+        type: Array,
+        inputType: 'code:JSON'
+      },
+      filter: {
+        type: String,
+        inputType: 'text'
+      },
+      showFilter: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle',
+      },
+      showArrow: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      collapsed: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      collapseAt: {
+        type: Number,
+        defaultValue: 450,
+        inputType: 'number'
+      },
+      loadingTimeout: {
+        type: Number,
+        defaultValue: 5000,
+        inputType: 'number'
       }
     },
 
     ready: function () {
+    },
 
-        // this.counter = 0;
-        // this.counterRange = 0;
-
-      // year = year.getFullYear();
-
-      // document.addEventListener('px-calendar-selected', function (evt) {
-      //   counter++;
-      //   for (var i = 1; i <= optionsArray.length; i++) {
-      //     var span = this.$$('#counter' + i);
-      //     if (span) {
-      //       span.innerHTML = '<strong>px-calendar-selected</strong> fired <strong>' + counter + '</strong> time(s)';
-      //     }
-      //   }
-      //
-      //   for (var i = 1; i <= optionsArray.length; i++) {
-      //     var span2 = this.$$('#dateTimeString' + i);
-      //     if (span2) {
-      //       span2.innerHTML = 'Current dateTime object: <strong>' + evt.detail.dateTime + '</strong>';
-      //     }
-      //   }
-      // });
-      //
-      // document.addEventListener('px-calendar-range-selected', function (evt) {
-      //   counterRange++;
-      //   for (var i = 1; i <= optionsArray.length; i++) {
-      //     var span = this.$$('#counterRange' + i);
-      //     if (span) {
-      //       span.innerHTML = '<strong>px-calendar-range-selected</strong> fired <strong>' + counterRange + '</strong> time(s)';
-      //     }
-      //   }
-      //
-      //   for (var i = 1; i <= optionsArray.length; i++) {
-      //     var span2 = this.$$('#rangeString' + i);
-      //     if (span2) {
-      //       span2.innerHTML = 'Current range object: From: <strong>' + evt.detail.range.from + '</strong> To: <strong>' + evt.detail.range.to + '</strong>';
-      //     }
-      //   }
-      // });
-
-      // template.linksIncludes = ['px-datetime-common/px-polygit-imports-datetime.html', 'px-polymer-font-awesome/polymer-font-awesome.html'];
+    attached: function () {
+      var cb = document.querySelector('px-context-browser');
+      var dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
+      dropdown.noCancelOnOutsideClick = true;
     }
   });
-
-  /**
-   * uses iron ajax programatically to fetch the children, according to the request.
-   * @param  {[String]} node [the node id]
-   * @return {[Promise]}      [a json object that contains the children of the requested object]
-   */
-  function demoGetChildren(node) {
-    var nodeId = node.identifier,
-        deferred = Q.defer(),
-        children,
-        response,
-        ironAjaxEl = document.createElement('iron-ajax'),
-        nodeIds = {
-          "001-1": "lotsOfChildren.json",
-          "001-2": "deepNestedChildren.json",
-          "001-2a":"deepNestedGrandchildren.json",
-          "001-2aa": "deepNestedGreatGrandchild.json"
-        };
-
-    ironAjaxEl.handleAs = "json";
-    ironAjaxEl.addEventListener('response', function(evt) {
-      if(evt.detail.response) {
-       children  = evt.detail.response;
-       deferred.resolve(children);
-      } else {
-       return;
-      }
-    });
-    //get our url - if there's no valid nodeId, resolve an empty promise.
-    if (nodeIds[nodeId]) {
-        ironAjaxEl.url = nodeIds[nodeId];
-        //and generate the promise.
-        ironAjaxEl.generateRequest();
-    } else {
-      deferred.resolve({ data: [], meta: { parentId: nodeId } });
-    }
-
-    //don't forget to return the promise!
-    return deferred.promise;
-  }
-
-  /**
-   * assigns a new object (handlers) to px-context-browser that has the ajax method which brings in children.
-   * @function lightDomLoaded
-   */
-  var lightDomLoaded = function() {
-    var localElementDemo = Polymer.dom(document).querySelector('local-element-demo'),
-        interactive = Polymer.dom(localElementDemo.root).querySelector('px-demo-interactive'),
-        component = Polymer.dom(interactive).querySelector('px-demo-component'),
-        colBrowser = Polymer.dom(component).querySelector('px-context-browser');
-
-    //context browser requires us to configure this object under handlers.
-    colBrowser.handlers = {
-      getChildren: function(parent, newIndex) {
-        return demoGetChildren(parent);
-      },
-      itemOpenHandler: function(context) {
-      }
-    };
-  };
-  /**
-   * we are listening to an event that tells us that px-context-browser has been loaded.
-   */
-  document.addEventListener('px-demo-component-light-dom-loaded', function() {
-    lightDomLoaded();
-  });
-</script>
+  </script>
