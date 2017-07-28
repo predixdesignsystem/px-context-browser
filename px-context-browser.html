@@ -18,7 +18,8 @@
 <!--
 ### Usage
 
-    <px-context-browser items='[{"label":"Home","id":"home"},{"label":"Alerts","id":"alerts"},{"label":"Assets","id":"assets","children":[{"label":"Asset #1","id":"a1"},{"label":"Asset #2","id":"a2"}]}]'></px-context-browser>
+    <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
+    <px-context-browser open-trigger="[[openTrigger]]" items='[{"label":"Home","id":"home"},{"label":"Alerts","id":"alerts"},{"label":"Assets","id":"assets"}]'></px-context-browser>
 
 ### Styling
 The following custom properties are available for styling.

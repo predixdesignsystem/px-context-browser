@@ -65,7 +65,10 @@
     </px-demo-interactive>
 
     <!-- API Viewer -->
-    <px-demo-api-viewer source="px-context-browser"></px-demo-api-viewer>
+    <px-demo-api-viewer
+      source="px-context-browser"
+      hide="[[apiHide]]">
+    </px-demo-api-viewer>
 
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
@@ -123,8 +126,19 @@
             }
           ];
         }
-      }
-    },
+      },
+
+      apiHide: {
+        type: Array,
+        value: function() {
+          return [
+            "multiActivate",
+            "multiSelect"
+          ]
+        }
+      },
+
+  },
 
     /**
      * A reference for `this.props`. Read the documentation there.
