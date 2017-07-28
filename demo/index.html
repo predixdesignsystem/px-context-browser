@@ -105,7 +105,15 @@
         value: function(){
           return [
             { configName: "Basic",
-              configReset: true
+              configReset: true,
+              opened: false,
+              selectedRoute: null,
+              filter: "",
+              // showFilter: true,
+              // showArrow: true,
+              // collapseAt: 600,
+              // loadingTimeout: 7000
+              configHideProps: ["selectedRoute", "filter", "showFilter", "showArrow"]
             },
             { configName: "Advanced",
               configReset: true,
@@ -147,6 +155,7 @@
       },
       selectedRoute: {
         type: Array,
+        defaultValue: null,
         inputType: 'code:JSON'
       },
       filter: {
@@ -155,27 +164,22 @@
       },
       showFilter: {
         type: Boolean,
-        defaultValue: false,
         inputType: 'toggle',
       },
       showArrow: {
         type: Boolean,
-        defaultValue: false,
         inputType: 'toggle'
       },
       collapsed: {
         type: Boolean,
-        defaultValue: false,
         inputType: 'toggle'
       },
       collapseAt: {
         type: Number,
-        defaultValue: 450,
         inputType: 'number'
       },
       loadingTimeout: {
         type: Number,
-        defaultValue: 5000,
         inputType: 'number'
       }
     },
