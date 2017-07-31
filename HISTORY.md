@@ -1,3 +1,7 @@
+v2.0.1
+==================
+* Fix dark theme
+
 v2.0.0
 ==================
 * Complete rebuild of the context browser with all new APIs. See the
