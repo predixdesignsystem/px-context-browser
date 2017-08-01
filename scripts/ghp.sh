@@ -25,8 +25,8 @@ TARGET_BRANCH="gh-pages"
 REPO=`git config remote.origin.url`
 
 # Find out our repo name from the bower file
-REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//')
-echo "repo name is ${REPO_NAME}"
+REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//' | sed -e 's/^[[:space:]]*//')
+echo "repo name is $REPO_NAME"
 
 # We get the URL in this format: "https://github.com/PredixDev/px-something"
 # First, we need to replace https-style remote URL with a SSH-style remote
@@ -42,11 +42,11 @@ SSH_GIT_PREDIXUI=${SSH_GIT/:PredixDev\//:predix-ui\/}
 # Prep git credentials
 GIT_USER_NAME="Travis CI"
 GIT_USER_EMAIL="PredixtravisCI@ge.com"
-GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation for tag ${TRAVIS_TAG} (${TRAVIS_COMMIT})"
+GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation for tag $TRAVIS_TAG ($TRAVIS_COMMIT)"
 
 # Set git credentials
-git config user.name ${GIT_USER_NAME}
-git config user.email ${GIT_USER_EMAIL}
+git config user.name $GIT_USER_NAME
+git config user.email $GIT_USER_EMAIL
 
 # ------------------------------------------------------------------------------
 # BUILD
@@ -69,26 +69,18 @@ cd $TRAVIS_BUILD_DIR
 # Open the build directory
 cd build/
 
-# Rename unbundled --> ${REPO_NAME}, move all bower_components/ up one level
-echo "now in $(pwd)"
-ls -al
-echo "moving unbundled to $REPO_NAME"
+# Rename unbundled --> $REPO_NAME, move all the bower_components/ up one level
+# so they're beside to $REPO_NAME
 mv unbundled $REPO_NAME
-ls -al
-echo "deleting $REPO_NAME if its in bower_components ${REPO_NAME}/bower_components/${REPO_NAME}/"
-rm -rf "${REPO_NAME}/bower_components/${REPO_NAME}/"
-ls -al
-echo "about to move all the stuff in ${REPO_NAME}/bower_components"
-ls -al "${REPO_NAME}"
-ls -al "${REPO_NAME}/bower_components"
-mv "${REPO_NAME}/bower_components/*" .
-rm -rf "${REPO_NAME}/bower_components/"
+rm -rf "$REPO_NAME/bower_components/$REPO_NAME/"
+find "$REPO_NAME/bower_components" -mindepth 1 -maxdepth 1 -print0 | xargs -0 -I {} mv {} .
+rm -rf "$REPO_NAME/bower_components/"
 
 # Add the redirect
 # Note: We are not overwriting the component's documentation `index.html` file
 # here, we are making sure that http://url/px-something/ redirects to
 # http://url/px-something/px-something/, where the demo page is installed
-echo "<META http-equiv=refresh content=\"0;URL=${REPO_NAME}/\">" > index.html
+echo "<META http-equiv=refresh content=\"0;URL=$REPO_NAME/\">" > index.html
 
 # Make sure the deploy key and node modules aren't checked into the build
 touch .gitignore
@@ -106,9 +98,9 @@ git init .
 git checkout --orphan $TARGET_BRANCH
 
 # Add and commit changes
-git add -A . --quiet &>/dev/null
+git add -A . >/dev/null
 echo "git add done"
-git commit -m "${GIT_COMMIT_MESSAGE}" --quiet &>/dev/null
+git commit -m "${GIT_COMMIT_MESSAGE}" >/dev/null
 echo "git commit done"
 
 # Prep the ssh key we'll use to deploy
