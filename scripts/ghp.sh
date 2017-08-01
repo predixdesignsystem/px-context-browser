@@ -25,7 +25,7 @@ TARGET_BRANCH="gh-pages"
 REPO=`git config remote.origin.url`
 
 # Find out our repo name from the bower file
-REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//')
+REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//' | sed -e 's/^[[:space:]]*//')
 echo "repo name is ${REPO_NAME}"
 
 # We get the URL in this format: "https://github.com/PredixDev/px-something"
