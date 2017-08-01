@@ -69,26 +69,18 @@ cd $TRAVIS_BUILD_DIR
 # Open the build directory
 cd build/
 
-# Rename unbundled --> ${REPO_NAME}, move all bower_components/ up one level
-echo "now in $(pwd)"
-ls -al
-echo "moving unbundled to $REPO_NAME"
+# Rename unbundled --> $REPO_NAME, move all the bower_components/ up one level
+# so they're beside to $REPO_NAME
 mv unbundled $REPO_NAME
-ls -al
-echo "deleting $REPO_NAME if its in bower_components ${REPO_NAME}/bower_components/${REPO_NAME}/"
-rm -rf "${REPO_NAME}/bower_components/${REPO_NAME}/"
-ls -al
-echo "about to move all the stuff in ${REPO_NAME}/bower_components"
-ls -al "${REPO_NAME}"
-ls -al "${REPO_NAME}/bower_components"
-mv "${REPO_NAME}/bower_components/*" .
-rm -rf "${REPO_NAME}/bower_components/"
+rm -rf "$REPO_NAME/bower_components/$REPO_NAME/"
+find "$REPO_NAME/bower_components" -mindepth 1 -print0 | xargs -0 -I {} mv {} .
+rm -rf "$REPO_NAME/bower_components/"
 
 # Add the redirect
 # Note: We are not overwriting the component's documentation `index.html` file
 # here, we are making sure that http://url/px-something/ redirects to
 # http://url/px-something/px-something/, where the demo page is installed
-echo "<META http-equiv=refresh content=\"0;URL=${REPO_NAME}/\">" > index.html
+echo "<META http-equiv=refresh content=\"0;URL=$REPO_NAME/\">" > index.html
 
 # Make sure the deploy key and node modules aren't checked into the build
 touch .gitignore
