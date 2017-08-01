@@ -1,0 +1,19 @@
+{
+  "entrypoint": "index.html",
+  "shell": "demo/index.html",
+  "sources": [
+    "demo/**/*",
+    "*.html",
+    "*.js"
+  ],
+  "builds": [
+    {
+      "name": "unbundled",
+      "preset": "es5-bundled",
+      "js": {"minify":false},
+      "html": {"minify":false},
+      "bundle": false,
+      "addServiceWorker": false
+    }
+  ]
+}
