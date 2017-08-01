@@ -17,8 +17,8 @@ before_script:
 - export PATH=$PWD/node_modules/.bin:$PATH
 - ./node_modules/.bin/bower
 script:
-- xvfb-run ./node_modules/.bin/wct --skip-plugin sauce
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then ./node_modules/.bin/wct --plugin sauce --skip-plugin
+- xvfb-run ./node_modules/.bin/wct --root $TRAVIS_BUILD_DIR --skip-plugin sauce
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then ./node_modules/.bin/wct --root $TRAVIS_BUILD_DIR --plugin sauce --skip-plugin
   local; fi
 after_success:
 - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k "$DEPLOYSECRET"
