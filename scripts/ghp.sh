@@ -73,7 +73,7 @@ cd build/
 # so they're beside to $REPO_NAME
 mv unbundled $REPO_NAME
 rm -rf "$REPO_NAME/bower_components/$REPO_NAME/"
-find "$REPO_NAME/bower_components" -mindepth 1 -print0 | xargs -0 -I {} mv {} .
+find "$REPO_NAME/bower_components" -mindepth 1 -maxdepth 1 -print0 | xargs -0 -I {} mv {} .
 rm -rf "$REPO_NAME/bower_components/"
 
 # Add the redirect
