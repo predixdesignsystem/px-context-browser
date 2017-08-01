@@ -26,7 +26,7 @@ REPO=`git config remote.origin.url`
 
 # Find out our repo name from the bower file
 REPO_NAME=$(grep "name" bower.json | sed 's/"name": "//' | sed 's/",//' | sed -e 's/^[[:space:]]*//')
-echo "repo name is ${REPO_NAME}"
+echo "repo name is $REPO_NAME"
 
 # We get the URL in this format: "https://github.com/PredixDev/px-something"
 # First, we need to replace https-style remote URL with a SSH-style remote
@@ -42,11 +42,11 @@ SSH_GIT_PREDIXUI=${SSH_GIT/:PredixDev\//:predix-ui\/}
 # Prep git credentials
 GIT_USER_NAME="Travis CI"
 GIT_USER_EMAIL="PredixtravisCI@ge.com"
-GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation for tag ${TRAVIS_TAG} (${TRAVIS_COMMIT})"
+GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation for tag $TRAVIS_TAG ($TRAVIS_COMMIT)"
 
 # Set git credentials
-git config user.name ${GIT_USER_NAME}
-git config user.email ${GIT_USER_EMAIL}
+git config user.name $GIT_USER_NAME
+git config user.email $GIT_USER_EMAIL
 
 # ------------------------------------------------------------------------------
 # BUILD
@@ -98,9 +98,9 @@ git init .
 git checkout --orphan $TARGET_BRANCH
 
 # Add and commit changes
-git add -A . --quiet &>/dev/null
+git add -A . >/dev/null
 echo "git add done"
-git commit -m "${GIT_COMMIT_MESSAGE}" --quiet &>/dev/null
+git commit -m $GIT_COMMIT_MESSAGE >/dev/null
 echo "git commit done"
 
 # Prep the ssh key we'll use to deploy
