@@ -70,8 +70,17 @@ cd $TRAVIS_BUILD_DIR
 cd build/
 
 # Rename unbundled --> ${REPO_NAME}, move all bower_components/ up one level
+echo "now in $(pwd)"
+ls -al
+echo "moving unbundled to $REPO_NAME"
 mv unbundled $REPO_NAME
+ls -al
+echo "deleting $REPO_NAME if its in bower_components ${REPO_NAME}/bower_components/${REPO_NAME}/"
 rm -rf "${REPO_NAME}/bower_components/${REPO_NAME}/"
+ls -al
+echo "about to move all the stuff in ${REPO_NAME}/bower_components"
+ls -al "${REPO_NAME}"
+ls -al "${REPO_NAME}/bower_components"
 mv "${REPO_NAME}/bower_components/*" .
 rm -rf "${REPO_NAME}/bower_components/"
 
