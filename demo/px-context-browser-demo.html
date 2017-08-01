@@ -47,7 +47,7 @@
             filter="{{props.filter.value}}"
             show-filter="[[props.showFilter.value]]"
             show-arrow="[[props.showArrow.value]]"
-            collapse="[[props.collapse.value]]"
+            collapsed="[[props.collapsed.value]]"
             collapse-at="[[props.collapseAt.value]]"
             loading-timeout="[[props.loadingTimeout.value]]"
             ></px-context-browser>
@@ -102,19 +102,6 @@
             { configName: "Advanced",
               configReset: true,
               opened: false,
-              items: [
-                { "label" : "Home",   "id" : "home" },
-                { "label" : "Alerts", "id" : "alerts", "children": [
-                  { "label" : "Alert #1", "id" : "al1" },
-                  { "label" : "Alert #2", "id" : "al2" },
-                  { "label" : "Alert #3", "id" : "al3" },
-                  { "label" : "Alert #4", "id" : "al4" }
-                ] },
-                { "label" : "Assets", "id" : "assets", "children": [
-                  { "label" : "Asset #1", "id" : "a1" },
-                  { "label" : "Asset #2", "id" : "a2" }
-                ] }
-              ],
               selectedRoute: ["alerts"],
               showFilter: true,
               showArrow: true,
@@ -151,7 +138,12 @@
         type: Array,
         defaultValue: [
           { "label" : "Home",   "id" : "home" },
-          { "label" : "Alerts", "id" : "alerts" },
+          { "label" : "Alerts", "id" : "alerts", "children": [
+            { "label" : "Alert #1", "id" : "al1" },
+            { "label" : "Alert #2", "id" : "al2" },
+            { "label" : "Alert #3", "id" : "al3" },
+            { "label" : "Alert #4", "id" : "al4" }
+          ] },
           { "label" : "Assets", "id" : "assets", "children": [
             { "label" : "Asset #1", "id" : "a1" },
             { "label" : "Asset #2", "id" : "a2" }
@@ -170,14 +162,17 @@
       },
       showFilter: {
         type: Boolean,
+        defaultValue: false,
         inputType: 'toggle',
       },
       showArrow: {
         type: Boolean,
+        defaultValue: false,
         inputType: 'toggle'
       },
       collapsed: {
         type: Boolean,
+        defaultValue: false,
         inputType: 'toggle'
       },
       collapseAt: {
