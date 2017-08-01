@@ -4,17 +4,6 @@
 set -e
 
 # ------------------------------------------------------------------------------
-# CHECK IF BUILD SHOULD RUN
-# ------------------------------------------------------------------------------
-
-# Check if this CI run should run a deploy. We should only deploy if this CI run
-# is not a pull request and if this CI run is a tag.
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o ! ${TRAVIS_TAG+x} ]; then
-    echo "Skipping deploy; just doing a build."
-    exit 0
-fi
-
-# ------------------------------------------------------------------------------
 # CONFIGURE SCRIPT
 # ------------------------------------------------------------------------------
 
@@ -42,11 +31,22 @@ SSH_GIT_PREDIXUI=${SSH_GIT/:PredixDev\//:predix-ui\/}
 # Prep git credentials
 GIT_USER_NAME="Travis CI"
 GIT_USER_EMAIL="PredixtravisCI@ge.com"
-GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation for tag $TRAVIS_TAG ($TRAVIS_COMMIT)"
+GIT_COMMIT_MESSAGE="[Travis] Rebuild documentation (commit: $TRAVIS_COMMIT)"
 
 # Set git credentials
 git config user.name $GIT_USER_NAME
 git config user.email $GIT_USER_EMAIL
+
+# ------------------------------------------------------------------------------
+# CHECK IF BUILD SHOULD RUN
+# ------------------------------------------------------------------------------
+
+# Check if this CI run should run a deploy. We should only deploy if this CI run
+# is not a pull request and if this CI run is from the master branch.
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
+    echo "Skipping deploy; just doing a build."
+    exit 0
+fi
 
 # ------------------------------------------------------------------------------
 # BUILD
