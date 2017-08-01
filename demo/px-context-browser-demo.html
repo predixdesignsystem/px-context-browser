@@ -36,13 +36,8 @@
       <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component>
-        <div style="width: 600px;">
-          <div style="border: lightgray 1px solid; width:400px; padding: 10px 15px; margin-bottom: 20px;">
-            <p class="caps">For demo purposes only</p>
-            <p><strong>Selected item:</strong> {{data.label}}</p>
-            <p><strong>Item info:</strong> {{data.info}}</p>
-          </div>
+      <px-demo-component style="display:flex;">
+        <div style="width: 400px; flex: none;">
           <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
           <px-context-browser
             open-trigger="[[openTrigger]]"
@@ -57,6 +52,11 @@
             loading-timeout="[[props.loadingTimeout.value]]"
             selected="{{data}}"
             ></px-context-browser>
+        </div>
+        <div style="flex: auto; background-color: #D8E0E5; padding: 10px 15px; margin-bottom: 20px;">
+          <p class="caps">For demo purposes only</p>
+          <p><strong>Selected item:</strong> {{data.label}}</p>
+          <p><strong>Item info:</strong> {{data.info}}</p>
         </div>
       </px-demo-component>
       <!-- END Component ------------------------------------------------------>
