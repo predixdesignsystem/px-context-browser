@@ -100,7 +100,7 @@ git checkout --orphan $TARGET_BRANCH
 # Add and commit changes
 git add -A . >/dev/null
 echo "git add done"
-git commit -m $GIT_COMMIT_MESSAGE >/dev/null
+git commit -m "${GIT_COMMIT_MESSAGE}" >/dev/null
 echo "git commit done"
 
 # Prep the ssh key we'll use to deploy
