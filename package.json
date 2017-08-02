@@ -36,6 +36,7 @@
         "yargs": "^6.0.0"
     },
     "scripts": {
-      "test": "./node_modules/.bin/wct"
+        "test": "./node_modules/.bin/wct",
+        "build": "./scripts/build.sh"
     }
 }
