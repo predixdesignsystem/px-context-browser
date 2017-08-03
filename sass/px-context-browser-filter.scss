@@ -49,8 +49,8 @@ input.filter__box {
   display: block;
   padding: 4px;
   color: gray;
-  --iron-icon-width: calc(100%-5px);
-  --iron-icon-height: calc(100%-5px);
+  --iron-icon-width: 100%;
+  --iron-icon-height: 100%;
 }
 .filter__icon--tappable {
   cursor: pointer;
