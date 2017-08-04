@@ -1,3 +1,7 @@
+v2.0.3
+==================
+* Fix bug so that filter icon shows up in IE
+
 v2.0.2
 ==================
 * Fix bugs in demo
