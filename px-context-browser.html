@@ -233,7 +233,7 @@ Custom property | Description
 
       __rootColumn: {
         type: Object,
-        computed: '_getRootColumn(items)'
+        computed: '_getRootColumn(__rootItems)'
       },
 
       __context: {
@@ -413,11 +413,19 @@ Custom property | Description
       const {item, path, children, isTerminal, hasChildren} = evt.detail;
 
       if (this.activeMeta && this.activeMeta.item && this.activeMeta.item === item) {
+        // Children added to the active (visible) item
         let path = `__context.columns.${this.__context.activeIndex}.items`;
         this.set(path, []);
         this.set(path, children);
         this.cancelLoading(true);
-      } else if (this.__context && Array.isArray(this.__context.columns) && this.__context.columns.length > 1) {
+      }
+      else if (this.__context && Array.isArray(this.__context.columns) && item === null) {
+        // Children added to the root
+        let path = `__context.columns.0.items`
+        this.set(path, []);
+        this.set(path, children);
+      }
+      else if (this.__context && Array.isArray(this.__context.columns) && this.__context.columns.length > 1) {
         // Loop over columns. If this item is in the columns list, go update
         // its children with this new list.
         for (let i=1; i<this.__context.columns.length; i++) {
@@ -515,10 +523,20 @@ Custom property | Description
     _getColumns(active, rootColumn) {
       const {item, path} = active;
       if (!Array.isArray(this.__context.columns)) {
+        // First run, add the root column to the columns array so it will
+        // be drawn
+        this.__context.columns = [rootColumn];
+      }
+
+      if (!Array.isArray(path) && Array.isArray(this.__context.columns) && this.__context.columns[0] !== rootColumn) {
+        // The assset graph was re-created from a new items list, clear out
+        // the columns and reset to only showing root
         this.__context.columns = [rootColumn];
       }
 
       if (!Array.isArray(path)) {
+        // No path to an asset, return the context graph with an active index
+        // of the root column
         return Object.assign({}, this.__context, {
           activeIndex: 0
         });
