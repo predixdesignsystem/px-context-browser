@@ -1,3 +1,7 @@
+v2.0.5
+==================
+* Fix to support runtime re-assignment of `items`
+
 v2.0.4
 ==================
 * Fix comment for analyzer
