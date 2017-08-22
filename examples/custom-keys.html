@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Context Browser Demo -- Custom Keys</title>
+
+  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <link rel="import" href="../../polymer/polymer.html"/>
+  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
+  <link rel="import" href="../px-context-browser-trigger.html"/>
+  <link rel="import" href="../px-context-browser.html"/>
+</head>
+
+<style is="custom-style" include="px-theme-styles"></style>
+<style is="custom-style">
+  body {
+    margin: 0;
+    padding: 30px;
+  }
+</style>
+<body>
+  <template is="dom-bind">
+    <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+    <px-context-browser
+        show-filter
+        keys='{ "label": "name", "id": "_ID_", "children": "subnodes" }'
+        items='[{ "_ID_": "home", "name": "Home", "subnodes" : [{ "_ID_": "child-1", "name": "Child 1" }, { "_ID_": "child-2", "name": "Child Two" }] }]'
+        open-trigger="[[openTrigger]]">
+    </px-context-browser>
+  </template>
+</section>
+</html>

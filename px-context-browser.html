@@ -82,14 +82,14 @@ Custom property | Description
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[active.label]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
             <div column$="[[column.index]]" class="column" slot="columns">
-              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, filtering)}}">
+              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
                 <px-context-browser-item
-                    label="[[item.label]]"
+                    label="[[_getItemProp(item, keys.label)]]"
                     selected$="[[_isItemSelected(item, selected)]]"
                     can-select
                     can-favorite="[[showFavorites]]"
@@ -486,18 +486,18 @@ Custom property | Description
       this.filter = '';
     },
 
-    _getColumnFilter(index, filter, filterIsActive) {
+    _getColumnFilter(index, filter, labelKey, filterIsActive) {
       if (!filterIsActive || this.__context.activeIndex !== index) {
         return null;
       }
 
       let filterStr = filter.toLowerCase();
-      return this._doesItemMatchFilter.bind(this, filterStr);
+      return this._doesItemMatchFilter.bind(this, filterStr, labelKey);
     },
 
-    _doesItemMatchFilter(filter, item) {
-      if (!item.label) return false;
-      return (item.label.toLowerCase().indexOf(filter) > -1);
+    _doesItemMatchFilter(filter, labelKey, item) {
+      if (!item[labelKey]) return false;
+      return (item[labelKey].toLowerCase().indexOf(filter) > -1);
     },
 
     // ********************************************************************** //
@@ -853,6 +853,18 @@ Custom property | Description
 
     _isNotNull(val) {
       return (typeof val !== 'undefined' && val !== null);
+    },
+
+    /**
+     * Fetches an item's property at the configured key. Used to dynamically
+     * fetch the item's label, icon, children, etc. based on the configured
+     * `keys` for the app.
+     */
+    _getItemProp(item, key) {
+      if (item && typeof item === 'object' && typeof key === 'string' && item.hasOwnProperty(key)) {
+        return item[key];
+      }
+      return null;
     }
   });
 
