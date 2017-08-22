@@ -1,3 +1,8 @@
+v2.0.6
+==================
+* Fixes support for custom keys (id, children, label) and adds support
+  for changing keys at runtime
+
 v2.0.5
 ==================
 * Fix to support runtime re-assignment of `items`
