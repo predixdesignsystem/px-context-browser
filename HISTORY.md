@@ -1,3 +1,7 @@
+v2.0.7
+==================
+* fix documentation
+
 v2.0.6
 ==================
 * Fixes support for custom keys (id, children, label) and adds support
