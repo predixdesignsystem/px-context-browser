@@ -1,3 +1,7 @@
+v2.0.8
+==================
+* fix documentation
+
 v2.0.7
 ==================
 * fix documentation
