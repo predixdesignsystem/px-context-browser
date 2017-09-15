@@ -202,6 +202,15 @@ Custom property | Description
       },
 
       /**
+       * If `true` the context browser will remain opened even after a context is selected.
+       * The only way to dismiss the context browser will be clicking the trigger again,
+       * or using the ESC key.
+       */
+      keepOpen: {
+        type: Boolean
+      },
+
+      /**
        * The width below which the context browser will collapse into a mobile
        * friendly menu that slides up from the bottom of the page. Use a number
        * (e.g. `450`) which will be converted to a pixel value (e.g. '450px').
@@ -797,6 +806,9 @@ Custom property | Description
         }
         else if (action === 'select' || (isTerminal && action === 'activate')) {
           this.select(item, 'DOM_EVENT');
+          if(!this.keepOpen) {
+            this.$.dropdown.close();
+          }
         }
         else if (action === 'favorite') {
           // @TODO: Implement favorites storage/notification behavior
@@ -816,6 +828,9 @@ Custom property | Description
             break;
           case 'select':
             this.select(this.active, 'DOM_EVENT');
+            if(!this.keepOpen) {
+              this.$.dropdown.close();
+            }
             break;
           case 'favorite':
             // @TODO: Implement favorites storage/notification behavior

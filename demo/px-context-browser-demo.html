@@ -45,6 +45,7 @@
           <px-context-browser
             open-trigger="[[openTrigger]]"
             opened="{{props.opened.value}}"
+            keep-open="{{props.keepOpen.value}}"
             items="{{props.items.value}}"
             selected-route="{{props.selectedRoute.value}}"
             filter="{{props.filter.value}}"
@@ -140,6 +141,11 @@
     demoProps: {
 
       opened: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      keepOpen: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'
