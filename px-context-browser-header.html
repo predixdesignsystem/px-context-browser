@@ -1,0 +1,58 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
+<link rel="import" href="css/px-context-browser-header-styles.html"/>
+
+<dom-module id="px-context-browser-header">
+  <template>
+    <style include="px-context-browser-header-styles"></style>
+
+    <div class="label" asset-action="back">
+      <div class="label__arrow">
+        <px-icon icon="px-nav:back"></px-icon>
+      </div>
+      <div class="label__link">
+        [[label]]
+      </div>
+    </div>
+    <div class="actions">
+      <template is="dom-if" if="[[canFavorite]]">
+        <px-context-browser-action-favorite class$="action [[_isLastAction('favorite', canSelect, canFavorite)]]" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+      </template>
+      <template is="dom-if" if="[[canSelect]]">
+        <px-context-browser-action-select class$="action [[_isLastAction('select', canSelect, canFavorite)]]" asset-action="select"></px-context-browser-action-select>
+      </template>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-header',
+
+    properties: {
+      label: {
+        type: String
+      },
+      favorited: {
+        type: Boolean,
+        value: false
+      },
+      canSelect: {
+        type: Boolean,
+        value: false
+      },
+      canFavorite: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    _isLastAction(action, canSelect, canFavorite) {
+      if ((canSelect && canFavorite && action === 'select') ||
+          (canSelect && !canFavorite && action === 'favorite')) {
+        return 'action--last';
+      }
+      return '';
+    }
+  })
+</script>

@@ -1,9 +1,11 @@
 {
   "verbose": false,
+  "compile": "auto",
   "plugins": {
     "local": {
       "browsers": [
-        "chrome"
+        "chrome",
+        "firefox"
       ]
     },
     "sauce": {
@@ -15,29 +17,14 @@
           "version": ""
         },
         {
-          "browserName": "internet explorer",
-          "platform": "Windows 8.1",
-          "version": "11"
-        },
-        {
-          "browserName": "safari",
-          "platform": "OS X 10.11",
-          "version": "9"
-        },
-        {
           "browserName": "safari",
           "platform": "OS X 10.11",
           "version": "10"
-        },
-        {
-          "browserName": "firefox",
-          "platform": "OS X 10.11"
         }
       ]
     }
   },
   "suites": [
-    "test/px-context-browser-test-fixture.html",
-    "test/px-context-browser-typeahead-test-fixture.html"
+    "test/px-context-browser-fixture.html"
   ]
 }

@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+
+// Base
+@import "px-forms-design/_base.forms.scss";
+
+:host {
+  display: none;
+}
+
+:host([active]) {
+  display: block;
+}
+
+.filter__form {
+  position: relative;
+  display: block;
+  padding: calculateRem(10px) calculateRem(15px);
+}
+
+// iOS Safari requires a minimum input text size of 16px, or it will automatically
+// zoom the page when the input becomes focused even if the developer marks
+// the page as un-zoomable. Manually setting the font size to 16px gets around
+// this issue.
+input.filter__box {
+  font-size: 16px;
+}
+
+.filter__icon {
+  position: absolute;
+  top: calculateRem(10px);
+  right: calculateRem(15px);
+  width: 1.5rem;
+  height: 2rem;
+  display: block;
+  padding: 4px;
+  color: gray;
+  --iron-icon-width: 100%;
+  --iron-icon-height: 100%;
+}
+.filter__icon--tappable {
+  cursor: pointer;
+}
+
+.filter__box {
+  padding-right: 1.5rem;
+}
+
+//removes the 'x' in edge and ie11's text input fields
+.filter__box::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }

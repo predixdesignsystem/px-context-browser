@@ -1,0 +1,91 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="css/px-context-browser-filter-styles.html"/>
+
+<dom-module id="px-context-browser-filter">
+  <template>
+    <style include="px-context-browser-filter-styles"></style>
+    <!-- <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="tab" on-keys-pressed="_handleTabKey"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="enter" on-keys-pressed="_handleEnterKey"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_searchEl]]" keys="left right up down" on-keys-pressed="_handleArrowKeys"></iron-a11y-keys> -->
+    <div class="filter__form">
+      <input
+          id="filter"
+          class="text-input filter__box"
+          placeholder="Filter"
+          value="{{filter::input}}"
+          autocomplete="off"
+          tabindex="0"
+          on-focus="_handleFocus"
+          on-blur="_handleBlur">
+      </input>
+      <template is="dom-if" if="[[_showFilterIcon(filter)]]">
+         <px-icon class="filter__icon" icon="px-utl:filter"></px-icon>
+      </template>
+      <template is="dom-if" if="[[_showClearIcon(filter)]]">
+        <px-icon id="close" class="filter__icon filter__icon--tappable" tabindex="-1" icon="px-nav:close" on-tap="clearFilter"></px-icon>
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'px-context-browser-filter',
+
+      properties: {
+        filter: {
+          type: String,
+          notify: true,
+          value: ''
+        },
+
+        active: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        },
+
+        filtering: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          computed: '_isFilterActive(filter)'
+        }
+      },
+
+      _handleFocus(evt) {
+        evt.stopPropagation();
+        this.fire('px-context-browser-filter-focused');
+      },
+
+      _handleBlur(evt) {
+        evt.stopPropagation();
+        this.fire('px-context-browser-filter-blured');
+      },
+
+      _isFilterActive(filter) {
+        return (typeof filter === 'string' && filter.length > 0);
+      },
+
+      _showFilterIcon(filter) {
+        return typeof filter === 'string' && filter.length === 0;
+      },
+
+      _showClearIcon(filter) {
+        return typeof filter === 'string' && filter.length > 0;
+      },
+
+      clearFilter() {
+        this.filter = '';
+      },
+
+      focusFilter() {
+        this.$.filter.focus();
+      },
+
+      blurFilter() {
+        this.$.filter.blur();
+      }
+    });
+  </script>
+</dom-module>

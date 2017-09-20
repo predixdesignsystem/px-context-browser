@@ -1,0 +1,30 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="css/px-context-browser-panel-styles.html"/>
+
+<dom-module id="px-context-browser-panel">
+  <template>
+    <style include="px-context-browser-panel-styles"></style>
+    <div class="pointer"></div>
+
+    <div class="panel-body">
+      <slot name="header"></slot>
+      <template is="dom-if" if="[[showLoadingBar]]">
+        <div class="loading-bar"></div>
+      </template>
+      <slot name="filter"></slot>
+      <slot name="columns"></slot>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-panel',
+
+    properties: {
+      showLoadingBar: {
+        type: Boolean,
+        value: false
+      }
+    }
+  })
+</script>

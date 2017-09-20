@@ -1,0 +1,56 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="px-context-browser-actions.html"/>
+<link rel="import" href="css/px-context-browser-item-styles.html"/>
+
+<dom-module id="px-context-browser-item">
+  <template>
+    <style include="px-context-browser-item-styles"></style>
+
+    <div class="label" asset-action="activate">
+      [[label]]
+    </div>
+    <div class="actions">
+      <template is="dom-if" if="[[canFavorite]]">
+        <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+      </template>
+      <template is="dom-if" if="[[canSelect]]">
+        <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
+      </template>
+      <template is="dom-if" if="[[canOpen]]">
+        <px-context-browser-action-open class="action action--open" asset-action="activate"></px-context-browser-action-favorite>
+      </template>
+    </div>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-item',
+
+    properties: {
+      label: {
+        type: String
+      },
+      selected: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
+      },
+      favorited: {
+        type: Boolean,
+        value: false
+      },
+      canSelect: {
+        type: Boolean,
+        value: false
+      },
+      canOpen: {
+        type: Boolean,
+        value: false
+      },
+      canFavorite: {
+        type: Boolean,
+        value: false
+      }
+    }
+  })
+</script>

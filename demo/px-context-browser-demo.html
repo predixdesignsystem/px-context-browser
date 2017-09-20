@@ -1,0 +1,215 @@
+<!-- Common imports -->
+<link rel="import" href="../../polymer/polymer.html" />
+<link rel="import" href="../../px-icon-set/px-icon-set.html" />
+
+<!-- Common demo imports -->
+<link rel="import" href="../../px-demo/px-demo-header.html" />
+<link rel="import" href="../../px-demo/px-demo-api-viewer.html" />
+<link rel="import" href="../../px-demo/px-demo-footer.html" />
+<link rel="import" href="../../px-demo/px-demo-configs.html" />
+<link rel="import" href="../../px-demo/px-demo-props.html" />
+<link rel="import" href="../../px-demo/px-demo-interactive.html" />
+<link rel="import" href="../../px-demo/px-demo-component-snippet.html" />
+<link rel="import" href="../../px-demo/px-demo-code-editor.html" />
+
+<!-- Imports for this component -->
+<link rel="import" href="../../px-demo/css/px-demo-styles.html" />
+<link rel="import" href="../px-context-browser.html" />
+<link rel="import" href="../px-context-browser-trigger.html" />
+
+<!-- Demo DOM module -->
+<dom-module id="px-context-browser-demo">
+  <template>
+    <style include="px-demo-styles" is="custom-style"></style>
+
+    <!-- Header -->
+    <px-demo-header
+        module-name="px-context-browser"
+        description="The context browser allows the user to drill down through a hierarchical menu in order to switch the context of the overall view. Examples of possible contexts include specific locations organized geographically, physical assets organized by model or other classification, or employees organized by department or function. When a user clicks on the title or arrow, the expanded view of the context browser covers cards and other content on the page. Selecting an item in the context browser causes the children of that item to show up in the next panel over, and also causes a button to appear within that selected row that allows the user to submit/save that context, which also re-collapses the browser.">
+    </px-demo-header>
+
+    <!-- Interactive -->
+    <px-demo-interactive>
+      <!-- Configs -->
+      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+
+      <!-- Props -->
+      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+
+      <px-demo-code-editor props="{{props}}" config="[[chosenConfig]]"></px-demo-code-editor>
+
+      <!-- Component ---------------------------------------------------------->
+      <px-demo-component style="display:flex; width:600px">
+        <div>
+          <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
+          <px-context-browser
+            open-trigger="[[openTrigger]]"
+            opened="{{props.opened.value}}"
+            keep-open="{{props.keepOpen.value}}"
+            items="{{props.items.value}}"
+            selected-route="{{props.selectedRoute.value}}"
+            filter="{{props.filter.value}}"
+            show-filter="[[props.showFilter.value]]"
+            show-arrow="[[props.showArrow.value]]"
+            collapsed="[[props.collapsed.value]]"
+            collapse-at="[[props.collapseAt.value]]"
+            loading-timeout="[[props.loadingTimeout.value]]"
+            selected="{{data}}"
+            ></px-context-browser>
+        </div>
+        <div style="flex: auto; border: 1px solid #D8E0E5; padding-left: 15px; margin-left: 20px;">
+          <p><strong>Selected item:</strong> {{data.label}}</p>
+          <p><strong>Item info:</strong> {{data.info}}</p>
+          <p class="caps">(For demo purposes only)</p>
+        </div>
+      </px-demo-component>
+      <!-- END Component ------------------------------------------------------>
+
+      <px-demo-component-snippet
+          element-properties="{{props}}"
+          element-name="px-context-browser">
+      </px-demo-component-snippet>
+    </px-demo-interactive>
+
+    <!-- API Viewer -->
+    <px-demo-api-viewer
+      source="px-context-browser"
+      hide="[[apiHide]]"
+      api-source-file-path="px-context-browser/px-context-browser-api.json">
+    </px-demo-api-viewer>
+
+    <!-- Footer -->
+    <px-demo-footer></px-demo-footer>
+
+  </template>
+
+</dom-module>
+<script>
+  Polymer({
+    is: 'px-context-browser-demo',
+
+    properties: {
+
+      /**
+       * @property demoProps
+       * @type {Object}
+       */
+      props: {
+        type: Object,
+        value: function(){ return this.demoProps; }
+      },
+
+      /**
+       * @property demoProps
+       * @type {Array}
+       */
+      configs: {
+        type: Array,
+        value: function(){
+          return [
+            { configName: "Basic",
+              configReset: true
+            },
+            { configName: "Advanced",
+              configReset: true,
+              opened: false,
+              selectedRoute: ["alerts"],
+              showFilter: true,
+              showArrow: true,
+              collapseAt: 600,
+              loadingTimeout: 7000
+            }
+          ];
+        }
+      },
+
+      apiHide: {
+        type: Array,
+        value: function() {
+          return [
+            "multiActivate",
+            "multiSelect"
+          ]
+        }
+      },
+
+  },
+
+    /**
+     * A reference for `this.props`. Read the documentation there.
+     */
+    demoProps: {
+
+      opened: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      keepOpen: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      items: {
+        type: Array,
+        defaultValue: [
+          { "label" : "Home",   "id" : "home" },
+          { "label" : "Alerts", "id" : "alerts", "info" : "This is a list of alerts", "children": [
+            { "label" : "Alert #1", "id" : "al1", "info" : "Oh no! Your turbine has stopped spinning"},
+            { "label" : "Alert #2", "id" : "al2", "info" : "Looks like something is not working"},
+            { "label" : "Alert #3", "id" : "al3", "info" : "I am a helpful alert message"},
+            { "label" : "Alert #4", "id" : "al4", "info" : "Danger: Something is not right." }
+          ] },
+          { "label" : "Assets", "id" : "assets", "children": [
+            { "label" : "Asset #1", "id" : "a1", "info" : "Here is some information about this asset" },
+            { "label" : "Asset #2", "id" : "a2", "info" : "This is a different asset. Here is more information about this asset." }
+          ] }
+        ],
+        inputType: 'code:JSON'
+      },
+      selectedRoute: {
+        type: Array,
+        defaultValue: ["assets", "a1"],
+        inputType: 'code:JSON'
+      },
+      filter: {
+        type: String,
+        inputType: 'text'
+      },
+      showFilter: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle',
+      },
+      showArrow: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      collapsed: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      collapseAt: {
+        type: Number,
+        defaultValue: 450,
+        inputType: 'number'
+      },
+      loadingTimeout: {
+        type: Number,
+        defaultValue: 5000,
+        inputType: 'number'
+      }
+    },
+
+    ready: function () {
+    },
+
+    attached: function () {
+      var cb = document.querySelector('px-context-browser');
+      var dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
+      dropdown.noCancelOnOutsideClick = true;
+    }
+  });
+  </script>

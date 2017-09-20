@@ -1,3 +1,89 @@
+v2.0.10
+==================
+* change default behavior to close on-select, add keep-open property to prevent (#86)
+
+v2.0.9
+==================
+* fix documentation
+
+v2.0.8
+==================
+* fix documentation
+
+v2.0.7
+==================
+* fix documentation
+
+v2.0.6
+==================
+* Fixes support for custom keys (id, children, label) and adds support
+  for changing keys at runtime
+
+v2.0.5
+==================
+* Fix to support runtime re-assignment of `items`
+
+v2.0.4
+==================
+* Fix comment for analyzer
+
+v2.0.3
+==================
+* Fix bug so that filter icon shows up in IE
+
+v2.0.2
+==================
+* Fix bugs in demo
+
+v2.0.1
+==================
+* Fix dark theme
+
+v2.0.0
+==================
+* Complete rebuild of the context browser with all new APIs. See the
+  documentation for more information on the new APIs and how to migrate your
+  existing code.
+* New, refreshed design. The browser is now a single column panel that opens
+  when its trigger is tapped.
+* Re-architected to work side-by-side with other Predix Design System components
+  used to navigate assets/context (px-tree, px-breadcrumbs).
+* The `<px-context-browser></px-context-browser>` tag no longer places a button
+  on the page. Use the px-context-browser tag together with a `<px-context-browser-trigger></px-context-browser-trigger>` tag show a button
+  that opens the browser. See the documentation for more information on binding
+  these two elements together.
+* The `browserContext` property has been renamed to `items`. The structure of
+  the context browser items has been completely overhauled.
+* The `browserContext` property `name` has been replaced with `label`.
+* The `browserContext` property `identifier` has been replaced with `id`.
+* The `browserContext` property `isOpenable` has been removed.
+* The initial context and direct context modes have been removed. Set the
+  `selected` property instead to select an item after loading the data.
+* The `disabled` property has been removed.
+* The `disableInfiniteScroll` property has been removed.
+* The `handlers` property has been removed. Listen to the event
+  `px-app-asset-children-requested` to be notified when new children should be
+  loaded. Listen to the event `selected-changed` to be notified when an item is
+  selected (tapped or selected through data binding). See the documentation for
+  more info. There is no event fired when an item is tapped but not selected as
+  that interaction pattern has been removed.
+* The `idField` and `labelField` properties have been removed. Use the `keys`
+  property to set both instead.
+* The `openedItemName` property has been removed. Listen to the event
+  `selected-changed` to be notified when a new item is selected.
+* The `resize` property has been removed.
+* The `selectedItem` property has been renamed to `selected`. Its behaviors are
+  also slightly different, see the documentation.
+* The `showChevron` property has been renamed to `showArrow`.
+* The `showColumnBrowser` property has been removed.
+* The `showColumnTypeahead` property has been removed. Use the `showFilter`
+  property to show a filter field at the top of the column.
+* The `addParents` method has been removed. Instead, add items from the root of
+  the graph using `addChildren`.
+* The `toggleColumnBrowser` method has been removed. Toggle the `collapsed`
+  property to show or hide the context browser.
+* The events have changed completely. See the documentation for more details.
+
 v1.8.0
 ==================
 * added localization for 'Open'
