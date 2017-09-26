@@ -41,7 +41,7 @@
   border-bottom: 1px solid var(--px-context-browser-header-border-color, lightgray);
 }
 
-.label {
+.context-browser-header-label {
   display: flex;
   align-items: center;
   color: var(--px-context-browser-header-text-color, teal);
@@ -51,11 +51,11 @@
   flex: 1 1 auto;
 }
 
-.label__arrow {
+.context-browser-header-label__arrow {
   margin-right: calculateRem(5px);
 }
 
-.label__link {
+.context-browser-header-label__link {
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;

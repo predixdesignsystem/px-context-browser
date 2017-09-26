@@ -1,3 +1,7 @@
+v2.0.11
+==================
+* Fix label color bug (#89)
+
 v2.0.10
 ==================
 * change default behavior to close on-select, add keep-open property to prevent (#86)
