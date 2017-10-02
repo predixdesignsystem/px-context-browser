@@ -1,3 +1,7 @@
+v2.0.12
+==================
+* Adds `isSelectable` configuration for items
+
 v2.0.11
 ==================
 * Fix label color bug (#89)
