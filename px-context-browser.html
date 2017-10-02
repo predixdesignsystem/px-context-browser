@@ -82,7 +82,7 @@ Custom property | Description
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
@@ -91,7 +91,7 @@ Custom property | Description
                 <px-context-browser-item
                     label="[[_getItemProp(item, keys.label)]]"
                     selected$="[[_isItemSelected(item, selected)]]"
-                    can-select
+                    can-select="[[_isItemSelectable(item)]]"
                     can-favorite="[[showFavorites]]"
                     can-open="[[_isItemOpenable(showArrow, item)]]"
                     on-tap="_handleItemTapped"
@@ -864,6 +864,10 @@ Custom property | Description
 
     _isItemOpenable(canOpen, item) {
       return canOpen && !this._assetGraph.isTerminal(item);
+    },
+
+    _isItemSelectable(item) {
+      return this._assetGraph.isSelectable(item);
     },
 
     _isNotNull(val) {
