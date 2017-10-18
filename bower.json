@@ -45,7 +45,8 @@
     "px-theme": "^3.0.0",
     "iron-ajax": "^2.0.2",
     "px-shadows-design": "^1.0.0",
-    "web-component-tester": "^6.0.0"
+    "web-component-tester": "^6.0.0",
+    "px-headings-design": "^1.0.3"
   },
   "resolutions": {
     "webcomponentsjs": "^0.7.24"

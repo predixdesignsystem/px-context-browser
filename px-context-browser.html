@@ -82,7 +82,7 @@ Custom property | Description
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
@@ -90,9 +90,11 @@ Custom property | Description
               <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
                 <px-context-browser-item
                     label="[[_getItemProp(item, keys.label)]]"
+                    breadcrumbs="[[_getItemProp(item, keys.id)]]"
                     selected$="[[_isItemSelected(item, selected)]]"
                     can-select="[[_isItemSelectable(item)]]"
                     can-favorite="[[showFavorites]]"
+                    style-as-favorite="[[_openedFromFavorites]]"
                     can-open="[[_isItemOpenable(showArrow, item)]]"
                     on-tap="_handleItemTapped"
                     tabindex="0"
@@ -120,10 +122,18 @@ Custom property | Description
 
     properties: {
       // @TODO: Implement favorites
-      // showFavorites: {
-      //   type: Boolean,
-      //   value: false
-      // },
+      showFavorites: {
+        type: Boolean,
+        value: true,
+        reflectToAttribute: true
+      },
+
+      favorites: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      },
 
       /**
        * Enable to show an arrow when the user hovers over an item that has
@@ -187,10 +197,15 @@ Custom property | Description
       },
 
       // @TODO: Implement favorites
-      // favoritesTrigger: {
-      //   type: HTMLElement,
-      //   observer: '_favoritesTriggerChanged'
-      // },
+      favoritesTrigger: {
+        type: HTMLElement,
+        observer: '_favoritesTriggerChanged'
+      },
+
+      _openedFromFavorites: {
+        type: Boolean,
+        value: false
+      },
 
       /**
        * If `true` the context browser is opened.
@@ -598,20 +613,21 @@ Custom property | Description
     },
 
     // @TODO: Implement favorites
-    // _favoritesTriggerChanged(newTrigger, oldTrigger) {
-    //   if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
-    //     oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
-    //     this._favoritesTriggerHandler = null;
-    //   }
-    //   if (newTrigger && newTrigger instanceof HTMLElement) {
-    //     this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
-    //   }
-    // },
+    _favoritesTriggerChanged(newTrigger, oldTrigger) {
+      if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
+        oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
+        this._favoritesTriggerHandler = null;
+      }
+      if (newTrigger && newTrigger instanceof HTMLElement) {
+        this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
+      }
+    },
 
     _handleOpenTriggerTapped(evt) {
       if (!this.opened) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
+        this._openedFromFavorites = false;
         this.opened = true;
       }
       else {
@@ -620,7 +636,17 @@ Custom property | Description
     },
 
     // @TODO: Implement favorites
-    // _handleFavoritesTriggerTapped(evt) {},
+    _handleFavoritesTriggerTapped(evt) {
+      if (!this.opened) {
+        this._positionTarget = Polymer.dom(evt).rootTarget;
+        // this._positionTarget = window;
+        this._openedFromFavorites = true;
+        this.opened = true;
+      }
+      else {
+        this.$.dropdown.close();
+      }
+    },
 
     // ********************************************************************** //
     // Reset active state (if necessary) when browser is closed/opened
@@ -812,6 +838,19 @@ Custom property | Description
         }
         else if (action === 'favorite') {
           // @TODO: Implement favorites storage/notification behavior
+          index = this.favorites.indexOf(item);
+          // if already in favorites list, remove it
+          // @TODO: wait 3 seconds before removing in case it was clicked by mistake
+          if (index > -1) {
+            console.log("remove", item.label);
+            this.favorites.splice(index, 1);
+          }
+          // if not already in favorites list, add it
+          else {
+            console.log(item.label, "is my favorite!");
+            this.favorites.push(item);
+          }
+          console.log(this.favorites);
         }
       }
     },
