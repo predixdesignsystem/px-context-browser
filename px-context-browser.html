@@ -81,8 +81,8 @@ Custom property | Description
       on-iron-overlay-canceled="_handleBrowserCanceled"
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
-      <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+      <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+        <px-context-browser-header slot="header" active$="[[_showHeader(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
@@ -196,12 +196,19 @@ Custom property | Description
         observer: '_openTriggerChanged'
       },
 
-      // @TODO: Implement favorites
+      /**
+       * Bind to a `<px-context-browser-trigger>` element. A tap on the favorites
+       * trigger will open a list of favorited items in the context browser.
+       */
       favoritesTrigger: {
         type: HTMLElement,
         observer: '_favoritesTriggerChanged'
       },
 
+      /**
+       * Determine whether the context browser was opened from the default or
+       * favorites trigger.
+       */
       openedFromFavorites: {
         type: Boolean,
         value: false,
@@ -914,6 +921,10 @@ Custom property | Description
 
     _isNotNull(val) {
       return (typeof val !== 'undefined' && val !== null);
+    },
+
+    _showHeader(active) {
+      return (this._isNotNull(active) && !this.openedFromFavorites);
     },
 
     /**
