@@ -55,7 +55,8 @@
   overflow-y: hidden;
 }
 
-$item-height: 60px;
+$item-height: 30px;
+$item-height-favorites: 60px;
 
 px-context-browser-columns {
   display: block;
@@ -64,6 +65,10 @@ px-context-browser-columns {
   min-height: $item-height;
   transition: min-height 350ms;
   padding-top: 1px;
+}
+
+:host([opened-from-favorites]) px-context-browser-columns {
+  min-height: $item-height-favorites;
 }
 
 px-context-browser-columns[visible-count] {
@@ -95,6 +100,37 @@ px-context-browser-columns[visible-count="8"] {
 }
 px-context-browser-columns[visible-count="9"] {
   min-height: ($item-height*9) + 1px;
+}
+
+:host([opened-from-favorites]) px-context-browser-columns[visible-count] {
+  min-height: ($item-height-favorites*10) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="1"] {
+  min-height: $item-height-favorites + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="2"] {
+  min-height: ($item-height-favorites*2) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="3"] {
+  min-height: ($item-height-favorites*3) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="4"] {
+  min-height: ($item-height-favorites*4) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="5"] {
+  min-height: ($item-height-favorites*5) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="6"] {
+  min-height: ($item-height-favorites*6) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="7"] {
+  min-height: ($item-height-favorites*7) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="8"] {
+  min-height: ($item-height-favorites*8) + 1px;
+}
+:host([opened-from-favorites]) px-context-browser-columns[visible-count="9"] {
+  min-height: ($item-height-favorites*9) + 1px;
 }
 
 px-context-browser-columns[collapsed],

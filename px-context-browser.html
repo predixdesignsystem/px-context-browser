@@ -94,7 +94,7 @@ Custom property | Description
                     selected$="[[_isItemSelected(item, selected)]]"
                     can-select="[[_isItemSelectable(item)]]"
                     can-favorite="[[showFavorites]]"
-                    style-as-favorite="[[_openedFromFavorites]]"
+                    style-as-favorite="[[openedFromFavorites]]"
                     can-open="[[_isItemOpenable(showArrow, item)]]"
                     on-tap="_handleItemTapped"
                     tabindex="0"
@@ -202,9 +202,12 @@ Custom property | Description
         observer: '_favoritesTriggerChanged'
       },
 
-      _openedFromFavorites: {
+      openedFromFavorites: {
         type: Boolean,
-        value: false
+        value: false,
+        readOnly: true,
+        notify: true,
+        reflectToAttribute: true
       },
 
       /**
@@ -627,7 +630,7 @@ Custom property | Description
       if (!this.opened) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        this._openedFromFavorites = false;
+        this._setOpenedFromFavorites(false);
         this.opened = true;
       }
       else {
@@ -640,7 +643,7 @@ Custom property | Description
       if (!this.opened) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        this._openedFromFavorites = true;
+        this._setOpenedFromFavorites(true);
         this.opened = true;
       }
       else {
