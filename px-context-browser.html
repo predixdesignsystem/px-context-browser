@@ -83,7 +83,7 @@ Custom property | Description
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active, openedFromFavorited)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorited)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorited)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <template is="dom-if" if="[[!_showFavoritesEmptyState(openedFromFavorited, favorited)]]">
           <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
@@ -94,8 +94,9 @@ Custom property | Description
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getItemProp(item, keys.id)]]"
                       selected$="[[_isItemSelected(item, selected)]]"
+                      favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                       can-select="[[_isItemSelectable(item)]]"
-                      can-favorite="[[showFavorites]]"
+                      can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
                       style-as-favorite="[[openedFromFavorited]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
                       on-tap="_handleItemTapped"
@@ -907,6 +908,10 @@ Custom property | Description
       return typeof selected === 'object' && selected === item;
     },
 
+    _isItemFavorited(item, favorited) {
+      return typeof favorited === 'object' && Array.isArray(favorited) && favorited.indexOf(item) > -1;
+    },
+
     _isItemVisible(item) {
       return item.visible === true;
     },
@@ -916,7 +921,11 @@ Custom property | Description
     },
 
     _isItemSelectable(item) {
-      return this._assetGraph.isSelectable(item);
+      return item && this._assetGraph.isSelectable(item);
+    },
+
+    _isItemFavoritable(item) {
+      return item && this._assetGraph.isSelectable(item);
     },
 
     _isNotNull(val) {
@@ -925,6 +934,10 @@ Custom property | Description
 
     _showHeader(active, openedFromFavorited) {
       return (this._isNotNull(active) && !openedFromFavorited);
+    },
+
+    _showFavoritesAndItemFavoritable(showFavorites, item) {
+      return showFavorites && this._isItemFavoritable(item);
     },
 
     _showFavoritesEmptyState(openedFromFavorited, favorited) {
