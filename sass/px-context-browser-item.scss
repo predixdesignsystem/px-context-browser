@@ -32,10 +32,6 @@
   color: var(--px-context-browser-item-breadcrumbs-color, gray);
 }
 
-:host([style-as-favorite][style-as-empty]) {
-  height: calculateRem(340px);
-}
-
 :host(:hover),
 :host(:focus) {
   background-color: var(--px-context-browser-item-background-color--hover, whitesmoke);
@@ -114,30 +110,4 @@
 // For the favorites context browser, there's only one .action
 :host([style-as-favorite]) .action {
   margin-right: calculateRem(15px);
-}
-
-.context-browser-favorites--empty__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 320px;
-}
-
-.context-browser-favorites--empty__text {
-  color: var(--px-context-browser-item-text-color, black);
-  margin-bottom: calculateRem(10px);
-}
-
-.context-browser-favorites--empty__subtext {
-  color: var(--px-context-browser-item-breadcrumbs-color, gray);
-  line-height: calculateRem(12px);
-}
-
-.context-browser-favorites--empty__icon {
-  margin-bottom: calculateRem(30px);
-  --iron-icon-height: calculateRem(65px);
-  --iron-icon-width: calculateRem(65px);
-  --iron-icon-fill-color: whitesmoke;
-  --iron-icon-stroke-color: lightgray;
 }

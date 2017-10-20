@@ -15,6 +15,9 @@
 @import "px-normalize-design/_generic.normalize.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
+// Base
+@import "px-headings-design/_base.headings.scss";
+
 // Component
 :host([collapsed]) .backdrop {
   position: fixed;
@@ -57,7 +60,6 @@
 
 $item-height: 30px;
 $item-height-favorites: 60px;
-$item-height-empty: 340px;
 
 px-context-browser-columns {
   display: block;
@@ -70,10 +72,6 @@ px-context-browser-columns {
 
 :host([opened-from-favorites]) px-context-browser-columns {
   min-height: $item-height-favorites;
-}
-
-:host([opened-from-favorites][is-favorites-empty]) px-context-browser-columns {
-  min-height: $item-height-empty;
 }
 
 px-context-browser-columns[visible-count] {
@@ -139,13 +137,40 @@ px-context-browser-columns[visible-count="9"] {
   min-height: ($item-height-favorites*9) + 1px;
 }
 
-:host([opened-from-favorites][is-favorites-empty]) px-context-browser-columns[visible-count] {
-  min-height: $item-height-empty;
-}
-
 px-context-browser-columns[collapsed],
 px-context-browser-columns[collapsed][visible-count],
 px-context-browser-columns[collapsed][visible-count="*"] {
   min-height: auto;
   flex: 1 1 auto;
+}
+
+.context-browser-favorites--empty__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: ($item-height*10) + 1px;
+}
+
+.context-browser-favorites--empty__text {
+  color: var(--px-context-browser-item-text-color, black);
+  margin-bottom: calculateRem(10px);
+  text-align: center;
+}
+
+.context-browser-favorites--empty__subtext {
+  color: var(--px-context-browser-item-breadcrumbs-color, gray);
+  line-height: calculateRem(12px);
+  text-align: center;
+}
+
+.context-browser-favorites--empty__icon {
+  margin-bottom: calculateRem(30px);
+  --iron-icon-height: calculateRem(65px);
+  --iron-icon-width: calculateRem(65px);
+  --iron-icon-fill-color: whitesmoke;
+  --iron-icon-stroke-color: lightgray;
 }

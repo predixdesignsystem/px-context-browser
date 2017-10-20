@@ -81,30 +81,40 @@ Custom property | Description
       on-iron-overlay-canceled="_handleBrowserCanceled"
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
-      <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_showHeader(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+      <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active, openedFromFavorites)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorites)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
-        <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
-          <template is="dom-repeat" items="[[__context.columns]]" as="column">
-            <div column$="[[column.index]]" class="column" slot="columns">
-              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
-                <px-context-browser-item
-                    label="[[_getItemProp(item, keys.label)]]"
-                    breadcrumbs="[[_getItemProp(item, keys.id)]]"
-                    selected$="[[_isItemSelected(item, selected)]]"
-                    can-select="[[_isItemSelectable(item)]]"
-                    can-favorite="[[showFavorites]]"
-                    style-as-favorite="[[openedFromFavorites]]"
-                    style-as-empty="[[isFavoritesEmpty]]"
-                    can-open="[[_isItemOpenable(showArrow, item)]]"
-                    on-tap="_handleItemTapped"
-                    tabindex="0"
-                    collapsed$="[[collapsed]]">
-                </px-context-browser-item>
-              </template>
-            </div>
-          </template>
-        </px-context-browser-columns>
+        <template is="dom-if" if="[[!_showFavoritesEmptyState(openedFromFavorites, favorites)]]">
+          <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
+            <template is="dom-repeat" items="[[__context.columns]]" as="column">
+              <div column$="[[column.index]]" class="column" slot="columns">
+                <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
+                  <px-context-browser-item
+                      label="[[_getItemProp(item, keys.label)]]"
+                      breadcrumbs="[[_getItemProp(item, keys.id)]]"
+                      selected$="[[_isItemSelected(item, selected)]]"
+                      can-select="[[_isItemSelectable(item)]]"
+                      can-favorite="[[showFavorites]]"
+                      style-as-favorite="[[openedFromFavorites]]"
+                      can-open="[[_isItemOpenable(showArrow, item)]]"
+                      on-tap="_handleItemTapped"
+                      tabindex="0"
+                      collapsed$="[[collapsed]]">
+                  </px-context-browser-item>
+                </template>
+              </div>
+            </template>
+          </px-context-browser-columns>
+        </template>
+
+        <template is="dom-if" if="[[_showFavoritesEmptyState(openedFromFavorites, favorites)]]">
+          <div slot="columns" class="context-browser-favorites--empty__container">
+            <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
+            <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
+            <div class="context-browser-favorites--empty__subtext zeta">To favorite a context, click on the star while viewing a context in the context browser.</div>
+          </div>
+        </template>
+
       </px-context-browser-panel>
     </iron-dropdown>
   </template>
@@ -933,8 +943,12 @@ Custom property | Description
       return (typeof val !== 'undefined' && val !== null);
     },
 
-    _showHeader(active) {
-      return (this._isNotNull(active) && !this.openedFromFavorites);
+    _showHeader(active, openedFromFavorites) {
+      return (this._isNotNull(active) && !openedFromFavorites);
+    },
+
+    _showFavoritesEmptyState(openedFromFavorites, favorites) {
+      return openedFromFavorites && (!favorites || !Array.isArray(favorites) || favorites.length === 0);
     },
 
     /**

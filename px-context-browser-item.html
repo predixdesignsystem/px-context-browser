@@ -24,7 +24,6 @@
     </template>
 
     <template is="dom-if" if="[[styleAsFavorite]]">
-      <template is="dom-if" if="[[!styleAsEmpty]]">
         <div>
           <div class="context-browser-label regular" asset-action="activate">
             [[label]]
@@ -38,17 +37,6 @@
             <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
           </template>
         </div>
-      </template>
-
-      <template is="dom-if" if="[[styleAsEmpty]]">
-        <div class="context-browser-favorites--empty__container">
-          <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
-          <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
-          <div class="context-browser-favorites--empty__subtext zeta">To favorite a context, click on the star</div>
-          <div class="context-browser-favorites--empty__subtext zeta">while viewing a context in the context browser.</div>
-        </div>
-      </template>
-
     </template>
 
   </template>
@@ -74,11 +62,6 @@
         value: false
       },
       styleAsFavorite: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-      styleAsEmpty: {
         type: Boolean,
         value: false,
         reflectToAttribute: true
