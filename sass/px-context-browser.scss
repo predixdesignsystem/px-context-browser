@@ -57,6 +57,7 @@
 
 $item-height: 30px;
 $item-height-favorites: 60px;
+$item-height-empty: 340px;
 
 px-context-browser-columns {
   display: block;
@@ -69,6 +70,10 @@ px-context-browser-columns {
 
 :host([opened-from-favorites]) px-context-browser-columns {
   min-height: $item-height-favorites;
+}
+
+:host([opened-from-favorites][is-favorites-empty]) px-context-browser-columns {
+  min-height: $item-height-empty;
 }
 
 px-context-browser-columns[visible-count] {
@@ -105,6 +110,7 @@ px-context-browser-columns[visible-count="9"] {
 :host([opened-from-favorites]) px-context-browser-columns[visible-count] {
   min-height: ($item-height-favorites*10) + 1px;
 }
+
 :host([opened-from-favorites]) px-context-browser-columns[visible-count="1"] {
   min-height: $item-height-favorites + 1px;
 }
@@ -131,6 +137,10 @@ px-context-browser-columns[visible-count="9"] {
 }
 :host([opened-from-favorites]) px-context-browser-columns[visible-count="9"] {
   min-height: ($item-height-favorites*9) + 1px;
+}
+
+:host([opened-from-favorites][is-favorites-empty]) px-context-browser-columns[visible-count] {
+  min-height: $item-height-empty;
 }
 
 px-context-browser-columns[collapsed],

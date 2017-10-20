@@ -95,6 +95,7 @@ Custom property | Description
                     can-select="[[_isItemSelectable(item)]]"
                     can-favorite="[[showFavorites]]"
                     style-as-favorite="[[openedFromFavorites]]"
+                    style-as-empty="[[isFavoritesEmpty]]"
                     can-open="[[_isItemOpenable(showArrow, item)]]"
                     on-tap="_handleItemTapped"
                     tabindex="0"
@@ -121,7 +122,6 @@ Custom property | Description
     ],
 
     properties: {
-      // @TODO: Implement favorites
       showFavorites: {
         type: Boolean,
         value: true,
@@ -133,6 +133,12 @@ Custom property | Description
         value: function() {
           return [];
         }
+      },
+
+      isFavoritesEmpty: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
       },
 
       /**
@@ -645,12 +651,16 @@ Custom property | Description
       }
     },
 
-    // @TODO: Implement favorites
     _handleFavoritesTriggerTapped(evt) {
       if (!this.opened) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
         this._setOpenedFromFavorites(true);
+        if (this.favorites.length === 0) {
+          this.isFavoritesEmpty = true;
+        } else {
+          this.isFavoritesEmpty = false;
+        }
         this.opened = true;
       }
       else {
