@@ -35,7 +35,6 @@
 
 :host([style-as-favorite]) {
   height: calculateRem(60px);
-  color: var(--px-context-browser-item-breadcrumbs-color, gray);
 }
 
 :host(:hover),
@@ -72,6 +71,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.context-browser-label--breadcrumbs {
+  color: var(--px-context-browser-item-breadcrumbs-color, gray);
 }
 
 .actions {

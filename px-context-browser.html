@@ -145,12 +145,6 @@ Custom property | Description
         }
       },
 
-      isFavoritesEmpty: {
-        type: Boolean,
-        value: false,
-        reflectToAttribute: true
-      },
-
       /**
        * Enable to show an arrow when the user hovers over an item that has
        * children and can be activated.
@@ -401,8 +395,7 @@ Custom property | Description
 
     created() {
       this._openTriggerHandler = null;
-      // @TODO: Implement favorites
-      // this._favoritesTriggerHandler = null;
+      this._favoritesTriggerHandler = null;
       this._resetActiveTask = null;
       this._squashNextResetActiveTask = null;
       this._childLoadingHandler = null;
@@ -638,7 +631,6 @@ Custom property | Description
       }
     },
 
-    // @TODO: Implement favorites
     _favoritesTriggerChanged(newTrigger, oldTrigger) {
       if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
         oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
@@ -650,7 +642,7 @@ Custom property | Description
     },
 
     _handleOpenTriggerTapped(evt) {
-      if (!this.opened) {
+      if (!this.opened || (this.opened && this.openedFromFavorites)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
         this._setOpenedFromFavorites(false);
@@ -662,15 +654,10 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
-      if (!this.opened) {
+      if (!this.opened || (this.opened && !this.openedFromFavorites)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
         this._setOpenedFromFavorites(true);
-        if (this.favorites.length === 0) {
-          this.isFavoritesEmpty = true;
-        } else {
-          this.isFavoritesEmpty = false;
-        }
         this.opened = true;
       }
       else {
@@ -683,14 +670,17 @@ Custom property | Description
     // ********************************************************************** //
 
     /**
-     * If the user clicked on the open trigger, we'll let the open trigger
-     * close the dropdown on its own.
+     * If the user clicked on the open or the favorites trigger, we'll let the
+     * trigger close the dropdown on its own.
      */
     _handleBrowserCanceled(evt) {
-      if (!this.openTrigger) return;
+      if (!this.openTrigger && !this.favoritesTrigger) return;
 
       const path = Polymer.dom(evt.detail).path;
-      if (path.indexOf(this.openTrigger) > -1) {
+      if (this.openTrigger && path.indexOf(this.openTrigger) > -1) {
+        evt.preventDefault();
+      }
+      if (this.favoritesTrigger && path.indexOf(this.favoritesTrigger) > -1) {
         evt.preventDefault();
       }
     },
