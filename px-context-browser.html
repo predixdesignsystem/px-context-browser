@@ -7,6 +7,7 @@
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-graph.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
+<link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-favoritable.html"/>
 <link rel="import" href="css/px-context-browser-styles.html"/>
 <link rel="import" href="css/px-context-browser-animations-styles.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
@@ -81,10 +82,10 @@ Custom property | Description
       on-iron-overlay-canceled="_handleBrowserCanceled"
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
-      <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active, openedFromFavorites)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorites)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+      <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active, openedFromFavorited)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorited)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite$="[[showFavorites]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
-        <template is="dom-if" if="[[!_showFavoritesEmptyState(openedFromFavorites, favorites)]]">
+        <template is="dom-if" if="[[!_showFavoritesEmptyState(openedFromFavorited, favorited)]]">
           <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
             <template is="dom-repeat" items="[[__context.columns]]" as="column">
               <div column$="[[column.index]]" class="column" slot="columns">
@@ -95,7 +96,7 @@ Custom property | Description
                       selected$="[[_isItemSelected(item, selected)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[showFavorites]]"
-                      style-as-favorite="[[openedFromFavorites]]"
+                      style-as-favorite="[[openedFromFavorited]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
                       on-tap="_handleItemTapped"
                       tabindex="0"
@@ -107,7 +108,7 @@ Custom property | Description
           </px-context-browser-columns>
         </template>
 
-        <template is="dom-if" if="[[_showFavoritesEmptyState(openedFromFavorites, favorites)]]">
+        <template is="dom-if" if="[[_showFavoritesEmptyState(openedFromFavorited, favorited)]]">
           <div slot="columns" class="context-browser-favorites--empty__container">
             <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
             <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
@@ -128,6 +129,7 @@ Custom property | Description
       PxAppBehavior.AssetGraph,
       PxAppBehavior.AssetSelectable,
       PxAppBehavior.AssetActivatable,
+      PxAppBehavior.AssetFavoritable,
       Polymer.IronResizableBehavior
     ],
 
@@ -136,13 +138,6 @@ Custom property | Description
         type: Boolean,
         value: true,
         reflectToAttribute: true
-      },
-
-      favorites: {
-        type: Array,
-        value: function() {
-          return [];
-        }
       },
 
       /**
@@ -219,7 +214,7 @@ Custom property | Description
        * Determine whether the context browser was opened from the default or
        * favorites trigger.
        */
-      openedFromFavorites: {
+      openedFromFavorited: {
         type: Boolean,
         value: false,
         readOnly: true,
@@ -642,10 +637,10 @@ Custom property | Description
     },
 
     _handleOpenTriggerTapped(evt) {
-      if (!this.opened || (this.opened && this.openedFromFavorites)) {
+      if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        this._setOpenedFromFavorites(false);
+        this._setOpenedFromFavorited(false);
         this.opened = true;
       }
       else {
@@ -654,10 +649,10 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
-      if (!this.opened || (this.opened && !this.openedFromFavorites)) {
+      if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        this._setOpenedFromFavorites(true);
+        this._setOpenedFromFavorited(true);
         this.opened = true;
       }
       else {
@@ -852,25 +847,20 @@ Custom property | Description
         }
         else if (action === 'select' || (isTerminal && action === 'activate')) {
           this.select(item, 'DOM_EVENT');
-          if(!this.keepOpen) {
+          if (!this.keepOpen) {
             this.$.dropdown.close();
           }
         }
         else if (action === 'favorite') {
-          // @TODO: Implement favorites storage/notification behavior
-          index = this.favorites.indexOf(item);
-          // if already in favorites list, remove it
-          // @TODO: wait 3 seconds before removing in case it was clicked by mistake
-          if (index > -1) {
-            console.log("remove", item.label);
-            this.favorites.splice(index, 1);
+          // if not already in favorited list, add it
+          if (this.favorited.indexOf(item) === -1) {
+            this.favorite(item);
           }
-          // if not already in favorites list, add it
+          // if already in the favorited list, remove it
           else {
-            console.log(item.label, "is my favorite!");
-            this.favorites.push(item);
+            // @TODO: wait 3 seconds before removing in case it was clicked by mistake
+            this.defavorite(item);
           }
-          console.log(this.favorites);
         }
       }
     },
@@ -933,12 +923,12 @@ Custom property | Description
       return (typeof val !== 'undefined' && val !== null);
     },
 
-    _showHeader(active, openedFromFavorites) {
-      return (this._isNotNull(active) && !openedFromFavorites);
+    _showHeader(active, openedFromFavorited) {
+      return (this._isNotNull(active) && !openedFromFavorited);
     },
 
-    _showFavoritesEmptyState(openedFromFavorites, favorites) {
-      return openedFromFavorites && (!favorites || !Array.isArray(favorites) || favorites.length === 0);
+    _showFavoritesEmptyState(openedFromFavorited, favorited) {
+      return openedFromFavorited && (!favorited || !Array.isArray(favorited) || favorited.length === 0);
     },
 
     /**
