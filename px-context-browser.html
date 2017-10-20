@@ -83,7 +83,7 @@ Custom property | Description
       on-iron-overlay-opened="_handleBrowserOpened"
       on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active, openedFromFavorited)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorited)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(item)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
+        <px-context-browser-header slot="header" active$="[[_showHeader(active, openedFromFavorited)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]" id="header"></px-context-browser-header>
         <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
         <template is="dom-if" if="[[!_showFavoritesEmptyState(openedFromFavorited, favorited)]]">
           <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
