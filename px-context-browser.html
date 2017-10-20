@@ -93,7 +93,7 @@ Custom property | Description
                   <px-context-browser-item
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getItemProp(item, keys.id)]]"
-                      selected$="[[_isItemSelected(item, selected)]]"
+                      selected="[[_isItemSelected(item, selected)]]"
                       favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
