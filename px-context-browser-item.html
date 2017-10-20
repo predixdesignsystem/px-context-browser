@@ -7,28 +7,31 @@
     <style include="px-context-browser-item-styles"></style>
 
     <template is="dom-if" if="[[!styleAsFavorite]]">
-      <div class="context-browser-label regular" asset-action="activate">
-        [[label]]
-      </div>
-      <div class="actions">
-        <template is="dom-if" if="[[canFavorite]]">
-          <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
-        </template>
-        <template is="dom-if" if="[[canSelect]]">
-          <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
-        </template>
-        <template is="dom-if" if="[[canOpen]]">
-          <px-context-browser-action-open class="action action--open" asset-action="activate"></px-context-browser-action-favorite>
-        </template>
-      </div>
+      <section class="context-browser-item" asset-action="activate">
+        <div class="context-browser-label regular">
+          [[label]]
+        </div>
+        <div class="actions">
+          <template is="dom-if" if="[[canFavorite]]">
+            <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+          </template>
+          <template is="dom-if" if="[[canSelect]]">
+            <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
+          </template>
+          <template is="dom-if" if="[[canOpen]]">
+            <px-context-browser-action-open class="action action--open" asset-action="activate"></px-context-browser-action-favorite>
+          </template>
+        </div>
+      </section>
     </template>
 
     <template is="dom-if" if="[[styleAsFavorite]]">
+      <section class="context-browser-item" asset-action="select">
         <div>
-          <div class="context-browser-label regular" asset-action="activate">
+          <div class="context-browser-label regular">
             [[label]]
           </div>
-          <div class="context-browser-label zeta" asset-action="activate">
+          <div class="context-browser-label zeta">
             [[breadcrumbs]] > [[breadcrumbs]] > [[breadcrumbs]]
           </div>
         </div>
@@ -37,6 +40,7 @@
             <px-context-browser-action-favorite class="action" active$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
           </template>
         </div>
+      </section>
     </template>
 
   </template>

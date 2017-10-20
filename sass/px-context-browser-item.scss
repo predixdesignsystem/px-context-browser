@@ -21,10 +21,16 @@
 // Component
 :host {
   display: flex;
-  align-items: center;
   height: calculateRem(30px);
   color: var(--px-context-browser-item-text-color, black);
   transition: background-color .2s ease-in-out;
+}
+
+.context-browser-item {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 :host([style-as-favorite]) {
