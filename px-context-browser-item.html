@@ -31,8 +31,15 @@
           <div class="context-browser-label regular">
             [[label]]
           </div>
-          <div class="context-browser-label context-browser-label--breadcrumbs zeta">
-            [[breadcrumbs]] > [[breadcrumbs]] > [[breadcrumbs]]
+          <div class="context-browser-label context-browser-label--breadcrumbs zeta truncate">
+            <template is="dom-repeat" items="[[breadcrumbs]]">
+              <template is="dom-if" if="[[_isNotFirstItem(index, breadcrumbs)]]">
+                > {{item}}
+              </template>
+              <template is="dom-if" if="[[!_isNotFirstItem(index, breadcrumbs)]]">
+                {{item}}
+              </template>
+            </template>
           </div>
         </div>
         <div class="actions">
@@ -54,7 +61,7 @@
         type: String
       },
       breadcrumbs: {
-        type: String
+        type: Array
       },
       selected: {
         type: Boolean,
@@ -82,6 +89,10 @@
         type: Boolean,
         value: false
       }
+    },
+
+    _isNotFirstItem(index) {
+      return index !== 0;
     }
   })
 </script>

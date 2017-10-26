@@ -92,7 +92,7 @@ Custom property | Description
                 <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
                   <px-context-browser-item
                       label="[[_getItemProp(item, keys.label)]]"
-                      breadcrumbs="[[_getItemProp(item, keys.id)]]"
+                      breadcrumbs="[[_getFavoritedItemPath(item)]]"
                       selected="[[_isItemSelected(item, selected)]]"
                       favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                       can-select="[[_isItemSelectable(item)]]"
@@ -856,6 +856,7 @@ Custom property | Description
           // if not already in favorited list, add it
           if (this.favorited.indexOf(item) === -1) {
             this.favorite(item);
+            this.items = this.favorited;
           }
           // if already in the favorited list, remove it
           else {
@@ -864,6 +865,27 @@ Custom property | Description
           }
         }
       }
+    },
+
+    _getFavoritedItemPath(item) {
+      if (item && typeof item === 'object' && this.favoritedMeta.item !== null && this.favoritedMeta && typeof this.favoritedMeta === 'object') {
+        const metadata = this.favoritedMeta;
+        let pathArray = [];
+        metadata.forEach(function(element) {
+          if (element.item === item) {
+            const pathEntry = element.path;
+            console.log(item.id, 'path: ', pathEntry);
+            pathEntry.forEach(function(pathItem) {
+              if (pathItem.id !== item.id) {
+                pathArray.push(pathItem.label);
+              }
+            });
+            console.log(pathArray);
+          }
+        });
+        return pathArray;
+      }
+      return null;
     },
 
     _handleHeaderTapped(evt) {
