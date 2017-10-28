@@ -31,15 +31,16 @@
           <div class="context-browser-label regular">
             [[label]]
           </div>
-          <div class="context-browser-label context-browser-label--breadcrumbs zeta truncate">
-            <template is="dom-repeat" items="[[breadcrumbs]]">
+          <div id="breadcrumbs" class="context-browser-label context-browser-label--breadcrumbs zeta">
+            <!-- <template is="dom-repeat" items="[[breadcrumbs]]">
               <template is="dom-if" if="[[_isNotFirstItem(index, breadcrumbs)]]">
                 > {{item}}
               </template>
               <template is="dom-if" if="[[!_isNotFirstItem(index, breadcrumbs)]]">
                 {{item}}
               </template>
-            </template>
+            </template> -->
+            [[_truncatedBreadcrumbs]]
           </div>
         </div>
         <div class="actions">
@@ -61,7 +62,22 @@
         type: String
       },
       breadcrumbs: {
-        type: Array
+        type: String
+      },
+      _breadcrumbsFontStyles: {
+        type: Object,
+        computed: '_computeBreadcrumbsFontStyles(_breadcrumbsEl)'
+      },
+      _breadcrumbsWidth: {
+        type: Number,
+        computed: '_computeBreadcrumbsWidth(_breadcrumbsEl)'
+      },
+      _breadcrumbsEl: {
+        type: HTMLElement
+      },
+      _truncatedBreadcrumbs: {
+        type: String,
+        computed: '_computeTruncatedBreadcrumbs(breadcrumbs, _breadcrumbsFontStyles, _breadcrumbsWidth, "beginning")'
       },
       selected: {
         type: Boolean,
@@ -75,7 +91,8 @@
       styleAsFavorite: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true
+        reflectToAttribute: true,
+        observer: '_handleStyleAsFavoriteChanged'
       },
       canSelect: {
         type: Boolean,
@@ -91,8 +108,129 @@
       }
     },
 
+    _handleStyleAsFavoriteChanged(isStyleAsFavorite, wasStyleAsFavorite) {
+      if (isStyleAsFavorite) {
+        debugger;
+        const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
+        if (breadcrumbsEl) {
+          this._breadcrumbsEl = breadcrumbsEl;
+        }
+      }
+    },
+
+    _computeBreadcrumbsFontStyles(el) {
+      return this.getFontStyles(el);
+    },
+
+    _computeBreadcrumbsWidth(el) {
+      return el.getBoundingClientRect().width;
+    },
+
+    _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width, position) {
+      return this.truncateText(breadcrumbs, fontStyles, width, position);
+    },
+
     _isNotFirstItem(index) {
       return index !== 0;
+    },
+
+    /**
+     * Reads the computed font styles (font family name and font size) from the targeted
+     * element and returns an object with the details.
+     *
+     * @param {HTMLElement} el
+     * @returns {Object} styles
+     * @returns {String} styles.size - The font size as a string with px suffix (e.g. '12px')
+     * @returns {String} styles.family - The CSS font family declaration as a string (e.g. 'Helvetica')
+     */
+    getFontStyles(el) {
+        var styles = window.getComputedStyle(el);
+        var size = styles.fontSize;
+        var family = styles.fontFamily;
+        return {
+            size: size,
+            family: family
+        }
+    },
+
+    /**
+     * Returns a truncated string with an ellipsis in the 'beginning', 'middle', or 'end'
+     * that fits in the targeted pixel size.
+     *
+     * @param {String} text
+     * @param {Object} fontStyles - An object with the font size and family strings from CSSText
+     * @param {Number} size - A pixel size without the 'px' suffix
+     * @param {String} ellipsisPos - 'beginning', 'middle', or 'end'
+     * @returns {Array}
+     */
+    truncateText(text, fontStyles, size, ellipsisPos) {
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+
+        // Set the font styles
+        context.font = fontStyles.size + ' ' + fontStyles.family;
+
+        // Get the em width of the font, to get an average character size
+        var mWidth = Math.round(context.measureText('m').width);
+
+        // Measure the size on an ellipsis
+        var ellipWidth = Math.round(context.measureText("\u2026").width);
+
+        // Assume ellipsisPos is 'middle' for now...
+
+        // Subtract ellipsis width from size, divide by two, and fit
+        var halfWidth = Math.floor((size - ellipWidth) / 2);
+
+        var response = [];
+        response[0] = this.fitTextToSize(context, text, mWidth, size);
+        response[1] = "\u2026";
+        response[2] = this.fitTextToSize(context, text, mWidth, size, true);
+        console.log(response);
+        return response;
+    },
+
+    /*
+     * Given a 2d canvas, a string of text, the average font size of a character
+     * of the text, and a target pixel width to fit the text in, returns a truncated
+     * string that fits inside that size.
+     *
+     * Optionally, specify reverse to fit the string backwards and truncate it at the
+     * beginning instead of the end.
+     *
+     * @param {Canvas.2dContext} canv
+     * @param {String} text
+     * @param {Number} mWidth
+     * @param {Number} size
+     * @param {Boolean} [reverse] - optional, reverses truncation
+     * @returns {String}
+     */
+    fitTextToSize(canv, text, mWidth, size, reverse) {
+        // First guess is to divide the size by the em width
+        var lengthGuess = (size-1)/mWidth;
+
+        if (!reverse) {
+            var start = 0;
+            var end = lengthGuess;
+        } else {
+            var start = text.length - lengthGuess;
+            var end = text.length;
+        }
+        var currentSize = canv.measureText(text.substring(start, end)).width;
+        for (;Math.abs(currentSize-size) > 1 && start != end && Math.abs(start-end) > 1;) {
+            if (currentSize > size) {
+                if (!reverse) end--;
+                if (reverse) start++
+            }
+            if (currentSize < size) {
+                if (!reverse) end++;
+                if (reverse) start--;
+            }
+            currentSize = Math.round(canv.measureText(text.substring(start, end)).width);
+        }
+
+
+        return text.substring(start, end);
     }
+
   })
 </script>

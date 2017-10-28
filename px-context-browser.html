@@ -92,7 +92,7 @@ Custom property | Description
                 <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
                   <px-context-browser-item
                       label="[[_getItemProp(item, keys.label)]]"
-                      breadcrumbs="[[_getFavoritedItemPath(item)]]"
+                      breadcrumbs="[[_getFavoritedItemPathString(item)]]"
                       selected="[[_isItemSelected(item, selected)]]"
                       favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                       can-select="[[_isItemSelectable(item)]]"
@@ -886,6 +886,19 @@ Custom property | Description
         return pathArray;
       }
       return null;
+    },
+
+    _getFavoritedItemPathString(item) {
+      let pathString = "";
+      if (item && typeof item === 'object' && this.favoritedMeta.item !== null && this.favoritedMeta && typeof this.favoritedMeta === 'object') {
+        const pathArray = this._getFavoritedItemPath(item);
+        // debugger;
+        pathArray.forEach(function(pathItem) {
+          pathString += `${pathItem} > `;
+        });
+      }
+      return pathString.slice(0, -3);
+
     },
 
     _handleHeaderTapped(evt) {
