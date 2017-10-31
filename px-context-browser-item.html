@@ -167,15 +167,10 @@
      * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
      */
     truncateBreadcrumbs(items, fontStyles, width) {
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      // Set the font styles
-      context.font = fontStyles.size + ' ' + fontStyles.family;
-
       let available = width;
 
       // If the first item is larger than the available, collapse all
-      if (available < Math.round(context.measureText(items[0]).width)) {
+      if (available < this.getTextWidth(items[0], fontStyles)) {
         return { visible: [], overflowed: items.slice(0) };
       }
 
@@ -184,27 +179,43 @@
       let i = len-1;
 
       while (i>=0 && available>0) {
-        if (Math.round(context.measureText(items[i]).width) > available) {
+        if (this.getTextWidth(items[i], fontStyles) > available) {
           break;
         }
-        available -= Math.round(context.measureText(items[i]).width);
-        console.log(i, items[i], Math.round(context.measureText(items[i]).width));
+        available -= this.getTextWidth(items[i], fontStyles);
+        console.log(i, items[i], this.getTextWidth(items[i], fontStyles));
         i--;
       }
 
       // If any overflow, ensure the overflow icon can fit
-      var ellipWidth = Math.round(context.measureText("\u2026").width);
-      var caratWidth = Math.round(context.measureText(" > ").width);
+      var ellipWidth = this.getTextWidth("\u2026", fontStyles);
+      var caratWidth = this.getTextWidth(" > ", fontStyles);;
       let overflowSize = ellipWidth + caratWidth;
       if (i !== 0 && available < overflowSize) {
         available -= overflowSize;
         while (i<len-1 && available<0) {
-          available += Math.round(context.measureText(items[i]).width);
+          available += this.getTextWidth(items[i], fontStyles);
           i++;
         }
       }
       console.log ({ visible: items.slice(i+1), overflowed: items.slice(0,i+1) });
       return items.slice(i+1);
+    },
+
+    /**
+     * Measures the given text and returns the width based on font size and family
+     *
+     * @param  {String} text - A text string
+     * @param {Object} fontStyles - An object with the font size and family strings from CSSText
+     * @return {Number} - The rounded width of the text string
+     */
+    getTextWidth(text, fontStyles) {
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      // Set the font styles
+      context.font = fontStyles.size + ' ' + fontStyles.family;
+
+      return Math.round(context.measureText(text).width);
     }
 
   })
