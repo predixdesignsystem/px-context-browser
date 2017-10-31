@@ -32,15 +32,14 @@
             [[label]]
           </div>
           <div id="breadcrumbs" class="context-browser-label context-browser-label--breadcrumbs zeta">
-            <!-- <template is="dom-repeat" items="[[breadcrumbs]]">
-              <template is="dom-if" if="[[_isNotFirstItem(index, breadcrumbs)]]">
+            <template is="dom-repeat" items="[[_truncatedBreadcrumbs]]">
+              <template is="dom-if" if="[[_isNotFirstItem(index, _truncatedBreadcrumbs)]]">
                 > {{item}}
               </template>
-              <template is="dom-if" if="[[!_isNotFirstItem(index, breadcrumbs)]]">
+              <template is="dom-if" if="[[!_isNotFirstItem(index, _truncatedBreadcrumbs)]]">
                 {{item}}
               </template>
-            </template> -->
-            [[_truncatedBreadcrumbs]]
+            </template>
           </div>
         </div>
         <div class="actions">
@@ -62,7 +61,7 @@
         type: String
       },
       breadcrumbs: {
-        type: String
+        type: Array
       },
       _breadcrumbsFontStyles: {
         type: Object,
@@ -110,11 +109,13 @@
 
     _handleStyleAsFavoriteChanged(isStyleAsFavorite, wasStyleAsFavorite) {
       if (isStyleAsFavorite) {
-        debugger;
-        const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
-        if (breadcrumbsEl) {
-          this._breadcrumbsEl = breadcrumbsEl;
-        }
+        // TODO: make this work without the async
+        this.async(function() {
+          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
+          if (breadcrumbsEl) {
+            this._breadcrumbsEl = breadcrumbsEl;
+          }
+        }, 200);
       }
     },
 
@@ -127,7 +128,7 @@
     },
 
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width, position) {
-      return this.truncateText(breadcrumbs, fontStyles, width, position);
+      return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
     },
 
     _isNotFirstItem(index) {
@@ -154,82 +155,56 @@
     },
 
     /**
-     * Returns a truncated string with an ellipsis in the 'beginning', 'middle', or 'end'
-     * that fits in the targeted pixel size.
+     * Iterates over a list of items and determines which will fit into the
+     * available width and which will not.
      *
-     * @param {String} text
+     * If any items do not fit, backtracks and reduces the available width to
+     * ensure an overflowed icon will also fit.
+     *
+     * @param  {Array} items - A flat Array of items to fit
      * @param {Object} fontStyles - An object with the font size and family strings from CSSText
-     * @param {Number} size - A pixel size without the 'px' suffix
-     * @param {String} ellipsisPos - 'beginning', 'middle', or 'end'
-     * @returns {Array}
+     * @param  {Number} width - The width to fit the items into
+     * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
      */
-    truncateText(text, fontStyles, size, ellipsisPos) {
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext('2d');
+    truncateBreadcrumbs(items, fontStyles, width) {
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      // Set the font styles
+      context.font = fontStyles.size + ' ' + fontStyles.family;
 
-        // Set the font styles
-        context.font = fontStyles.size + ' ' + fontStyles.family;
+      let available = width;
 
-        // Get the em width of the font, to get an average character size
-        var mWidth = Math.round(context.measureText('m').width);
+      // If the first item is larger than the available, collapse all
+      if (available < Math.round(context.measureText(items[0]).width)) {
+        return { visible: [], overflowed: items.slice(0) };
+      }
 
-        // Measure the size on an ellipsis
-        var ellipWidth = Math.round(context.measureText("\u2026").width);
+      // Try to fit items in the available space
+      let len = items.length;
+      let i = len-1;
 
-        // Assume ellipsisPos is 'middle' for now...
-
-        // Subtract ellipsis width from size, divide by two, and fit
-        var halfWidth = Math.floor((size - ellipWidth) / 2);
-
-        var response = [];
-        response[0] = this.fitTextToSize(context, text, mWidth, size);
-        response[1] = "\u2026";
-        response[2] = this.fitTextToSize(context, text, mWidth, size, true);
-        console.log(response);
-        return response;
-    },
-
-    /*
-     * Given a 2d canvas, a string of text, the average font size of a character
-     * of the text, and a target pixel width to fit the text in, returns a truncated
-     * string that fits inside that size.
-     *
-     * Optionally, specify reverse to fit the string backwards and truncate it at the
-     * beginning instead of the end.
-     *
-     * @param {Canvas.2dContext} canv
-     * @param {String} text
-     * @param {Number} mWidth
-     * @param {Number} size
-     * @param {Boolean} [reverse] - optional, reverses truncation
-     * @returns {String}
-     */
-    fitTextToSize(canv, text, mWidth, size, reverse) {
-        // First guess is to divide the size by the em width
-        var lengthGuess = (size-1)/mWidth;
-
-        if (!reverse) {
-            var start = 0;
-            var end = lengthGuess;
-        } else {
-            var start = text.length - lengthGuess;
-            var end = text.length;
+      while (i>=0 && available>0) {
+        if (Math.round(context.measureText(items[i]).width) > available) {
+          break;
         }
-        var currentSize = canv.measureText(text.substring(start, end)).width;
-        for (;Math.abs(currentSize-size) > 1 && start != end && Math.abs(start-end) > 1;) {
-            if (currentSize > size) {
-                if (!reverse) end--;
-                if (reverse) start++
-            }
-            if (currentSize < size) {
-                if (!reverse) end++;
-                if (reverse) start--;
-            }
-            currentSize = Math.round(canv.measureText(text.substring(start, end)).width);
+        available -= Math.round(context.measureText(items[i]).width);
+        console.log(i, items[i], Math.round(context.measureText(items[i]).width));
+        i--;
+      }
+
+      // If any overflow, ensure the overflow icon can fit
+      var ellipWidth = Math.round(context.measureText("\u2026").width);
+      var caratWidth = Math.round(context.measureText(" > ").width);
+      let overflowSize = ellipWidth + caratWidth;
+      if (i !== 0 && available < overflowSize) {
+        available -= overflowSize;
+        while (i<len-1 && available<0) {
+          available += Math.round(context.measureText(items[i]).width);
+          i++;
         }
-
-
-        return text.substring(start, end);
+      }
+      console.log ({ visible: items.slice(i+1), overflowed: items.slice(0,i+1) });
+      return items.slice(i+1);
     }
 
   })
