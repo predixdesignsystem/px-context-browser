@@ -33,6 +33,10 @@
   cursor: pointer;
 }
 
+host([style-as-favorite]) .context-browser-item {
+  display: block;
+}
+
 :host([style-as-favorite]) {
   height: calculateRem(60px);
 }
@@ -77,6 +81,10 @@
   color: var(--px-context-browser-item-breadcrumbs-color, gray);
 }
 
+.context-browser-favorite--text-container {
+  background-color: salmon;
+  flex: auto;
+}
 .actions {
   margin-left: auto;
   opacity: 0;
@@ -86,6 +94,7 @@
 :host([style-as-favorite]) .actions {
   display: flex;
   opacity: 1;
+  flex: none;
 }
 :host(:hover) .actions,
 :host(:focus) .actions,

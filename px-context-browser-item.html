@@ -27,19 +27,12 @@
 
     <template is="dom-if" if="[[styleAsFavorite]]">
       <section class="context-browser-item" asset-action="select">
-        <div>
+        <div class="context-browser-favorite--text-container">
           <div class="context-browser-label regular">
             [[label]]
           </div>
           <div id="breadcrumbs" class="context-browser-label context-browser-label--breadcrumbs zeta">
-            <template is="dom-repeat" items="[[_truncatedBreadcrumbs]]">
-              <template is="dom-if" if="[[_isNotFirstItem(index, _truncatedBreadcrumbs)]]">
-                > {{item}}
-              </template>
-              <template is="dom-if" if="[[!_isNotFirstItem(index, _truncatedBreadcrumbs)]]">
-                {{item}}
-              </template>
-            </template>
+            <span id="truncateBreadcrumbs">[[_truncatedBreadcrumbs]]</span>
           </div>
         </div>
         <div class="actions">
@@ -76,7 +69,7 @@
       },
       _truncatedBreadcrumbs: {
         type: String,
-        computed: '_computeTruncatedBreadcrumbs(breadcrumbs, _breadcrumbsFontStyles, _breadcrumbsWidth, "beginning")'
+        computed: '_computeTruncatedBreadcrumbs(breadcrumbs, _breadcrumbsFontStyles, _breadcrumbsWidth)'
       },
       selected: {
         type: Boolean,
@@ -111,7 +104,7 @@
       if (isStyleAsFavorite) {
         // TODO: make this work without the async
         this.async(function() {
-          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
+          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#truncateBreadcrumbs');
           if (breadcrumbsEl) {
             this._breadcrumbsEl = breadcrumbsEl;
           }
@@ -127,7 +120,8 @@
       return el.getBoundingClientRect().width;
     },
 
-    _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width, position) {
+    _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
+      console.log(`width: ${width}`);
       return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
     },
 
@@ -167,39 +161,37 @@
      * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
      */
     truncateBreadcrumbs(items, fontStyles, width) {
-      let available = width;
+      const ellipWidth = this.getTextWidth("\u2026 > ", fontStyles);
+      const caratWidth = this.getTextWidth(" > ", fontStyles);
 
-      // If the first item is larger than the available, collapse all
-      if (available < this.getTextWidth(items[0], fontStyles)) {
-        return { visible: [], overflowed: items.slice(0) };
-      }
-
-      // Try to fit items in the available space
+      const available = width;
       let len = items.length;
-      let i = len-1;
+      let visible = len;
+      let lastResult;
 
-      while (i>=0 && available>0) {
-        if (this.getTextWidth(items[i], fontStyles) > available) {
-          break;
+      while (visible > 0) {
+        // Get array items from end to beginning
+        let itemsToFit = items.slice(visible * -1);
+        // Join items together with carat
+        let textToMeasure = itemsToFit.join(' > ');
+        // If some items fit but not all, prepend ellipses
+        if (visible < len && len > 1) {
+          textToMeasure =  '... > ' + textToMeasure;
         }
-        available -= this.getTextWidth(items[i], fontStyles);
-        console.log(i, items[i], this.getTextWidth(items[i], fontStyles));
-        i--;
+        // Measure the resulting string to see if it fits
+        let measure = this.getTextWidth(textToMeasure, fontStyles);
+        // If it fits, we're done!
+        if (available > measure) {
+          return textToMeasure;
+        }
+        // Otherwise, try to fit with one less item
+        visible--;
       }
 
-      // If any overflow, ensure the overflow icon can fit
-      var ellipWidth = this.getTextWidth("\u2026", fontStyles);
-      var caratWidth = this.getTextWidth(" > ", fontStyles);;
-      let overflowSize = ellipWidth + caratWidth;
-      if (i !== 0 && available < overflowSize) {
-        available -= overflowSize;
-        while (i<len-1 && available<0) {
-          available += this.getTextWidth(items[i], fontStyles);
-          i++;
-        }
-      }
-      console.log ({ visible: items.slice(i+1), overflowed: items.slice(0,i+1) });
-      return items.slice(i+1);
+      // We know visible === 0, truncate last item and add ... > if needed
+      let prefix = (len > 1) ? '... > ' : '';
+      // return prefix + items[len-1];
+      return prefix + 'truncate me';
     },
 
     /**
