@@ -31,10 +31,11 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  min-width: 0;
 }
 
-host([style-as-favorite]) .context-browser-item {
-  display: block;
+.context-browser-text-container {
+  min-width: 0;
 }
 
 :host([style-as-favorite]) {
@@ -81,9 +82,6 @@ host([style-as-favorite]) .context-browser-item {
   color: var(--px-context-browser-item-breadcrumbs-color, gray);
 }
 
-.context-browser-favorite--text-container {
-  flex: auto;
-}
 .actions {
   margin-left: auto;
   opacity: 0;
@@ -93,7 +91,6 @@ host([style-as-favorite]) .context-browser-item {
 :host([style-as-favorite]) .actions {
   display: flex;
   opacity: 1;
-  flex: none;
 }
 :host(:hover) .actions,
 :host(:focus) .actions,

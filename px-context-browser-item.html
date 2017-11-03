@@ -27,7 +27,7 @@
 
     <template is="dom-if" if="[[styleAsFavorite]]">
       <section class="context-browser-item" asset-action="select">
-        <div class="context-browser-favorite--text-container">
+        <div class="context-browser-text-container">
           <div class="context-browser-label regular">
             [[label]]
           </div>
@@ -194,8 +194,8 @@
 
       // We know visible === 0, truncate last item and add ... > if needed
       let prefix = (len > 1) ? '... > ' : '';
-      // return prefix + items[len-1];
-      return prefix + 'truncate me';
+      // CSS will take care of any end truncation needed
+      return prefix + items[len-1];
     },
 
     /**
