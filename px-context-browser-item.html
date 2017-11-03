@@ -32,7 +32,7 @@
             [[label]]
           </div>
           <div id="breadcrumbs" class="context-browser-label context-browser-label--breadcrumbs zeta">
-            <span id="truncateBreadcrumbs">[[_truncatedBreadcrumbs]]</span>
+            [[_truncatedBreadcrumbs]]
           </div>
         </div>
         <div class="actions">
@@ -104,7 +104,7 @@
       if (isStyleAsFavorite) {
         // TODO: make this work without the async
         this.async(function() {
-          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#truncateBreadcrumbs');
+          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
           if (breadcrumbsEl) {
             this._breadcrumbsEl = breadcrumbsEl;
           }
@@ -117,7 +117,11 @@
     },
 
     _computeBreadcrumbsWidth(el) {
-      return el.getBoundingClientRect().width;
+      var style = getComputedStyle(el);
+      const paddingLeft = style.getPropertyValue('padding-left').slice(0,-2);
+      const paddingRight = style.getPropertyValue('padding-right').slice(0,-2);
+      const containerWidth = el.getBoundingClientRect().width;
+      return (containerWidth - paddingLeft - paddingRight);
     },
 
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
