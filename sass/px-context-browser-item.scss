@@ -35,6 +35,7 @@
 }
 
 .context-browser-text-container {
+  flex: 1 1 auto;
   min-width: 0;
 }
 
@@ -66,20 +67,26 @@
   color: var(--px-context-browser-item-text-color--selected, white);
 }
 
-.context-browser-label {
+.context-browser-text {
   flex: 1 1 auto;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
-  min-width: 0;
   cursor: pointer;
   user-select: none;
+  min-width: 0;
+}
+
+.context-browser-text__label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.context-browser-label--breadcrumbs {
+.context-browser-text__breadcrumbs {
   color: var(--px-context-browser-item-breadcrumbs-color, gray);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .actions {

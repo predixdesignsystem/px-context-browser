@@ -8,8 +8,10 @@
 
     <template is="dom-if" if="[[!styleAsFavorite]]">
       <section class="context-browser-item" asset-action="activate">
-        <div class="context-browser-label regular">
-          [[label]]
+        <div class="context-browser-text ">
+          <div class="context-browser-text__label regular">
+            [[label]]
+          </div>
         </div>
         <div class="actions">
           <template is="dom-if" if="[[canFavorite]]">
@@ -27,11 +29,11 @@
 
     <template is="dom-if" if="[[styleAsFavorite]]">
       <section class="context-browser-item" asset-action="select">
-        <div class="context-browser-text-container">
-          <div class="context-browser-label regular">
+        <div class="context-browser-text">
+          <div class="context-browser-text__label regular">
             [[label]]
           </div>
-          <div id="breadcrumbs" class="context-browser-label context-browser-label--breadcrumbs zeta">
+          <div id="breadcrumbs" class="context-browser-text__breadcrumbs context-browser-label--breadcrumbs zeta">
             [[_truncatedBreadcrumbs]]
           </div>
         </div>
@@ -117,15 +119,10 @@
     },
 
     _computeBreadcrumbsWidth(el) {
-      var style = getComputedStyle(el);
-      const paddingLeft = style.getPropertyValue('padding-left').slice(0,-2);
-      const paddingRight = style.getPropertyValue('padding-right').slice(0,-2);
-      const containerWidth = el.getBoundingClientRect().width;
-      return (containerWidth - paddingLeft - paddingRight);
+      return el.getBoundingClientRect().width;
     },
 
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
-      console.log(`width: ${width}`);
       return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
     },
 
