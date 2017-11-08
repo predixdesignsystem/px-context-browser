@@ -568,7 +568,7 @@ Custom property | Description
       }
 
       if (!Array.isArray(path) && Array.isArray(this.__context.columns) && this.__context.columns[0] !== rootColumn) {
-        // The assset graph was re-created from a new items list, clear out
+        // The asset graph was re-created from a new items list, clear out
         // the columns and reset to only showing root
         this.__context.columns = [rootColumn];
       }
@@ -869,8 +869,11 @@ Custom property | Description
 
     _getFavoritedItemPath(item) {
       if (item && typeof item === 'object' && this.favoritedMeta.item !== null && this.favoritedMeta && typeof this.favoritedMeta === 'object') {
+        // return this._assetGraph.getPath(item);
+
         const metadata = this.favoritedMeta;
         let pathArray = [];
+        // use getPath() here
         metadata.forEach(function(element) {
           if (element.item === item) {
             const pathEntry = element.path;

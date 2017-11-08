@@ -89,6 +89,10 @@
   text-overflow: ellipsis;
 }
 
+:host([selected]) .context-browser-text__breadcrumbs {
+  color: var(--px-context-browser-item-breadcrumbs-color--selected, white);
+}
+
 .actions {
   margin-left: auto;
   opacity: 0;

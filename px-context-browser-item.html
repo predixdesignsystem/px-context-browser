@@ -123,7 +123,9 @@
     },
 
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
-      return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
+      if (breadcrumbs && fontStyles && width) {
+        return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
+      }
     },
 
     _isNotFirstItem(index) {
@@ -166,7 +168,7 @@
       const caratWidth = this.getTextWidth(" > ", fontStyles);
 
       const available = width;
-      let len = items.length;
+      const len = items.length;
       let visible = len;
       let lastResult;
 
