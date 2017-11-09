@@ -116,7 +116,7 @@ Custom property | Description
       <!-- FAVORITES CONTEXT BROWSER-->
       <template is="dom-if" if="[[openedFromFavorited]]">
         <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]">
-          <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited)]]">
+          <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited, favorited.*)]]">
             <px-context-browser-columns slot="columns" active="0" visible-count$="[[favorited.length]]" collapsed$="[[collapsed]]">
               <div column="0" class="column" slot="columns">
                 <template is="dom-repeat" items="[[favorited]]">
@@ -139,7 +139,7 @@ Custom property | Description
           </template>
 
           <!--EMPTY FAVORITES-->
-          <template is="dom-if" if="[[_showFavoritesEmptyState(favorited)]]">
+          <template is="dom-if" if="[[_showFavoritesEmptyState(favorited, favorited.*)]]">
             <div slot="columns" class="context-browser-favorites--empty__container">
               <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
               <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
