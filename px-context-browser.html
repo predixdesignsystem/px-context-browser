@@ -99,7 +99,6 @@ Custom property | Description
                         favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                         can-select="[[_isItemSelectable(item)]]"
                         can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
-                        style-as-favorite="[[openedFromFavorited]]"
                         can-open="[[_isItemOpenable(showArrow, item)]]"
                         on-tap="_handleItemTapped"
                         tabindex="0"
@@ -127,11 +126,12 @@ Custom property | Description
                       favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
-                      style-as-favorite="[[openedFromFavorited]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
                       on-tap="_handleItemTapped"
                       tabindex="0"
-                      collapsed$="[[collapsed]]">
+                      collapsed$="[[collapsed]]"
+                      style-as-favorite
+                      visible="[[openedFromFavorited]]">
                   </px-context-browser-item>
                 </template>
               </div>

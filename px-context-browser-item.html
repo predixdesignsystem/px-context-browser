@@ -85,8 +85,7 @@
       styleAsFavorite: {
         type: Boolean,
         value: false,
-        reflectToAttribute: true,
-        observer: '_handleStyleAsFavoriteChanged'
+        reflectToAttribute: true
       },
       canSelect: {
         type: Boolean,
@@ -99,18 +98,20 @@
       canFavorite: {
         type: Boolean,
         value: false
+      },
+      visible: {
+        type: Boolean,
+        value: true
       }
     },
 
-    _handleStyleAsFavoriteChanged(isStyleAsFavorite, wasStyleAsFavorite) {
-      if (isStyleAsFavorite) {
-        // TODO: make this work without the async
-        this.async(function() {
-          const breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
-          if (breadcrumbsEl) {
-            this._breadcrumbsEl = breadcrumbsEl;
-          }
-        }, 200);
+    observers: ['_handleFavoritesItemVisible(visible, styleAsFavorite)'],
+
+    _handleFavoritesItemVisible(visible, styleAsFavorite) {
+      if (visible && styleAsFavorite && !this._breadcrumbsEl) {
+        window.requestAnimationFrame(() => {
+          this._breadcrumbsEl = Polymer.dom(this.root).querySelector('#breadcrumbs');
+        });
       }
     },
 
