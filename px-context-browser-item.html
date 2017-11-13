@@ -129,10 +129,6 @@
       }
     },
 
-    _isNotFirstItem(index) {
-      return index !== 0;
-    },
-
     /**
      * Reads the computed font styles (font family name and font size) from the targeted
      * element and returns an object with the details.
@@ -165,6 +161,9 @@
      * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
      */
     truncateBreadcrumbs(items, fontStyles, width) {
+      if (!items.length) {
+        return ''; // no breadcrumbs to display for the root item
+      }
       const ellipWidth = this.getTextWidth("\u2026 > ", fontStyles);
       const caratWidth = this.getTextWidth(" > ", fontStyles);
 
