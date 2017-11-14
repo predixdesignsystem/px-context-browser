@@ -116,9 +116,9 @@ Custom property | Description
       <template is="dom-if" if="[[openedFromFavorited]]">
         <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]">
           <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited, favorited.*)]]">
-            <px-context-browser-columns slot="columns" active="0" visible-count$="[[favorited.length]]" collapsed$="[[collapsed]]">
+            <px-context-browser-columns slot="columns" active="0" visible-count$="[[displayFaves.length]]" collapsed$="[[collapsed]]">
               <div column="0" class="column" slot="columns">
-                <template is="dom-repeat" items="[[favorited]]">
+                <template is="dom-repeat" items="[[displayFaves]]">
                   <px-context-browser-item
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getFavoritedItemPath(item)]]"
@@ -674,6 +674,7 @@ Custom property | Description
       if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
+        this.displayFaves = [...this.favorited];
         this._setOpenedFromFavorited(false);
         this.opened = true;
       }
@@ -683,6 +684,13 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
+      if (this._updateFavoritesTask) {
+        this.cancelAsync(this._updateFavoritesTask);
+        this._updateFavoritesTask = null;
+      }
+      // else {
+      //   this._updateFavorites(); // necessary to update active if a new item is selected via. API while the browser was closed
+      // }
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
@@ -691,6 +699,7 @@ Custom property | Description
       }
       else {
         this.$.dropdown.close();
+        this._updateFavoritesTask = this.async(this._updateFavorites.bind(this), 5000);
       }
     },
 
@@ -745,13 +754,28 @@ Custom property | Description
       this._resetActiveTask = this.async(this._resetActive.bind(this), 5000);
     },
 
+  // resetActiveAndUpdateFavorited
+  // add something in here to wait 5 sec for de-favorite something
+  // might need to do some checking about which panel was closed/opened
+  // might need to separate out resetActive and clearFavorited depending on
+  // panel stuff
     _resetActive() {
+      // reset active
       if (!this.selected && this.active) {
         this.activate(null, 'DOM_EVENT');
       }
       else if (this.selected && this.active !== this.selectedMeta.parent) {
         this.activate(this.selectedMeta.parent, 'DOM_EVENT');
       }
+
+      // // update favorited items
+      // this.displayFaves = this.favorited;
+    },
+
+    // call this if favorites browser has been closed for > 5 sec, or if regular
+    // CB has been opened since closing favories browser
+    _updateFavorites() {
+      this.displayFaves = [...this.favorited];
     },
 
     _handleInitialOpenedValue(nextVal, lastVal) {
