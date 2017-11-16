@@ -684,12 +684,14 @@ Custom property | Description
     },
 
     _handleOpenTriggerTapped(evt) {
+      if (this.opened && this.openedFromFavorited) {
+        this._updateFavorites();
+      }
       if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
         this._setOpenedFromFavorited(false);
         this.opened = true;
-        this._updateFavorites();
       }
       else {
         this.$.dropdown.close();
@@ -775,7 +777,9 @@ Custom property | Description
         this.cancelAsync(this._updateFavoritesTask);
         this._updateFavoritesTask = null;
       }
-      this._updateFavoritesTask = this.async(this._updateFavorites.bind(this), 5000);
+      if (this.openedFromFavorited) {
+        this._updateFavoritesTask = this.async(this._updateFavorites.bind(this), 5000);
+      }
 
     },
 
