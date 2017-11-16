@@ -349,7 +349,8 @@ Custom property | Description
       // 'focus-first-visible-item' : '_focusFirstVisibleItem',
       'px-app-asset-children-updated' : '_handleChildrenChanged',
       'iron-resize' : '_handleResize',
-      'px-context-browser-filter-focused' : '_handleFilterFocused'
+      'px-context-browser-filter-focused' : '_handleFilterFocused',
+      'px-app-asset-favorited' : '_handleNewItemFavorited'
     },
 
     _handleFilterFocused(evt) {
@@ -357,6 +358,18 @@ Custom property | Description
         const target = Polymer.dom(evt).rootTarget;
         target.blurFilter();
       }
+    },
+
+    _handleNewItemFavorited(evt) {
+      // debugger;
+      var item = evt.detail.item;
+      if (!this._isItemInTempFaves(item, this.tempFaves)) {
+        this.push('tempFaves', item);
+      }
+    },
+
+    _isItemInTempFaves(item, tempFaves) {
+      return tempFaves.indexOf(item) > -1;
     },
 
     /**
@@ -676,6 +689,7 @@ Custom property | Description
         // this._positionTarget = window;
         this._setOpenedFromFavorited(false);
         this.opened = true;
+        this._updateFavorites();
       }
       else {
         this.$.dropdown.close();
@@ -686,7 +700,7 @@ Custom property | Description
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        if (this.tempFaves === null || !this.tempFaves.length) {
+        if (this.tempFaves === null) {
           this.tempFaves = [...this.favorited];
         }
         this._setOpenedFromFavorited(true);
