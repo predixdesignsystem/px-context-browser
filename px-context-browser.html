@@ -350,7 +350,8 @@ Custom property | Description
       'px-app-asset-children-updated' : '_handleChildrenChanged',
       'iron-resize' : '_handleResize',
       'px-context-browser-filter-focused' : '_handleFilterFocused',
-      'px-app-asset-favorited' : '_handleNewItemFavorited'
+      'px-app-asset-favorited' : '_handleNewItemFavorited',
+      'px-context-browser-view-changed' : '_handleContextBrowserViewChanged'
     },
 
     _handleFilterFocused(evt) {
@@ -361,15 +362,33 @@ Custom property | Description
     },
 
     _handleNewItemFavorited(evt) {
-      // debugger;
       var item = evt.detail.item;
       if (!this._isItemInTempFaves(item, this.tempFaves)) {
+        if (this.tempFaves === null) {
+          this.tempFaves = [];
+        }
         this.push('tempFaves', item);
       }
     },
 
     _isItemInTempFaves(item, tempFaves) {
+      if (tempFaves === null) {
+        return false;
+      }
       return tempFaves.indexOf(item) > -1;
+    },
+
+    // this method is called if the browser changes from regular to favorites
+    // view (or favorites to regular) without being closed and reopened
+    _handleContextBrowserViewChanged() {
+      // change from favorites to regular
+      if (this.openedFromFavorited) {
+        this._updateFavoritedAndClearTempFaves();
+      }
+      // changed from regular to favorites
+      else {
+
+      }
     },
 
     /**
@@ -684,9 +703,12 @@ Custom property | Description
     },
 
     _handleOpenTriggerTapped(evt) {
+      // if switching view of already opened browser from favorites to regular
       if (this.opened && this.openedFromFavorited) {
-        this._updateFavorites();
+        this.fire('px-context-browser-view-changed');
       }
+      // if opening regular browser from closed OR switching view of already
+      // opened browser from favories to regular
       if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
@@ -699,12 +721,17 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
+      // if switching view of already opened browser from regular to favorites
+      if (this.opened && !this.openedFromFavorited) {
+        this.fire('px-context-browser-view-changed');
+        this.tempFaves = this.favorited;
+      }
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        if (this.tempFaves === null) {
-          this.tempFaves = [...this.favorited];
-        }
+        // if (this.tempFaves === null) {
+        //   this.tempFaves = [...this.favorited];
+        // }
         this._setOpenedFromFavorited(true);
         this.opened = true;
       }
@@ -746,21 +773,23 @@ Custom property | Description
       } else {
         this._resetActive(); // necessary to update active if a new item is selected via. API while the browser was closed
       }
-      // update favorites
-      // debugger;
+      // if opened from favorites browser
       if (this.openedFromFavorited) {
-        if (this._updateFavoritesTask) {
-          this.cancelAsync(this._updateFavoritesTask);
-          this._updateFavoritesTask = null;
-        } else {
-          this._updateFavorites(); // necessary to update tempFaves if new items are favorited via API while the browser was closed
+        if (this._updateFavoritedAndClearTempFavesTask) {
+          this.cancelAsync(this._updateFavoritedAndClearTempFavesTask);
+          this._updateFavoritedAndClearTempFavesTask = null;
         }
+        // else {
+        //   this._updateFavoritedAndClearTempFaves(); // necessary to update tempFaves if new items are favorited via API while the browser was closed
+        // }
       }
     },
 
     /**
      * After 5 seconds, reset the active to the parent of the selected item,
      * or to the root if no item is selected.
+     * Also after 5 seconds, set the favorited items to those in tempFaves and
+     * then clear tempFaves
      */
     _handleBrowserClosed(evt) {
       if (this._squashNextResetActiveTask) {
@@ -773,21 +802,16 @@ Custom property | Description
       }
       this._resetActiveTask = this.async(this._resetActive.bind(this), 5000);
       // update favorites
-      if (this._updateFavoritesTask) {
-        this.cancelAsync(this._updateFavoritesTask);
-        this._updateFavoritesTask = null;
+      if (this._updateFavoritedAndClearTempFavesTask) {
+        this.cancelAsync(this._updateFavoritedAndClearTempFavesTask);
+        this._updateFavoritedAndClearTempFavesTask = null;
       }
       if (this.openedFromFavorited) {
-        this._updateFavoritesTask = this.async(this._updateFavorites.bind(this), 5000);
+        this._updateFavoritedAndClearTempFavesTask = this.async(this._updateFavoritedAndClearTempFaves.bind(this), 5000);
       }
 
     },
 
-  // resetActiveAndUpdateFavorited
-  // add something in here to wait 5 sec for de-favorite something
-  // might need to do some checking about which panel was closed/opened
-  // might need to separate out resetActive and clearFavorited depending on
-  // panel stuff
     _resetActive() {
       if (!this.selected && this.active) {
         this.activate(null, 'DOM_EVENT');
@@ -797,9 +821,10 @@ Custom property | Description
       }
     },
 
-    // call this if favorites browser has been closed for > 5 sec, or if regular
-    // CB has been opened since closing favories browser
-    _updateFavorites() {
+    // call this if favorites browser has been closed for > 5 sec, or if CB
+    // view has been switched from favorites browser to regular browser
+    _updateFavoritedAndClearTempFaves() {
+      debugger;
       this.favorited = [...this.tempFaves];
       this.tempFaves = null;
     },
@@ -936,6 +961,7 @@ Custom property | Description
           }
         }
         else if (action === 'favorite') {
+          // if in regular context browser
           if (!this.openedFromFavorited) {
             // if not already in favorited list, add it
             if (this.favorited.indexOf(item) === -1) {
@@ -945,11 +971,12 @@ Custom property | Description
             else {
               this.defavorite(item);
             }
-          } else {
+          }
+          // if in favorites context browser
+          else {
             if (this.tempFaves.indexOf(item) === -1) {
               this.push('tempFaves', item);
             }
-            // if already in the favorited list, remove it
             else {
               this.splice('tempFaves', this.tempFaves.indexOf(item), 1);
             }
