@@ -364,10 +364,14 @@ Custom property | Description
     _handleNewItemFavorited(evt) {
       var item = evt.detail.item;
       if (!this._isItemInTempFaves(item, this.tempFaves)) {
-        if (this.tempFaves === null) {
-          this.tempFaves = [];
-        }
         this.push('tempFaves', item);
+      }
+    },
+
+    _handleNewItemDefavorited(evt) {
+      var item = evt.detail.item;
+      if (this._isItemInTempFaves(item, this.tempFaves)) {
+        this.splice('tempFaves', this.tempFaves.indexOf(item), 1);
       }
     },
 
@@ -384,10 +388,6 @@ Custom property | Description
       // change from favorites to regular
       if (this.openedFromFavorited) {
         this._updateFavoritedAndClearTempFaves();
-      }
-      // changed from regular to favorites
-      else {
-
       }
     },
 
@@ -708,7 +708,7 @@ Custom property | Description
         this.fire('px-context-browser-view-changed');
       }
       // if opening regular browser from closed OR switching view of already
-      // opened browser from favories to regular
+      // opened browser from favorites to regular
       if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
@@ -721,10 +721,11 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
+
       // if switching view of already opened browser from regular to favorites
       if (this.opened && !this.openedFromFavorited) {
-        this.fire('px-context-browser-view-changed');
-        this.tempFaves = this.favorited;
+        // this.fire('px-context-browser-view-changed');
+        this.tempFaves = [...this.favorited];
       }
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
@@ -779,9 +780,6 @@ Custom property | Description
           this.cancelAsync(this._updateFavoritedAndClearTempFavesTask);
           this._updateFavoritedAndClearTempFavesTask = null;
         }
-        // else {
-        //   this._updateFavoritedAndClearTempFaves(); // necessary to update tempFaves if new items are favorited via API while the browser was closed
-        // }
       }
     },
 
@@ -824,9 +822,7 @@ Custom property | Description
     // call this if favorites browser has been closed for > 5 sec, or if CB
     // view has been switched from favorites browser to regular browser
     _updateFavoritedAndClearTempFaves() {
-      debugger;
       this.favorited = [...this.tempFaves];
-      this.tempFaves = null;
     },
 
     _handleInitialOpenedValue(nextVal, lastVal) {
