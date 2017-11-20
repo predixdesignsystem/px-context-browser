@@ -351,7 +351,7 @@ Custom property | Description
       'iron-resize' : '_handleResize',
       'px-context-browser-filter-focused' : '_handleFilterFocused',
       'px-app-asset-favorited' : '_handleNewItemFavorited',
-      'px-context-browser-view-changed' : '_handleContextBrowserViewChanged'
+      'px-app-asset-defavorited' : '_handleNewItemDefavorited'
     },
 
     _handleFilterFocused(evt) {
@@ -380,15 +380,6 @@ Custom property | Description
         return false;
       }
       return tempFaves.indexOf(item) > -1;
-    },
-
-    // this method is called if the browser changes from regular to favorites
-    // view (or favorites to regular) without being closed and reopened
-    _handleContextBrowserViewChanged() {
-      // change from favorites to regular
-      if (this.openedFromFavorited) {
-        this._updateFavoritedAndClearTempFaves();
-      }
     },
 
     /**
@@ -705,7 +696,7 @@ Custom property | Description
     _handleOpenTriggerTapped(evt) {
       // if switching view of already opened browser from favorites to regular
       if (this.opened && this.openedFromFavorited) {
-        this.fire('px-context-browser-view-changed');
+        this._updateFavoritedAndClearTempFaves();
       }
       // if opening regular browser from closed OR switching view of already
       // opened browser from favorites to regular
@@ -724,15 +715,11 @@ Custom property | Description
 
       // if switching view of already opened browser from regular to favorites
       if (this.opened && !this.openedFromFavorited) {
-        // this.fire('px-context-browser-view-changed');
         this.tempFaves = [...this.favorited];
       }
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
-        // if (this.tempFaves === null) {
-        //   this.tempFaves = [...this.favorited];
-        // }
         this._setOpenedFromFavorited(true);
         this.opened = true;
       }
