@@ -781,6 +781,11 @@ Custom property | Description
           this._updateFavoritedAndClearTempFavesTask = null;
         }
       }
+      else {
+        if (this.tempFaves) {
+          this.favorited = [...this.tempFaves];
+        }
+      }
     },
 
     /**
@@ -799,11 +804,6 @@ Custom property | Description
         this._resetActiveTask = null;
       }
       this._resetActiveTask = this.async(this._resetActive.bind(this), 5000);
-      // update favorites
-      if (this._updateFavoritedAndClearTempFavesTask) {
-        this.cancelAsync(this._updateFavoritedAndClearTempFavesTask);
-        this._updateFavoritedAndClearTempFavesTask = null;
-      }
       if (this.openedFromFavorited) {
         this._updateFavoritedAndClearTempFavesTask = this.async(this._updateFavoritedAndClearTempFaves.bind(this), 5000);
       }
