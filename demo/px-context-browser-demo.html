@@ -21,6 +21,11 @@
 <dom-module id="px-context-browser-demo">
   <template>
     <style include="px-demo-styles" is="custom-style"></style>
+    <style>
+      .triggers {
+        display: flex;
+      }
+    </style>
 
     <!-- Header -->
     <px-demo-header
@@ -41,9 +46,17 @@
       <!-- Component ---------------------------------------------------------->
       <px-demo-component style="display:flex; width:600px">
         <div>
-          <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
+          <div class="triggers">
+            <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
+
+            <template is="dom-if" if="[[props.showFavorites.value]]">
+              <px-context-browser-trigger trigger={{favoritesTrigger}} favorites></px-context-browser-trigger>
+            </template>
+          </div>
+
           <px-context-browser
             open-trigger="[[openTrigger]]"
+            favorites-trigger="[[favoritesTrigger]]"
             opened="{{props.opened.value}}"
             keep-open="{{props.keepOpen.value}}"
             items="{{props.items.value}}"
@@ -51,6 +64,7 @@
             filter="{{props.filter.value}}"
             show-filter="[[props.showFilter.value]]"
             show-arrow="[[props.showArrow.value]]"
+            show-favorites="[[props.showFavorites.value]]"
             collapsed="[[props.collapsed.value]]"
             collapse-at="[[props.collapseAt.value]]"
             loading-timeout="[[props.loadingTimeout.value]]"
@@ -119,6 +133,12 @@
               collapseAt: 600,
               loadingTimeout: 7000
             }
+            ,
+            { configName: "Favorites",
+              configReset: true,
+              opened: false,
+              showFavorites: true
+            }
           ];
         }
       },
@@ -182,6 +202,11 @@
         inputType: 'toggle',
       },
       showArrow: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
+      },
+      showFavorites: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'

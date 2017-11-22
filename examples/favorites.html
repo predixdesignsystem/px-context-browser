@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Context Browser Demo -- Custom Keys</title>
+  <title>Context Browser Demo -- Favorites</title>
 
   <script src="../../webcomponentsjs/webcomponents.min.js"></script>
   <link rel="import" href="../../polymer/polymer.html"/>
@@ -27,11 +27,11 @@
       <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
     </div>
     <px-context-browser
-        items='[{"id":"us","label":"United States","children":[{"id":"calif","label":"California","children":[{"id":"los-angeles","label":"Los Angeles"},{"id":"san-francisco","label":"San Francisco","children":[{"id":"mission","label":"The Mission"},{"id":"noe-valley","label":"Noe Valley"},{"id":"castro","label":"The Castro"}]},{"id":"oakland","label":"Oakland","children":[{"id":"adams-point","label":"Adams Point"},{"id":"temescal","label":"Temescal"}]}]},{"id":"mass","label":"Massachusetts","children":[{"id":"boston","label":"Boston","children":[{"id":"back-bay","label":"Back Bay"},{"id":"south-end","label":"South End"},{"id":"seaport","label":"Seaport"}]},{"id":"cambridge","label":"Cambridge","children":[{"id":"cambridgeport","label":"Cambridgeport", "children":[{"id":"more-text", "label":"Another Place"}]},{"id":"west-cambridge","label":"West Cambridge"},{"id":"riverside","label":"Riverside"}]}]}]}]'
+        items='[{"id":"us","label":"United States","children":[{"id":"calif","label":"California","children":[{"id":"los-angeles","label":"Los Angeles"},{"id":"san-francisco","label":"San Francisco and more words to make this really really suuuper duper long","children":[{"id":"mission","label":"The Mission", "children":[{"id":"valencia","label":"Valencia St."}]},{"id":"noe-valley","label":"Noe Valley"},{"id":"castro","label":"The Castro"}]},{"id":"oakland","label":"Oakland","children":[{"id":"adams-point","label":"Adams Point"},{"id":"temescal","label":"Temescal"}]}]},{"id":"mass","label":"Massachusetts","children":[{"id":"boston","label":"Boston","children":[{"id":"back-bay","label":"Back Bay"},{"id":"south-end","label":"South End"},{"id":"seaport","label":"Seaport"}]},{"id":"cambridge","label":"Cambridge","children":[{"id":"cambridgeport","label":"Cambridgeport", "children":[{"id":"more-text", "label":"Another Place"}]},{"id":"west-cambridge","label":"West Cambridge"},{"id":"riverside","label":"Riverside"}]}]}]}]'
         open-trigger="[[openTrigger]]"
         favorites-trigger="[[favoritesTrigger]]"
-        show-favorites>
+        show-favorites
     </px-context-browser>
   </template>
-</section>
+
 </html>
