@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Favorite Foods app</title>
+
+  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <link rel="import" href="../../polymer/polymer.html"/>
+  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
+  <link rel="import" href="../px-context-browser-trigger.html"/>
+  <link rel="import" href="../px-context-browser.html"/>
+</head>
+
+<style is="custom-style" include="px-theme-styles"></style>
+<style is="custom-style">
+  body {
+    margin: 0;
+    padding: 30px;
+  }
+  .triggers {
+    display: flex;
+  }
+</style>
+<body>
+  <template is="dom-bind">
+    <div>
+      <h1>My favorite foods</h1>
+    </div>
+    <div class="triggers">
+      <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+      <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
+    </div>
+    <px-context-browser
+        items='[[foods]]'
+        open-trigger="[[openTrigger]]"
+        favorites-trigger="[[favoritesTrigger]]"
+        selected={{selectedFood}}
+        favorited={{favoriteFoods}}
+        favorited-route=[[favoriteFoodRoutes]]
+        show-favorites
+        on-px-app-asset-favorited='saveFavorite'
+        on-px-app-asset-defavorited='removeFavorite'>
+    </px-context-browser>
+    <div>
+      <h2>Food: [[selectedFood.label]]</h2>
+      <h2>Favorited: [[isFavorited(selectedFood, favoriteFoods)]]</h2>
+      <h2>Calories: [[selectedFood.calories]]</h2>
+    </div>
+  </template>
+
+  <script>
+    var templ = document.querySelector('template[is="dom-bind"]');
+    templ.foods = [
+      {id:'fruit', label:'fruit', isSelectable: false, children: [
+        {id:'melon', label:'melon', isSelectable: false, children: [
+          {id:'watermelon', label:'watermelon', calories:'100', isTerminal:true},
+          {id:'canteloupe', label:'canteloupe', calories:'300', isTerminal:true}
+        ]}
+      ]},
+      {id:'vegetables', label:'vegetables', isSelectable: false, children: [
+        {id:'root', label:'root vegetables', isSelectable: false, children: [
+          {id:'carrots', label:'carrots', calories:'50', isTerminal:true},
+          {id:'potatoes', label:'potatoes', calories:'200', isTerminal:true}
+        ]}
+      ]},
+      {id:'meat', label:'meat', isSelectable: false, children: [
+        {id:'red', label:'red meat', isSelectable: false, children: [
+          {id:'beef', label:'beef', calories:'500', isTerminal:true},
+          {id:'venison', label:'venison', calories:'400', isTerminal:true}
+        ]}
+      ]}
+    ];
+
+    templ.isFavorited = function(item, faves) {
+      return faves.indexOf(item) > -1;
+    }
+
+    templ.saveFavorite = function(e) {
+      debugger;
+      var faveRoute = [e.detail.route];
+      localStorage.setItem('faves', JSON.stringify(faveRoute));
+    }
+
+    window.addEventListener('load', function() {
+      var localFaves = localStorage.getItem('faves');
+      if (localFaves) {
+        localFaves = JSON.parse(localFaves);
+        templ.favoriteFoodRoutes = localFaves;
+      }
+
+    });
+  </script>
+
+
+
+</html>
