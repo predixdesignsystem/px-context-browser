@@ -123,7 +123,7 @@ Custom property | Description
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getFavoritedItemPath(item)]]"
                       selected="[[_isItemSelected(item, selected)]]"
-                      favorited="[[_isItemFavorited(item, tempFaves, tempFaves.*)]]"
+                      favorited="[[_isItemInTempFaves(item, tempFaves)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
@@ -296,6 +296,11 @@ Custom property | Description
         reflectToAttribute: true
       },
 
+      tempFaves: {
+        type: Array,
+        value: () => null
+      },
+
       _positionTarget: {
         type: HTMLElement
       },
@@ -363,22 +368,20 @@ Custom property | Description
 
     _handleNewItemFavorited(evt) {
       var item = evt.detail.item;
-      if (!this._isItemInTempFaves(item, this.tempFaves)) {
-        this.push('tempFaves', item);
+      if (item && !this._isItemInTempFaves(item, this.tempFaves)) {
+        this.tempFaves = (this.tempFaves || []).concat([item]);
       }
     },
 
     _handleNewItemDefavorited(evt) {
       var item = evt.detail.item;
-      if (this._isItemInTempFaves(item, this.tempFaves)) {
-        this.splice('tempFaves', this.tempFaves.indexOf(item), 1);
+      if (item && this._isItemInTempFaves(item, this.tempFaves)) {
+        this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
       }
     },
 
     _isItemInTempFaves(item, tempFaves) {
-      if (tempFaves === null) {
-        return false;
-      }
+      if (!item || !tempFaves || !Array.isArray(tempFaves)) return false;
       return tempFaves.indexOf(item) > -1;
     },
 
@@ -769,9 +772,7 @@ Custom property | Description
         }
       }
       else {
-        if (this.tempFaves) {
-          this.favorited = [...this.tempFaves];
-        }
+        this._updateFavoritedAndClearTempFaves();
       }
     },
 
@@ -809,7 +810,10 @@ Custom property | Description
     // call this if favorites browser has been closed for > 5 sec, or if CB
     // view has been switched from favorites browser to regular browser
     _updateFavoritedAndClearTempFaves() {
-      this.favorited = [...this.tempFaves];
+      if (Array.isArray(this.tempFaves)) {
+        this.favorited = [...this.tempFaves];
+        this.tempFaves = null;
+      }
     },
 
     _handleInitialOpenedValue(nextVal, lastVal) {
@@ -957,11 +961,11 @@ Custom property | Description
           }
           // if in favorites context browser
           else {
-            if (this.tempFaves.indexOf(item) === -1) {
-              this.push('tempFaves', item);
+            if (this._isItemInTempFaves(item, this.tempFaves)) {
+              this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
             }
             else {
-              this.splice('tempFaves', this.tempFaves.indexOf(item), 1);
+              this.tempFaves = (this.tempFaves || []).concat([item]);
             }
           }
         }
