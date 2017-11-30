@@ -721,6 +721,9 @@ Custom property | Description
         this.tempFaves = [...this.favorited];
       }
       if (!this.opened || (this.opened && !this.openedFromFavorited)) {
+        if (!this.tempFaves) {
+          this.tempFaves = [...this.favorited];
+        }
         this._positionTarget = Polymer.dom(evt).rootTarget;
         // this._positionTarget = window;
         this._setOpenedFromFavorited(true);

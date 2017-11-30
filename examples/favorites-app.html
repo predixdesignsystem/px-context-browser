@@ -70,20 +70,46 @@
       ]}
     ];
 
+
     templ.isFavorited = function(item, faves) {
       return faves.indexOf(item) > -1;
     }
 
     templ.saveFavorite = function(e) {
-      debugger;
-      var faveRoute = [e.detail.route];
-      localStorage.setItem('faves', JSON.stringify(faveRoute));
+      // get currently stored favorites
+      var localFaves = JSON.parse(localStorage.getItem('faves'));
+      // get new favorited item
+      var itemToFavorite = [e.detail.route];
+      // add new item to already favorited items
+      var myFaves = (localFaves || []).concat(itemToFavorite);
+      console.log(myFaves);
+      localStorage.setItem('faves', JSON.stringify(myFaves));
     }
+
+    templ.removeFavorite = function(e) {
+      debugger;
+      // get currently stored favorites
+      var localFaves = JSON.parse(localStorage.getItem('faves'));
+      // get new defavorited item
+      var itemToDefavorite = [e.detail.route];
+      // remove item from stored favorited items
+      var myFaves = localFaves.filter(favorite => JSON.stringify(favorite) !== JSON.stringify(itemToDefavorite[0]));
+      console.log(myFaves);
+      localStorage.setItem('faves', JSON.stringify(myFaves));
+    }
+
+    // update favorites in localStorage when favorited is updated
+    window.addEventListener('px-context-browser-favorited-changed', function() {
+      var updatedFaves = templ.favoriteFoodRoutes;
+      console.log(updatedFaves);
+      localStorage.setItem('faves', JSON.stringify(updatedFaves));
+    });
 
     window.addEventListener('load', function() {
       var localFaves = localStorage.getItem('faves');
       if (localFaves) {
         localFaves = JSON.parse(localFaves);
+        console.log(localFaves);
         templ.favoriteFoodRoutes = localFaves;
       }
 
