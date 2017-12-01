@@ -815,6 +815,7 @@ Custom property | Description
     _updateFavoritedAndClearTempFaves() {
       if (Array.isArray(this.tempFaves)) {
         this.favorited = [...this.tempFaves];
+        this.fire('px-context-browser-favorited-changed')
         this.tempFaves = null;
       }
     },

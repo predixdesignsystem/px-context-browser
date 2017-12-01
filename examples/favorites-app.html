@@ -35,7 +35,7 @@
         favorites-trigger="[[favoritesTrigger]]"
         selected={{selectedFood}}
         favorited={{favoriteFoods}}
-        favorited-route=[[favoriteFoodRoutes]]
+        favorited-route={{favoriteFoodRoutes}}
         show-favorites
         on-px-app-asset-favorited='saveFavorite'
         on-px-app-asset-defavorited='removeFavorite'>
@@ -82,26 +82,24 @@
       var itemToFavorite = [e.detail.route];
       // add new item to already favorited items
       var myFaves = (localFaves || []).concat(itemToFavorite);
-      console.log(myFaves);
+      // console.log(myFaves);
       localStorage.setItem('faves', JSON.stringify(myFaves));
     }
 
     templ.removeFavorite = function(e) {
-      debugger;
       // get currently stored favorites
       var localFaves = JSON.parse(localStorage.getItem('faves'));
       // get new defavorited item
       var itemToDefavorite = [e.detail.route];
       // remove item from stored favorited items
       var myFaves = localFaves.filter(favorite => JSON.stringify(favorite) !== JSON.stringify(itemToDefavorite[0]));
-      console.log(myFaves);
+      // console.log(myFaves);
       localStorage.setItem('faves', JSON.stringify(myFaves));
     }
 
     // update favorites in localStorage when favorited is updated
     window.addEventListener('px-context-browser-favorited-changed', function() {
       var updatedFaves = templ.favoriteFoodRoutes;
-      console.log(updatedFaves);
       localStorage.setItem('faves', JSON.stringify(updatedFaves));
     });
 
@@ -109,13 +107,9 @@
       var localFaves = localStorage.getItem('faves');
       if (localFaves) {
         localFaves = JSON.parse(localFaves);
-        console.log(localFaves);
         templ.favoriteFoodRoutes = localFaves;
       }
-
     });
   </script>
-
-
 
 </html>
