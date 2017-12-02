@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+// Settings
+@import "px-defaults-design/_settings.defaults.scss";
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+
+// Base
+@import "px-forms-design/_base.forms.scss";
+
+.contextual-notification {
+  position: relative;
+  display: block;
+  padding-left: calculateRem(15px);
+  padding-right: calculateRem(15px);
+  background-color: salmon;
+  height: calculateRem(30px);
+}
+
+.contextual-notification__text {
+  color: white;
+}
+
+.contextual-notification__icon {
+  position: absolute;
+  top: calculateRem(10px);
+  right: calculateRem(15px);
+  width: 1.5rem;
+  height: 2rem;
+  display: block;
+  padding: 4px;
+  color: white;
+  --iron-icon-width: 100%;
+  --iron-icon-height: 100%;
+}

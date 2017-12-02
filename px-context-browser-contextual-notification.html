@@ -1,0 +1,28 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+<link rel="import" href="css/px-context-browser-contextual-notification-styles.html"/>
+
+<dom-module id="px-context-browser-contextual-notification">
+  <template>
+    <style include="px-context-browser-contextual-notification-styles"></style>
+    <div class="contextual-notification">
+      <div class="contextual-notification__text">
+        [[text]]
+      </div>
+      <px-icon class="contextual-notification__icon" icon="px-nav:reload"></px-icon>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'px-context-browser-contextual-notification',
+
+      properties: {
+        text: {
+          type: String,
+          value: 'Your favorites list failed to sync.'
+        }
+      },
+    });
+  </script>
+</dom-module>
