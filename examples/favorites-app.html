@@ -100,7 +100,15 @@
     // update favorites in localStorage when favorited is updated
     window.addEventListener('px-context-browser-favorited-changed', function() {
       var updatedFaves = templ.favoriteFoodRoutes;
-      localStorage.setItem('faves', JSON.stringify(updatedFaves));
+      saveFavoritesToServerFake(updatedFaves, function(succeeded) {
+        if (!succeeded) {
+          var cb = document.querySelector('px-context-browser');
+          cb.favoritedSyncFailed = true;
+        }
+        else {
+          // Do something when successful?
+        }
+      });
     });
 
     window.addEventListener('load', function() {
@@ -110,6 +118,37 @@
         templ.favoriteFoodRoutes = localFaves;
       }
     });
+
+    var requestCount = 0;
+    function saveFavoritesToServerFake(favorites, callbackFuction) {
+      setTimeout(function() {
+        if (requestCount % 2 === 0) {
+          // Even always succeeds
+          localStorage.setItem('faves', JSON.stringify(favorites));
+          callbackFuction(true);
+        }
+        else {
+          // Odd always fails
+          callbackFuction(false);
+        }
+        requestCount++;
+      }, 1000);
+    }
+
+    // function saveFavoritesToServer(favorites, callbackFuction) {
+    //   var xhr = new XMLHttpRequest();
+    //   xhr.onreadystatechange = function() {
+    //     if (xhr.status === 200) {
+    //       // I saved my favorites to the server, yay
+    //       callbackFuction(true);
+    //     }
+    //     else {
+    //       callbackFuction(false);
+    //     }
+    //   };
+    //   xhr.open('POST', 'http://example.com/api/send_favorites');
+    //   xhr.send(JSON.stringify(favorites));
+    // }
   </script>
 
 </html>
