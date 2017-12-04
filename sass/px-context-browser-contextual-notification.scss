@@ -17,29 +17,27 @@
 
 // Base
 @import "px-forms-design/_base.forms.scss";
+@import "px-headings-design/_base.headings.scss";
 
 .contextual-notification {
   position: relative;
-  display: block;
+  display: flex;
+  align-items: center;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
-  background-color: salmon;
+  background-color: var(--px-context-browser-contextual-notification-color, blue);
   height: calculateRem(30px);
 }
 
 .contextual-notification__text {
+  flex: 1 1 auto;
   color: white;
 }
 
 .contextual-notification__icon {
-  position: absolute;
-  top: calculateRem(10px);
-  right: calculateRem(15px);
-  width: 1.5rem;
-  height: 2rem;
-  display: block;
-  padding: 4px;
+  flex: 0 0 auto;
+  width: calculateRem(16px);
+  height: calculateRem(16px);
   color: white;
-  --iron-icon-width: 100%;
-  --iron-icon-height: 100%;
+  cursor: pointer;
 }
