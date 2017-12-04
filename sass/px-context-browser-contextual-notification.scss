@@ -19,6 +19,15 @@
 @import "px-forms-design/_base.forms.scss";
 @import "px-headings-design/_base.headings.scss";
 
+@keyframes ContextualNotification {
+  from {
+    height: calculateRem(0px);
+  }
+  to {
+    height: calculateRem(30px);
+  }
+}
+
 .contextual-notification {
   position: relative;
   display: flex;
@@ -27,6 +36,7 @@
   padding-right: calculateRem(15px);
   background-color: var(--px-context-browser-contextual-notification-color, blue);
   height: calculateRem(30px);
+  animation: ContextualNotification .5s ease;
 }
 
 .contextual-notification__text {
