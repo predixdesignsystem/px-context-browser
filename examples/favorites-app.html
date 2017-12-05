@@ -99,13 +99,13 @@
     // update favorites in localStorage when favorited is updated
     window.addEventListener('px-context-browser-favorited-changed', function() {
       var updatedFaves = templ.favoriteFoodRoutes;
+      var cb = document.querySelector('px-context-browser');
       saveFavoritesToServerFake(updatedFaves, function(succeeded) {
         if (!succeeded) {
-          var cb = document.querySelector('px-context-browser');
           cb.favoritedSyncFailed = true;
         }
         else {
-          // Do something when successful?
+          cb.favoritedSyncFailed = false;
         }
       });
     });
@@ -118,31 +118,48 @@
       }
     });
 
+    window.addEventListener('px-context-browser-sync-favorites', function() {
+      var unsyncedFaves = templ.favoriteFoodRoutes;
+      var cb = document.querySelector('px-context-browser');
+      cb.favoritedSyncFailed = false;
+      saveFavoritesToServerFake(unsyncedFaves, function(succeeded) {
+        if (!succeeded) {
+          cb.favoritedSyncFailed = true;
+        }
+        else {
+          cb.favoritedSyncFailed = false;
+        }
+      });
+    })
+
     var requestCount = 0;
-    function saveFavoritesToServerFake(favorites, callbackFuction) {
+    function saveFavoritesToServerFake(favorites, callbackFunction) {
+      var cb = document.querySelector('px-context-browser');
+      cb._setSyncing(true);
       setTimeout(function() {
-        if (requestCount % 2 === 0) {
+        cb._setSyncing(false);
+        if (requestCount % 3 === 0) {
           // Even always succeeds
           localStorage.setItem('faves', JSON.stringify(favorites));
-          callbackFuction(true);
+          callbackFunction(true);
         }
         else {
           // Odd always fails
-          callbackFuction(false);
+          callbackFunction(false);
         }
         requestCount++;
-      }, 1000);
+      }, 3000);
     }
 
-    // function saveFavoritesToServer(favorites, callbackFuction) {
+    // function saveFavoritesToServer(favorites, callbackFunction) {
     //   var xhr = new XMLHttpRequest();
     //   xhr.onreadystatechange = function() {
     //     if (xhr.status === 200) {
     //       // I saved my favorites to the server, yay
-    //       callbackFuction(true);
+    //       callbackFunction(true);
     //     }
     //     else {
-    //       callbackFuction(false);
+    //       callbackFunction(false);
     //     }
     //   };
     //   xhr.open('POST', 'http://example.com/api/send_favorites');

@@ -10,7 +10,7 @@
       <div class="contextual-notification__text zeta">
         [[text]]
       </div>
-      <px-icon class="contextual-notification__icon" icon="px-nav:reload"></px-icon>
+      <px-icon class="contextual-notification__icon" icon="px-nav:reload" on-tap="syncFavorites"></px-icon>
     </div>
   </template>
   <script>
@@ -23,6 +23,10 @@
           value: 'Your favorites list failed to sync.'
         }
       },
+
+      syncFavorites() {
+        this.fire('px-context-browser-sync-favorites');
+      }
     });
   </script>
 </dom-module>

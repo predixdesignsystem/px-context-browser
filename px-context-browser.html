@@ -115,7 +115,7 @@ Custom property | Description
 
       <!-- FAVORITES CONTEXT BROWSER-->
       <template is="dom-if" if="[[openedFromFavorited]]">
-        <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]">
+        <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
           <template is="dom-if" if="[[favoritedSyncFailed]]">
               <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
           </template>
@@ -307,7 +307,18 @@ Custom property | Description
 
       favoritedSyncFailed: {
         type: Boolean,
-        value: true
+        value: false,
+        notify: true
+      },
+
+      /**
+       * Watch for changes to determine if the context browser is trying to
+       * sync its favorited items
+       */
+      syncing: {
+        type: Boolean,
+        value: false,
+        readOnly: true
       },
 
       _positionTarget: {
