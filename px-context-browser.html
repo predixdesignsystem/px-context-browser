@@ -116,6 +116,7 @@ Custom property | Description
       <!-- FAVORITES CONTEXT BROWSER-->
       <template is="dom-if" if="[[openedFromFavorited]]">
         <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
+        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
           <template is="dom-if" if="[[favoritedSyncFailed]]">
               <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
           </template>
@@ -835,7 +836,7 @@ Custom property | Description
     _updateFavoritedAndClearTempFaves() {
       if (Array.isArray(this.tempFaves)) {
         this.favorited = [...this.tempFaves];
-        this.fire('px-context-browser-favorited-changed')
+        this.fire('px-app-asset-favorited-sync-requested');
         this.tempFaves = null;
       }
     },

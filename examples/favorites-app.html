@@ -97,17 +97,10 @@
     }
 
     // update favorites in localStorage when favorited is updated
-    window.addEventListener('px-context-browser-favorited-changed', function() {
-      var updatedFaves = templ.favoriteFoodRoutes;
+    window.addEventListener('px-app-asset-favorited-sync-requested', function() {
+      var unsyncedFaves = templ.favoriteFoodRoutes;
       var cb = document.querySelector('px-context-browser');
-      saveFavoritesToServerFake(updatedFaves, function(succeeded) {
-        if (!succeeded) {
-          cb.favoritedSyncFailed = true;
-        }
-        else {
-          cb.favoritedSyncFailed = false;
-        }
-      });
+      tryToSaveFavoritesToServer(unsyncedFaves);
     });
 
     window.addEventListener('load', function() {
@@ -118,19 +111,19 @@
       }
     });
 
-    window.addEventListener('px-context-browser-sync-favorites', function() {
-      var unsyncedFaves = templ.favoriteFoodRoutes;
-      var cb = document.querySelector('px-context-browser');
-      cb.favoritedSyncFailed = false;
-      saveFavoritesToServerFake(unsyncedFaves, function(succeeded) {
-        if (!succeeded) {
-          cb.favoritedSyncFailed = true;
-        }
-        else {
-          cb.favoritedSyncFailed = false;
-        }
-      });
-    })
+    // window.addEventListener('px-context-browser-sync-favorites', function() {
+    //   var unsyncedFaves = templ.favoriteFoodRoutes;
+    //   var cb = document.querySelector('px-context-browser');
+    //   cb.favoritedSyncFailed = false;
+    //   saveFavoritesToServerFake(unsyncedFaves, function(succeeded) {
+    //     if (!succeeded) {
+    //       cb.favoritedSyncFailed = true;
+    //     }
+    //     else {
+    //       cb.favoritedSyncFailed = false;
+    //     }
+    //   });
+    // });
 
     var requestCount = 0;
     function saveFavoritesToServerFake(favorites, callbackFunction) {
@@ -138,33 +131,50 @@
       cb._setSyncing(true);
       setTimeout(function() {
         cb._setSyncing(false);
-        if (requestCount % 3 === 0) {
+        if (requestCount % 2 === 0) {
           // Even always succeeds
           localStorage.setItem('faves', JSON.stringify(favorites));
+          // console.log(`divisible by 3 always succeeds`);
           callbackFunction(true);
         }
         else {
           // Odd always fails
+          // console.log(`everything else fails`);
           callbackFunction(false);
         }
         requestCount++;
-      }, 3000);
+      }, 5000);
     }
 
-    // function saveFavoritesToServer(favorites, callbackFunction) {
-    //   var xhr = new XMLHttpRequest();
-    //   xhr.onreadystatechange = function() {
-    //     if (xhr.status === 200) {
-    //       // I saved my favorites to the server, yay
-    //       callbackFunction(true);
-    //     }
-    //     else {
-    //       callbackFunction(false);
-    //     }
-    //   };
-    //   xhr.open('POST', 'http://example.com/api/send_favorites');
-    //   xhr.send(JSON.stringify(favorites));
-    // }
+    /**
+     * Tries to save the favorites at least 2 times before failing. If we fail
+     * 2 times, show the favoritedSyncFailed contextual notification and ask
+     * the user to manually resync.
+     */
+    function tryToSaveFavoritesToServer(favorites, retries) {
+      var _retries = typeof retries === 'number' ? retries : 0;
+
+      // Reset the cb failed contextual notification before we start
+      var cb = document.querySelector('px-context-browser');
+      cb.favoritedSyncFailed = false;
+
+      saveFavoritesToServerFake(favorites, function(succeeded) {
+        if (!succeeded && _retries < 2) {
+          // Try again
+          console.log(`failed, trying again`);
+          tryToSaveFavoritesToServer(favorites, _retries+1);
+          return;
+        }
+        if (!succeeded && _retries >= 2) {
+          // Stop trying, we failed too many times
+          console.log(`failed too many times, giving up`);
+          cb.favoritedSyncFailed = true;
+          return;
+        }
+        console.log(`success, we saved`);
+        cb.favoritedSyncFailed = false;
+      });
+    }
   </script>
 
 </html>
