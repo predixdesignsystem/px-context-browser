@@ -16,6 +16,7 @@
 <link rel="import" href="px-context-browser-columns.html"/>
 <link rel="import" href="px-context-browser-filter.html"/>
 <link rel="import" href="px-context-browser-contextual-notification.html"/>
+<link rel="import" href="px-context-browser-favorited-temp.html"/>
 
 <!--
 ### Usage
@@ -68,6 +69,17 @@ Custom property | Description
 
     <!-- Links the active column to __activeContext so changes to the active column are notifying -->
     <array-selector id="selector" items="[[__context.columns]]" selected="{{__activeContext}}"></array-selector>
+
+    <!-- Creates a temporary cache of favorited sometimes??? -->
+    <px-context-browser-favorited-temp
+        id="favoritedCop"
+        favorited-behavior-element="[[__this]]"
+        favorited="[[favorited]]"
+        current-favorited="{{currentFavorited}}"
+        asset-graph="[[_assetGraph]]"
+        opened="[[opened]]"
+        opened-from-favorited="[[openedFromFavorited]]">
+    </px-context-browser-favorited-temp>
 
     <!-- Backdrop to show if collapsed and open -->
     <div class="backdrop" visible$="[[_isCollapseOpened(collapsed, opened)]]"></div>
@@ -128,7 +140,7 @@ Custom property | Description
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getFavoritedItemPath(item)]]"
                       selected="[[_isItemSelected(item, selected)]]"
-                      favorited="[[_isItemInTempFaves(item, tempFaves)]]"
+                      favorited="[[_isItemCurrentlyFavorited(item, currentFavorited)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
@@ -358,7 +370,12 @@ Custom property | Description
       _cancelFilterFocus: {
         type: Boolean,
         value: false
-      }
+      },
+
+      /**
+       * Reference to this context browser instance, for data-binding.
+       */
+      __this: HTMLElement
     },
 
     observers: [
@@ -389,21 +406,21 @@ Custom property | Description
 
     _handleNewItemFavorited(evt) {
       var item = evt.detail.item;
-      if (item && !this._isItemInTempFaves(item, this.tempFaves)) {
+      if (item && !this._isItemCurrentlyFavorited(item, this.tempFaves)) {
         this.tempFaves = (this.tempFaves || []).concat([item]);
       }
     },
 
     _handleNewItemDefavorited(evt) {
       var item = evt.detail.item;
-      if (item && this._isItemInTempFaves(item, this.tempFaves)) {
+      if (item && this._isItemCurrentlyFavorited(item, this.tempFaves)) {
         this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
       }
     },
 
-    _isItemInTempFaves(item, tempFaves) {
-      if (!item || !tempFaves || !Array.isArray(tempFaves)) return false;
-      return tempFaves.indexOf(item) > -1;
+    _isItemCurrentlyFavorited(item, favorited) {
+      if (!item || !favorited || !Array.isArray(favorited)) return false;
+      return favorited.indexOf(item) > -1;
     },
 
     /**
@@ -476,6 +493,11 @@ Custom property | Description
       this._squashNextResetActiveTask = null;
       this._childLoadingHandler = null;
       this._cancelFilterFocusTask = null;
+    },
+
+    ready() {
+      this._favoritedCop = this.$.favoritedCop;
+      this.__this = this;
     },
 
     attached() {
@@ -741,7 +763,8 @@ Custom property | Description
       if (this.opened && !this.openedFromFavorited) {
         this.tempFaves = [...this.favorited];
       }
-      if (!this.opened || (this.opened && !this.openedFromFavorited)) {
+      // if the browser was closed and youre opening it from favorites
+      if (!this.opened) {
         if (!this.tempFaves) {
           this.tempFaves = [...this.favorited];
         }
@@ -973,26 +996,31 @@ Custom property | Description
           }
         }
         else if (action === 'favorite') {
-          // if in regular context browser
-          if (!this.openedFromFavorited) {
-            // if not already in favorited list, add it
-            if (this.favorited.indexOf(item) === -1) {
-              this.favorite(item);
-            }
-            // if already in the favorited list, remove it
-            else {
-              this.defavorite(item);
-            }
-          }
-          // if in favorites context browser
-          else {
-            if (this._isItemInTempFaves(item, this.tempFaves)) {
-              this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
-            }
-            else {
-              this.tempFaves = (this.tempFaves || []).concat([item]);
-            }
-          }
+          this._favoritedCop.handleItemTapped(item);
+
+
+          // // if in regular context browser
+          // if (!this.openedFromFavorited) {
+          //   // if not already in favorited list, add it
+          //   if (this.favorited.indexOf(item) === -1) {
+          //     this.favorite(item);
+          //   }
+          //   // if already in the favorited list, remove it
+          //   else {
+          //     this.defavorite(item);
+          //   }
+          // }
+          // // if in favorites context browser
+          // else {
+          //   if (this._isItemCurrentlyFavorited(item, this.tempFaves)) {
+          //     this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
+          //   }
+          //   else {
+          //     this.tempFaves = (this.tempFaves || []).concat([item]);
+          //   }
+          // }
+
+
         }
       }
     },
