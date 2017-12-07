@@ -22,6 +22,8 @@
     <!-- Load mocha test fixture setup -->
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link href="../../test-fixture/test-fixture.html" rel="import">
+    <!-- Load test helpers -->
+    <script src="chai-expect-eventually.js"></script>
   </head>
   <body>
     <style include="px-theme-styles" is="custom-style"></style>
@@ -47,6 +49,19 @@
                 open-trigger="{{openTrigger}}">
             </px-context-browser>
           </template>
+        </div>
+      </template>
+    </test-fixture>
+
+    <test-fixture id="ContextBrowserFavoritedFixture">
+      <template is="dom-template">
+        <div>
+          <px-context-browser-trigger id="open-trigger" trigger="{{openTrigger}}"></px-context-browser-trigger>
+          <px-context-browser-trigger id="favorited-trigger" trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
+          <px-context-browser
+              open-trigger="[[openTrigger]]"
+              favorites-trigger="[[favoritesTrigger]]">
+          </px-context-browser>
         </div>
       </template>
     </test-fixture>
