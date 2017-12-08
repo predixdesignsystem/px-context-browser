@@ -76,7 +76,6 @@ Custom property | Description
         favorited-behavior-element="[[__this]]"
         favorited="[[favorited]]"
         current-favorited="{{currentFavorited}}"
-        asset-graph="[[_assetGraph]]"
         opened="[[opened]]"
         opened-from-favorited="[[openedFromFavorited]]">
     </px-context-browser-favorited-temp>
@@ -313,11 +312,6 @@ Custom property | Description
         reflectToAttribute: true
       },
 
-      tempFaves: {
-        type: Array,
-        value: () => null
-      },
-
       favoritedSyncFailed: {
         type: Boolean,
         value: false,
@@ -330,8 +324,7 @@ Custom property | Description
        */
       syncing: {
         type: Boolean,
-        value: false,
-        readOnly: true
+        value: false
       },
 
       _positionTarget: {
@@ -392,29 +385,13 @@ Custom property | Description
       // 'focus-first-visible-item' : '_focusFirstVisibleItem',
       'px-app-asset-children-updated' : '_handleChildrenChanged',
       'iron-resize' : '_handleResize',
-      'px-context-browser-filter-focused' : '_handleFilterFocused',
-      'px-app-asset-favorited' : '_handleNewItemFavorited',
-      'px-app-asset-defavorited' : '_handleNewItemDefavorited'
+      'px-context-browser-filter-focused' : '_handleFilterFocused'
     },
 
     _handleFilterFocused(evt) {
       if (this._cancelFilterFocus) {
         const target = Polymer.dom(evt).rootTarget;
         target.blurFilter();
-      }
-    },
-
-    _handleNewItemFavorited(evt) {
-      var item = evt.detail.item;
-      if (item && !this._isItemCurrentlyFavorited(item, this.tempFaves)) {
-        this.tempFaves = (this.tempFaves || []).concat([item]);
-      }
-    },
-
-    _handleNewItemDefavorited(evt) {
-      var item = evt.detail.item;
-      if (item && this._isItemCurrentlyFavorited(item, this.tempFaves)) {
-        this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
       }
     },
 
@@ -740,17 +717,12 @@ Custom property | Description
     },
 
     _handleOpenTriggerTapped(evt) {
-      // if switching view of already opened browser from favorites to regular
-      if (this.opened && this.openedFromFavorited) {
-        this._updateFavoritedAndClearTempFaves();
-      }
-      // if opening regular browser from closed OR switching view of already
-      // opened browser from favorites to regular
+      // If we aren't opened, or if we're opened and not viewing the regular
+      // browser panel, ensure the dropdown is opened
       if (!this.opened || (this.opened && this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
-        // this._positionTarget = window;
-        this._setOpenedFromFavorited(false);
         this.opened = true;
+        this._setOpenedFromFavorited(false);
       }
       else {
         this.$.dropdown.close();
@@ -758,20 +730,12 @@ Custom property | Description
     },
 
     _handleFavoritesTriggerTapped(evt) {
-
-      // if switching view of already opened browser from regular to favorites
-      if (this.opened && !this.openedFromFavorited) {
-        this.tempFaves = [...this.favorited];
-      }
-      // if the browser was closed and youre opening it from favorites
-      if (!this.opened) {
-        if (!this.tempFaves) {
-          this.tempFaves = [...this.favorited];
-        }
+      // If we aren't opened, or if we're opened and not viewing the favorited
+      // list, ensure the dropdown is opened
+      if (!this.opened || (this.opened && !this.openedFromFavorited)) {
         this._positionTarget = Polymer.dom(evt).rootTarget;
-        // this._positionTarget = window;
-        this._setOpenedFromFavorited(true);
         this.opened = true;
+        this._setOpenedFromFavorited(true);
       }
       else {
         this.$.dropdown.close();
@@ -811,23 +775,11 @@ Custom property | Description
       } else {
         this._resetActive(); // necessary to update active if a new item is selected via. API while the browser was closed
       }
-      // if opened from favorites browser
-      if (this.openedFromFavorited) {
-        if (this._updateFavoritedAndClearTempFavesTask) {
-          this.cancelAsync(this._updateFavoritedAndClearTempFavesTask);
-          this._updateFavoritedAndClearTempFavesTask = null;
-        }
-      }
-      else {
-        this._updateFavoritedAndClearTempFaves();
-      }
     },
 
     /**
      * After 5 seconds, reset the active to the parent of the selected item,
      * or to the root if no item is selected.
-     * Also after 5 seconds, set the favorited items to those in tempFaves and
-     * then clear tempFaves
      */
     _handleBrowserClosed(evt) {
       if (this._squashNextResetActiveTask) {
@@ -839,10 +791,6 @@ Custom property | Description
         this._resetActiveTask = null;
       }
       this._resetActiveTask = this.async(this._resetActive.bind(this), 5000);
-      if (this.openedFromFavorited) {
-        this._updateFavoritedAndClearTempFavesTask = this.async(this._updateFavoritedAndClearTempFaves.bind(this), 5000);
-      }
-
     },
 
     _resetActive() {
@@ -851,16 +799,6 @@ Custom property | Description
       }
       else if (this.selected && this.active !== this.selectedMeta.parent) {
         this.activate(this.selectedMeta.parent, 'DOM_EVENT');
-      }
-    },
-
-    // call this if favorites browser has been closed for > 5 sec, or if CB
-    // view has been switched from favorites browser to regular browser
-    _updateFavoritedAndClearTempFaves() {
-      if (Array.isArray(this.tempFaves)) {
-        this.favorited = [...this.tempFaves];
-        this.fire('px-app-asset-favorited-sync-requested');
-        this.tempFaves = null;
       }
     },
 
@@ -997,30 +935,6 @@ Custom property | Description
         }
         else if (action === 'favorite') {
           this._favoritedCop.handleItemTapped(item);
-
-
-          // // if in regular context browser
-          // if (!this.openedFromFavorited) {
-          //   // if not already in favorited list, add it
-          //   if (this.favorited.indexOf(item) === -1) {
-          //     this.favorite(item);
-          //   }
-          //   // if already in the favorited list, remove it
-          //   else {
-          //     this.defavorite(item);
-          //   }
-          // }
-          // // if in favorites context browser
-          // else {
-          //   if (this._isItemCurrentlyFavorited(item, this.tempFaves)) {
-          //     this.tempFaves = this.tempFaves.filter(favorite => favorite !== item);
-          //   }
-          //   else {
-          //     this.tempFaves = (this.tempFaves || []).concat([item]);
-          //   }
-          // }
-
-
         }
       }
     },

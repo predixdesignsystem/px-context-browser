@@ -74,107 +74,129 @@
       return faves.indexOf(item) > -1;
     }
 
+    var syncFailedReason = null;
+    var failedToAdd = [];
+    var failedToRemove = [];
+
+    function getJSON(url) {
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              resolve(JSON.parse(xhr.responseText));
+            }
+            else {
+              reject();
+            }
+          }
+        };
+
+        xhr.open('GET', url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send();
+      });
+    };
+
+    function postJSON(url, body) {
+      return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              resolve();
+            }
+            else {
+              reject();
+            }
+          }
+        };
+
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(body));
+      });
+    };
+
+    window.addEventListener('load', getFavoritesFromServer);
+
+    function getFavoritesFromServer() {
+      getJSON('http://localhost:3000/favorites')
+        .then((savedFavorites) => {
+          console.log(`Got these saved favorites: ${savedFavorites}`)
+          templ.favoriteFoodRoutes = savedFavorites;
+        })
+        .catch(() => {
+          var cb = document.querySelector('px-context-browser');
+          cb.favoritedSyncFailed = true;
+          syncFailedReason = 'GET_FAILED';
+          console.log(`Did not get any favorites from the server`);
+        });
+    };
+
     templ.saveFavorite = function(e) {
-      // get currently stored favorites
-      var localFaves = JSON.parse(localStorage.getItem('faves'));
-      // get new favorited item
-      var itemToFavorite = [e.detail.route];
-      // add new item to already favorited items
-      var myFaves = (localFaves || []).concat(itemToFavorite);
-      // console.log(myFaves);
-      localStorage.setItem('faves', JSON.stringify(myFaves));
+      addFavoriteToServer(e.detail.route);
+    }
+
+    function addFavoriteToServer(item) {
+      var cb = document.querySelector('px-context-browser');
+      cb.syncing = true;
+      postJSON('http://localhost:3000/favorites/add', {id: item})
+        .then(() => {
+          console.log(`Added ${item} to faves`);
+        })
+        .catch(() => {
+          cb.favoritedSyncFailed = true;
+          syncFailedReason = 'POST_FAILED';
+          failedToAdd.push(item);
+          console.log(`Did not succeed in adding ${item} to faves`);
+        })
+        .finally(() => {
+          cb.syncing = false;
+        });
     }
 
     templ.removeFavorite = function(e) {
-      // get currently stored favorites
-      var localFaves = JSON.parse(localStorage.getItem('faves'));
-      // get new defavorited item
-      var itemToDefavorite = [e.detail.route];
-      // remove item from stored favorited items
-      var myFaves = localFaves.filter(favorite => JSON.stringify(favorite) !== JSON.stringify(itemToDefavorite[0]));
-      // console.log(myFaves);
-      localStorage.setItem('faves', JSON.stringify(myFaves));
+      removeFavoriteFromServer(e.detail.route);
     }
 
-    // update favorites in localStorage when favorited is updated
+    function removeFavoriteFromServer(item) {
+      var cb = document.querySelector('px-context-browser');
+      cb.syncing = true;
+      postJSON('http://localhost:3000/favorites/remove', {id: item})
+        .then(() => {
+          console.log(`Removed ${item} from faves`);
+        })
+        .catch(() => {
+          var cb = document.querySelector('px-context-browser');
+          cb.favoritedSyncFailed = true;
+          syncFailedReason = 'POST_FAILED';
+          failedToRemove.push(item);
+          console.log(`Did not succeed in removing ${item} from faves`);
+        })
+        .finally(() => {
+          cb.syncing = false;
+        });
+    }
+
     window.addEventListener('px-app-asset-favorited-sync-requested', function() {
-      var unsyncedFaves = templ.favoriteFoodRoutes;
-      var cb = document.querySelector('px-context-browser');
-      tryToSaveFavoritesToServer(unsyncedFaves);
-    });
-
-    window.addEventListener('load', function() {
-      var localFaves = localStorage.getItem('faves');
-      if (localFaves) {
-        localFaves = JSON.parse(localFaves);
-        templ.favoriteFoodRoutes = localFaves;
+      if (syncFailedReason === 'GET_FAILED') {
+        getFavoritesFromServer();
       }
-    });
-
-    // window.addEventListener('px-context-browser-sync-favorites', function() {
-    //   var unsyncedFaves = templ.favoriteFoodRoutes;
-    //   var cb = document.querySelector('px-context-browser');
-    //   cb.favoritedSyncFailed = false;
-    //   saveFavoritesToServerFake(unsyncedFaves, function(succeeded) {
-    //     if (!succeeded) {
-    //       cb.favoritedSyncFailed = true;
-    //     }
-    //     else {
-    //       cb.favoritedSyncFailed = false;
-    //     }
-    //   });
-    // });
-
-    var requestCount = 0;
-    function saveFavoritesToServerFake(favorites, callbackFunction) {
-      var cb = document.querySelector('px-context-browser');
-      cb._setSyncing(true);
-      setTimeout(function() {
-        cb._setSyncing(false);
-        if (requestCount % 2 === 0) {
-          // Even always succeeds
-          localStorage.setItem('faves', JSON.stringify(favorites));
-          // console.log(`divisible by 3 always succeeds`);
-          callbackFunction(true);
-        }
-        else {
-          // Odd always fails
-          // console.log(`everything else fails`);
-          callbackFunction(false);
-        }
-        requestCount++;
-      }, 5000);
-    }
-
-    /**
-     * Tries to save the favorites at least 2 times before failing. If we fail
-     * 2 times, show the favoritedSyncFailed contextual notification and ask
-     * the user to manually resync.
-     */
-    function tryToSaveFavoritesToServer(favorites, retries) {
-      var _retries = typeof retries === 'number' ? retries : 0;
-
-      // Reset the cb failed contextual notification before we start
+      if (syncFailedReason === 'POST_FAILED') {
+        let _failedToAdd = failedToAdd.slice(0);
+        failedToAdd = [];
+        _failedToAdd.forEach(item => addFavoriteToServer(item));
+        let _failedToRemove = failedToRemove.slice(0);
+        failedToRemove = [];
+        _failedToRemove.forEach(item => removeFavoriteFromServer(item));
+      }
       var cb = document.querySelector('px-context-browser');
       cb.favoritedSyncFailed = false;
-
-      saveFavoritesToServerFake(favorites, function(succeeded) {
-        if (!succeeded && _retries < 2) {
-          // Try again
-          console.log(`failed, trying again`);
-          tryToSaveFavoritesToServer(favorites, _retries+1);
-          return;
-        }
-        if (!succeeded && _retries >= 2) {
-          // Stop trying, we failed too many times
-          console.log(`failed too many times, giving up`);
-          cb.favoritedSyncFailed = true;
-          return;
-        }
-        console.log(`success, we saved`);
-        cb.favoritedSyncFailed = false;
-      });
-    }
+      syncFailedReason = null;
+    });
   </script>
 
 </html>

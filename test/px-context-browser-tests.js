@@ -197,10 +197,6 @@ function runCustomTests() {
       });
     });
 
-    // it('copies `favorited` to `tempFaves` when the user taps the opens the favorites browser', (done) => {
-    //   favoritedTrigger.click();
-    // });
-
     it('marks an item as defavorited but keeps it in the favorites list when the user taps the favorite icon in the favorites browser', (done) => {
       browser.favorited = [items[0]];
       favoritedTrigger.click();
