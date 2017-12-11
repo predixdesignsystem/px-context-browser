@@ -30,15 +30,15 @@
       <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
     </div>
     <px-context-browser
-        items='[[foods]]'
+        items="[[foods]]"
         open-trigger="[[openTrigger]]"
         favorites-trigger="[[favoritesTrigger]]"
-        selected={{selectedFood}}
-        favorited={{favoriteFoods}}
-        favorited-route={{favoriteFoodRoutes}}
+        selected="{{selectedFood}}"
+        favorited="{{favoriteFoods}}"
+        favorited-route="{{favoriteFoodRoutes}}"
         show-favorites
-        on-px-app-asset-favorited='saveFavorite'
-        on-px-app-asset-defavorited='removeFavorite'>
+        on-px-app-asset-favorited="saveFavorite"
+        on-px-app-asset-defavorited="removeFavorite">
     </px-context-browser>
     <div>
       <h2>Food: [[selectedFood.label]]</h2>
