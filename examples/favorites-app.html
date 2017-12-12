@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Favorite Foods app</title>
+  <head>
+    <title>Favorite Foods app</title>
 
-  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
-  <link rel="import" href="../../polymer/polymer.html"/>
-  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
-  <link rel="import" href="../px-context-browser-trigger.html"/>
-  <link rel="import" href="../px-context-browser.html"/>
-</head>
+    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <link rel="import" href="../../polymer/polymer.html"/>
+    <link rel="import" href="../../px-theme/px-theme-styles.html"/>
+    <link rel="import" href="../px-context-browser-trigger.html"/>
+    <link rel="import" href="../px-context-browser.html"/>
+  </head>
 
-<style is="custom-style" include="px-theme-styles"></style>
-<style is="custom-style">
-  body {
-    margin: 0;
-    padding: 30px;
-  }
-  .triggers {
-    display: flex;
-  }
-</style>
-<body>
-  <template is="dom-bind">
-    <div>
-      <h1>My favorite foods</h1>
-    </div>
-    <div class="triggers">
-      <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-      <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
-    </div>
-    <px-context-browser
-        items="[[foods]]"
-        open-trigger="[[openTrigger]]"
-        favorites-trigger="[[favoritesTrigger]]"
-        selected="{{selectedFood}}"
-        favorited="{{favoriteFoods}}"
-        favorited-route="{{favoriteFoodRoutes}}"
-        show-favorites
-        on-px-app-asset-favorited="saveFavorite"
-        on-px-app-asset-defavorited="removeFavorite">
-    </px-context-browser>
-    <div>
-      <h2>Food: [[selectedFood.label]]</h2>
-      <h2>Favorited: [[isFavorited(selectedFood, favoriteFoods)]]</h2>
-      <h2>Calories: [[selectedFood.calories]]</h2>
-    </div>
-  </template>
-
+  <style is="custom-style" include="px-theme-styles"></style>
+  <style is="custom-style">
+    body {
+      margin: 0;
+      padding: 30px;
+    }
+    .triggers {
+      display: flex;
+    }
+  </style>
+  <body>
+    <template is="dom-bind">
+      <div>
+        <h1>My favorite foods</h1>
+      </div>
+      <div class="triggers">
+        <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+        <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
+      </div>
+      <px-context-browser
+          items="[[foods]]"
+          open-trigger="[[openTrigger]]"
+          favorites-trigger="[[favoritesTrigger]]"
+          selected="{{selectedFood}}"
+          favorited="{{favoriteFoods}}"
+          favorited-route="{{favoriteFoodRoutes}}"
+          show-favorites
+          on-px-app-asset-favorited="saveFavorite"
+          on-px-app-asset-defavorited="removeFavorite">
+      </px-context-browser>
+      <div>
+        <h2>Food: [[selectedFood.label]]</h2>
+        <h2>Favorited: [[isFavorited(selectedFood, favoriteFoods)]]</h2>
+        <h2>Calories: [[selectedFood.calories]]</h2>
+      </div>
+    </template>
+  </body>
   <script>
     var templ = document.querySelector('template[is="dom-bind"]');
     templ.foods = [

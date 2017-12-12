@@ -312,6 +312,12 @@ Custom property | Description
         reflectToAttribute: true
       },
 
+      /**
+       * Watch for changes to determine if the context browser has failed to sync
+       * its favorited items with those on the app's server. If true, a
+       * contextual notification will be displayed to inform the user and let
+       * them manually resync.
+       */
       favoritedSyncFailed: {
         type: Boolean,
         value: false,
@@ -320,7 +326,7 @@ Custom property | Description
 
       /**
        * Watch for changes to determine if the context browser is trying to
-       * sync its favorited items
+       * sync its favorited items.
        */
       syncing: {
         type: Boolean,
