@@ -170,8 +170,11 @@ function runCustomTests() {
           { id: "home", label: "Home" },
           { id: "asset", label: "Assets", children: [
             { id: "a1", label: "Asset 1" },
-            { id: "a2", label: "Asset 2" }
-          ] }
+            { id: "a2", label: "Asset 2", children: [
+              { id: "abc", label: "ABC" },
+              { id: "xyz", label: "XYZ" }
+            ]}
+          ]}
         ];
         browser.items = items;
         done();
@@ -183,6 +186,14 @@ function runCustomTests() {
       expect(() => browser.opened && browser.openedFromFavorited)
         .to.eventuallyEqual(true, {within: 1000, every: 100}, done);
     });
+
+    // it('opens the favorited panel to an empty view if there are no currently favorited items', (done) => {
+    //   favoritedTrigger.click();
+    //   expect(() => browser.opened && browser.openedFromFavorited)
+    //     .to.eventuallyEqual(true, {within: 1000, every: 100});
+    //   expect(browser.favorited.length === 0).to.be.true;
+    //   done();
+    // });
 
     it('immediately adds an item to `favorited` when the user taps the favorite icon in the regular browser', (done) => {
       openTrigger.click();
@@ -197,10 +208,24 @@ function runCustomTests() {
       });
     });
 
+    it('immediately removes a currently favorited item from `favorited` when the user taps the favorite icon in the regular browser', (done) => {
+      browser.favorited = [items[0], items[1]];
+      openTrigger.click();
+      flush(() => {
+        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+        const homeItem = itemEls.filter(item => !item.styleAsFavorite && item.label === 'Home')[0];
+        const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
+        favIcon.click();
+        expect(browser.favorited.indexOf(items[0]) === -1).to.be.true;
+        done();
+      });
+    });
+
     it('marks an item as defavorited but keeps it in the favorites list when the user taps the favorite icon in the favorites browser', (done) => {
-      browser.favorited = [items[0]];
+      browser.favorited = [items[0],items[1]];
       favoritedTrigger.click();
       flush(() => {
+        debugger;
         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
         const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
         const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
@@ -240,6 +265,19 @@ function runCustomTests() {
           .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
       });
     });
+
+    it('shows breadcrumbs for items in the Favorites Panel', (done) => {
+      browser.favorited = [items[1].children[0], items[1].children[1].children[0]];
+      favoritedTrigger.click();
+      flush(() => {
+        // debugger;
+        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+        const assetItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'ABC')[0];
+        const itemBreadcrumbs = Polymer.dom(assetItem.root).querySelector('#breadcrumbs');
+        expect(itemBreadcrumbs.innerText === "Assets > Asset 2").to.be.true;
+        done();
+    });
+  });
 
   });
 }
