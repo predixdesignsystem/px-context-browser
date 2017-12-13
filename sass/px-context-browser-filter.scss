@@ -28,7 +28,7 @@
 
 .filter__form {
   position: relative;
-  display: block;
+  display: flex;
   padding: calculateRem(10px) calculateRem(15px);
 }
 
@@ -44,11 +44,11 @@ input.filter__box {
   position: absolute;
   top: calculateRem(10px);
   right: calculateRem(15px);
-  width: 1.5rem;
-  height: 2rem;
+  width: calculateRem(16px);
+  height: calculateRem(16px);
   display: block;
   padding: 4px;
-  color: gray;
+  color: var(--px-input-text-color--placeholder, lightgray);
   --iron-icon-width: 100%;
   --iron-icon-height: 100%;
 }
