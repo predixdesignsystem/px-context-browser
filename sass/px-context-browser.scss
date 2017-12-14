@@ -152,7 +152,7 @@ px-context-browser-columns[collapsed][visible-count="*"] {
   max-width: 80%;
   margin-left: auto;
   margin-right: auto;
-  min-height: ($item-height*10) + 1px;
+  min-height: calculateRem(340px);
 }
 
 .context-browser-favorites--empty__text {
@@ -169,8 +169,9 @@ px-context-browser-columns[collapsed][visible-count="*"] {
 
 .context-browser-favorites--empty__icon {
   margin-bottom: calculateRem(30px);
-  --iron-icon-height: calculateRem(65px);
-  --iron-icon-width: calculateRem(65px);
-  --iron-icon-fill-color: whitesmoke;
-  --iron-icon-stroke-color: lightgray;
+  --iron-icon-height: calculateRem(70px);
+  --iron-icon-width: calculateRem(70px);
+  --iron-icon-fill-color: var(--px-context-browser-empty-favorites-icon-color, whitesmoke);
+  --iron-icon-stroke-color: var(--px-context-browser-empty-favorites-icon-stroke-color, lightgray);;
+  stroke-width: calculateRem(0.4px);
 }
