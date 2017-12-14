@@ -170,9 +170,11 @@ function runCustomTests() {
           { id: "home", label: "Home" },
           { id: "asset", label: "Assets", children: [
             { id: "a1", label: "Asset 1" },
-            { id: "a2", label: "Asset 2", children: [
+            { id: "a2", label: "The Second Asset", children: [
               { id: "abc", label: "ABC" },
-              { id: "xyz", label: "XYZ" }
+              { id: "long", label: "My Very Long Child Asset", children: [
+                { id: "fave", label: "My Favorite Asset" }
+              ]}
             ]}
           ]}
         ];
@@ -189,10 +191,25 @@ function runCustomTests() {
 
     // it('opens the favorited panel to an empty view if there are no currently favorited items', (done) => {
     //   favoritedTrigger.click();
-    //   expect(() => browser.opened && browser.openedFromFavorited)
-    //     .to.eventuallyEqual(true, {within: 1000, every: 100});
-    //   expect(browser.favorited.length === 0).to.be.true;
-    //   done();
+    //   flush(() => {
+    //     const emptyText = Polymer.dom(browser.root).querySelector('.context-browser-favorites--empty__text');
+    //     const emptyTextRect = emptyText.getBoundingClientRect();
+    //     expect(emptyTextRect.left > 0).to.be.true;
+    //     expect(emptyTextRect.height).to.be.closeTo(60, 5);
+    //     done();
+    //   });
+    // });
+    //
+    // it('opens the favorited panel to a list view if there are favorited items', (done) => {
+    //   browser.favorited = [items[0], items[1]];
+    //   favoritedTrigger.click();
+    //   flush(() => {
+    //     const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+    //     const favoritedItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
+    //     expect(favoritedItem.left > 0).to.be.true;
+    //     expect(favoritedItem.height).to.be.closeTo(19, 5);
+    //     done();
+    //   });
     // });
 
     it('immediately adds an item to `favorited` when the user taps the favorite icon in the regular browser', (done) => {
@@ -225,14 +242,15 @@ function runCustomTests() {
       browser.favorited = [items[0],items[1]];
       favoritedTrigger.click();
       flush(() => {
-        debugger;
         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
         const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
         const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
         favIcon.click();
-        expect(browser.favorited.indexOf(items[0]) > -1).to.be.true;
-        expect(favIcon.hasAttribute('active')).to.be.false;
-        done();
+        flush(() => {
+          expect(browser.favorited.indexOf(items[0]) > -1).to.be.true;
+          expect(favIcon.hasAttribute('active')).to.be.false;
+          done();
+        });
       });
     });
 
@@ -265,19 +283,49 @@ function runCustomTests() {
           .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
       });
     });
-
-    it('shows breadcrumbs for items in the Favorites Panel', (done) => {
-      browser.favorited = [items[1].children[0], items[1].children[1].children[0]];
-      favoritedTrigger.click();
-      flush(() => {
-        // debugger;
-        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-        const assetItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'ABC')[0];
-        const itemBreadcrumbs = Polymer.dom(assetItem.root).querySelector('#breadcrumbs');
-        expect(itemBreadcrumbs.innerText === "Assets > Asset 2").to.be.true;
-        done();
-    });
-  });
+//
+//     it('shows breadcrumbs for non-root items in the Favorites Panel', (done) => {
+//       browser.favorited = [items[1].children[1].children[0]];
+//       favoritedTrigger.click();
+//       flush(() => {
+//         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+//         const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'ABC')[0];
+//         const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
+//         expect(itemBreadcrumbs.innerText === "Assets > The Second Asset").to.be.true;
+//         done();
+//     });
+//   });
+//
+//   it('truncates breadcrumbs text from the front if too long', (done) => {
+//     browser.favorited = [items[1].children[1].children[1].children[0]];
+//     favoritedTrigger.click();
+//     flush(() => {
+//       // debugger;
+//       const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+//       const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'My Favorite Asset')[0];
+//       const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
+//       expect(itemBreadcrumbs.innerText === "... > The Second Asset > My Very Long Child Asset").to.be.true;
+//       done();
+//   });
+// });
+//
+// it('breadcrumbs truncation algorithm works as expected', (done) => {
+//   const items = ['US', 'CA', 'Oakland']; // 17 total
+//   const oneItem = ['Oakland']; // 7 total
+//   const fontStyles = {size: "15px", family: "\"GE Inspira Sans\", sans-serif"};
+//   favoritedTrigger.click();
+//   flush(() => {
+//     debugger;
+//     const itemEl = Polymer.dom(browser.root).querySelector('px-context-browser-item');
+//     // to.equal()
+//     expect(itemEl.truncateBreadcrumbs(items, fontStyles, 20) === 'US > CA > Oakland').to.be.true;
+//     expect(itemEl.truncateBreadcrumbs(items, fontStyles, 15) === '... > Oakland').to.be.true;
+//     expect(itemEl.truncateBreadcrumbs(items, fontStyles, 10) === '... > Oakland').to.be.true;
+//     expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 10) === 'Oakland').to.be.true;
+//     expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 5) === 'Oakland').to.be.true;
+//     done();
+//   });
+// });
 
   });
 }
