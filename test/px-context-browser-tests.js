@@ -347,7 +347,7 @@ function runCustomTests() {
   it('fires the `px-app-asset-favorited-sync-requested` event when the contextual notification resync button is tapped', (done) => {
     var i=0;
     var listener = function(evt) {
-      i++
+      i++;
     };
     browser.addEventListener('px-app-asset-favorited-sync-requested', listener);
 

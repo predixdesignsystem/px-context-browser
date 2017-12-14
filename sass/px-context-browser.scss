@@ -173,5 +173,5 @@ px-context-browser-columns[collapsed][visible-count="*"] {
   --iron-icon-width: calculateRem(70px);
   --iron-icon-fill-color: var(--px-context-browser-empty-favorites-icon-color, whitesmoke);
   --iron-icon-stroke-color: var(--px-context-browser-empty-favorites-icon-stroke-color, lightgray);;
-  stroke-width: calculateRem(0.4px);
+  stroke-width: calculateRem(0.5px);
 }
