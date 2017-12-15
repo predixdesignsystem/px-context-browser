@@ -28,8 +28,9 @@
 
 .filter__form {
   position: relative;
-  display: flex;
+  display: block;
   padding: calculateRem(10px) calculateRem(15px);
+  box-sizing: border-box;
 }
 
 // iOS Safari requires a minimum input text size of 16px, or it will automatically
@@ -44,8 +45,8 @@ input.filter__box {
   position: absolute;
   top: calculateRem(10px);
   right: calculateRem(15px);
-  width: calculateRem(16px);
-  height: calculateRem(16px);
+  width: 1.5rem;
+  height: 2rem;
   display: block;
   padding: 4px;
   color: var(--px-input-text-color--placeholder, lightgray);

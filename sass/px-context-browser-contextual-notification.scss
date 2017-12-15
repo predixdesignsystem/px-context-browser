@@ -48,6 +48,8 @@
   flex: 0 0 auto;
   width: calculateRem(16px);
   height: calculateRem(16px);
+  --iron-icon-width: 100%;
+  --iron-icon-height: 100%;
   color: white;
   cursor: pointer;
 }
