@@ -128,13 +128,13 @@ Custom property | Description
       <template is="dom-if" if="[[openedFromFavorited]]">
         <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
           <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited, favorited.*)]]">
-            <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
+            <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
             <template is="dom-if" if="[[favoritedSyncFailed]]">
                 <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
             </template>
-            <px-context-browser-columns slot="columns" active="0" visible-count$="[[favorited.length]]" collapsed$="[[collapsed]]">
+            <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
               <div column="0" class="column" slot="columns">
-                <template is="dom-repeat" items="[[favorited]]">
+                <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" for-column="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
                   <px-context-browser-item
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getFavoritedItemPath(item)]]"
@@ -212,10 +212,21 @@ Custom property | Description
       },
 
       /**
-       * User-supplied filter text. The string will be lowercased and compared
-       * to the label of each item in the visible column.
+       * User-supplied filter text to filter items in the context browser.
+       * The string will be lowercased and compared to the label of each item
+       * in the currently visible column.
        */
       filter: {
+        type: String,
+        notify: true
+      },
+
+      /**
+       * User-supplied filter text to filter items in the favorites panel.
+       * The string will be lowercased and compared to the label of each item
+       * in the favorites panel.
+       */
+      favoritedFilter: {
         type: String,
         notify: true
       },
@@ -372,6 +383,10 @@ Custom property | Description
       _cancelFilterFocus: {
         type: Boolean,
         value: false
+      },
+
+      _favoritedVisibleCount: {
+        type: Number
       },
 
       /**
@@ -622,6 +637,15 @@ Custom property | Description
       return this._doesItemMatchFilter.bind(this, filterStr, labelKey);
     },
 
+    _getColumnFilterFavorited(filter, labelKey, filterIsActive) {
+      if (!filterIsActive) {
+        return null;
+      }
+
+      let filterStr = filter.toLowerCase();
+      return this._doesItemMatchFilter.bind(this, filterStr, labelKey);
+    },
+
     _doesItemMatchFilter(filter, labelKey, item) {
       if (!item[labelKey]) return false;
       return (item[labelKey].toLowerCase().indexOf(filter) > -1);
@@ -645,6 +669,15 @@ Custom property | Description
       const count = target.renderedItemCount;
       if (typeof count !== 'number') return;
       this.set(`__context.columns.${index}.visibleCount`, count);
+    },
+
+    _updateVisibleCountFavorited(evt) {
+      if (this.opened && this.openedFromFavorited) {
+        const target = Polymer.dom(this.root).querySelector('#favoritedRepeater');
+        const count = target.renderedItemCount;
+        if (typeof count !== 'number') return;
+        this._favoritedVisibleCount = count;
+      }
     },
 
     _getColumns(active, rootColumn) {
