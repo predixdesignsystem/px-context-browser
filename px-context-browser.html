@@ -674,6 +674,7 @@ Custom property | Description
     _updateVisibleCountFavorited() {
       if (this.opened && this.openedFromFavorited) {
         const target = Polymer.dom(this.root).querySelector('#favoritedRepeater');
+        if (!target) return;
         const count = target.renderedItemCount;
         if (typeof count !== 'number') return;
         this._favoritedVisibleCount = count;

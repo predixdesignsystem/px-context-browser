@@ -362,5 +362,48 @@ function runCustomTests() {
     }, 600);
   });
 
+  it('updates the panel height to show the correct number of items in the Favorites Panel when new items are favorited', (done) => {
+    browser.favorited = [items[0], items[1]];
+    favoritedTrigger.click();
+
+    flush(() => {
+      const ironDropdown = Polymer.dom(browser.root).querySelector('#dropdown');
+      const panelContent = ironDropdown.querySelector('#contentWrapper');
+      let panelRect = panelContent.getBoundingClientRect();
+      expect(panelRect.left > 0).to.be.true;
+      expect(panelRect.height).to.be.closeTo(140, 5);
+
+      browser.favorite(items[1].children[0]);
+      setTimeout(() => {
+        panelRect = panelContent.getBoundingClientRect();
+        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.height).to.be.closeTo(200, 5);
+        done();
+      }, 500);
+    });
+  });
+
+  it('updates the panel height to show the correct number of items in the Favorites Panel when items are filtered', (done) => {
+    browser.favorited = [items[0], items[1], items[1].children[0]];
+    browser.showFilter = true;
+    favoritedTrigger.click();
+
+    flush(() => {
+      const ironDropdown = Polymer.dom(browser.root).querySelector('#dropdown');
+      const panelContent = ironDropdown.querySelector('#contentWrapper');
+      let panelRect = panelContent.getBoundingClientRect();
+      expect(panelRect.left > 0).to.be.true;
+      expect(panelRect.height).to.be.closeTo(252, 5);
+
+      browser.favoritedFilter = "h";
+      setTimeout(() => {
+        panelRect = panelContent.getBoundingClientRect();
+        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.height).to.be.closeTo(132, 5);
+        done();
+      }, 500);
+    });
+  });
+
   });
 }
