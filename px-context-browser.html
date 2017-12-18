@@ -671,7 +671,7 @@ Custom property | Description
       this.set(`__context.columns.${index}.visibleCount`, count);
     },
 
-    _updateVisibleCountFavorited(evt) {
+    _updateVisibleCountFavorited() {
       if (this.opened && this.openedFromFavorited) {
         const target = Polymer.dom(this.root).querySelector('#favoritedRepeater');
         const count = target.renderedItemCount;
@@ -778,6 +778,17 @@ Custom property | Description
         this._positionTarget = Polymer.dom(evt).rootTarget;
         this.opened = true;
         this._setOpenedFromFavorited(true);
+        if (Polymer.Element) {
+          Polymer.RenderStatus.afterNextRender(this, () => {
+            this._updateVisibleCountFavorited();
+          });
+        } else {
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              this._updateVisibleCountFavorited();
+            });
+          });
+        }
       }
       else {
         this.$.dropdown.close();
