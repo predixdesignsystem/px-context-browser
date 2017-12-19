@@ -1020,8 +1020,11 @@ Custom property | Description
             }
             break;
           case 'favorite':
-            // @TODO: Implement favorited storage/notification behavior
-            this.favorite(this.active, 'DOM_EVENT');
+            if (Array.isArray(this.favorited) && this.favorited.indexOf(this.active) === -1) {
+              this.favorite(this.active, 'DOM_EVENT');
+            } else {
+              this.defavorite(this.active, 'DOM_EVENT');
+            }
             break;
         }
       }
@@ -1070,7 +1073,7 @@ Custom property | Description
       return (typeof val !== 'undefined' && val !== null);
     },
 
-    _showFavoritesAndItemFavoritable(showFavorites, item) {
+    _showFavoritedAndItemFavoritable(showFavorites, item) {
       return showFavorites && this._isItemFavoritable(item);
     },
 
