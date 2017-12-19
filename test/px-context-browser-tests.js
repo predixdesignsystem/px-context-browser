@@ -185,19 +185,21 @@ function runCustomTests() {
 
     it('opens the favorited panel when the favorited trigger is tapped', (done) => {
       favoritedTrigger.click();
-      expect(() => browser.opened && browser.openedFromFavorited)
-        .to.eventuallyEqual(true, {within: 1000, every: 100}, done);
+      flush(() => {
+        expect(browser.favoritedOpened).to.be.true;
+        done();
+      });
     });
 
     it('opens the favorited panel to an empty view if there are no currently favorited items', (done) => {
       favoritedTrigger.click();
-      flush(() => {
+      flushAndRender(() => {
         const emptyText = Polymer.dom(browser.root).querySelector('.context-browser-favorites--empty__text');
         const emptyTextRect = emptyText.getBoundingClientRect();
         expect(emptyTextRect.left > 0).to.be.true;
         expect(emptyTextRect.height).to.be.closeTo(19, 5);
         done();
-      });
+      }, 10);
     });
 
     it('opens the favorited panel to a list view if there are favorited items', (done) => {
@@ -255,155 +257,155 @@ function runCustomTests() {
       });
     });
 
-    it('updates favorited when the favorites browser is closed for > 5 seconds and the state is dirty', (done) => {
-      browser.favorited = [items[0], items[1]];
-      favoritedTrigger.click();
-      flush(() => {
-        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-        const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
-        const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
-        favIcon.click();
-        favoritedTrigger.click();
-        // wait at least 5 seconds
-        expect(() => browser.favorited.indexOf(items[0]) === -1)
-          .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
-      });
-    });
+    // it('updates favorited when the favorites browser is closed for > 5 seconds and the state is dirty', (done) => {
+    //   browser.favorited = [items[0], items[1]];
+    //   favoritedTrigger.click();
+    //   flush(() => {
+    //     const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+    //     const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
+    //     const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
+    //     favIcon.click();
+    //     favoritedTrigger.click();
+    //     // wait at least 5 seconds
+    //     expect(() => browser.favorited.indexOf(items[0]) === -1)
+    //       .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
+    //   });
+    // });
 
-    it('updates favorited when the user opens the regular browser and the state is dirty', (done) => {
-      browser.favorited = [items[0], items[1]];
-      favoritedTrigger.click();
-      flush(() => {
-        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-        const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
-        const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
-        favIcon.click();
-        openTrigger.click();
-        // wait at least 5 seconds
-        expect(() => browser.favorited.indexOf(items[0]) === -1)
-          .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
-      });
-    });
+    // it('updates favorited when the user opens the regular browser and the state is dirty', (done) => {
+    //   browser.favorited = [items[0], items[1]];
+    //   favoritedTrigger.click();
+    //   flush(() => {
+    //     const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+    //     const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
+    //     const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
+    //     favIcon.click();
+    //     openTrigger.click();
+    //     // wait at least 5 seconds
+    //     expect(() => browser.favorited.indexOf(items[0]) === -1)
+    //       .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
+    //   });
+    // });
 
     it('shows breadcrumbs for non-root items in the Favorites Panel', (done) => {
       browser.favorited = [items[1].children[1].children[0]];
       favoritedTrigger.click();
-      flush(() => {
+      flushAndRender(() => {
         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
         const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'ABC')[0];
         const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
         expect(itemBreadcrumbs.innerText === "Assets > The Second Asset").to.be.true;
         done();
+      }, 10);
     });
-  });
 
-  it('truncates breadcrumbs text from the front if too long', (done) => {
-    browser.favorited = [items[1].children[1].children[1].children[0]];
-    favoritedTrigger.click();
-    flush(() => {
-      const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-      const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'My Favorite Asset')[0];
-      const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
-      expect(itemBreadcrumbs.innerText === "... > The Second Asset > My Very Long Child Asset").to.be.true;
-      done();
+    it('truncates breadcrumbs text from the front if too long', (done) => {
+      browser.favorited = [items[1].children[1].children[1].children[0]];
+      favoritedTrigger.click();
+      flushAndRender(() => {
+        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+        const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'My Favorite Asset')[0];
+        const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
+        expect(itemBreadcrumbs.innerText === "... > The Second Asset > My Very Long Child Asset").to.be.true;
+        done();
+      }, 10);
     });
-  });
 
-  it('breadcrumbs truncation algorithm works as expected', (done) => {
-    const items = ['US', 'CA', 'Oakland'];
-    const oneItem = ['Oakland'];
-    const fontStyles = {size: "15px", family: "\"GE Inspira Sans\", sans-serif"};
-    favoritedTrigger.click();
-    flush(() => {
-      const itemEl = Polymer.dom(browser.root).querySelector('px-context-browser-item');
-      expect(itemEl.truncateBreadcrumbs(items, fontStyles, 120)).to.equal('US > CA > Oakland'); // width = 117
-      expect(itemEl.truncateBreadcrumbs(items, fontStyles, 110)).to.equal('... > CA > Oakland'); // width = 108
-      expect(itemEl.truncateBreadcrumbs(items, fontStyles, 100)).to.equal('... > Oakland'); // width = 76
-      expect(itemEl.truncateBreadcrumbs(items, fontStyles, 70)).to.equal('... > Oakland'); // end truncation will happen through CSS
-      expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 60)).to.equal('Oakland'); // width = 52
-      expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 50)).to.equal('Oakland'); // end truncation will happen through CSS
-      done();
-    });
-  });
-
-  it('shows a contextual notification in the favorites panel but not the regular context browser if `favoritedSyncFailed` is true', (done) => {
-    browser.favoritedSyncFailed = true;
-    favoritedTrigger.click();
-    setTimeout(() => {
-      const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
-      let contextualNotificationRect = contextualNotification.getBoundingClientRect();
-      expect(contextualNotificationRect.left > 0).to.be.true;
-      expect(contextualNotificationRect.height).to.be.closeTo(30, 5);
-      openTrigger.click();
+    it('breadcrumbs truncation algorithm works as expected', (done) => {
+      const items = ['US', 'CA', 'Oakland'];
+      const oneItem = ['Oakland'];
+      const fontStyles = {size: "15px", family: "\"GE Inspira Sans\", sans-serif"};
+      favoritedTrigger.click();
       flush(() => {
-        contextualNotificationRect = contextualNotification.getBoundingClientRect();
-        expect(contextualNotificationRect.left).to.equal(0);
-        expect(contextualNotificationRect.height).to.equal(0);
+        const itemEl = Polymer.dom(browser.root).querySelector('px-context-browser-item');
+        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 120)).to.equal('US > CA > Oakland'); // width = 117
+        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 110)).to.equal('... > CA > Oakland'); // width = 108
+        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 100)).to.equal('... > Oakland'); // width = 76
+        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 70)).to.equal('... > Oakland'); // end truncation will happen through CSS
+        expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 60)).to.equal('Oakland'); // width = 52
+        expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 50)).to.equal('Oakland'); // end truncation will happen through CSS
         done();
       });
-    }, 600);
-  });
-
-  it('fires the `px-app-asset-favorited-sync-requested` event when the contextual notification resync button is tapped', (done) => {
-    var i=0;
-    var listener = function(evt) {
-      i++;
-    };
-    browser.addEventListener('px-app-asset-favorited-sync-requested', listener);
-
-    browser.favoritedSyncFailed = true;
-    favoritedTrigger.click();
-    setTimeout(() => {
-      const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
-      const resyncIcon = contextualNotification.querySelector('px-icon');
-      resyncIcon.click();
-      expect(i).to.equal(1);
-      done();
-    }, 600);
-  });
-
-  it('updates the panel height to show the correct number of items in the Favorites Panel when new items are favorited', (done) => {
-    browser.favorited = [items[0], items[1]];
-    favoritedTrigger.click();
-
-    flush(() => {
-      const ironDropdown = Polymer.dom(browser.root).querySelector('#dropdown');
-      const panelContent = ironDropdown.querySelector('#contentWrapper');
-      let panelRect = panelContent.getBoundingClientRect();
-      expect(panelRect.left > 0).to.be.true;
-      expect(panelRect.height).to.be.closeTo(140, 5);
-
-      browser.favorite(items[1].children[0]);
-      setTimeout(() => {
-        panelRect = panelContent.getBoundingClientRect();
-        expect(panelRect.left > 0).to.be.true;
-        expect(panelRect.height).to.be.closeTo(200, 5);
-        done();
-      }, 500);
     });
-  });
 
-  it('updates the panel height to show the correct number of items in the Favorites Panel when items are filtered', (done) => {
-    browser.favorited = [items[0], items[1], items[1].children[0]];
-    browser.showFilter = true;
-    favoritedTrigger.click();
-
-    flush(() => {
-      const ironDropdown = Polymer.dom(browser.root).querySelector('#dropdown');
-      const panelContent = ironDropdown.querySelector('#contentWrapper');
-      let panelRect = panelContent.getBoundingClientRect();
-      expect(panelRect.left > 0).to.be.true;
-      expect(panelRect.height).to.be.closeTo(252, 5);
-
-      browser.favoritedFilter = "h";
+    it('shows a contextual notification in the favorites panel but not the regular context browser if `favoritedSyncFailed` is true', (done) => {
+      browser.favoritedSyncFailed = true;
+      favoritedTrigger.click();
       setTimeout(() => {
-        panelRect = panelContent.getBoundingClientRect();
-        expect(panelRect.left > 0).to.be.true;
-        expect(panelRect.height).to.be.closeTo(132, 5);
-        done();
-      }, 500);
+        const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
+        let contextualNotificationRect = contextualNotification.getBoundingClientRect();
+        expect(contextualNotificationRect.left > 0).to.be.true;
+        expect(contextualNotificationRect.height).to.be.closeTo(30, 5);
+        openTrigger.click();
+
+        flushAndRender(() => {
+          contextualNotificationRect = contextualNotification.getBoundingClientRect();
+          expect(contextualNotificationRect.left).to.equal(0);
+          expect(contextualNotificationRect.height).to.equal(0);
+          done();
+        }, 10);
+      }, 1000);
     });
-  });
+
+    it('fires the `px-app-asset-favorited-sync-requested` event when the contextual notification resync button is tapped', (done) => {
+      var i=0;
+      var listener = function(evt) {
+        i++;
+      };
+      browser.addEventListener('px-app-asset-favorited-sync-requested', listener);
+
+      browser.favoritedSyncFailed = true;
+      favoritedTrigger.click();
+      setTimeout(() => {
+        const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
+        const resyncIcon = contextualNotification.querySelector('px-icon');
+        resyncIcon.click();
+        expect(i).to.equal(1);
+        done();
+      }, 600);
+    });
+
+    it('updates the panel height to show the correct number of items in the Favorites Panel when new items are favorited', (done) => {
+      browser.favorited = [items[0], items[1]];
+      favoritedTrigger.click();
+
+      flushAndRender(() => {
+        const panel = Polymer.dom(browser.root).querySelector('#favoritedPanel');
+        let panelRect = panel.getBoundingClientRect();
+        debugger;
+        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.height).to.be.closeTo(140, 5);
+
+        browser.favorite(items[1].children[0]);
+        setTimeout(() => {
+          let panelRect = panel.getBoundingClientRect();
+          expect(panelRect.left > 0).to.be.true;
+          expect(panelRect.height).to.be.closeTo(200, 5);
+          done();
+        }, 500);
+      }, 10);
+    });
+
+    it('updates the panel height to show the correct number of items in the Favorites Panel when items are filtered', (done) => {
+      browser.favorited = [items[0], items[1], items[1].children[0]];
+      browser.showFilter = true;
+      favoritedTrigger.click();
+
+      flush(() => {
+        const panel = Polymer.dom(browser.root).querySelector('#favoritedPanel');
+        let panelRect = panel.getBoundingClientRect();
+        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.height).to.be.closeTo(252, 5);
+
+        browser.favoritedFilter = "h";
+        setTimeout(() => {
+          let panelRect = panel.getBoundingClientRect();
+          expect(panelRect.left > 0).to.be.true;
+          expect(panelRect.height).to.be.closeTo(132, 5);
+          done();
+        }, 500);
+      });
+    });
 
   });
 }

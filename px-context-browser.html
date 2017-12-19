@@ -77,100 +77,103 @@ Custom property | Description
         favorited="[[favorited]]"
         current-favorited="{{currentFavorited}}"
         opened="[[opened]]"
-        opened-from-favorited="[[openedFromFavorited]]">
+        favorited-opened="[[favoritedOpened]]">
     </px-context-browser-favorited-temp>
 
     <!-- Backdrop to show if collapsed and open -->
-    <div class="backdrop" visible$="[[_isCollapseOpened(collapsed, opened)]]"></div>
+    <div class="backdrop" visible$="[[_isCollapseOpened(collapsed, opened, favoritedOpened)]]"></div>
 
+    <!-- REGULAR CONTEXT BROWSER -->
     <iron-dropdown
-      id="dropdown"
-      no-overlap
-      horizontal-offset="-15"
-      vertical-align="[[_getDropdownVerticalAlign(collapsed)]]"
-      horizontal-align="[[_getDropdownHorizontalAlign(collapsed)]]"
-      opened="{{opened}}"
-      position-target="[[_getPositionTarget(_positionTarget, collapsed)]]"
-      on-iron-overlay-canceled="_handleBrowserCanceled"
-      on-iron-overlay-opened="_handleBrowserOpened"
-      on-iron-overlay-closed="_handleBrowserClosed">
-
-      <!-- REGULAR CONTEXT BROWSER -->
-      <template is="dom-if" if="[[!openedFromFavorited]]">
-        <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-          <px-context-browser-header id="header" slot="header" active$="[[_showHeader(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
-          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
-          <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
-            <template is="dom-repeat" items="[[__context.columns]]" as="column">
-              <div column$="[[column.index]]" class="column" slot="columns">
-                <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
-                  <px-context-browser-item
-                      label="[[_getItemProp(item, keys.label)]]"
-                      breadcrumbs="[[_getFavoritedItemPath(item)]]"
-                      selected="[[_isItemSelected(item, selected)]]"
-                      favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
-                      can-select="[[_isItemSelectable(item)]]"
-                      can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
-                      can-open="[[_isItemOpenable(showArrow, item)]]"
-                      on-tap="_handleItemTapped"
-                      tabindex="0"
-                      collapsed$="[[collapsed]]">
-                  </px-context-browser-item>
-                </template>
-              </div>
-            </template>
-          </px-context-browser-columns>
-        </px-context-browser-panel>
-      </template>
-      <!-- end REGULAR CONTEXT BROWSER -->
-
-      <!-- FAVORITES CONTEXT BROWSER-->
-      <template is="dom-if" if="[[openedFromFavorited]]">
-        <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
-          <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited, favorited.*)]]">
-            <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
-            <template is="dom-if" if="[[favoritedSyncFailed]]">
-                <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-            </template>
-            <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
-              <div column="0" class="column" slot="columns">
-                <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" for-column="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
-                  <px-context-browser-item
-                      label="[[_getItemProp(item, keys.label)]]"
-                      breadcrumbs="[[_getFavoritedItemPath(item)]]"
-                      selected="[[_isItemSelected(item, selected)]]"
-                      favorited="[[_isItemCurrentlyFavorited(item, currentFavorited)]]"
-                      can-select="[[_isItemSelectable(item)]]"
-                      can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
-                      can-open="[[_isItemOpenable(showArrow, item)]]"
-                      on-tap="_handleItemTapped"
-                      tabindex="0"
-                      collapsed$="[[collapsed]]"
-                      style-as-favorite
-                      visible="[[openedFromFavorited]]">
-                  </px-context-browser-item>
-                </template>
-              </div>
-            </px-context-browser-columns>
-          </template>
-
-          <!--EMPTY FAVORITES-->
-          <template is="dom-if" if="[[_showFavoritesEmptyState(favorited, favorited.*)]]">
-            <template is="dom-if" if="[[favoritedSyncFailed]]">
-                <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-            </template>
-            <div slot="columns" class="context-browser-favorites--empty__container">
-              <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
-              <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
-              <div class="context-browser-favorites--empty__subtext zeta">To favorite a context, click on the star while viewing a context in the context browser.</div>
+        id="dropdown"
+        no-overlap
+        horizontal-offset="-15"
+        vertical-align="[[_getDropdownVerticalAlign(collapsed)]]"
+        horizontal-align="[[_getDropdownHorizontalAlign(collapsed)]]"
+        opened="{{opened}}"
+        position-target="[[_getPositionTarget(_positionTarget, collapsed)]]"
+        on-iron-overlay-canceled="_handleBrowserCanceled"
+        on-iron-overlay-opened="_handleBrowserOpened"
+        on-iron-overlay-closed="_handleBrowserClosed">
+      <px-context-browser-panel id="panel" slot="dropdown-content" has-header$="[[_showHeader(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+        <px-context-browser-header id="header" slot="header" active$="[[_showHeader(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritedAndItemFavoritable(showFavorited, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
+        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
+        <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
+          <template is="dom-repeat" items="[[__context.columns]]" as="column">
+            <div column$="[[column.index]]" class="column" slot="columns">
+              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
+                <px-context-browser-item
+                    label="[[_getItemProp(item, keys.label)]]"
+                    breadcrumbs="[[_getFavoritedItemPath(item)]]"
+                    selected="[[_isItemSelected(item, selected)]]"
+                    favorited="[[_isItemFavorited(item, favorited, favorited.*)]]"
+                    can-select="[[_isItemSelectable(item)]]"
+                    can-favorite="[[_showFavoritedAndItemFavoritable(showFavorited, item)]]"
+                    can-open="[[_isItemOpenable(showArrow, item)]]"
+                    on-tap="_handleItemTapped"
+                    tabindex="0"
+                    collapsed$="[[collapsed]]">
+                </px-context-browser-item>
+              </template>
             </div>
           </template>
-        </px-context-browser-panel>
-      </template>
-
-      <!-- end FAVORITES CONTEXT BROWSER-->
-
+        </px-context-browser-columns>
+      </px-context-browser-panel>
     </iron-dropdown>
+
+    <!-- FAVORITES CONTEXT BROWSER-->
+    <iron-dropdown
+        id="favoritedDropdown"
+        no-overlap
+        horizontal-offset="-15"
+        vertical-align="[[_getDropdownVerticalAlign(collapsed)]]"
+        horizontal-align="[[_getDropdownHorizontalAlign(collapsed)]]"
+        opened="{{favoritedOpened}}"
+        position-target="[[_getPositionTarget(_favoritedPositionTarget, collapsed)]]"
+        on-iron-overlay-canceled="_handleFavoritedBrowserCanceled">
+      <!-- NON-EMPTY FAVORITES STATE -->
+      <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
+        <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
+          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
+          <template is="dom-if" if="[[favoritedSyncFailed]]">
+              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
+          </template>
+          <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
+            <div column="0" class="column" slot="columns">
+              <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" for-column="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
+                <px-context-browser-item
+                    label="[[_getItemProp(item, keys.label)]]"
+                    breadcrumbs="[[_getFavoritedItemPath(item)]]"
+                    selected="[[_isItemSelected(item, selected)]]"
+                    favorited="[[_isItemCurrentlyFavorited(item, currentFavorited)]]"
+                    can-select="[[_isItemSelectable(item)]]"
+                    can-favorite="[[_showFavoritedAndItemFavoritable(showFavorited, item)]]"
+                    can-open="[[_isItemOpenable(showArrow, item)]]"
+                    on-tap="_handleItemTapped"
+                    tabindex="0"
+                    collapsed$="[[collapsed]]"
+                    style-as-favorite
+                    visible="[[favoritedOpened]]">
+                </px-context-browser-item>
+              </template>
+            </div>
+          </px-context-browser-columns>
+        </template>
+
+        <!-- EMPTY FAVORITES STATE -->
+        <template is="dom-if" if="[[_showFavoritedEmptyState(favorited, favorited.*)]]">
+          <template is="dom-if" if="[[favoritedSyncFailed]]">
+              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
+          </template>
+          <div slot="columns" class="context-browser-favorites--empty__container">
+            <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
+            <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
+            <div class="context-browser-favorites--empty__subtext zeta">To favorite a context, click on the star while viewing a context in the context browser.</div>
+          </div>
+        </template>
+      </px-context-browser-panel>
+    </iron-dropdown>
+
   </template>
 </dom-module>
 <script>
@@ -187,7 +190,7 @@ Custom property | Description
     ],
 
     properties: {
-      showFavorites: {
+      showFavorited: {
         type: Boolean,
         value: true,
         reflectToAttribute: true
@@ -222,9 +225,9 @@ Custom property | Description
       },
 
       /**
-       * User-supplied filter text to filter items in the favorites panel.
+       * User-supplied filter text to filter items in the favorited panel.
        * The string will be lowercased and compared to the label of each item
-       * in the favorites panel.
+       * in the favorited panel.
        */
       favoritedFilter: {
         type: String,
@@ -266,33 +269,30 @@ Custom property | Description
       },
 
       /**
-       * Bind to a `<px-context-browser-trigger>` element. A tap on the favorites
+       * Bind to a `<px-context-browser-trigger>` element. A tap on the favorited
        * trigger will open a list of favorited items in the context browser.
        */
-      favoritesTrigger: {
+      favoritedTrigger: {
         type: HTMLElement,
-        observer: '_favoritesTriggerChanged'
+        observer: '_favoritedTriggerChanged'
       },
 
       /**
-       * Determine whether the context browser was opened from the default or
-       * favorites trigger.
-       */
-      openedFromFavorited: {
-        type: Boolean,
-        value: false,
-        readOnly: true,
-        notify: true,
-        reflectToAttribute: true
-      },
-
-      /**
-       * If `true` the context browser is opened.
+       * If `true` the context browser is opened to the navigation view.
        */
       opened: {
         type: Boolean,
         notify: true,
         observer: '_handleInitialOpenedValue'
+      },
+
+      /**
+       * If `true` the context browser is opened to the favorited view.
+       */
+      favoritedOpened: {
+        type: Boolean,
+        notify: true,
+        reflectToAttribute: true
       },
 
       /**
@@ -459,8 +459,8 @@ Custom property | Description
       return false;
     },
 
-    _isCollapseOpened(collapsed, opened) {
-      return (collapsed && opened);
+    _isCollapseOpened(collapsed, opened, favoritedOpened) {
+      return (collapsed && (opened || favoritedOpened));
     },
 
     _handleResize(evt) {
@@ -488,8 +488,6 @@ Custom property | Description
     },
 
     created() {
-      this._openTriggerHandler = null;
-      this._favoritesTriggerHandler = null;
       this._resetActiveTask = null;
       this._squashNextResetActiveTask = null;
       this._childLoadingHandler = null;
@@ -672,7 +670,7 @@ Custom property | Description
     },
 
     _updateVisibleCountFavorited() {
-      if (this.opened && this.openedFromFavorited) {
+      if (this.favoritedOpened) {
         const target = Polymer.dom(this.root).querySelector('#favoritedRepeater');
         if (!target) return;
         const count = target.renderedItemCount;
@@ -736,49 +734,49 @@ Custom property | Description
     },
 
     // ********************************************************************** //
-    // Bind to open/favorites trigger, open/close on trigger tap
+    // Bind to open/favorited trigger, open/close on trigger tap
     // ********************************************************************** //
 
     _openTriggerChanged(newTrigger, oldTrigger) {
-      if (oldTrigger && oldTrigger instanceof HTMLElement && this._openTriggerHandler !== null) {
-        oldTrigger.removeEventListener('trigger-tapped', this._openTriggerHandler);
-        this._openTriggerHandler = null;
+      if (oldTrigger && oldTrigger instanceof HTMLElement && this._openTriggerTapped) {
+        oldTrigger.removeEventListener('trigger-tapped', this._openTriggerTapped);
       }
       if (newTrigger && newTrigger instanceof HTMLElement) {
-        this._openTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleOpenTriggerTapped.bind(this));
+        this._positionTarget = newTrigger;
+        this._openTriggerTapped = () => {
+          this._handleOpenTriggerTapped();
+        };
+        newTrigger.addEventListener('trigger-tapped', this._openTriggerTapped, false);
       }
     },
 
-    _favoritesTriggerChanged(newTrigger, oldTrigger) {
-      if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritesTriggerHandler !== null) {
-        oldTrigger.removeEventListener('trigger-tapped', this._favoritesTriggerHandler);
-        this._favoritesTriggerHandler = null;
+    _favoritedTriggerChanged(newTrigger, oldTrigger) {
+      if (oldTrigger && oldTrigger instanceof HTMLElement && this._favoritedTriggerTapped) {
+        oldTrigger.removeEventListener('trigger-tapped', this._favoritedTriggerTapped);
       }
       if (newTrigger && newTrigger instanceof HTMLElement) {
-        this._favoritesTriggerHandler = newTrigger.addEventListener('trigger-tapped', this._handleFavoritesTriggerTapped.bind(this));
+        this._favoritedPositionTarget = newTrigger;
+        this._favoritedTriggerTapped = () => {
+          this._handleFavoritedTriggerTapped();
+        };
+        newTrigger.addEventListener('trigger-tapped', this._favoritedTriggerTapped, false);
       }
     },
 
     _handleOpenTriggerTapped(evt) {
-      // If we aren't opened, or if we're opened and not viewing the regular
-      // browser panel, ensure the dropdown is opened
-      if (!this.opened || (this.opened && this.openedFromFavorited)) {
-        this._positionTarget = Polymer.dom(evt).rootTarget;
+      if (!this.opened) {
+        this.favoritedOpened = false;
         this.opened = true;
-        this._setOpenedFromFavorited(false);
       }
       else {
         this.$.dropdown.close();
       }
     },
 
-    _handleFavoritesTriggerTapped(evt) {
-      // If we aren't opened, or if we're opened and not viewing the favorited
-      // list, ensure the dropdown is opened
-      if (!this.opened || (this.opened && !this.openedFromFavorited)) {
-        this._positionTarget = Polymer.dom(evt).rootTarget;
-        this.opened = true;
-        this._setOpenedFromFavorited(true);
+    _handleFavoritedTriggerTapped(evt) {
+      if (!this.favoritedOpened) {
+        this.opened = false;
+        this.favoritedOpened = true;
         if (Polymer.Element) {
           Polymer.RenderStatus.afterNextRender(this, () => {
             this._updateVisibleCountFavorited();
@@ -792,7 +790,7 @@ Custom property | Description
         }
       }
       else {
-        this.$.dropdown.close();
+        this.$.favoritedDropdown.close();
       }
     },
 
@@ -801,17 +799,21 @@ Custom property | Description
     // ********************************************************************** //
 
     /**
-     * If the user clicked on the open or the favorites trigger, we'll let the
+     * If the user clicked on the open or the favorited trigger, we'll let the
      * trigger close the dropdown on its own.
      */
     _handleBrowserCanceled(evt) {
-      if (!this.openTrigger && !this.favoritesTrigger) return;
-
+      if (!this.openTrigger) return;
       const path = Polymer.dom(evt.detail).path;
-      if (this.openTrigger && path.indexOf(this.openTrigger) > -1) {
+      if (path.indexOf(this.openTrigger) > -1) {
         evt.preventDefault();
       }
-      if (this.favoritesTrigger && path.indexOf(this.favoritesTrigger) > -1) {
+    },
+
+    _handleFavoritedBrowserCanceled(evt) {
+      if (!this.favoritedTrigger) return;
+      const path = Polymer.dom(evt.detail).path;
+      if (path.indexOf(this.favoritedTrigger) > -1) {
         evt.preventDefault();
       }
     },
@@ -1022,7 +1024,7 @@ Custom property | Description
             }
             break;
           case 'favorite':
-            // @TODO: Implement favorites storage/notification behavior
+            // @TODO: Implement favorited storage/notification behavior
             this.favorite(this.active, 'DOM_EVENT');
             break;
         }
@@ -1076,11 +1078,11 @@ Custom property | Description
       return this._isNotNull(active);
     },
 
-    _showFavoritesAndItemFavoritable(showFavorites, item) {
-      return showFavorites && this._isItemFavoritable(item);
+    _showFavoritedAndItemFavoritable(showFavorited, item) {
+      return showFavorited && this._isItemFavoritable(item);
     },
 
-    _showFavoritesEmptyState(favorited) {
+    _showFavoritedEmptyState(favorited) {
       return (!favorited || !Array.isArray(favorited) || favorited.length === 0);
     },
 

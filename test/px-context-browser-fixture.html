@@ -17,13 +17,14 @@
     <!-- Load local components -->
     <link rel="import" href="../px-context-browser.html" />
     <link rel="import" href="../px-context-browser-trigger.html" />
+    <!-- Load test helpers -->
+    <script src="chai-expect-eventually.js"></script>
+    <script src="test-helpers.js"></script>
     <!-- This script link will contain the generated script stub for custom, developer-added test cases -->
     <script src="px-context-browser-tests.js"></script>
     <!-- Load mocha test fixture setup -->
     <script src="../../test-fixture/test-fixture-mocha.js"></script>
     <link href="../../test-fixture/test-fixture.html" rel="import">
-    <!-- Load test helpers -->
-    <script src="chai-expect-eventually.js"></script>
   </head>
   <body>
     <style include="px-theme-styles" is="custom-style"></style>
@@ -57,10 +58,10 @@
       <template is="dom-template">
         <div>
           <px-context-browser-trigger id="open-trigger" trigger="{{openTrigger}}"></px-context-browser-trigger>
-          <px-context-browser-trigger id="favorited-trigger" trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
+          <px-context-browser-trigger id="favorited-trigger" trigger="{{favoritedTrigger}}" favorites></px-context-browser-trigger>
           <px-context-browser
               open-trigger="[[openTrigger]]"
-              favorites-trigger="[[favoritesTrigger]]">
+              favorited-trigger="[[favoritedTrigger]]">
           </px-context-browser>
         </div>
       </template>

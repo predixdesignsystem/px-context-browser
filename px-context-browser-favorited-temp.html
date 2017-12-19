@@ -7,8 +7,8 @@
       properties: {
         favoritedBehaviorElement: HTMLElement,
         favorited: Array,
-        openedFromFavorited: Boolean,
         opened: Boolean,
+        favoritedOpened: Boolean,
         _itemsToRemove: {
           type: Array,
           value: () => []
@@ -22,7 +22,7 @@
       },
 
       observers: [
-        '_handleOpenedChanged(opened, openedFromFavorited)',
+        '_handleOpenedChanged(opened, favoritedOpened)',
         '_computeCurrentFavorited(favorited, _itemsToRemove, favorited.*)'
       ],
 
@@ -42,7 +42,7 @@
        * @param  {Object} item - Reference to an item in the asset graph
        */
       handleItemTapped(item) {
-        if (!this.openedFromFavorited) {
+        if (!this.favoritedOpened) {
           if (this.currentFavorited.indexOf(item) === -1) {
             this.favoritedBehaviorElement.favorite(item);
           }
@@ -51,7 +51,7 @@
           }
         }
 
-        if (this.openedFromFavorited) {
+        if (this.favoritedOpened) {
           if (this._itemsToRemove.indexOf(item) === -1) {
             this._itemsToRemove = this._itemsToRemove.concat([item]);
           }
@@ -82,16 +82,16 @@
         });
       },
 
-      _handleOpenedChanged(opened, openedFromFavorited) {
+      _handleOpenedChanged(opened, favoritedOpened) {
         if (this._flushFavoritedChangesTask) {
           this.cancelAsync(this._flushFavoritedChangesTask);
           this._flushFavoritedChangesTask = null;
         }
-        if (!opened) {
-          this._flushFavoritedChangesTask = this.async(this.flushFavoritedChanges.bind(this), 5000);
-        }
-        if (opened && !openedFromFavorited) {
+        if (opened) {
           this.flushFavoritedChanges();
+        }
+        if (!opened && !favoritedOpened) {
+          this._flushFavoritedChangesTask = this.async(this.flushFavoritedChanges.bind(this), 5000);
         }
       }
 

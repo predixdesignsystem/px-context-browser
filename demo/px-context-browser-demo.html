@@ -50,13 +50,13 @@
             <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
 
             <template is="dom-if" if="[[props.showFavorites.value]]" restamp>
-              <px-context-browser-trigger trigger={{favoritesTrigger}} favorites></px-context-browser-trigger>
+              <px-context-browser-trigger trigger={{favoritedTrigger}} favorites></px-context-browser-trigger>
             </template>
           </div>
 
           <px-context-browser
             open-trigger="[[openTrigger]]"
-            favorites-trigger="[[favoritesTrigger]]"
+            favorited-trigger="[[favoritedTrigger]]"
             opened="{{props.opened.value}}"
             keep-open="{{props.keepOpen.value}}"
             items="{{props.items.value}}"

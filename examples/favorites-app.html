@@ -27,12 +27,12 @@
       </div>
       <div class="triggers">
         <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-        <px-context-browser-trigger trigger="{{favoritesTrigger}}" favorites></px-context-browser-trigger>
+        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorites></px-context-browser-trigger>
       </div>
       <px-context-browser
           items="[[foods]]"
           open-trigger="[[openTrigger]]"
-          favorites-trigger="[[favoritesTrigger]]"
+          favorited-trigger="[[favoritedTrigger]]"
           selected="{{selectedFood}}"
           favorited="{{favoriteFoods}}"
           favorited-route="{{favoriteFoodRoutes}}"
