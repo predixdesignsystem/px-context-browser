@@ -12,11 +12,10 @@
 @import "px-defaults-design/_settings.defaults.scss";
 
 // Generic
-@import "px-normalize-design/_generic.normalize.scss";
+@import "px-normalize-design/_generic.normalize-mini.scss";
 @import "px-box-sizing-design/_generic.box-sizing.scss";
 
 // Base
-@import "px-forms-design/_base.forms.scss";
 @import "px-headings-design/_base.headings.scss";
 
 @keyframes ContextualNotification {

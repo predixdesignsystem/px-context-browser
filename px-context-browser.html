@@ -70,7 +70,7 @@ Custom property | Description
     <!-- Links the active column to __activeContext so changes to the active column are notifying -->
     <array-selector id="selector" items="[[__context.columns]]" selected="{{__activeContext}}"></array-selector>
 
-    <!-- Creates a temporary cache of favorited sometimes??? -->
+    <!-- Creates a temporary cache of favorited items before applying changes to the favorited array -->
     <px-context-browser-favorited-temp
         id="favoritedCop"
         favorited-behavior-element="[[__this]]"
@@ -97,8 +97,8 @@ Custom property | Description
 
       <!-- REGULAR CONTEXT BROWSER -->
       <template is="dom-if" if="[[!openedFromFavorited]]">
-        <px-context-browser-panel slot="dropdown-content" has-header$="[[_showHeader(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
-          <px-context-browser-header id="header" slot="header" active$="[[_showHeader(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
+        <px-context-browser-panel slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
+          <px-context-browser-header id="header" slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
           <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
           <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
             <template is="dom-repeat" items="[[__context.columns]]" as="column">
@@ -126,7 +126,7 @@ Custom property | Description
 
       <!-- FAVORITES CONTEXT BROWSER-->
       <template is="dom-if" if="[[openedFromFavorited]]">
-        <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" favorites-currently-syncing="[[syncing]]">
+        <px-context-browser-panel slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
           <template is="dom-if" if="[[!_showFavoritesEmptyState(favorited, favorited.*)]]">
             <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
             <template is="dom-if" if="[[favoritedSyncFailed]]">
@@ -139,7 +139,7 @@ Custom property | Description
                       label="[[_getItemProp(item, keys.label)]]"
                       breadcrumbs="[[_getFavoritedItemPath(item)]]"
                       selected="[[_isItemSelected(item, selected)]]"
-                      favorited="[[_isItemCurrentlyFavorited(item, currentFavorited)]]"
+                      favorited="[[_isItemFavorited(item, currentFavorited)]]"
                       can-select="[[_isItemSelectable(item)]]"
                       can-favorite="[[_showFavoritesAndItemFavoritable(showFavorites, item)]]"
                       can-open="[[_isItemOpenable(showArrow, item)]]"
@@ -327,10 +327,11 @@ Custom property | Description
       },
 
       /**
-       * Watch for changes to determine if the context browser has failed to sync
-       * its favorited items with those on the app's server. If true, a
-       * contextual notification will be displayed to inform the user and let
-       * them manually resync.
+       * Set to true if your app fails to sync the user's favorited list to the
+       * server. Shows a notification bar informing the user that the sync
+       * failed and allows them to tap an icon to attempt to sync the favorited
+       * list again. Listen for the NAME_OF_EVENT event to receive a
+       * notification when the user requests a new sync attempt.
        */
       favoritedSyncFailed: {
         type: Boolean,
@@ -342,7 +343,7 @@ Custom property | Description
        * Watch for changes to determine if the context browser is trying to
        * sync its favorited items.
        */
-      syncing: {
+      favoritedSyncing: {
         type: Boolean,
         value: false
       },
@@ -417,11 +418,6 @@ Custom property | Description
         const target = Polymer.dom(evt).rootTarget;
         target.blurFilter();
       }
-    },
-
-    _isItemCurrentlyFavorited(item, favorited) {
-      if (!item || !favorited || !Array.isArray(favorited)) return false;
-      return favorited.indexOf(item) > -1;
     },
 
     /**
@@ -994,7 +990,7 @@ Custom property | Description
     },
 
     _getFavoritedItemPath(item) {
-      if (item && typeof item === 'object' && this.favoritedMeta.item !== null && this.favoritedMeta && typeof this.favoritedMeta === 'object') {
+      if (item && typeof item === 'object') {
         const path = this._assetGraph.getPath(item);
         let pathArray = [];
         path.forEach(function (element) {
@@ -1070,10 +1066,6 @@ Custom property | Description
 
     _isNotNull(val) {
       return (typeof val !== 'undefined' && val !== null);
-    },
-
-    _showHeader(active) {
-      return this._isNotNull(active);
     },
 
     _showFavoritesAndItemFavoritable(showFavorites, item) {

@@ -116,7 +116,7 @@
     },
 
     _computeBreadcrumbsFontStyles(el) {
-      return this.getFontStyles(el);
+      return this._getFontStyles(el);
     },
 
     _computeBreadcrumbsWidth(el) {
@@ -125,7 +125,7 @@
 
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
       if (breadcrumbs && fontStyles && width) {
-        return this.truncateBreadcrumbs(breadcrumbs, fontStyles, width);
+        return this._truncateBreadcrumbs(breadcrumbs, fontStyles, width);
       }
     },
 
@@ -138,7 +138,7 @@
      * @returns {String} styles.size - The font size as a string with px suffix (e.g. '12px')
      * @returns {String} styles.family - The CSS font family declaration as a string (e.g. 'Helvetica')
      */
-    getFontStyles(el) {
+    _getFontStyles(el) {
         var styles = window.getComputedStyle(el);
         var size = styles.fontSize;
         var family = styles.fontFamily;
@@ -160,12 +160,12 @@
      * @param  {Number} width - The width to fit the items into
      * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
      */
-    truncateBreadcrumbs(items, fontStyles, width) {
+    _truncateBreadcrumbs(items, fontStyles, width) {
       if (!items.length) {
         return ''; // no breadcrumbs to display for the root item
       }
-      const ellipWidth = this.getTextWidth("\u2026 > ", fontStyles);
-      const caratWidth = this.getTextWidth(" > ", fontStyles);
+      const ellipWidth = this._getTextWidth("\u2026 > ", fontStyles);
+      const caratWidth = this._getTextWidth(" > ", fontStyles);
 
       const available = width;
       const len = items.length;
@@ -182,7 +182,7 @@
           textToMeasure =  '... > ' + textToMeasure;
         }
         // Measure the resulting string to see if it fits
-        let measure = this.getTextWidth(textToMeasure, fontStyles);
+        let measure = this._getTextWidth(textToMeasure, fontStyles);
         // If it fits, we're done!
         if (available > measure) {
           return textToMeasure;
@@ -204,8 +204,8 @@
      * @param {Object} fontStyles - An object with the font size and family strings from CSSText
      * @return {Number} - The rounded width of the text string
      */
-    getTextWidth(text, fontStyles) {
-      var canvas = document.createElement('canvas');
+    _getTextWidth(text, fontStyles) {
+      var canvas = this._textMeasureCanvas = (this._textMeasureCanvas ? this._textMeasureCanvas : document.createElement('canvas'));
       var context = canvas.getContext('2d');
       // Set the font styles
       context.font = fontStyles.size + ' ' + fontStyles.family;
