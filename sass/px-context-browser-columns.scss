@@ -17,7 +17,7 @@
 
 // Component
 .column-animation > ::slotted(:not(.active):not(.animating)) {
-  display: none;
+  display: none !important;
 }
 
 .column-animation > ::slotted(.animating) {
