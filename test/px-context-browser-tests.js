@@ -257,35 +257,35 @@ function runCustomTests() {
       });
     });
 
-    // it('updates favorited when the favorites browser is closed for > 5 seconds and the state is dirty', (done) => {
-    //   browser.favorited = [items[0], items[1]];
-    //   favoritedTrigger.click();
-    //   flush(() => {
-    //     const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-    //     const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
-    //     const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
-    //     favIcon.click();
-    //     favoritedTrigger.click();
-    //     // wait at least 5 seconds
-    //     expect(() => browser.favorited.indexOf(items[0]) === -1)
-    //       .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
-    //   });
-    // });
+    it('updates favorited when the favorites browser is closed for > 5 seconds and the state is dirty', (done) => {
+      browser.favorited = [items[0], items[1]];
+      favoritedTrigger.click();
+      flush(() => {
+        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+        const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
+        const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
+        favIcon.click();
+        favoritedTrigger.click();
+        // wait at least 5 seconds
+        expect(() => browser.favorited.indexOf(items[0]) === -1)
+          .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
+      });
+    });
 
-    // it('updates favorited when the user opens the regular browser and the state is dirty', (done) => {
-    //   browser.favorited = [items[0], items[1]];
-    //   favoritedTrigger.click();
-    //   flush(() => {
-    //     const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
-    //     const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
-    //     const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
-    //     favIcon.click();
-    //     openTrigger.click();
-    //     // wait at least 5 seconds
-    //     expect(() => browser.favorited.indexOf(items[0]) === -1)
-    //       .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
-    //   });
-    // });
+    it('updates favorited when the user opens the regular browser and the state is dirty', (done) => {
+      browser.favorited = [items[0], items[1]];
+      favoritedTrigger.click();
+      flush(() => {
+        const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
+        const homeItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'Home')[0];
+        const favIcon = Polymer.dom(homeItem.root).querySelector('px-context-browser-action-favorite');
+        favIcon.click();
+        openTrigger.click();
+        // wait at least 5 seconds
+        expect(() => browser.favorited.indexOf(items[0]) === -1)
+          .to.eventuallyEqual(true, {within: 9000, every: 250}, done);
+      });
+    });
 
     it('shows breadcrumbs for non-root items in the Favorites Panel', (done) => {
       browser.favorited = [items[1].children[1].children[0]];
@@ -318,12 +318,12 @@ function runCustomTests() {
       favoritedTrigger.click();
       flush(() => {
         const itemEl = Polymer.dom(browser.root).querySelector('px-context-browser-item');
-        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 120)).to.equal('US > CA > Oakland'); // width = 117
-        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 110)).to.equal('... > CA > Oakland'); // width = 108
-        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 100)).to.equal('... > Oakland'); // width = 76
-        expect(itemEl.truncateBreadcrumbs(items, fontStyles, 70)).to.equal('... > Oakland'); // end truncation will happen through CSS
-        expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 60)).to.equal('Oakland'); // width = 52
-        expect(itemEl.truncateBreadcrumbs(oneItem, fontStyles, 50)).to.equal('Oakland'); // end truncation will happen through CSS
+        expect(itemEl._truncateBreadcrumbs(items, fontStyles, 120)).to.equal('US > CA > Oakland'); // width = 117
+        expect(itemEl._truncateBreadcrumbs(items, fontStyles, 110)).to.equal('... > CA > Oakland'); // width = 108
+        expect(itemEl._truncateBreadcrumbs(items, fontStyles, 100)).to.equal('... > Oakland'); // width = 76
+        expect(itemEl._truncateBreadcrumbs(items, fontStyles, 70)).to.equal('... > Oakland'); // end truncation will happen through CSS
+        expect(itemEl._truncateBreadcrumbs(oneItem, fontStyles, 60)).to.equal('Oakland'); // width = 52
+        expect(itemEl._truncateBreadcrumbs(oneItem, fontStyles, 50)).to.equal('Oakland'); // end truncation will happen through CSS
         done();
       });
     });

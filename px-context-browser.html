@@ -190,6 +190,10 @@ Custom property | Description
     ],
 
     properties: {
+      /**
+       * Enable to show a star icon next to each item. The user can tap the star
+       * to add that item to their favorited list.
+       */
       showFavorited: {
         type: Boolean,
         value: true,
@@ -1073,8 +1077,8 @@ Custom property | Description
       return (typeof val !== 'undefined' && val !== null);
     },
 
-    _showFavoritedAndItemFavoritable(showFavorites, item) {
-      return showFavorites && this._isItemFavoritable(item);
+    _showFavoritedAndItemFavoritable(showFavorited, item) {
+      return showFavorited && this._isItemFavoritable(item);
     },
 
     _showFavoritedEmptyState(favorited) {
