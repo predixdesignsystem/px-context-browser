@@ -381,7 +381,7 @@ function runCustomTests() {
           expect(panelRect.left > 0).to.be.true;
           expect(panelRect.height).to.be.closeTo(200, 5);
           done();
-        }, 500);
+        }, 1000);
       }, 10);
     });
 
@@ -402,7 +402,7 @@ function runCustomTests() {
           expect(panelRect.left > 0).to.be.true;
           expect(panelRect.height).to.be.closeTo(132, 5);
           done();
-        }, 500);
+        }, 1000);
       });
     });
 

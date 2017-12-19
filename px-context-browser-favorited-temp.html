@@ -77,7 +77,7 @@
       _computeCurrentFavorited(favorited, itemsToRemove) {
         this.debounce('compute-current-favorited', () => {
           if (Array.isArray(favorited) && Array.isArray(itemsToRemove)) {
-            this._setCurrentFavorited(favorited.filter(fav => !itemsToRemove.includes(fav)));
+            this._setCurrentFavorited(favorited.filter(fav => itemsToRemove.indexOf(fav) === -1));
           }
         });
       },
