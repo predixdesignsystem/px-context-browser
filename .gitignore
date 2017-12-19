@@ -4,6 +4,5 @@ temp
 bower_components
 .idea
 reports
-css/noprefix
-*.iml
-build/
+bower_components-*/
+bower-*.json

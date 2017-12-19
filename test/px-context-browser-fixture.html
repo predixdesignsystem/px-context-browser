@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Web Component Test : Fixture for px-context-browser</title>
 
-    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <!-- BOILERPLATE -->
+    <!-- load webcomponents.js polyfill for browsers that don't support native web components -->
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <!-- Load web-component-tester's browser.js test runner -->
+    <!-- load web-component-tester test runner script -->
     <script src="../../web-component-tester/browser.js"></script>
-    <!-- Load Polymer -->
-    <link rel="import" href="../../polymer/polymer.html" />
-    <!-- Retain this link for px-theme.html -->
-    <!-- px-theme is needed for WCT to run without errors -->
-    <link rel="import" href="../../px-theme/px-theme-styles.html" />
-    <!-- Load local components -->
-    <link rel="import" href="../px-context-browser.html" />
-    <link rel="import" href="../px-context-browser-trigger.html" />
-    <!-- Load test helpers -->
+    <!-- load and apply default theme, required to run tests -->
+    <link rel="import" href="../../px-theme/px-theme-styles.html"/>
+
+    <!-- UNIQUE TO THIS COMPONENT -->
+    <!-- import web components to test -->
+    <link rel="import" href="../px-context-browser.html"/>
+    <link rel="import" href="../px-context-browser-trigger.html"/>
+    <!-- load test helpers -->
+    <link rel="import" href="../../iron-test-helpers/iron-test-helpers.html"/>
     <script src="chai-expect-eventually.js"></script>
     <script src="test-helpers.js"></script>
-    <!-- This script link will contain the generated script stub for custom, developer-added test cases -->
+    <!-- load test script -->
     <script src="px-context-browser-tests.js"></script>
-    <!-- Load mocha test fixture setup -->
-    <script src="../../test-fixture/test-fixture-mocha.js"></script>
-    <link href="../../test-fixture/test-fixture.html" rel="import">
   </head>
   <body>
-    <style include="px-theme-styles" is="custom-style"></style>
+    <custom-style>
+      <style include="px-theme-styles" is="custom-style"></style>
+    </custom-style>
 
     <test-fixture id="ContextBrowser">
       <template>
@@ -41,28 +41,18 @@
     <test-fixture id="ContextBrowserBindingFixture">
       <template>
         <div>
-          <template is="dom-bind" id="app">
-            <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-            <px-context-browser
-                items="{{items}}"
-                selected-route="{{selectedRoute}}"
-                opened="{{opened}}"
-                open-trigger="{{openTrigger}}">
-            </px-context-browser>
-          </template>
+          <px-context-browser-trigger></px-context-browser-trigger>
+          <px-context-browser></px-context-browser>
         </div>
       </template>
     </test-fixture>
 
     <test-fixture id="ContextBrowserFavoritedFixture">
-      <template is="dom-template">
+      <template>
         <div>
-          <px-context-browser-trigger id="open-trigger" trigger="{{openTrigger}}"></px-context-browser-trigger>
-          <px-context-browser-trigger id="favorited-trigger" trigger="{{favoritedTrigger}}" favorited></px-context-browser-trigger>
-          <px-context-browser
-              open-trigger="[[openTrigger]]"
-              favorited-trigger="[[favoritedTrigger]]">
-          </px-context-browser>
+          <px-context-browser-trigger id="openTrigger"></px-context-browser-trigger>
+          <px-context-browser-trigger id="favoritedTrigger" favorited></px-context-browser-trigger>
+          <px-context-browser></px-context-browser>
         </div>
       </template>
     </test-fixture>
