@@ -3,35 +3,39 @@
 <head>
   <title>Context Browser Demo -- Favorites</title>
 
-  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../polymer/polymer.html"/>
   <link rel="import" href="../../px-theme/px-theme-styles.html"/>
   <link rel="import" href="../px-context-browser-trigger.html"/>
   <link rel="import" href="../px-context-browser.html"/>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+    }
+    .triggers {
+      display: flex;
+    }
+  </style>
 </head>
-
-<style is="custom-style" include="px-theme-styles"></style>
-<style is="custom-style">
-  body {
-    margin: 0;
-    padding: 30px;
-  }
-  .triggers {
-    display: flex;
-  }
-</style>
 <body>
-  <template is="dom-bind">
-    <div class="triggers">
-      <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-      <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited></px-context-browser-trigger>
-    </div>
-    <px-context-browser
-        items='[{"id":"us","label":"United States","children":[{"id":"calif","label":"California","children":[{"id":"los-angeles","label":"Los Angeles"},{"id":"san-francisco","label":"San Francisco and more words to make this really really suuuper duper long","children":[{"id":"mission","label":"The Mission", "children":[{"id":"valencia","label":"Valencia St."}]},{"id":"noe-valley","label":"Noe Valley"},{"id":"castro","label":"The Castro"}]},{"id":"oakland","label":"Oakland","children":[{"id":"adams-point","label":"Adams Point"},{"id":"temescal","label":"Temescal"}]}]},{"id":"mass","label":"Massachusetts","children":[{"id":"boston","label":"Boston","children":[{"id":"back-bay","label":"Back Bay"},{"id":"south-end","label":"South End"},{"id":"seaport","label":"Seaport"}]},{"id":"cambridge","label":"Cambridge","children":[{"id":"cambridgeport","label":"Cambridgeport", "children":[{"id":"more-text", "label":"Another Place"}]},{"id":"west-cambridge","label":"West Cambridge"},{"id":"riverside","label":"Riverside"}]}]}]}]'
-        open-trigger="[[openTrigger]]"
-        favorited-trigger="[[favoritedTrigger]]"
-        show-favorited>
-    </px-context-browser>
-  </template>
+  <custom-style>
+    <style is="custom-style" include="px-theme-styles"></style>
+  </custom-style>
 
+  <dom-bind>
+    <template is="dom-bind">
+      <div class="triggers">
+        <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
+        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited></px-context-browser-trigger>
+      </div>
+      <px-context-browser
+          items='[{"id":"us","label":"United States","children":[{"id":"calif","label":"California","children":[{"id":"los-angeles","label":"Los Angeles"},{"id":"san-francisco","label":"San Francisco and more words to make this really really suuuper duper long","children":[{"id":"mission","label":"The Mission", "children":[{"id":"valencia","label":"Valencia St."}]},{"id":"noe-valley","label":"Noe Valley"},{"id":"castro","label":"The Castro"}]},{"id":"oakland","label":"Oakland","children":[{"id":"adams-point","label":"Adams Point"},{"id":"temescal","label":"Temescal"}]}]},{"id":"mass","label":"Massachusetts","children":[{"id":"boston","label":"Boston","children":[{"id":"back-bay","label":"Back Bay"},{"id":"south-end","label":"South End"},{"id":"seaport","label":"Seaport"}]},{"id":"cambridge","label":"Cambridge","children":[{"id":"cambridgeport","label":"Cambridgeport", "children":[{"id":"more-text", "label":"Another Place"}]},{"id":"west-cambridge","label":"West Cambridge"},{"id":"riverside","label":"Riverside"}]}]}]}]'
+          open-trigger="[[openTrigger]]"
+          favorited-trigger="[[favoritedTrigger]]"
+          show-favorited>
+      </px-context-browser>
+    </template>
+  </dom-bind>
 </html>

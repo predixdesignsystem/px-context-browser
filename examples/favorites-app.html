@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Favorite Foods app</title>
+<head>
+  <title>Favorite Foods app</title>
 
-    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
-    <link rel="import" href="../../polymer/polymer.html"/>
-    <link rel="import" href="../../px-theme/px-theme-styles.html"/>
-    <link rel="import" href="../px-context-browser-trigger.html"/>
-    <link rel="import" href="../px-context-browser.html"/>
-  </head>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../polymer/polymer.html"/>
+  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
+  <link rel="import" href="../px-context-browser-trigger.html"/>
+  <link rel="import" href="../px-context-browser.html"/>
 
-  <style is="custom-style" include="px-theme-styles"></style>
-  <style is="custom-style">
+  <style>
     body {
       margin: 0;
       padding: 30px;
@@ -20,7 +18,13 @@
       display: flex;
     }
   </style>
-  <body>
+</head>
+<body>
+  <custom-style>
+    <style is="custom-style" include="px-theme-styles"></style>
+  </custom-style>
+
+  <dom-bind>
     <template is="dom-bind">
       <div>
         <h1>My favorite foods</h1>
@@ -46,9 +50,11 @@
         <h2>Calories: [[selectedFood.calories]]</h2>
       </div>
     </template>
-  </body>
+  </dom-bind>
   <script>
-    var templ = document.querySelector('template[is="dom-bind"]');
+    var templQuery = Polymer.Element ? 'dom-bind' : 'template[is=dom-bind]';
+    var templ = document.querySelector(templQuery);
+
     templ.foods = [
       {id:'fruit', label:'fruit', isSelectable: false, children: [
         {id:'melon', label:'melon', isSelectable: false, children: [
@@ -198,5 +204,5 @@
       syncFailedReason = null;
     });
   </script>
-
+</body>
 </html>
