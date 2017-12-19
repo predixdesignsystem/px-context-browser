@@ -142,7 +142,7 @@
 
     function addFavoriteToServer(item) {
       var cb = document.querySelector('px-context-browser');
-      cb.syncing = true;
+      cb.favoritedSyncing = true;
       postJSON('http://localhost:3000/favorites/add', {id: item})
         .then(() => {
           console.log(`Added ${item} to faves`);
@@ -154,7 +154,7 @@
           console.log(`Did not succeed in adding ${item} to faves`);
         })
         .finally(() => {
-          cb.syncing = false;
+          cb.favoritedSyncing = false;
         });
     }
 
@@ -164,7 +164,7 @@
 
     function removeFavoriteFromServer(item) {
       var cb = document.querySelector('px-context-browser');
-      cb.syncing = true;
+      cb.favoritedSyncing = true;
       postJSON('http://localhost:3000/favorites/remove', {id: item})
         .then(() => {
           console.log(`Removed ${item} from faves`);
@@ -177,7 +177,7 @@
           console.log(`Did not succeed in removing ${item} from faves`);
         })
         .finally(() => {
-          cb.syncing = false;
+          cb.favoritedSyncing = false;
         });
     }
 

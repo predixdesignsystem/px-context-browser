@@ -8,11 +8,8 @@
 
     <div class="panel-body">
       <slot name="header"></slot>
-      <template is="dom-if" if="[[showLoadingBar]]">
-        <div class="loading-bar"></div>
-      </template>
       <slot name="filter"></slot>
-      <template is="dom-if" if="[[favoritesCurrentlySyncing]]">
+      <template is="dom-if" if="[[showLoadingBar]]">
         <div class="loading-bar"></div>
       </template>
       <slot name="contextual-notification"></slot>
@@ -26,10 +23,6 @@
 
     properties: {
       showLoadingBar: {
-        type: Boolean,
-        value: false
-      },
-      favoritesCurrentlySyncing: {
         type: Boolean,
         value: false
       }
