@@ -1,3 +1,5 @@
+<link rel="import" href="../px-icon-set/px-icon-set.html"/>
+
 <!-- Action: Select -->
 <dom-module id="px-context-browser-action-select">
   <template>
@@ -5,25 +7,18 @@
       :host {
         display: block;
       }
-      svg {
-        stroke: currentcolor;
-        fill: transparent;
-        stroke-width: 2px;
+      px-icon {
+        --iron-icon-height: 1.3333rem;
+        --iron-icon-width: 1.3333rem;
       }
-      :host(:hover) svg,
-      :host([active]) svg {
+      :host(:hover) px-icon,
+      :host([active]) px-icon {
         stroke: var(--px-context-browser-icon-select-stroke, darkolivegreen);
         fill: var(--px-context-browser-icon-select-fill, yellowgreen);
       }
     </style>
 
-    <!-- Source code copied from px-icon-set.html to allow for color styling -->
-    <svg viewBox="0 0 32 32">
-      <g id="open" transform="translate(1 1)">
-        <circle cx="14.8" cy="14.8" r="14.2" stroke-linejoin="round"/>
-        <path stroke-linejoin="round" d="M9.3 20.2L20.4 9.1m-7.1-.5h7.6v7.6"/>
-      </g>
-    </svg>
+    <px-icon icon="px-nav:open-context"></px-icon>
   </template>
 </dom-module>
 <script>
@@ -39,24 +34,18 @@
       :host {
         display: block;
       }
-      svg {
-        stroke: currentcolor;
-        fill: transparent;
-        stroke-width: 2px;
+      px-icon {
+        --iron-icon-height: 1.3333rem;
+        --iron-icon-width: 1.3333rem;
       }
-      :host(:hover) svg,
-      :host([active]) svg {
+      :host(:hover) px-icon,
+      :host([active]) px-icon {
         stroke: var(--px-context-browser-icon-favorite-stroke, darkgoldenrod);
         fill: var(--px-context-browser-icon-favorite-fill, yellow);
       }
     </style>
 
-    <!-- Source code copied from px-icon-set.html to allow for color styling -->
-    <svg viewBox="0 0 32 32">
-      <g id="star">
-        <path stroke-linejoin="round" d="M15.2 1.6l3.2 9.9h10.4l-8.4 6.1 3.2 9.9-8.4-6.1-8.5 6.1 3.3-9.9-8.5-6.1H12z"/>
-      </g>
-    </svg>
+    <px-icon icon="px-nav:favorite"></px-icon>
   </template>
 </dom-module>
 <script>
@@ -72,19 +61,13 @@
       :host {
         display: block;
       }
-      svg {
-        stroke: currentcolor;
-        fill: transparent;
-        stroke-width: 2px;
+      px-icon {
+        --iron-icon-height: 1.3333rem;
+        --iron-icon-width: 1.3333rem;
       }
     </style>
 
-    <!-- Source code copied from px-icon-set.html to allow for color styling -->
-    <svg viewBox="0 0 32 32">
-      <g id="arrow-right" transform="translate(1 8)">
-        <path stroke-linejoin="round" d="M21.2 15.9L29 8.1 21.2.4m7.1 7.7H0"/>
-      </g>
-    </svg>
+    <px-icon icon="px-nav:next"></px-icon>
   </template>
 </dom-module>
 <script>

@@ -1,3 +1,11 @@
+v2.0.14
+==================
+* add device flags
+
+v2.0.13
+==================
+* cut over to px-icon-set for actions
+
 v2.0.12
 ==================
 * Adds `isSelectable` configuration for items
