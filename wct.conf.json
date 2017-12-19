@@ -25,6 +25,6 @@
     }
   },
   "suites": [
-    "test/px-context-browser-fixture.html"
+    "test/index.html"
   ]
 }

@@ -294,7 +294,7 @@ function runCustomTests() {
         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
         const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'ABC')[0];
         const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
-        expect(itemBreadcrumbs.innerText === "Assets > The Second Asset").to.be.true;
+        expect(itemBreadcrumbs.innerText.trim()).to.equal("Assets > The Second Asset");
         done();
       }, 10);
     });
@@ -306,7 +306,7 @@ function runCustomTests() {
         const itemEls = Polymer.dom(browser.root).querySelectorAll('px-context-browser-item');
         const favoriteItem = itemEls.filter(item => item.styleAsFavorite && item.label === 'My Favorite Asset')[0];
         const itemBreadcrumbs = Polymer.dom(favoriteItem.root).querySelector('#breadcrumbs');
-        expect(itemBreadcrumbs.innerText === "... > The Second Asset > My Very Long Child Asset").to.be.true;
+        expect(itemBreadcrumbs.innerText.trim()).to.equal("... > The Second Asset > My Very Long Child Asset");
         done();
       }, 10);
     });
