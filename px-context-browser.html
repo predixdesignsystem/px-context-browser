@@ -101,7 +101,7 @@ Custom property | Description
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
             <div column$="[[column.index]]" class="column" slot="columns">
-              <template is="dom-repeat" items="[[column.items]]" as="item" for-column$="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
+              <template is="dom-repeat" items="[[column.items]]" as="item" forcolumn="[[column.index]]" on-dom-change="_updateVisibleCount" filter="{{_getColumnFilter(column.index, filter, keys.label, filtering)}}">
                 <px-context-browser-item
                     label="[[_getItemProp(item, keys.label)]]"
                     breadcrumbs="[[_getFavoritedItemPath(item)]]"
@@ -140,7 +140,7 @@ Custom property | Description
           </template>
           <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
             <div column="0" class="column" slot="columns">
-              <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" for-column="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
+              <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" forcolumn="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
                 <px-context-browser-item
                     label="[[_getItemProp(item, keys.label)]]"
                     breadcrumbs="[[_getFavoritedItemPath(item)]]"
@@ -663,7 +663,7 @@ Custom property | Description
     _updateVisibleCount(evt) {
       if (!this.__context || typeof this.__context.activeIndex !== 'number') return;
       const target = Polymer.dom(evt).rootTarget;
-      const index = target.getAttribute('for-column');
+      const index = target.forcolumn;
       const count = target.renderedItemCount;
       if (typeof count !== 'number') return;
       this.set(`__context.columns.${index}.visibleCount`, count);
