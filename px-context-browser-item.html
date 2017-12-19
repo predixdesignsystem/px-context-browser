@@ -138,10 +138,6 @@
       }, 5);
     },
 
-    _computeBreadcrumbsFontStyles(el) {
-      return this.getFontStyles(el);
-    },
-
     _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
       if (breadcrumbs && fontStyles && width) {
         return this._truncateBreadcrumbs(breadcrumbs, fontStyles, width);

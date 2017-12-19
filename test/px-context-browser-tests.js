@@ -372,7 +372,6 @@ function runCustomTests() {
       flushAndRender(() => {
         const panel = Polymer.dom(browser.root).querySelector('#favoritedPanel');
         let panelRect = panel.getBoundingClientRect();
-        debugger;
         expect(panelRect.left > 0).to.be.true;
         expect(panelRect.height).to.be.closeTo(140, 5);
 
