@@ -1,3 +1,9 @@
+v2.1.0
+==================
+* Add Polymer 1.x/2.x hybrid element support
+* Add favoriting feature to allow users to 'favorite' items in the context
+browser and see those items listed in a separate Favorited Items Panel
+
 v2.0.14
 ==================
 * add device flags
