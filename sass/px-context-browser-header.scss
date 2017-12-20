@@ -53,6 +53,7 @@
 
 .context-browser-header-label__arrow {
   margin-right: calculateRem(5px);
+  display: inline-flex;
 }
 
 .context-browser-header-label__link {

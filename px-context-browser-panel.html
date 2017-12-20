@@ -1,4 +1,5 @@
 <link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-progress-bar/px-progress-bar.html"/>
 <link rel="import" href="css/px-context-browser-panel-styles.html"/>
 
 <dom-module id="px-context-browser-panel">
@@ -10,7 +11,7 @@
       <slot name="header"></slot>
       <slot name="filter"></slot>
       <template is="dom-if" if="[[showLoadingBar]]">
-        <div class="loading-bar"></div>
+        <px-progress-bar value="100" min="0" max ="100" infinite></px-progress-bar>
       </template>
       <slot name="contextual-notification"></slot>
       <slot name="columns"></slot>
