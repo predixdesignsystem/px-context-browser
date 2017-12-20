@@ -378,20 +378,20 @@ describe('px-context-browser [favorited behaviors]', () => {
     browser.favorited = [items[0], items[1]];
     favoritedTrigger.click();
 
-    flushAndRender(() => {
+    setTimeout(() => {
       const panel = Polymer.dom(browser.root).querySelector('#favoritedPanel');
       let panelRect = panel.getBoundingClientRect();
-      expect(panelRect.left > 0).to.be.true;
+      expect(panelRect.left).to.be.greaterThan(0);
       expect(panelRect.height).to.be.closeTo(140, 5);
 
       browser.favorite(items[1].children[0]);
       setTimeout(() => {
         let panelRect = panel.getBoundingClientRect();
-        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.left).to.be.greaterThan(0);
         expect(panelRect.height).to.be.closeTo(200, 5);
         done();
-      }, 1000);
-    }, 10);
+      }, 2000);
+    }, 2000);
   });
 
   it('updates the panel height to show the correct number of items in the Favorites Panel when items are filtered', (done) => {
@@ -399,20 +399,20 @@ describe('px-context-browser [favorited behaviors]', () => {
     browser.showFilter = true;
     favoritedTrigger.click();
 
-    flush(() => {
+    setTimeout(() => {
       const panel = Polymer.dom(browser.root).querySelector('#favoritedPanel');
       let panelRect = panel.getBoundingClientRect();
-      expect(panelRect.left > 0).to.be.true;
+      expect(panelRect.left).to.be.greaterThan(0);
       expect(panelRect.height).to.be.closeTo(252, 5);
 
       browser.favoritedFilter = "h";
       setTimeout(() => {
         let panelRect = panel.getBoundingClientRect();
-        expect(panelRect.left > 0).to.be.true;
+        expect(panelRect.left).to.be.greaterThan(0);
         expect(panelRect.height).to.be.closeTo(132, 5);
         done();
-      }, 1000);
-    });
+      }, 2000);
+    }, 2000);
   });
 
 });

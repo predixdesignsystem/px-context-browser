@@ -20,7 +20,7 @@
 <!-- Demo DOM module -->
 <dom-module id="px-context-browser-demo">
   <template>
-    <style include="px-demo-styles" is="custom-style"></style>
+    <style include="px-demo-styles"></style>
     <style>
       .triggers {
         display: flex;
@@ -37,15 +37,15 @@
     <!-- Interactive -->
     <px-demo-interactive>
       <!-- Configs -->
-      <px-demo-configs configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
+      <px-demo-configs slot="px-demo-configs" configs="[[configs]]" props="{{props}}" chosen-config="{{chosenConfig}}"></px-demo-configs>
 
       <!-- Props -->
-      <px-demo-props props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
+      <px-demo-props slot="px-demo-props" props="{{props}}" config="[[chosenConfig]]"></px-demo-props>
 
-      <px-demo-code-editor props="{{props}}" config="[[chosenConfig]]"></px-demo-code-editor>
+      <px-demo-code-editor slot="px-demo-code-editor" props="{{props}}" config="[[chosenConfig]]"></px-demo-code-editor>
 
       <!-- Component ---------------------------------------------------------->
-      <px-demo-component style="display:flex; width:600px">
+      <px-demo-component slot="px-demo-component" style="display:flex; width:600px">
         <div>
           <div class="triggers">
             <px-context-browser-trigger trigger={{openTrigger}}></px-context-browser-trigger>
@@ -81,6 +81,7 @@
       <!-- END Component ------------------------------------------------------>
 
       <px-demo-component-snippet
+          slot="px-demo-component-snippet"
           element-properties="{{props}}"
           element-name="px-context-browser">
       </px-demo-component-snippet>
@@ -95,29 +96,18 @@
 
     <!-- Footer -->
     <px-demo-footer></px-demo-footer>
-
   </template>
-
 </dom-module>
 <script>
   Polymer({
     is: 'px-context-browser-demo',
 
     properties: {
-
-      /**
-       * @property demoProps
-       * @type {Object}
-       */
       props: {
         type: Object,
         value: function(){ return this.demoProps; }
       },
 
-      /**
-       * @property demoProps
-       * @type {Array}
-       */
       configs: {
         type: Array,
         value: function(){
@@ -152,15 +142,13 @@
             "multiSelect"
           ]
         }
-      },
-
+      }
   },
 
     /**
      * A reference for `this.props`. Read the documentation there.
      */
     demoProps: {
-
       opened: {
         type: Boolean,
         defaultValue: false,
@@ -229,10 +217,7 @@
       }
     },
 
-    ready: function () {
-    },
-
-    attached: function () {
+    ready: function() {
       var cb = document.querySelector('px-context-browser');
       var dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
       dropdown.noCancelOnOutsideClick = true;
