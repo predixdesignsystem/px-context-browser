@@ -218,9 +218,23 @@
     },
 
     ready: function() {
-      var cb = document.querySelector('px-context-browser');
-      var dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
-      dropdown.noCancelOnOutsideClick = true;
+      const disableCancelOnOutsideClick = () => {
+        const cb = Polymer.dom(this.root).querySelector('px-context-browser');
+        const dropdown = Polymer.dom(cb.root).querySelector('iron-dropdown');
+        dropdown.noCancelOnOutsideClick = true;
+      };
+      /*
+       * In Polymer 2.x, ready can happen before the template is initialized
+       * and stamped in the DOM. Wait for first render to disable click.
+       * In Polymer 1.x, just disable click right away.
+       */
+      if (Polymer.Element) {
+        Polymer.RenderStatus.afterNextRender(this, () => {
+          disableCancelOnOutsideClick();
+        });
+      } else {
+        disableCancelOnOutsideClick();
+      }
     }
   });
   </script>
