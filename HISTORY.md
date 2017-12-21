@@ -1,3 +1,7 @@
+v2.1.2
+==================
+* Demo fix: Remove dead demo code for trigger
+
 v2.1.1
 ==================
 * Demo fix: ensure template has rendered before querying it
