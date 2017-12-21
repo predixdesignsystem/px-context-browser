@@ -1,3 +1,7 @@
+v2.1.1
+==================
+* Demo fix: ensure template has rendered before querying it
+
 v2.1.0
 ==================
 * Add Polymer 1.x/2.x hybrid element support
