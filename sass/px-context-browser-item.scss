@@ -34,11 +34,6 @@
   min-width: 0;
 }
 
-.context-browser-text-container {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 :host([style-as-favorite]) {
   height: calculateRem(60px);
 }
@@ -68,6 +63,8 @@
 }
 
 .context-browser-text {
+  display: block;
+  width: 100%;
   flex: 1 1 auto;
   padding-left: calculateRem(15px);
   padding-right: calculateRem(15px);
@@ -98,6 +95,7 @@
   opacity: 0;
   transition: opacity .2s ease-in-out;
   display: none;
+  flex: 0 0 auto;
 }
 :host([style-as-favorite]) .actions {
   display: flex;
@@ -115,7 +113,6 @@
   display: none;
 }
 .action {
-  flex: 0 0 auto;
   width: calculateRem(20px);
   height: calculateRem(20px);
   margin-left: calculateRem(5px);

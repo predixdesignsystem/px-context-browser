@@ -52,17 +52,20 @@
 }
 
 .context-browser-header-label__arrow {
+  flex: 0 0 auto;
   margin-right: calculateRem(5px);
   display: inline-flex;
 }
 
 .context-browser-header-label__link {
+  flex: 1 1 auto;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .actions {
+  flex: 0 0 auto;
   margin-left: calculateRem(10px);
   display: flex;
   align-items: center;
