@@ -2,6 +2,7 @@
 <link rel="import" href="../px-icon-set/px-icon.html"/>
 <link rel="import" href="../px-icon-set/px-icon-set.html"/>
 <link rel="import" href="css/px-context-browser-filter-styles.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 <dom-module id="px-context-browser-filter">
   <template>
@@ -13,7 +14,7 @@
       <input
           id="filter"
           class="text-input filter__box"
-          placeholder="Filter"
+          placeholder="{{localize('Filter')}}"
           value="{{filter::input}}"
           autocomplete="off"
           tabindex="0"
@@ -31,6 +32,10 @@
   <script>
     Polymer({
       is: 'px-context-browser-filter',
+
+      behaviors: [
+        Polymer.AppLocalizeBehavior
+      ],
 
       properties: {
         filter: {
