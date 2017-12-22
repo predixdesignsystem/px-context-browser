@@ -1,3 +1,7 @@
+v2.1.3
+==================
+* Fix truncation for items and header in ie11
+
 v2.1.2
 ==================
 * Demo fix: Remove dead demo code for trigger
