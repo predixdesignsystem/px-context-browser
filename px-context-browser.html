@@ -8,6 +8,7 @@
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-favoritable.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/px-context-browser-styles.html"/>
 <link rel="import" href="css/px-context-browser-animations-styles.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
@@ -17,7 +18,6 @@
 <link rel="import" href="px-context-browser-filter.html"/>
 <link rel="import" href="px-context-browser-contextual-notification.html"/>
 <link rel="import" href="px-context-browser-favorited-temp.html"/>
-<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 
 <!--
 ### Usage
@@ -98,7 +98,7 @@ Custom property | Description
         on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel id="panel" slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
         <px-context-browser-header id="header" slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritedAndItemFavoritable(showFavorited, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
-        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}" language="{{language}}" use-key-if-missing="{{useKeyIfMissing}}" resources="{{resources}}"></px-context-browser-filter>
+        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
             <div column$="[[column.index]]" class="column" slot="columns">
@@ -135,7 +135,7 @@ Custom property | Description
       <!-- NON-EMPTY FAVORITES STATE -->
       <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
         <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
-          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}" language="{{language}}" use-key-if-missing="{{useKeyIfMissing}}" resources="{{resources}}"></px-context-browser-filter>
+          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
           <template is="dom-if" if="[[favoritedSyncFailed]]">
               <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
           </template>
@@ -382,9 +382,9 @@ Custom property | Description
         value: function() {
           return {
             'en': {
-              "You don't have any favorites yet.": "You don't have any favorites yet.",
-              "To favorite a context\, click on the star while viewing a context in the context browser.": "To favorite a context, click on the star while viewing a context in the context browser.",
-              "Filter": "Filter"
+              'You don\'t have any favorites yet.': 'You don\'t have any favorites yet.',
+              'To favorite a context\, click on the star while viewing a context in the context browser.': 'To favorite a context, click on the star while viewing a context in the context browser.',
+              'Filter': 'Filter'
             }
           }
         }
