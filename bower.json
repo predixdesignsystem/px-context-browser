@@ -33,7 +33,8 @@
     "iron-dropdown": "^2.0.0",
     "px-app-helpers": "^2.1.0",
     "iron-media-query": "^2.0.0",
-    "px-progress-bar": "^1.2.1"
+    "px-progress-bar": "^1.2.1",
+    "px-contextual-notification": "^1.0.0"
   },
   "devDependencies": {
     "promise-polyfill": "polymerlabs/promise-polyfill#^2.0.0",

@@ -17,6 +17,7 @@
 <link rel="import" href="px-context-browser-filter.html"/>
 <link rel="import" href="px-context-browser-contextual-notification.html"/>
 <link rel="import" href="px-context-browser-favorited-temp.html"/>
+<link rel="import" href="../px-contextual-notification/px-contextual-notification.html"/>
 
 <!--
 ### Usage
@@ -135,9 +136,9 @@ Custom property | Description
       <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
         <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
           <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
-          <template is="dom-if" if="[[favoritedSyncFailed]]">
-              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-          </template>
+          <px-contextual-notification slot="contextual-notification" opened="[[favoritedSyncFailed]]" content="Your favorites list failed to sync." action-icon="px-nav:reload">
+            <div slot="left"></div>
+          </px-contextual-notification>
           <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
             <div column="0" class="column" slot="columns">
               <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" forcolumn="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
@@ -162,9 +163,9 @@ Custom property | Description
 
         <!-- EMPTY FAVORITES STATE -->
         <template is="dom-if" if="[[_showFavoritedEmptyState(favorited, favorited.*)]]">
-          <template is="dom-if" if="[[favoritedSyncFailed]]">
-              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-          </template>
+          <px-contextual-notification slot="contextual-notification" opened="[[favoritedSyncFailed]]" content="Your favorites list failed to sync." action-icon="px-nav:reload">
+            <div slot="left"></div>
+          </px-contextual-notification>
           <div slot="columns" class="context-browser-favorites--empty__container">
             <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
             <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
@@ -414,7 +415,12 @@ Custom property | Description
       // 'focus-first-visible-item' : '_focusFirstVisibleItem',
       'px-app-asset-children-updated' : '_handleChildrenChanged',
       'iron-resize' : '_handleResize',
-      'px-context-browser-filter-focused' : '_handleFilterFocused'
+      'px-context-browser-filter-focused' : '_handleFilterFocused',
+      'px-contextual-notification-action-tapped' : '_syncFavorites'
+    },
+
+    _syncFavorites() {
+      this.fire('px-app-asset-favorited-sync-requested');
     },
 
     _handleFilterFocused(evt) {
