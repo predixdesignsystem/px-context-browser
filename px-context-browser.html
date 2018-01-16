@@ -135,7 +135,7 @@ Custom property | Description
       <!-- NON-EMPTY FAVORITES STATE -->
       <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
         <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
-          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
+          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
           <template is="dom-if" if="[[favoritedSyncFailed]]">
               <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
           </template>
