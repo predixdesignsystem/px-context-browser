@@ -1,6 +1,6 @@
 {
   "name": "px-context-browser",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "main": [
     "px-context-browser.html"
   ],
@@ -34,6 +34,7 @@
     "px-app-helpers": "^2.1.0",
     "iron-media-query": "^2.0.0",
     "px-progress-bar": "^1.2.1",
+    "app-localize-behavior": "^2.0.0",
     "px-contextual-notification": "^1.0.0"
   },
   "devDependencies": {

@@ -13,7 +13,7 @@
       <input
           id="filter"
           class="text-input filter__box"
-          placeholder="Filter"
+          placeholder="[[placeholder]]"
           value="{{filter::input}}"
           autocomplete="off"
           tabindex="0"
@@ -37,6 +37,10 @@
           type: String,
           notify: true,
           value: ''
+        },
+
+        placeholder: {
+          type: String
         },
 
         active: {

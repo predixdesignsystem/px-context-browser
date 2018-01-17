@@ -8,6 +8,7 @@
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-selectable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-activatable.html"/>
 <link rel="import" href="../px-app-helpers/px-app-asset/px-app-asset-behavior-favoritable.html"/>
+<link rel="import" href="../app-localize-behavior/app-localize-behavior.html"/>
 <link rel="import" href="css/px-context-browser-styles.html"/>
 <link rel="import" href="css/px-context-browser-animations-styles.html"/>
 <link rel="import" href="px-context-browser-panel.html"/>
@@ -98,7 +99,7 @@ Custom property | Description
         on-iron-overlay-closed="_handleBrowserClosed">
       <px-context-browser-panel id="panel" slot="dropdown-content" has-header$="[[_isNotNull(active)]]" collapsed$="[[collapsed]]" show-loading-bar="[[loading]]">
         <px-context-browser-header id="header" slot="header" active$="[[_isNotNull(active)]]" label="[[_getItemProp(active, keys.label)]]" on-tap="_handleHeaderTapped" can-select="[[_isItemSelectable(active)]]" can-favorite="[[_showFavoritedAndItemFavoritable(showFavorited, active)]]" favorited="[[_isItemFavorited(active, favorited, favorited.*)]]" collapsed$="[[collapsed]]"></px-context-browser-header>
-        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}"></px-context-browser-filter>
+        <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{filter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
         <px-context-browser-columns slot="columns" active="[[__context.activeIndex]]" visible-count$="[[__activeContext.visibleCount]]" collapsed$="[[collapsed]]">
           <template is="dom-repeat" items="[[__context.columns]]" as="column">
             <div column$="[[column.index]]" class="column" slot="columns">
@@ -135,7 +136,7 @@ Custom property | Description
       <!-- NON-EMPTY FAVORITES STATE -->
       <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
         <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
-          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}"></px-context-browser-filter>
+          <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
           <px-contextual-notification slot="contextual-notification" opened="[[favoritedSyncFailed]]" content="Your favorites list failed to sync." action-icon="px-nav:reload">
             <div slot="left"></div>
           </px-contextual-notification>
@@ -168,8 +169,8 @@ Custom property | Description
           </px-contextual-notification>
           <div slot="columns" class="context-browser-favorites--empty__container">
             <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
-            <div class="context-browser-favorites--empty__text regular">You don't have any favorites yet.</div>
-            <div class="context-browser-favorites--empty__subtext zeta">To favorite a context, click on the star while viewing a context in the context browser.</div>
+            <div class="context-browser-favorites--empty__text regular">[[localize("You don't have any favorites yet.")]]</div>
+            <div class="context-browser-favorites--empty__subtext zeta">[[localize("To favorite a context\, click on the star while viewing a context in the context browser.")]]</div>
           </div>
         </template>
       </px-context-browser-panel>
@@ -187,7 +188,8 @@ Custom property | Description
       PxAppBehavior.AssetSelectable,
       PxAppBehavior.AssetActivatable,
       PxAppBehavior.AssetFavoritable,
-      Polymer.IronResizableBehavior
+      Polymer.IronResizableBehavior,
+      Polymer.AppLocalizeBehavior
     ],
 
     properties: {
@@ -351,6 +353,42 @@ Custom property | Description
       favoritedSyncing: {
         type: Boolean,
         value: false
+      },
+
+      /**
+       * A valid IETF language tag as a string that `app-localize-behavior` will
+       * use to localize this component.
+       *
+       * See https://github.com/PolymerElements/app-localize-behavior for API
+       * documentation and more information.
+       */
+      language: {
+        type: String,
+        value: 'en'
+      },
+      /**
+       * Use the key for localization if value for that language is missing.
+       * Should always be true for Predix components.
+       */
+      useKeyIfMissing: {
+        type: Boolean,
+        value: true
+      },
+      /**
+       * Library object of hardcoded strings used in this application.
+       * Used by `app-localize-behavior` in conjunction with `language`.
+       */
+      resources: {
+        type: Object,
+        value: function() {
+          return {
+            'en': {
+              'You don\'t have any favorites yet.': 'You don\'t have any favorites yet.',
+              'To favorite a context\, click on the star while viewing a context in the context browser.': 'To favorite a context, click on the star while viewing a context in the context browser.',
+              'Filter': 'Filter'
+            }
+          }
+        }
       },
 
       _positionTarget: {
