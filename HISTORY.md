@@ -1,3 +1,7 @@
+v2.1.4
+==================
+* Add support for localization
+
 v2.1.3
 ==================
 * Fix truncation for items and header in ie11
