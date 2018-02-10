@@ -1,3 +1,7 @@
+v2.1.5
+==================
+* fixing demo pages for IE11
+
 v2.1.4
 ==================
 * Add support for localization
