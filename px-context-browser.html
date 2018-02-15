@@ -138,9 +138,7 @@ Custom property | Description
       <px-context-browser-panel id="favoritedPanel" slot="dropdown-content" collapsed$="[[collapsed]]" show-loading-bar="[[favoritedSyncing]]">
         <template is="dom-if" if="[[!_showFavoritedEmptyState(favorited, favorited.*)]]">
           <px-context-browser-filter slot="filter" active$="[[showFilter]]" filter="{{favoritedFilter}}" filtering="{{filtering}}" placeholder="[[localize('Filter')]]"></px-context-browser-filter>
-          <template is="dom-if" if="[[favoritedSyncFailed]]">
-              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-          </template>
+          <px-context-browser-contextual-notification slot="contextual-notification" opened="[[favoritedSyncFailed]]"></px-context-browser-contextual-notification>
           <px-context-browser-columns slot="columns" active="0" visible-count$="[[_favoritedVisibleCount]]" collapsed$="[[collapsed]]">
             <div column="0" class="column" slot="columns">
               <template is="dom-repeat" id="favoritedRepeater" items="[[favorited]]" as="item" forcolumn="0" on-dom-change="_updateVisibleCountFavorited" filter="{{_getColumnFilterFavorited(favoritedFilter, keys.label, filtering)}}">
@@ -165,9 +163,7 @@ Custom property | Description
 
         <!-- EMPTY FAVORITES STATE -->
         <template is="dom-if" if="[[_showFavoritedEmptyState(favorited, favorited.*)]]">
-          <template is="dom-if" if="[[favoritedSyncFailed]]">
-              <px-context-browser-contextual-notification slot="contextual-notification"></px-context-browser-contextual-notification>
-          </template>
+          <px-context-browser-contextual-notification slot="contextual-notification" opened="[[favoritedSyncFailed]]"></px-context-browser-contextual-notification>
           <div slot="columns" class="context-browser-favorites--empty__container">
             <px-icon icon="px-nav:favorite" class="context-browser-favorites--empty__icon"></px-icon>
             <div class="context-browser-favorites--empty__text regular">[[localize("You don't have any favorites yet.")]]</div>

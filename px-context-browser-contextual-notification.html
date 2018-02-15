@@ -1,17 +1,9 @@
 <link rel="import" href="../polymer/polymer.html"/>
-<link rel="import" href="../px-icon-set/px-icon.html"/>
-<link rel="import" href="../px-icon-set/px-icon-set-navigation.html"/>
-<link rel="import" href="css/px-context-browser-contextual-notification-styles.html"/>
+<link rel="import" href="../px-notification/px-notification.html"/>
 
 <dom-module id="px-context-browser-contextual-notification">
   <template>
-    <style include="px-context-browser-contextual-notification-styles"></style>
-    <div class="contextual-notification">
-      <div class="contextual-notification__text zeta">
-        [[text]]
-      </div>
-      <px-icon class="contextual-notification__icon" icon="px-nav:reload" on-tap="syncFavorites"></px-icon>
-    </div>
+    <px-notification type="info" content="[[text]]" action-icon="px-nav:reload" opened="[[opened]]"></px-notification>
   </template>
   <script>
     Polymer({
@@ -21,7 +13,15 @@
         text: {
           type: String,
           value: 'Your favorites list failed to sync.'
+        },
+        opened: {
+          type: Boolean,
+          value: false
         }
+      },
+
+      listeners: {
+        'px-notification-action-tapped': 'syncFavorites'
       },
 
       syncFavorites() {
