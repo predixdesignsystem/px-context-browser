@@ -1,3 +1,7 @@
+v2.1.7
+==================
+* Replace px-context-browser-contextual-notification with px-notification
+
 v2.1.6
 ==================
 * reduce icon-set imports
