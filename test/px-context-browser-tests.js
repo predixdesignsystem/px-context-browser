@@ -345,7 +345,7 @@ describe('px-context-browser [favorited behaviors]', () => {
       const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
       let contextualNotificationRect = contextualNotification.getBoundingClientRect();
       expect(contextualNotificationRect.left > 0).to.be.true;
-      expect(contextualNotificationRect.height).to.be.closeTo(30, 5);
+      expect(contextualNotificationRect.height).to.be.closeTo(80, 5);
       openTrigger.click();
 
       flushAndRender(() => {
@@ -365,7 +365,9 @@ describe('px-context-browser [favorited behaviors]', () => {
     favoritedTrigger.click();
     setTimeout(() => {
       const contextualNotification = Polymer.dom(browser.root).querySelector('px-context-browser-contextual-notification');
-      const resyncIcon = Polymer.dom(contextualNotification.root).querySelector('px-icon');
+      const notification = Polymer.dom(contextualNotification.root).querySelector('px-notification');
+      const resyncIcon = Polymer.dom(notification.root).querySelector('.notification-right px-icon');
+      console.log(resyncIcon);
 
       MockInteractions.tap(resyncIcon);
       // resyncIcon.click();
