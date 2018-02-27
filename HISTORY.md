@@ -1,3 +1,8 @@
+v2.2.0
+==================
+* Set `showFavorited` default value to false. The developer should set the
+`show-favorited` attribute on the context browser element to enable favoriting
+
 v2.1.7
 ==================
 * Replace px-context-browser-contextual-notification with px-notification
