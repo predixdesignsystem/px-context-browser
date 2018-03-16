@@ -20,6 +20,31 @@ describe('px-context-browser', function() {
     });
   });
 
+  it('shows the first column when it is first opened', done => {
+    const fx = fixture('ContextBrowser');
+
+    flush(() => {
+      const triggerEl = fx.querySelector('px-context-browser-trigger');
+      const browserEl = fx.querySelector('px-context-browser');
+
+      browserEl.openTrigger = triggerEl;
+      browserEl.items = [
+        { id: "home", label: "Home" },
+        { id: "asset", label: "Assets", children: [
+          { id: "a1", label: "Asset 1" },
+          { id: "a2", label: "Asset 2" }
+        ] }
+      ];
+      triggerEl.click();
+
+      Polymer.RenderStatus.afterNextRender(browserEl, () => {
+        const columnsEl = browserEl.shadowRoot ? browserEl.shadowRoot.querySelector('px-context-browser-columns') : browserEl.querySelector('px-context-browser-columns');
+        expect(columnsEl._activeEl).to.be.instanceof(HTMLElement);
+        done();
+      });
+    });
+  });
+
   it('resets its active item to the parent of the selected item 5s after it is closed', function(done) {
     var fx = fixture('ContextBrowserBindingFixture');
 

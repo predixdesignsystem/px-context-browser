@@ -44,12 +44,27 @@
         FADE_OUT_RIGHT: 'fade-out-right',
         FADE_OUT_LEFT:  'fade-out-left'
       };
+      this._distributed = false;
     },
 
     attached: function() {
-      this._observer = Polymer.dom(this.$.columns).observeNodes(function(info) {
+      const tryCallActiveChanged = () => {
         if (typeof this.active === 'number' && !this._activeEl) {
           this._activeChanged(this.active);
+        }
+      };
+
+      this._observer = Polymer.dom(this.$.columns).observeNodes(function(info) {
+        if (!this._distributed && info.addedNodes) {
+          /* Check if at least one `div.column` has been distributed */
+          const nodes = Array.prototype.slice.call(info.addedNodes, 0);
+          for (let i=0; i<nodes.length; i++) {
+            if (nodes[i].nodeName === 'DIV' && nodes[i].classList.contains('column')) {
+              this._distributed = true;
+              tryCallActiveChanged();
+              break;
+            }
+          }
         }
       }.bind(this));
     },
@@ -59,8 +74,17 @@
     },
 
     _activeChanged: function(nextActive, lastActive) {
-      var nextActiveEl = Polymer.dom(this).querySelector('[column="'+nextActive+'"]');
-      if (typeof nextActive === 'number' && nextActive !== this._activeEl) {
+      if (!this._distributed) return;
+      let nextActiveEl = this.querySelector('[column="'+nextActive+'"]');
+      if (typeof lastActive !== 'number' && nextActive === 0 && nextActiveEl === null) {
+        /*
+         * The next active el should probably be the first div.column even if the attribute
+         * `column="0"` hasn't been defined yet because of lazy data binding. This is only
+         * an issue when the component first boots
+         */
+        nextActiveEl = this.querySelector('div.column');
+      }
+      if (nextActiveEl && typeof nextActive === 'number' && nextActiveEl !== this._activeEl) {
         this._animateInClassName = (nextActive > (lastActive||0)) ? this._animateClassNames.FADE_IN_LEFT : this._animateClassNames.FADE_IN_RIGHT;
         this._animateOutClassName = (nextActive > (lastActive||0)) ? this._animateClassNames.FADE_OUT_LEFT : this._animateClassNames.FADE_OUT_RIGHT;
         this._activeEl = nextActiveEl;
