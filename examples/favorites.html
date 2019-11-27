@@ -19,13 +19,24 @@ limitations under the License.
 <head>
   <title>Context Browser Demo -- Favorites</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../polymer/polymer.html"/>
-  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
-  <link rel="import" href="../px-context-browser-trigger.html"/>
-  <link rel="import" href="../px-context-browser.html"/>
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../../@polymer/polymer/polymer-legacy.js"></script>
+  <script type="module" src="../../px-theme/px-theme-styles.js"></script>
+  <script type="module" src="../px-context-browser-trigger.js"></script>
+  <script type="module" src="../px-context-browser.js"></script>
 
-  <style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<style>
     body {
       margin: 0;
       padding: 30px;
@@ -33,25 +44,36 @@ limitations under the License.
     .triggers {
       display: flex;
     }
-  </style>
+  </style>`;
+
+document.head.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-  <custom-style>
-    <style is="custom-style" include="px-theme-styles"></style>
-  </custom-style>
+  <script type="module">
+const $_documentContainer = document.createElement('template');
 
-  <dom-bind>
+$_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="px-theme-styles"></style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-bind>
     <template is="dom-bind">
       <div class="triggers">
         <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited></px-context-browser-trigger>
+        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited=""></px-context-browser-trigger>
       </div>
-      <px-context-browser
-          items='[{"id":"us","label":"United States","children":[{"id":"calif","label":"California","children":[{"id":"los-angeles","label":"Los Angeles"},{"id":"san-francisco","label":"San Francisco and more words to make this really really suuuper duper long","children":[{"id":"mission","label":"The Mission", "children":[{"id":"valencia","label":"Valencia St."}]},{"id":"noe-valley","label":"Noe Valley"},{"id":"castro","label":"The Castro"}]},{"id":"oakland","label":"Oakland","children":[{"id":"adams-point","label":"Adams Point"},{"id":"temescal","label":"Temescal"}]}]},{"id":"mass","label":"Massachusetts","children":[{"id":"boston","label":"Boston","children":[{"id":"back-bay","label":"Back Bay"},{"id":"south-end","label":"South End"},{"id":"seaport","label":"Seaport"}]},{"id":"cambridge","label":"Cambridge","children":[{"id":"cambridgeport","label":"Cambridgeport", "children":[{"id":"more-text", "label":"Another Place"}]},{"id":"west-cambridge","label":"West Cambridge"},{"id":"riverside","label":"Riverside"}]}]}]}]'
-          open-trigger="[[openTrigger]]"
-          favorited-trigger="[[favoritedTrigger]]"
-          show-favorited>
+      <px-context-browser items="[{&quot;id&quot;:&quot;us&quot;,&quot;label&quot;:&quot;United States&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;calif&quot;,&quot;label&quot;:&quot;California&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;los-angeles&quot;,&quot;label&quot;:&quot;Los Angeles&quot;},{&quot;id&quot;:&quot;san-francisco&quot;,&quot;label&quot;:&quot;San Francisco and more words to make this really really suuuper duper long&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;mission&quot;,&quot;label&quot;:&quot;The Mission&quot;, &quot;children&quot;:[{&quot;id&quot;:&quot;valencia&quot;,&quot;label&quot;:&quot;Valencia St.&quot;}]},{&quot;id&quot;:&quot;noe-valley&quot;,&quot;label&quot;:&quot;Noe Valley&quot;},{&quot;id&quot;:&quot;castro&quot;,&quot;label&quot;:&quot;The Castro&quot;}]},{&quot;id&quot;:&quot;oakland&quot;,&quot;label&quot;:&quot;Oakland&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;adams-point&quot;,&quot;label&quot;:&quot;Adams Point&quot;},{&quot;id&quot;:&quot;temescal&quot;,&quot;label&quot;:&quot;Temescal&quot;}]}]},{&quot;id&quot;:&quot;mass&quot;,&quot;label&quot;:&quot;Massachusetts&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;boston&quot;,&quot;label&quot;:&quot;Boston&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;back-bay&quot;,&quot;label&quot;:&quot;Back Bay&quot;},{&quot;id&quot;:&quot;south-end&quot;,&quot;label&quot;:&quot;South End&quot;},{&quot;id&quot;:&quot;seaport&quot;,&quot;label&quot;:&quot;Seaport&quot;}]},{&quot;id&quot;:&quot;cambridge&quot;,&quot;label&quot;:&quot;Cambridge&quot;,&quot;children&quot;:[{&quot;id&quot;:&quot;cambridgeport&quot;,&quot;label&quot;:&quot;Cambridgeport&quot;, &quot;children&quot;:[{&quot;id&quot;:&quot;more-text&quot;, &quot;label&quot;:&quot;Another Place&quot;}]},{&quot;id&quot;:&quot;west-cambridge&quot;,&quot;label&quot;:&quot;West Cambridge&quot;},{&quot;id&quot;:&quot;riverside&quot;,&quot;label&quot;:&quot;Riverside&quot;}]}]}]}]" open-trigger="[[openTrigger]]" favorited-trigger="[[favoritedTrigger]]" show-favorited="">
       </px-context-browser>
     </template>
-  </dom-bind>
+  </dom-bind>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </html>

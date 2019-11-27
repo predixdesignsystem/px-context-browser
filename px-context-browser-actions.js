@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) 2018, General Electric
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +12,20 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
+*/
+/* Action: Select */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import 'px-icon-set/px-icon-set-navigation.js';
 
-<link rel="import" href="../px-icon-set/px-icon-set-navigation.html"/>
-<link rel="import" href="../px-icon-set/px-icon.html"/>
-
-<!-- Action: Select -->
-<dom-module id="px-context-browser-action-select">
-  <template>
+import 'px-icon-set/px-icon.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+Polymer({
+  _template: html`
     <style>
       :host {
         display: block;
@@ -36,17 +42,18 @@ limitations under the License.
     </style>
 
     <px-icon icon="px-nav:open-context"></px-icon>
-  </template>
-</dom-module>
-<script>
-  Polymer({
-    is: 'px-context-browser-action-select'
-  });
-</script>
+`,
 
-<!-- Action: Favorite -->
-<dom-module id="px-context-browser-action-favorite">
-  <template>
+  is: 'px-context-browser-action-select'
+});
+/* Action: Favorite */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+Polymer({
+  _template: html`
     <style>
       :host {
         display: block;
@@ -63,17 +70,18 @@ limitations under the License.
     </style>
 
     <px-icon icon="px-nav:favorite"></px-icon>
-  </template>
-</dom-module>
-<script>
-  Polymer({
-    is: 'px-context-browser-action-favorite'
-  });
-</script>
+`,
 
-<!-- Action: Open -->
-<dom-module id="px-context-browser-action-open">
-  <template>
+  is: 'px-context-browser-action-favorite'
+});
+/* Action: Open */
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+Polymer({
+  _template: html`
     <style>
       :host {
         display: block;
@@ -85,10 +93,7 @@ limitations under the License.
     </style>
 
     <px-icon icon="px-nav:next"></px-icon>
-  </template>
-</dom-module>
-<script>
-  Polymer({
-    is: 'px-context-browser-action-open'
-  });
-</script>
+`,
+
+  is: 'px-context-browser-action-open'
+});

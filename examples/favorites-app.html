@@ -19,13 +19,24 @@ limitations under the License.
 <head>
   <title>Favorite Foods app</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../polymer/polymer.html"/>
-  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
-  <link rel="import" href="../px-context-browser-trigger.html"/>
-  <link rel="import" href="../px-context-browser.html"/>
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../../@polymer/polymer/polymer-legacy.js"></script>
+  <script type="module" src="../../px-theme/px-theme-styles.js"></script>
+  <script type="module" src="../px-context-browser-trigger.js"></script>
+  <script type="module" src="../px-context-browser.js"></script>
 
-  <style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<style>
     body {
       margin: 0;
       padding: 30px;
@@ -33,32 +44,35 @@ limitations under the License.
     .triggers {
       display: flex;
     }
-  </style>
+  </style>`;
+
+document.head.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-  <custom-style>
-    <style is="custom-style" include="px-theme-styles"></style>
-  </custom-style>
+  <script type="module">
+const $_documentContainer = document.createElement('template');
 
-  <dom-bind>
+$_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="px-theme-styles"></style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-bind>
     <template is="dom-bind">
       <div>
         <h1>My favorite foods</h1>
       </div>
       <div class="triggers">
         <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited></px-context-browser-trigger>
+        <px-context-browser-trigger trigger="{{favoritedTrigger}}" favorited=""></px-context-browser-trigger>
       </div>
-      <px-context-browser
-          items="[[foods]]"
-          open-trigger="[[openTrigger]]"
-          favorited-trigger="[[favoritedTrigger]]"
-          selected="{{selectedFood}}"
-          favorited="{{favoriteFoods}}"
-          favorited-route="{{favoriteFoodRoutes}}"
-          show-favorited
-          on-px-app-asset-favorited="saveFavorite"
-          on-px-app-asset-defavorited="removeFavorite">
+      <px-context-browser items="[[foods]]" open-trigger="[[openTrigger]]" favorited-trigger="[[favoritedTrigger]]" selected="{{selectedFood}}" favorited="{{favoriteFoods}}" favorited-route="{{favoriteFoodRoutes}}" show-favorited="" on-px-app-asset-favorited="saveFavorite" on-px-app-asset-defavorited="removeFavorite">
       </px-context-browser>
       <div>
         <h2>Food: [[selectedFood.label]]</h2>
@@ -66,159 +80,167 @@ limitations under the License.
         <h2>Calories: [[selectedFood.calories]]</h2>
       </div>
     </template>
-  </dom-bind>
-  <script>
-    var templQuery = Polymer.Element ? 'dom-bind' : 'template[is=dom-bind]';
-    var templ = document.querySelector(templQuery);
+  </dom-bind>`;
 
-    templ.foods = [
-      {id:'fruit', label:'fruit', isSelectable: false, children: [
-        {id:'melon', label:'melon', isSelectable: false, children: [
-          {id:'watermelon', label:'watermelon', calories:'100', isTerminal:true},
-          {id:'canteloupe', label:'canteloupe', calories:'300', isTerminal:true}
-        ]}
-      ]},
-      {id:'vegetables', label:'vegetables', isSelectable: false, children: [
-        {id:'root', label:'root vegetables', isSelectable: false, children: [
-          {id:'carrots', label:'carrots', calories:'50', isTerminal:true},
-          {id:'potatoes', label:'potatoes', calories:'200', isTerminal:true}
-        ]}
-      ]},
-      {id:'meat', label:'meat', isSelectable: false, children: [
-        {id:'red', label:'red meat', isSelectable: false, children: [
-          {id:'beef', label:'beef', calories:'500', isTerminal:true},
-          {id:'venison', label:'venison', calories:'400', isTerminal:true}
-        ]}
-      ]}
-    ];
+document.body.appendChild($_documentContainer.content);
+</script>
+  <script type="module">
+import '@polymer/polymer/polymer-legacy.js';
+import 'px-theme/px-theme-styles.js';
+import '../px-context-browser-trigger.js';
+import '../px-context-browser.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+var templQuery = PolymerElement ? 'dom-bind' : 'template[is=dom-bind]';
+var templ = document.querySelector(templQuery);
 
-    templ.isFavorited = function(item, faves) {
-      return faves.indexOf(item) > -1;
-    }
+templ.foods = [
+  {id:'fruit', label:'fruit', isSelectable: false, children: [
+    {id:'melon', label:'melon', isSelectable: false, children: [
+      {id:'watermelon', label:'watermelon', calories:'100', isTerminal:true},
+      {id:'canteloupe', label:'canteloupe', calories:'300', isTerminal:true}
+    ]}
+  ]},
+  {id:'vegetables', label:'vegetables', isSelectable: false, children: [
+    {id:'root', label:'root vegetables', isSelectable: false, children: [
+      {id:'carrots', label:'carrots', calories:'50', isTerminal:true},
+      {id:'potatoes', label:'potatoes', calories:'200', isTerminal:true}
+    ]}
+  ]},
+  {id:'meat', label:'meat', isSelectable: false, children: [
+    {id:'red', label:'red meat', isSelectable: false, children: [
+      {id:'beef', label:'beef', calories:'500', isTerminal:true},
+      {id:'venison', label:'venison', calories:'400', isTerminal:true}
+    ]}
+  ]}
+];
 
-    var syncFailedReason = null;
-    var failedToAdd = [];
-    var failedToRemove = [];
+templ.isFavorited = function(item, faves) {
+  return faves.indexOf(item) > -1;
+}
 
-    function getJSON(url) {
-      return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
+var syncFailedReason = null;
+var failedToAdd = [];
+var failedToRemove = [];
 
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-              resolve(JSON.parse(xhr.responseText));
-            }
-            else {
-              reject();
-            }
-          }
-        };
+function getJSON(url) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
 
-        xhr.open('GET', url);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send();
-      });
-    };
-
-    function postJSON(url, body) {
-      return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-              resolve();
-            }
-            else {
-              reject();
-            }
-          }
-        };
-
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(JSON.stringify(body));
-      });
-    };
-
-    window.addEventListener('load', getFavoritesFromServer);
-
-    function getFavoritesFromServer() {
-      getJSON('http://localhost:3000/favorites')
-        .then((savedFavorites) => {
-          console.log(`Got these saved favorites: ${savedFavorites}`)
-          templ.favoriteFoodRoutes = savedFavorites;
-        })
-        .catch(() => {
-          var cb = document.querySelector('px-context-browser');
-          cb.favoritedSyncFailed = true;
-          syncFailedReason = 'GET_FAILED';
-          console.log(`Did not get any favorites from the server`);
-        });
-    };
-
-    templ.saveFavorite = function(e) {
-      addFavoriteToServer(e.detail.route);
-    }
-
-    function addFavoriteToServer(item) {
-      var cb = document.querySelector('px-context-browser');
-      cb.favoritedSyncing = true;
-      postJSON('http://localhost:3000/favorites/add', {id: item})
-        .then(() => {
-          console.log(`Added ${item} to faves`);
-        })
-        .catch(() => {
-          cb.favoritedSyncFailed = true;
-          syncFailedReason = 'POST_FAILED';
-          failedToAdd.push(item);
-          console.log(`Did not succeed in adding ${item} to faves`);
-        })
-        .finally(() => {
-          cb.favoritedSyncing = false;
-        });
-    }
-
-    templ.removeFavorite = function(e) {
-      removeFavoriteFromServer(e.detail.route);
-    }
-
-    function removeFavoriteFromServer(item) {
-      var cb = document.querySelector('px-context-browser');
-      cb.favoritedSyncing = true;
-      postJSON('http://localhost:3000/favorites/remove', {id: item})
-        .then(() => {
-          console.log(`Removed ${item} from faves`);
-        })
-        .catch(() => {
-          var cb = document.querySelector('px-context-browser');
-          cb.favoritedSyncFailed = true;
-          syncFailedReason = 'POST_FAILED';
-          failedToRemove.push(item);
-          console.log(`Did not succeed in removing ${item} from faves`);
-        })
-        .finally(() => {
-          cb.favoritedSyncing = false;
-        });
-    }
-
-    window.addEventListener('px-app-asset-favorited-sync-requested', function() {
-      if (syncFailedReason === 'GET_FAILED') {
-        getFavoritesFromServer();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          resolve(JSON.parse(xhr.responseText));
+        }
+        else {
+          reject();
+        }
       }
-      if (syncFailedReason === 'POST_FAILED') {
-        let _failedToAdd = failedToAdd.slice(0);
-        failedToAdd = [];
-        _failedToAdd.forEach(item => addFavoriteToServer(item));
-        let _failedToRemove = failedToRemove.slice(0);
-        failedToRemove = [];
-        _failedToRemove.forEach(item => removeFavoriteFromServer(item));
+    };
+
+    xhr.open('GET', url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+  });
+}
+
+function postJSON(url, body) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          resolve();
+        }
+        else {
+          reject();
+        }
       }
+    };
+
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(body));
+  });
+}
+
+window.addEventListener('load', getFavoritesFromServer);
+
+function getFavoritesFromServer() {
+  getJSON('http://localhost:3000/favorites')
+    .then((savedFavorites) => {
+      console.log(`Got these saved favorites: ${savedFavorites}`)
+      templ.favoriteFoodRoutes = savedFavorites;
+    })
+    .catch(() => {
       var cb = document.querySelector('px-context-browser');
-      cb.favoritedSyncFailed = false;
-      syncFailedReason = null;
+      cb.favoritedSyncFailed = true;
+      syncFailedReason = 'GET_FAILED';
+      console.log(`Did not get any favorites from the server`);
     });
-  </script>
+}
+
+templ.saveFavorite = function(e) {
+  addFavoriteToServer(e.detail.route);
+}
+
+function addFavoriteToServer(item) {
+  var cb = document.querySelector('px-context-browser');
+  cb.favoritedSyncing = true;
+  postJSON('http://localhost:3000/favorites/add', {id: item})
+    .then(() => {
+      console.log(`Added ${item} to faves`);
+    })
+    .catch(() => {
+      cb.favoritedSyncFailed = true;
+      syncFailedReason = 'POST_FAILED';
+      failedToAdd.push(item);
+      console.log(`Did not succeed in adding ${item} to faves`);
+    })
+    .finally(() => {
+      cb.favoritedSyncing = false;
+    });
+}
+
+templ.removeFavorite = function(e) {
+  removeFavoriteFromServer(e.detail.route);
+}
+
+function removeFavoriteFromServer(item) {
+  var cb = document.querySelector('px-context-browser');
+  cb.favoritedSyncing = true;
+  postJSON('http://localhost:3000/favorites/remove', {id: item})
+    .then(() => {
+      console.log(`Removed ${item} from faves`);
+    })
+    .catch(() => {
+      var cb = document.querySelector('px-context-browser');
+      cb.favoritedSyncFailed = true;
+      syncFailedReason = 'POST_FAILED';
+      failedToRemove.push(item);
+      console.log(`Did not succeed in removing ${item} from faves`);
+    })
+    .finally(() => {
+      cb.favoritedSyncing = false;
+    });
+}
+
+window.addEventListener('px-app-asset-favorited-sync-requested', function() {
+  if (syncFailedReason === 'GET_FAILED') {
+    getFavoritesFromServer();
+  }
+  if (syncFailedReason === 'POST_FAILED') {
+    let _failedToAdd = failedToAdd.slice(0);
+    failedToAdd = [];
+    _failedToAdd.forEach(item => addFavoriteToServer(item));
+    let _failedToRemove = failedToRemove.slice(0);
+    failedToRemove = [];
+    _failedToRemove.forEach(item => removeFavoriteFromServer(item));
+  }
+  var cb = document.querySelector('px-context-browser');
+  cb.favoritedSyncFailed = false;
+  syncFailedReason = null;
+});
+</script>
 </body>
 </html>

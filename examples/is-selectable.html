@@ -19,33 +19,56 @@ limitations under the License.
 <head>
   <title>Context Browser Demo -- Custom Keys</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../../polymer/polymer.html"/>
-  <link rel="import" href="../../px-theme/px-theme-styles.html"/>
-  <link rel="import" href="../px-context-browser-trigger.html"/>
-  <link rel="import" href="../px-context-browser.html"/>
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+  <script type="module" src="../../@polymer/polymer/polymer-legacy.js"></script>
+  <script type="module" src="../../px-theme/px-theme-styles.js"></script>
+  <script type="module" src="../px-context-browser-trigger.js"></script>
+  <script type="module" src="../px-context-browser.js"></script>
 
-  <style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<style>
     body {
       margin: 0;
       padding: 30px;
     }
-  </style>
+  </style>`;
+
+document.head.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-  <custom-style>
-    <style is="custom-style" include="px-theme-styles"></style>
-  </custom-style>
+  <script type="module">
+const $_documentContainer = document.createElement('template');
 
-  <dom-bind>
+$_documentContainer.innerHTML = `<custom-style>
+    <style is="custom-style" include="px-theme-styles"></style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+
+  <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<dom-bind>
     <template is="dom-bind">
       <px-context-browser-trigger trigger="{{openTrigger}}"></px-context-browser-trigger>
-      <px-context-browser
-          show-filter
-          items='[{ "id": "home", "label": "Home", "isSelectable": false, "children" : [{ "id": "child-1", "label": "Child 1" }, { "id": "child-2", "label": "Child Two" }] }]'
-          open-trigger="[[openTrigger]]">
+      <px-context-browser show-filter="" items="[{ &quot;id&quot;: &quot;home&quot;, &quot;label&quot;: &quot;Home&quot;, &quot;isSelectable&quot;: false, &quot;children&quot; : [{ &quot;id&quot;: &quot;child-1&quot;, &quot;label&quot;: &quot;Child 1&quot; }, { &quot;id&quot;: &quot;child-2&quot;, &quot;label&quot;: &quot;Child Two&quot; }] }]" open-trigger="[[openTrigger]]">
       </px-context-browser>
     </template>
-  </dom-bind>
+  </dom-bind>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </body>
 </html>

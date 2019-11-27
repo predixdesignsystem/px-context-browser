@@ -1,0 +1,250 @@
+/*
+Copyright (c) 2018, General Electric
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '@polymer/polymer/polymer-legacy.js';
+
+import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
+import './px-context-browser-actions.js';
+import './css/px-context-browser-item-styles.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+Polymer({
+  _template: html`
+    <style include="px-context-browser-item-styles"></style>
+
+    <template is="dom-if" if="[[!styleAsFavorite]]">
+      <section class="context-browser-item" asset-action="activate">
+        <div class="context-browser-text">
+          <div class="context-browser-text__label regular">
+            [[label]]
+          </div>
+        </div>
+        <div class="actions">
+          <template is="dom-if" if="[[canFavorite]]">
+            <px-context-browser-action-favorite class="action" active\$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+          </template>
+          <template is="dom-if" if="[[canSelect]]">
+            <px-context-browser-action-select class="action" asset-action="select"></px-context-browser-action-select>
+          </template>
+          <template is="dom-if" if="[[canOpen]]" restamp="">
+            <px-context-browser-action-open class="action action--open" asset-action="activate">
+          </px-context-browser-action-open></template>
+        </div>
+      </section>
+    </template>
+
+    <template is="dom-if" if="[[styleAsFavorite]]">
+      <section class="context-browser-item" asset-action="select">
+        <div class="context-browser-text">
+          <div class="context-browser-text__label regular">
+            [[label]]
+          </div>
+          <div id="breadcrumbs" class="context-browser-text__breadcrumbs context-browser-label--breadcrumbs zeta">
+            [[_truncatedBreadcrumbs]]
+          </div>
+        </div>
+        <div class="actions">
+          <template is="dom-if" if="[[canFavorite]]">
+            <px-context-browser-action-favorite class="action" active\$="{{favorited}}" asset-action="favorite"></px-context-browser-action-favorite>
+          </template>
+        </div>
+      </section>
+    </template>
+`,
+
+  is: 'px-context-browser-item',
+
+  behaviors: [
+    IronResizableBehavior
+  ],
+
+  properties: {
+    label: {
+      type: String
+    },
+    breadcrumbs: {
+      type: Array
+    },
+    _breadcrumbsFontStyles: {
+      type: Object
+    },
+    _breadcrumbsWidth: {
+      type: Number
+    },
+    _truncatedBreadcrumbs: {
+      type: String,
+      computed: '_computeTruncatedBreadcrumbs(breadcrumbs, _breadcrumbsFontStyles, _breadcrumbsWidth)'
+    },
+    selected: {
+      type: Boolean,
+      value: false,
+      reflectToAttribute: true
+    },
+    favorited: {
+      type: Boolean,
+      value: false
+    },
+    styleAsFavorite: {
+      type: Boolean,
+      value: false,
+      reflectToAttribute: true
+    },
+    canSelect: {
+      type: Boolean,
+      value: false
+    },
+    canOpen: {
+      type: Boolean,
+      value: false
+    },
+    canFavorite: {
+      type: Boolean,
+      value: false
+    },
+    visible: {
+      type: Boolean,
+      value: true
+    }
+  },
+
+  observers: ['_handleFavoritesItemVisible(visible, styleAsFavorite)'],
+
+  listeners: {
+    'iron-resize' : '_handleResize'
+  },
+
+  _handleFavoritesItemVisible(visible, styleAsFavorite) {
+    if (visible && styleAsFavorite) {
+      this._updateBreadcrumbsInfo();
+    }
+  },
+
+  _handleResize() {
+    if (this.visible && this.styleAsFavorite) {
+      this._updateBreadcrumbsInfo();
+    }
+  },
+
+  _updateBreadcrumbsInfo() {
+    this.debounce('update-breadcrumbs-width', () => {
+      window.requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (!this._breadcrumbsWidth || !this.__breadcrumbsFontStyles) {
+            const el = dom(this.root).querySelector('#breadcrumbs');
+            if (!el) return;
+            this._breadcrumbsFontStyles = this._getFontStyles(el);
+            this._breadcrumbsWidth = el.getBoundingClientRect().width;
+          }
+        });
+      })
+    }, 5);
+  },
+
+  _computeTruncatedBreadcrumbs(breadcrumbs, fontStyles, width) {
+    if (breadcrumbs && fontStyles && width) {
+      return this._truncateBreadcrumbs(breadcrumbs, fontStyles, width);
+    }
+  },
+
+  /**
+   * Reads the computed font styles (font family name and font size) from the targeted
+   * element and returns an object with the details.
+   *
+   * @param {HTMLElement} el
+   * @returns {Object} styles
+   * @returns {String} styles.size - The font size as a string with px suffix (e.g. '12px')
+   * @returns {String} styles.family - The CSS font family declaration as a string (e.g. 'Helvetica')
+   */
+  _getFontStyles(el) {
+      var styles = window.getComputedStyle(el);
+      var size = styles.fontSize;
+      var family = styles.fontFamily;
+      return {
+          size: size,
+          family: family
+      }
+  },
+
+  /**
+   * Iterates over a list of items and determines which will fit into the
+   * available width and which will not.
+   *
+   * If any items do not fit, backtracks and reduces the available width to
+   * ensure an overflowed icon will also fit.
+   *
+   * @param  {Array} items - A flat Array of items to fit
+   * @param {Object} fontStyles - An object with the font size and family strings from CSSText
+   * @param  {Number} width - The width to fit the items into
+   * @return {Array.<Array>} - First entry is Array of items that fit, second entry is Array of items that do not fit
+   */
+  _truncateBreadcrumbs(items, fontStyles, width) {
+    if (!items.length) {
+      return ''; // no breadcrumbs to display for the root item
+    }
+    const ellipWidth = this._getTextWidth("\u2026 > ", fontStyles);
+    const caratWidth = this._getTextWidth(" > ", fontStyles);
+
+    const available = width;
+    const len = items.length;
+    let visible = len;
+    let lastResult;
+
+    while (visible > 0) {
+      // Get array items from end to beginning
+      let itemsToFit = items.slice(visible * -1);
+      // Join items together with carat
+      let textToMeasure = itemsToFit.join(' > ');
+      // If some items fit but not all, prepend ellipses
+      if (visible < len && len > 1) {
+        textToMeasure =  '... > ' + textToMeasure;
+      }
+      // Measure the resulting string to see if it fits
+      let measure = this._getTextWidth(textToMeasure, fontStyles);
+      // If it fits, we're done!
+      if (available > measure) {
+        return textToMeasure;
+      }
+      // Otherwise, try to fit with one less item
+      visible--;
+    }
+
+    // We know visible === 0, truncate last item and add ... > if needed
+    let prefix = (len > 1) ? '... > ' : '';
+    // CSS will take care of any end truncation needed
+    return prefix + items[len-1];
+  },
+
+  /**
+   * Measures the given text and returns the width based on font size and family
+   *
+   * @param  {String} text - A text string
+   * @param {Object} fontStyles - An object with the font size and family strings from CSSText
+   * @return {Number} - The rounded width of the text string
+   */
+  _getTextWidth(text, fontStyles) {
+    var canvas = this._textMeasureCanvas = (this._textMeasureCanvas ? this._textMeasureCanvas : document.createElement('canvas'));
+    var context = canvas.getContext('2d');
+    // Set the font styles
+    context.font = fontStyles.size + ' ' + fontStyles.family;
+
+    return Math.round(context.measureText(text).width);
+  }
+})
